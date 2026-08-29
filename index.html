@@ -45,167 +45,202 @@
     border: 1px solid var(--ring); border-radius: 999px; padding: 3px 10px;
   }
   .sub { color: var(--ink-2); font-size: 13px; margin: 0 0 16px; }
-  /* stat strip */
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 0 0 18px; }
-  .stat { background: var(--surface-1); border: 1px solid var(--ring); border-radius: 10px; padding: 10px 12px; }
-  .stat .v { font-size: 18px; font-weight: 650; }
-  .stat .l { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
-  /* tabs */
-  nav.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 18px; border-bottom: 1px solid var(--grid); padding-bottom: 0; }
+  nav.tabs { display: flex; gap: 2px; flex-wrap: wrap; margin: 0 0 18px; border-bottom: 1px solid var(--grid); }
   nav.tabs button {
     appearance: none; background: none; border: none; border-bottom: 2px solid transparent;
-    font: inherit; font-size: 13.5px; color: var(--ink-2); padding: 8px 12px 9px; cursor: pointer;
+    font: inherit; font-size: 13px; color: var(--ink-2); padding: 8px 10px 9px; cursor: pointer;
   }
   nav.tabs button.on { color: var(--ink-1); font-weight: 650; border-bottom-color: var(--s1); }
   section.tab { display: none; }
   section.tab.on { display: block; }
   .card {
     background: var(--surface-1); border: 1px solid var(--ring); border-radius: 12px;
-    padding: 18px 18px 10px; margin-bottom: 24px;
+    padding: 18px 18px 12px; margin-bottom: 24px;
   }
-  .card h2 { font-size: 15px; margin: 0 0 2px; }
+  .card h2 { font-size: 16px; margin: 0 0 4px; }
   .card .desc { font-size: 12.5px; color: var(--ink-2); margin: 0 0 12px; }
-  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-2); margin: 0 0 6px; }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
-  .sw.bar { height: 10px; width: 10px; border-radius: 3px; }
-  .sw.dash { background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px); height: 3px; }
-  .sw.dot { background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 5px); height: 3px; }
-  figure { margin: 0; position: relative; }
-  svg { width: 100%; height: auto; display: block; }
-  svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
-  .tt {
-    position: absolute; pointer-events: none; opacity: 0; transition: opacity .12s;
-    background: var(--surface-1); border: 1px solid var(--ring); border-radius: 8px;
-    box-shadow: 0 4px 14px rgba(0,0,0,.18); padding: 8px 11px; font-size: 12px;
-    color: var(--ink-1); max-width: 270px; z-index: 5;
-  }
-  .tt b { display: block; margin-bottom: 3px; }
-  .tt .row { display: flex; justify-content: space-between; gap: 14px; color: var(--ink-2); }
-  .tt .row em { font-style: normal; font-variant-numeric: tabular-nums; color: var(--ink-1); }
-  details { font-size: 12.5px; color: var(--ink-2); margin: 8px 0 6px; }
-  table { border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
-  th, td { padding: 4px 12px; border-bottom: 1px solid var(--grid); text-align: right; font-size: 12.5px; }
-  th:first-child, td:first-child { text-align: left; }
-  .fonte { font-size: 11.5px; color: var(--muted); margin: 8px 2px 6px; }
-  .grid5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(265px, 1fr)); gap: 14px; }
-  .panel { position: relative; border: 1px solid var(--grid); border-radius: 10px; padding: 10px 8px 4px; }
-  .panel h3 { font-size: 12.5px; margin: 0 0 2px 6px; color: var(--ink-1); }
-  .panel .pnota { font-size: 10px; color: var(--muted); margin: 0 0 4px 6px; min-height: 12px; }
-  .normas { display: grid; grid-template-columns: repeat(auto-fit, minmax(390px, 1fr)); gap: 12px; margin-top: 4px; }
-  .norma { border: 1px solid var(--grid); border-radius: 10px; padding: 12px 14px; }
-  .norma .tag, .evento .tag {
+  .card p { font-size: 13px; color: var(--ink-2); line-height: 1.55; margin: 0 0 10px; }
+  .card p b, .card li b { color: var(--ink-1); }
+  .tag {
     display: inline-block; font-size: 10.5px; color: var(--ink-2); background: var(--chip-bg);
-    border: 1px solid var(--ring); border-radius: 6px; padding: 2px 8px; margin: 0 0 7px;
+    border: 1px solid var(--ring); border-radius: 6px; padding: 2px 8px; margin: 0 0 8px;
     font-variant-numeric: tabular-nums;
   }
-  .norma h3, .evento h3 { font-size: 13px; margin: 0 0 5px; color: var(--ink-1); }
-  .norma p, .evento p { font-size: 12px; color: var(--ink-2); margin: 0 0 6px; line-height: 1.45; }
-  .norma .efeito, .evento .efeito { font-size: 12px; color: var(--ink-1); margin: 0; line-height: 1.45; }
-  .norma .efeito::before, .evento .efeito::before { content: "→ "; color: var(--muted); }
-  .norma .exemplo {
-    background: var(--chip-bg); border-radius: 8px; padding: 8px 11px; margin: 8px 0 2px;
-    font-size: 11.5px; color: var(--ink-2); line-height: 1.5;
+  .efeito { font-size: 13px; color: var(--ink-1); line-height: 1.5; margin: 0 0 10px; }
+  .efeito::before { content: "→ "; color: var(--muted); }
+  .fonte { font-size: 11.5px; color: var(--muted); margin: 10px 2px 4px; }
+  ul.tight { margin: 4px 0 10px; padding-left: 18px; font-size: 13px; color: var(--ink-2); line-height: 1.55; }
+  .indice { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin: 6px 0 4px; }
+  .indice button {
+    appearance: none; text-align: left; font: inherit; cursor: pointer;
+    background: none; border: 1px solid var(--grid); border-radius: 10px; padding: 11px 13px;
+    color: var(--ink-2); transition: border-color .12s;
   }
-  .norma .exemplo b { color: var(--ink-1); }
+  .indice button:hover { border-color: var(--s1); }
+  .indice .t { font-size: 13px; font-weight: 650; color: var(--ink-1); margin-bottom: 3px; }
+  .indice .d { font-size: 11.5px; line-height: 1.4; }
   .enfase {
     border-left: 3px solid var(--s2); background: var(--chip-bg); border-radius: 0 10px 10px 0;
-    padding: 10px 14px; margin: 14px 0 4px; font-size: 12px; color: var(--ink-2); line-height: 1.5;
+    padding: 10px 14px; margin: 14px 0 6px; font-size: 12px; color: var(--ink-2); line-height: 1.5;
   }
   .enfase b { color: var(--ink-1); }
-  .evento { border: 1px solid var(--grid); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
-  .duo { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
-  ul.tight { margin: 4px 0 8px; padding-left: 18px; font-size: 12px; color: var(--ink-2); line-height: 1.55; }
-  ul.tight li b { color: var(--ink-1); }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v1.2 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v1.3 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
+  <nav class="tabs" id="tabs">
+    <button data-tab="contabilidade" class="on">Contabilidade</button>
+    <button data-tab="poc">PoC</button>
+    <button data-tab="ref">REF</button>
+    <button data-tab="juros">Juros capitalizados</button>
+    <button data-tab="spes">SPEs e JVs</button>
+    <button data-tab="ret">Afetação + RET</button>
+    <button data-tab="distrato">Distrato</button>
+    <button data-tab="permuta">Permuta e AVP</button>
+  </nav>
 
-
-  
-
-  <!-- ================= ABA 1: CONTABILIDADE ================= -->
+  <!-- ============ ABA: CONTABILIDADE (VISÃO GERAL) ============ -->
   <section class="tab on" id="tab-contabilidade">
-
     <div class="card">
       <h2>As regras do jogo: a contabilidade da incorporação</h2>
-      <p class="desc">Sete normas explicam por que a DRE de uma incorporadora não se parece com a de nenhuma outra empresa.</p>
-      <div class="normas">
-        <div class="norma">
-          <span class="tag">CPC 47 · Ofício-Circular CVM/SNC/SEP 02/2018 · OCPC 01/04</span>
-          <h3>Receita pelo andamento da obra (PoC)</h3>
-          <p>A receita da unidade vendida na planta é reconhecida pela <b>evolução financeira da obra</b> (custo incorrido ÷ custo orçado) aplicada às unidades vendidas — não na entrega das chaves. É uma jabuticaba aceita pela CVM: no IFRS aplicado no resto do mundo (IFRIC 15/ICPC 02), a receita só nasceria na entrega.</p>
-          <p class="efeito">A margem de hoje é a decisão comercial de 2–3 anos atrás (efeito safra); lucro contábil anda anos à frente do caixa.</p>
-          <div class="exemplo"><b>Exemplo:</b> o La Galerie entrou em reconhecimento em jun/26 e, só no 2T26, avançou 49% na evolução financeira → <b>R$ 141 milhões</b> de receita na DRE da Cyrela — sem nenhuma chave entregue (release 2T26, Anexo III).</div>
-        </div>
-        <div class="norma">
-          <span class="tag">Deliberações CVM 561/08 e 624/10</span>
-          <h3>REF: o resultado que fica fora do balanço</h3>
-          <p>Receita e custo orçado das unidades <b>vendidas mas ainda não construídas</b> não aparecem no balanço — só em nota explicativa (receita/custo "a apropriar"). A margem REF é a margem embutida nesse backlog.</p>
-          <p class="efeito">A REF antecipa a margem futura — mas é refém do <b>orçamento de obra</b>: revisão de custo bate na margem corrente de uma vez (caso Plano&amp;Plano no 2T26).</p>
-          <div class="exemplo"><b>Exemplo:</b> em 30/06/2026 a Cyrela tinha <b>R$ 12,2 bilhões</b> de receita já vendida fora do balanço, com margem de 36,2% — quase 5 trimestres de receita esperando a obra andar para virar DRE.</div>
-        </div>
-        <div class="norma">
-          <span class="tag">CPC 20 (IAS 23)</span>
-          <h3>Juros capitalizados no custo</h3>
-          <p>Os juros do financiamento à produção (SFH) não vão para o resultado financeiro: entram no <b>estoque</b> e saem anos depois dentro do <b>custo dos imóveis vendidos</b>, comprimindo a margem bruta contábil.</p>
-          <p class="efeito">Por isso os pares divulgam "margem ajustada ex-juros" (Direcional: 42,1% vs 39,7% contábil em 2025). Ciclo de Selic alta = margem contábil menor mesmo sem piora operacional.</p>
-          <div class="exemplo"><b>Exemplo:</b> no 2T26 a MRV Incorporação reportou margem bruta de 31,2% — e de 34,7% "ex-juros". Os mesmos projetos, a mesma obra: 3,5 p.p. da margem foram consumidos por juros de SFH que entraram no custo, não no resultado financeiro.</div>
-        </div>
-        <div class="norma">
-          <span class="tag">CPC 36 / CPC 19 (IFRS 10/11) · Lei 4.591/64</span>
-          <h3>Uma SPE por projeto; JVs pela equivalência</h3>
-          <p>Cada empreendimento vive numa SPE. Controladas consolidam (com sócios minoritários); <b>JVs como Cury, Lavvi e Plano&amp;Plano entram numa linha só</b>, a equivalência patrimonial — a receita delas não passa pela receita da Cyrela.</p>
-          <p class="efeito">A receita consolidada subestima o grupo; o lucro captura tudo (R$ 548 mi de equivalência em 2025, ~27% do lucro da Cyrela). Base da futura visão de soma das partes.</p>
-          <div class="exemplo"><b>Exemplo:</b> a Cury faturou <b>R$ 5,4 bilhões</b> em 2025 — mais da metade da receita da própria Cyrela (R$ 9,4 bi). Nada disso aparece na receita consolidada: só a fatia do lucro, dentro da linha de equivalência.</div>
-        </div>
-        <div class="norma">
-          <span class="tag">Lei 10.931/2004</span>
-          <h3>Patrimônio de afetação + RET</h3>
-          <p>O patrimônio da obra pode ser <b>segregado</b> (afetação: protege o comprador da quebra da incorporadora) e tributado pelo <b>RET: 4% da receita bruta</b> (1% em faixas do MCMV) no lugar de IR/CS sobre o lucro, apurado SPE a SPE.</p>
-          <p class="efeito">Alíquota efetiva baixa e estável — e mais um motivo para o lucro por segmento não bater com contas feitas com alíquota cheia.</p>
-          <div class="exemplo"><b>Exemplo:</b> uma SPE no RET com R$ 100 mi de receita paga <b>R$ 4 mi</b> de tributos federais (IRPJ+CSLL+PIS/Cofins juntos), tenha o projeto 20% ou 40% de margem. No lucro real, um projeto de 30% de margem pagaria ~R$ 10 mi só de IR/CS.</div>
-        </div>
-        <div class="norma">
-          <span class="tag">Lei 13.786/2018</span>
-          <h3>Lei do distrato</h3>
-          <p>Cancelou a loteria judicial pós-2015: a incorporadora pode <b>reter até 25% do que foi pago</b> (50% com patrimônio de afetação) quando o cliente desiste.</p>
-          <p class="efeito">Reduziu o risco de devolução em massa que destruiu as DREs de 2015–17 — mas o FR 2026 rebaixou o conforto: de "reduz o risco" para "não é possível garantir que elimina".</p>
-          <div class="exemplo"><b>Exemplo:</b> cliente pagou R$ 200 mil de uma unidade de R$ 1 mi e desistiu: a incorporadora devolve R$ 150 mil (retém 25%); com patrimônio de afetação, devolve R$ 100 mil. Antes de 2018, tribunais mandavam devolver "quase a totalidade" (FR 2025).</div>
-        </div>
-        <div class="norma">
-          <span class="tag">OCPC 01 · CPC 12 · CPC 48</span>
-          <h3>Permuta, AVP e recebíveis</h3>
-          <p>Terreno pago com unidades futuras (<b>permuta</b>) entra a valor justo no estoque contra adiantamento de clientes — sem consumir caixa (41% do landbank da Cyrela). Recebíveis longos sofrem <b>ajuste a valor presente</b> e, no pró-soluto e na CashMe, <b>provisão por perda esperada</b>.</p>
-          <p class="efeito">Permuta viabiliza crescer sem caixa (mas divide o VGV); AVP/PDD tornam o resultado financeiro tão importante quanto a margem bruta.</p>
-          <div class="exemplo"><b>Exemplo:</b> do landbank de <b>R$ 17,5 bilhões</b> da Cyrela no 2T26, 46% foi adquirido por permuta: o dono do terreno recebe unidades futuras, a Cyrela lança o projeto sem desembolsar pelo terreno — e o VGV "100%" inclui a parte que não é dela.</div>
-        </div>
+      <p class="desc">Sete normas explicam por que a DRE de uma incorporadora não se parece com a de nenhuma outra empresa. Cada uma tem sua própria aba, com a norma, a mecânica e o efeito prático na leitura dos números.</p>
+      <div class="indice" id="indice">
+        <button data-goto="poc"><div class="t">1 · Receita pelo andamento da obra (PoC)</div><div class="d">CPC 47 + Ofício-Circular CVM 02/2018 — a receita nasce com a obra, não com as chaves.</div></button>
+        <button data-goto="ref"><div class="t">2 · REF: o resultado fora do balanço</div><div class="d">Deliberações CVM 561/624 — o backlog vendido só aparece em nota explicativa.</div></button>
+        <button data-goto="juros"><div class="t">3 · Juros capitalizados no custo</div><div class="d">CPC 20 — o SFH comprime a margem bruta por dentro do custo.</div></button>
+        <button data-goto="spes"><div class="t">4 · SPEs e JVs pela equivalência</div><div class="d">CPC 36/19 — a receita consolidada subestima o grupo; o lucro captura tudo.</div></button>
+        <button data-goto="ret"><div class="t">5 · Patrimônio de afetação + RET</div><div class="d">Lei 10.931/2004 — tributo de 4% sobre a receita, apurado SPE a SPE.</div></button>
+        <button data-goto="distrato"><div class="t">6 · Lei do distrato</div><div class="d">Lei 13.786/2018 — retenção de até 25% (50% com afetação) na desistência.</div></button>
+        <button data-goto="permuta"><div class="t">7 · Permuta, AVP e recebíveis</div><div class="d">OCPC 01, CPC 12 e CPC 48 — terreno sem caixa, valor presente e perda esperada.</div></button>
       </div>
       <div class="enfase">
         <b>O selo oficial da jabuticaba:</b> todo relatório de auditoria do setor carrega um parágrafo de ênfase. Na Cyrela (Deloitte, DFP 2025): as demonstrações seguem as práticas "<i>aplicáveis às entidades de incorporação imobiliária no Brasil registradas na CVM</i>", com o reconhecimento de receita de unidades não concluídas seguindo o entendimento da diretoria sobre o CPC 47 "<i>alinhado com aquele manifestado pela CVM no Ofício Circular CVM/SNC/SEP nº 02/2018</i>". Sem ressalva — mas é o lembrete de que a comparação com incorporadoras fora do Brasil exige tradução.
       </div>
-      <p class="fonte">Fontes: FR 2026 item 2.3 (ênfase da auditoria) e 2.9 (REF/Deliberação CVM 561); releases das companhias (margens ajustadas); Leis 4.591/64, 10.931/04 e 13.786/18; CPC 47, CPC 20, CPC 36/19, CPC 12, CPC 48, OCPC 01/04.</p>
+      <p class="fonte">Fontes: FR 2026 da Cyrela (itens 2.3 e 2.9); Leis 4.591/64, 10.931/04 e 13.786/18; CPC 47, CPC 20, CPC 36/19, CPC 12, CPC 48, OCPC 01/04; Deliberações CVM 561/08 e 624/10.</p>
     </div>
-
-
   </section>
 
-  <!-- ================= ABA 2: RESULTADOS ================= -->
-  
+  <!-- ============ ABA: POC ============ -->
+  <section class="tab" id="tab-poc">
+    <div class="card">
+      <span class="tag">CPC 47 (IFRS 15) · Ofício-Circular CVM/SNC/SEP 02/2018 · OCPC 01/04 · ICPC 02</span>
+      <h2>Receita pelo andamento da obra (PoC)</h2>
+      <p>A receita de uma unidade vendida na planta é reconhecida ao longo da construção, pela <b>evolução financeira da obra</b>: custo incorrido ÷ custo total orçado (incluindo o terreno), aplicado às unidades vendidas. Vendeu na planta e a obra está 40% executada? 40% do preço daquela venda já está na DRE — muito antes de qualquer chave.</p>
+      <p>É uma <b>jabuticaba brasileira</b>. Na aplicação internacional do IFRS 15 (e antes dele, IFRIC 15/ICPC 02), a venda de imóvel residencial em construção normalmente só vira receita na entrega, quando o controle é transferido. A CVM aceitou a tese da <b>transferência contínua de controle</b> — o regime jurídico da incorporação (Lei 4.591/64) faz o comprador "dono" da fração ideal desde cedo — e consolidou o entendimento no Ofício-Circular CVM/SNC/SEP 02/2018. Todo o setor listado usa PoC.</p>
+      <p>Regras operacionais que modulam a curva (FR da Cyrela, item 1.4): a obra só começa com <b>≥30% das unidades vendidas</b>, entre 6 e 12 meses após o lançamento, e dura em média ~26 meses. No lançamento, o PoC típico é baixo (~3%, o custo do terreno já incorrido); ele acelera com o concreto.</p>
+      <p class="efeito">A margem bruta de hoje reflete a precificação de 2–3 anos atrás (efeito safra) e o lucro contábil anda anos à frente do caixa. Revisões do custo orçado mudam o denominador e batem na margem corrente de uma vez.</p>
+      <p class="fonte">Fontes: CPC 47; Ofício-Circular CVM/SNC/SEP 02/2018; OCPC 01 (R1) e OCPC 04; FR 2026 da Cyrela, itens 1.4 e 2.3.</p>
+    </div>
+  </section>
 
-  <!-- ================= ABA 3: SOCIETÁRIO ================= -->
-  
+  <!-- ============ ABA: REF ============ -->
+  <section class="tab" id="tab-ref">
+    <div class="card">
+      <span class="tag">Deliberações CVM 561/08 e 624/10 · nota explicativa das DFs</span>
+      <h2>REF: o resultado que fica fora do balanço</h2>
+      <p>O espelho do PoC: se a receita entra conforme a obra anda, tudo o que foi <b>vendido mas ainda não construído</b> fica fora do balanço. Receita de vendas a apropriar, custo orçado a incorrer e a margem resultante — o "resultado de exercícios futuros" (REF) — são divulgados apenas em <b>nota explicativa</b>, por determinação das Deliberações CVM 561/08 e 624/10.</p>
+      <p>A <b>margem REF</b> (lucro bruto a apropriar ÷ receita líquida a apropriar) é o indicador antecedente mais importante do setor: é a margem que a DRE vai reconhecer nos próximos 2–3 anos, se o orçamento de obra se confirmar. Companhias saudáveis operam com REF acima da margem corrente — a corrente converge para o backlog.</p>
+      <p>O porém está na condicional: a REF é calculada sobre o <b>custo orçado</b>, uma estimativa gerencial. Estouro de custo (INCC, materiais, mão de obra) reduz a REF e, pior, obriga revisão que comprime a margem corrente de uma só vez.</p>
+      <p class="efeito">Acompanhe a margem REF trimestre a trimestre e compare com a margem reconhecida: gap positivo e estável = margem contratada; REF em queda = o problema de amanhã já está no backlog de hoje.</p>
+      <p class="fonte">Fontes: Deliberações CVM 561/08 e 624/10; FR 2026 da Cyrela, itens 2.8/2.9; releases trimestrais (seção "Reconhecimento de Receita" / backlog).</p>
+    </div>
+  </section>
 
-  <p class="fonte" style="margin-top:4px">Cyrela Update · construído a partir de fontes primárias (RI da Cyrela, CVM, atas e releases oficiais dos pares). Seções futuras do roteiro (Operacional, Soma das partes, Valuation) serão adicionadas em novas versões.</p>
+  <!-- ============ ABA: JUROS ============ -->
+  <section class="tab" id="tab-juros">
+    <div class="card">
+      <span class="tag">CPC 20 (IAS 23) — Custos de Empréstimos</span>
+      <h2>Juros capitalizados no custo</h2>
+      <p>Os juros do financiamento à produção (tipicamente SFH: TR ou poupança + spread) não aparecem no resultado financeiro enquanto a obra anda. Pelo CPC 20, eles são <b>capitalizados no estoque</b> do empreendimento — viram parte do custo do ativo em construção.</p>
+      <p>Quando as unidades são vendidas e o PoC roda, esses juros saem do estoque <b>dentro do custo dos imóveis vendidos</b>, comprimindo a margem bruta. Ou seja: o custo financeiro do projeto está escondido na margem bruta, não na linha de despesa financeira.</p>
+      <p>Por isso o setor divulga a <b>"margem bruta ajustada" (ex-juros capitalizados)</b> ao lado da contábil. A diferença entre as duas mede quanto do aperto de margem é juro, não obra — e cresce quando a Selic sobe ou quando a companhia toma mais dívida de produção.</p>
+      <p class="efeito">Compare sempre as duas margens: contábil para o resultado como ele é; ajustada para a qualidade operacional. Um gap crescente entre elas é ciclo de juros entrando no custo — não necessariamente piora de execução.</p>
+      <p class="fonte">Fontes: CPC 20/IAS 23; releases de Cyrela, Cury, Direcional, MRV e Plano&amp;Plano (todas divulgam a margem ajustada ex-juros).</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: SPES ============ -->
+  <section class="tab" id="tab-spes">
+    <div class="card">
+      <span class="tag">CPC 36 (IFRS 10) · CPC 19 (IFRS 11) · CPC 18 · Lei 4.591/64</span>
+      <h2>Uma SPE por projeto; JVs pela equivalência</h2>
+      <p>Cada empreendimento vive numa <b>SPE</b> (sociedade de propósito específico) — exigência prática do financiamento bancário, do patrimônio de afetação e da gestão de risco jurídico. O balanço consolidado de uma incorporadora é a soma de dezenas ou centenas de SPEs, cada uma com sócios, dívida e caixa próprios.</p>
+      <p>A consequência contábil tem dois andares. SPEs <b>controladas</b> consolidam integralmente, com a fatia dos sócios aparecendo como participação de minoritários. Já os negócios em <b>controle compartilhado</b> — as JVs — entram por uma linha única, a <b>equivalência patrimonial</b>: nem receita, nem margem, nem dívida passam pelo consolidado; só a fatia do lucro.</p>
+      <p>No caso da Cyrela isso é estrutural: Cury, Lavvi e Plano&amp;Plano — três companhias listadas — contribuem apenas via equivalência. O caixa dessas participações só chega de fato via dividendos recebidos.</p>
+      <p class="efeito">A receita consolidada subestima o tamanho do grupo; o lucro captura tudo. Para avaliar a companhia, a leitura natural é soma das partes: operação própria + valor de mercado das participações listadas.</p>
+      <p class="fonte">Fontes: CPC 36, CPC 19, CPC 18; FR 2026 da Cyrela, itens 1.2 e 1.3; DFs consolidadas (linha de equivalência patrimonial).</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: RET ============ -->
+  <section class="tab" id="tab-ret">
+    <div class="card">
+      <span class="tag">Lei 10.931/2004 · RET · patrimônio de afetação</span>
+      <h2>Patrimônio de afetação + RET</h2>
+      <p>Criados no rescaldo do caso Encol, os dois institutos andam juntos. O <b>patrimônio de afetação</b> segrega juridicamente o terreno, a obra e os recebíveis de um empreendimento: se a incorporadora quebrar, aquele patrimônio não entra na massa falida — os compradores terminam a obra. É a base da confiança (e do funding bancário) do sistema.</p>
+      <p>Para o empreendimento afetado, a lei oferece o <b>RET — Regime Especial de Tributação</b>: IRPJ, CSLL, PIS e Cofins são substituídos por um pagamento único de <b>4% da receita mensal recebida</b> (com alíquota reduzida a 1% para projetos de interesse social/MCMV dentro dos limites do programa). A apuração é por SPE, definitiva, sem relação com a margem do projeto.</p>
+      <p>Efeitos em cadeia: a alíquota efetiva do setor é baixa e relativamente insensível ao lucro; projetos de margem alta são ainda mais beneficiados (o tributo não sobe com a margem); e a comparação de lucro líquido entre segmentos ou companhias precisa considerar o mix de regimes (RET 4%, RET 1%, lucro presumido nas SPEs menores).</p>
+      <p class="efeito">Não modele IR/CS de incorporadora com alíquota cheia de 34% — o imposto do setor é, na prática, uma fração da receita, não do lucro.</p>
+      <p class="fonte">Fontes: Lei 10.931/2004 (arts. 1º–10); Lei 4.591/64 (afetação); notas explicativas de tributos das DFs do setor.</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: DISTRATO ============ -->
+  <section class="tab" id="tab-distrato">
+    <div class="card">
+      <span class="tag">Lei 13.786/2018 ("Lei do Distrato")</span>
+      <h2>Lei do distrato</h2>
+      <p>Entre 2015 e 2017, a combinação de recessão com jurisprudência pró-consumidor criou a <b>loteria do distrato</b>: o comprador desistia e os tribunais mandavam devolver quase tudo o que fora pago — na prática, uma opção de compra gratuita contra a incorporadora, exercida em massa justamente quando os preços caíam. As DREs do setor sangraram com estornos de receita.</p>
+      <p>A Lei 13.786/2018 deu a régua: na desistência do comprador, a incorporadora pode reter a <b>pena convencional de até 25% dos valores pagos</b> — ou <b>até 50% quando o empreendimento tem patrimônio de afetação</b> — além de encargos como comissão de corretagem e taxas de fruição, com a devolução do saldo em prazos definidos.</p>
+      <p>Contabilmente, o distrato reverte receita e custo reconhecidos por PoC e devolve a unidade ao estoque — que precisará ser revendida, muitas vezes em condições piores. Por isso o nível de distratos e a venda de estoque pronto são termômetros de qualidade das safras.</p>
+      <p class="efeito">O risco de cauda de 2015–17 caiu de patamar — mas não sumiu: o próprio FR 2026 da Cyrela trocou "a regulamentação reduz o risco" por "não é possível garantir que eliminará os riscos".</p>
+      <p class="fonte">Fontes: Lei 13.786/2018; FR 2026 da Cyrela, item 4.1 (fator de risco de distratos, comparado ao FR 2025).</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: PERMUTA ============ -->
+  <section class="tab" id="tab-permuta">
+    <div class="card">
+      <span class="tag">OCPC 01 (R1) · CPC 12 · CPC 48 (IFRS 9)</span>
+      <h2>Permuta, AVP e recebíveis</h2>
+      <p><b>Permuta</b> é comprar terreno pagando com o próprio projeto: o dono do terreno recebe unidades futuras (permuta física) ou um percentual das vendas (permuta financeira). Pela OCPC 01, o terreno entra no estoque a valor justo, contra um adiantamento de clientes — <b>sem desembolso de caixa</b>. O VGV "100%" divulgado inclui a parte do terrenista; a fatia da incorporadora é o "%CBR" ou "% companhia".</p>
+      <p><b>AVP (CPC 12):</b> recebíveis longos — típicos do financiamento direto pós-chaves — são trazidos a valor presente; a diferença retorna ao resultado como receita financeira ao longo do tempo. Durante a obra, as parcelas são corrigidas por INCC; depois das chaves, por índice de preços + juros.</p>
+      <p><b>Perda esperada (CPC 48):</b> carteiras de crédito próprio — o pró-soluto (parcela do preço financiada pela própria incorporadora) e, no caso da Cyrela, a carteira de home equity da CashMe — exigem provisão por perda esperada desde o dia 1, além de ajustes a valor justo que entram e saem do resultado.</p>
+      <p class="efeito">Permuta é a alavanca de crescer sem caixa (ao custo de dividir o VGV); AVP e PDD fazem o resultado financeiro e as "outras receitas/despesas" carregarem informação econômica real — não são linhas residuais.</p>
+      <p class="fonte">Fontes: OCPC 01 (R1); CPC 12; CPC 48; FR 2026 da Cyrela (CashMe como fator de risco, item 4.1); releases (abertura %CBR e permuta do landbank).</p>
+    </div>
+  </section>
+
+  <p class="fonte" style="margin-top:4px">Cyrela Update · construído a partir de fontes primárias (RI da Cyrela, CVM, atas e releases oficiais). Seções futuras do roteiro (Operacional, Resultados, Soma das partes, Valuation) serão adicionadas em novas versões.</p>
 </div>
 
-
+<script>
+(function () {
+  var tabs = document.getElementById("tabs");
+  function show(name) {
+    var target = document.getElementById("tab-" + name);
+    if (!target) return;
+    tabs.querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b.dataset.tab === name); });
+    document.querySelectorAll("section.tab").forEach(function (s) { s.classList.toggle("on", s === target); });
+    if (history.replaceState) history.replaceState(null, "", "#" + name);
+  }
+  tabs.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    show(b.dataset.tab);
+  });
+  document.getElementById("indice").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-goto]"); if (!b) return;
+    show(b.dataset.goto);
+    window.scrollTo(0, 0);
+  });
+  if (location.hash) show(location.hash.slice(1));
+})();
+</script>
 </body>
 </html>

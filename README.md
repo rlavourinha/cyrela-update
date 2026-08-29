@@ -4,8 +4,9 @@ Dashboard autocontido (HTML + SVG inline, sem dependências externas) do update 
 
 **Ver online:** https://rlavourinha.github.io/cyrela-update/
 
-## Conteúdo (v1.2 · 29/08/2026 · dados até 2T26)
+## Conteúdo (v1.3 · 29/08/2026 · dados até 2T26)
 
-- **Contabilidade** — as 7 normas que regem a incorporação imobiliária no Brasil (PoC/CPC 47, REF, juros capitalizados, SPE/equivalência, patrimônio de afetação + RET, lei do distrato, permuta/AVP) e a ênfase-padrão dos relatórios de auditoria do setor.
+- **Contabilidade** — visão geral das 7 normas que regem a incorporação imobiliária no Brasil e a ênfase-padrão dos relatórios de auditoria do setor.
+- **Uma aba por norma**: PoC (CPC 47), REF (Deliberações CVM 561/624), juros capitalizados (CPC 20), SPEs e JVs (CPC 36/19), patrimônio de afetação + RET (Lei 10.931/04), lei do distrato (Lei 13.786/18) e permuta/AVP/perda esperada (OCPC 01, CPC 12, CPC 48).
 
 Seções futuras do roteiro (Operacional, Resultados, Soma das partes, Valuation) serão adicionadas em novas versões.
