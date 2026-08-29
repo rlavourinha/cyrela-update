@@ -156,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.3 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.4 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -216,42 +216,46 @@
           <h3>1 · Só a obra avança (+10 p.p. de PoC, 60% vendido)</h3>
           <table>
             <tbody>
-              <tr><td>Balanço · Estoques (obra incorrida +6,8 − apropriação 4,1)</td><td>+2,7</td></tr>
-              <tr><td>Balanço · Caixa (paga a obra)</td><td>(6,8)</td></tr>
-              <tr><td>Balanço · Contas a receber</td><td>+6,0</td></tr>
+              <tr><td>Premissa · cliente paga no período</td><td>0%</td></tr>
               <tr><td>DRE · Receita (10% × 60 vendidos)</td><td>+6,0</td></tr>
               <tr><td>DRE · COGS (68 × 10% × 60%)</td><td>(4,1)</td></tr>
               <tr class="total"><td>DRE · Lucro bruto</td><td>+1,9</td></tr>
+              <tr><td>Balanço · Estoques (obra +6,8 − apropriação 4,1)</td><td>+2,7</td></tr>
+              <tr><td>Balanço · Caixa (paga a obra; nada entra)</td><td>(6,8)</td></tr>
+              <tr><td>Balanço · Contas a receber</td><td>+6,0</td></tr>
             </tbody>
           </table>
-          <p class="efeito">Sem vender nada, o tijolo assentado vira receita das unidades já vendidas — e consome caixa.</p>
+          <p class="efeito">Lucro de +1,9 sem entrar um centavo: o tijolo vira receita das unidades já vendidas e o caixa só sai.</p>
         </div>
         <div class="norma">
           <h3>2 · Venda com obra a 40% (unidade de 1,00)</h3>
           <table>
             <tbody>
+              <tr><td>Premissa · cliente paga no ato</td><td>100%</td></tr>
               <tr><td>DRE · Receita (1,00 × 40%)</td><td>+0,40</td></tr>
               <tr><td>DRE · COGS (0,68 × 40%)</td><td>(0,27)</td></tr>
               <tr class="total"><td>DRE · Lucro bruto</td><td>+0,13</td></tr>
-              <tr><td>Balanço · Contas a receber (menos a entrada em caixa)</td><td>+0,40</td></tr>
+              <tr><td>Balanço · Caixa</td><td>+1,00</td></tr>
               <tr><td>Balanço · Estoques</td><td>(0,27)</td></tr>
+              <tr><td>Balanço · Adiantamento de clientes (passivo)</td><td>+0,60</td></tr>
             </tbody>
           </table>
-          <p class="efeito">A venda puxa de uma vez todo o PoC acumulado: quanto mais tarde, maior o reconhecimento instantâneo — é o catch-up das bolhas jovens do gráfico abaixo.</p>
+          <p class="efeito">A venda puxa todo o PoC acumulado de uma vez — e o caixa recebido além do reconhecido (0,60) vira passivo: a receita dele só nasce com a obra.</p>
         </div>
         <div class="norma">
           <h3>3 · Estouro de orçamento (68 → 74; obra 70%, 80% vendido)</h3>
           <table>
             <tbody>
+              <tr><td>Premissa · cliente já pagou</td><td>50% (40 de 80)</td></tr>
               <tr><td>Novo PoC: 47,6 incorrido ÷ 74 orçado</td><td>64,3% (cai)</td></tr>
               <tr><td>DRE · Receita (estorno: 64,3% × 80 vs 70% × 80)</td><td>(4,5)</td></tr>
               <tr><td>DRE · COGS (incorrido das vendidas não muda)</td><td>0,0</td></tr>
               <tr class="total"><td>DRE · Lucro bruto</td><td>(4,5)</td></tr>
-              <tr><td>Balanço · Contas a receber</td><td>(4,5)</td></tr>
+              <tr><td>Balanço · Contas a receber (16,0 → 11,5; caixa intocado)</td><td>(4,5)</td></tr>
               <tr><td>Margem do projeto (vida inteira, de uma vez)</td><td>32% → 26%</td></tr>
             </tbody>
           </table>
-          <p class="efeito">Cumulative catch-up: a revisão reprecifica o passado num único trimestre — e a margem REF do backlog cai junto. É o mecanismo do tombo da Plano&amp;Plano no 2T26.</p>
+          <p class="efeito">Cumulative catch-up: a revisão reprecifica o passado num trimestre — o estorno não devolve caixa, só encolhe o accrual. É o mecanismo do tombo da Plano&amp;Plano no 2T26; a margem REF cai junto.</p>
         </div>
       </div>
     </div>
