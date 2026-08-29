@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v2.0 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v2.1 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -266,6 +266,10 @@
         <button data-esc="cx" class="on">Terreno em caixa</button>
         <button data-esc="pm">Terreno permutado</button>
       </div>
+      <div class="seg" id="segCx" style="margin-left:10px">
+        <button data-cxpol="ret" class="on">Caixa retido até o fim</button>
+        <button data-cxpol="dist">Caixa distribuído</button>
+      </div>
       <div class="tscroll" id="dre100"></div>
       <div class="tscroll" id="bs100"></div>
 
@@ -278,7 +282,7 @@
       </details>
 
       <p class="efeito">Quatro leituras: (1) o PoC nasce alto porque o terreno já está no custo incorrido; (2) a permuta antecipa a DRE (o terrenista conta como vendido no dia 0), mas os dois cenários terminam nos mesmos R$ 100 mi de receita; (3) os juros do SBPE saem por dentro do COGS — mesma obra, margem menor; (4) o gráfico 3 é a moral da história: a receita corre anos à frente do caixa, e o grosso do dinheiro só chega no repasse — mexa no controle de recebimento e veja quanto da espera ele alivia.</p>
-      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC; sem distribuições até T12. Retornos: médias simples dos 13 saldos trimestrais; ROE = lucro do projeto (após juros capitalizados) ÷ PL médio; ROIC = lucro antes dos juros capitalizados ÷ capital investido médio (dívida + PL − caixa); anualizados pela vida de 3 anos do projeto.</p>
+      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC. Política de caixa: "retido" acumula até T12; "distribuído" varre todo caixa livre ao acionista no fim de cada trimestre (o caixa do balanço fica zerado e o PL é reduzido pelas distribuições). Retornos: médias simples dos 13 saldos trimestrais; ROE = lucro do projeto (após juros capitalizados) ÷ PL médio; ROIC = lucro antes dos juros capitalizados ÷ capital investido médio (dívida + PL − caixa); anualizados pela vida de 3 anos do projeto.</p>
     </div>
 </section>
 
@@ -467,7 +471,7 @@
   function rotulo(g, texto, y, cor, negrito) {
     el("text", { x: 834, y: y, fill: cor, "font-size": 13, "font-weight": negrito ? 650 : 400 }, g, texto);
   }
-  function n1(v) { return v.toFixed(1).replace(".", ","); }
+  function n1(v) { if (Math.abs(v) < 0.05) v = 0; return v.toFixed(1).replace(".", ","); }
   function pct(v) { return n1(v) + "%"; }
   function rs(v) { return "R$ " + n1(v) + " mi"; }
 
@@ -519,16 +523,23 @@
     document.getElementById(id).addEventListener("input", desenha);
   });
 
-  var ESC = "cx";
+  var ESC = "cx", CXPOL = "ret";
   document.getElementById("segEsc").addEventListener("click", function (e) {
     var b = e.target.closest("button[data-esc]"); if (!b) return;
     ESC = b.dataset.esc;
     document.querySelectorAll("#segEsc button").forEach(function (x) { x.classList.toggle("on", x === b); });
     demonstrativos();
   });
+  document.getElementById("segCx").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-cxpol]"); if (!b) return;
+    CXPOL = b.dataset.cxpol;
+    document.querySelectorAll("#segCx button").forEach(function (x) { x.classList.toggle("on", x === b); });
+    demonstrativos();
+  });
 
-  function calcDemo(esc) {
+  function calcDemo(esc, pol) {
     var eh_cx = (esc === "cx");
+    var distribui = (pol === "dist");
     var rec = eh_cx ? M.rCx : M.rPm;
     var cogs = eh_cx ? M.cC : M.cCpm;
     var k = eh_cx ? M.kCx : M.kPm;
@@ -541,8 +552,8 @@
       if (q >= 1 && q <= 10) jj += alfa * obraInc[q] * (M.kd / 400);
       jAcum.push(jj);
     }
-    var caixa = [], cr = [], est = [], div = [], adiant = [], aporte = [], lucro = [];
-    var cx = 0, ap = 0;
+    var caixa = [], cr = [], est = [], div = [], adiant = [], aporte = [], lucro = [], dist = [];
+    var cx = 0, ap = 0, dd = 0;
     for (q = 0; q <= 12; q++) {
       var inn = (k[q] - (q ? k[q - 1] : 0)) + (desemb[q] - (q ? desemb[q - 1] : 0));
       var out = (obraInc[q] - (q ? obraInc[q - 1] : 0));
@@ -550,7 +561,9 @@
       if (q === 10) out += alfa * obra + jT;
       cx += inn - out;
       if (cx < -1e-9) { ap += -cx; cx = 0; }
+      if (distribui && cx > 0) { dd += cx; cx = 0; }
       aporte.push(ap);
+      dist.push(dd);
       caixa.push(cx);
       var recMkt = rec[q] - perm * M.poc[q] / 100;
       cr.push(Math.max(0, recMkt - k[q]));
@@ -560,38 +573,40 @@
       lucro.push(rec[q] - cogs[q]);
     }
     return { rec: rec, cogs: cogs, caixa: caixa, cr: cr, est: est, div: div,
-             adiant: adiant, aporte: aporte, lucro: lucro };
+             adiant: adiant, aporte: aporte, lucro: lucro, dist: dist };
   }
 
   function media(arr) { var t = 0; for (var i = 0; i < arr.length; i++) t += arr[i]; return t / arr.length; }
 
   function metricas() {
     var ANOS_PROJ = 3;
-    var res = {};
-    ["cx", "pm"].forEach(function (esc) {
-      var d = calcDemo(esc);
-      var plMed = media(d.aporte.map(function (v, i) { return v + d.lucro[i]; }));
-      var ciMed = media(d.div.map(function (v, i) { return v + d.aporte[i] + d.lucro[i] - d.caixa[i]; }));
-      var lucroFinal = d.lucro[12];
-      var lucroOp = d.rec[12] - M.custo * d.rec[12] / 100;   // antes dos juros capitalizados
-      res[esc] = {
-        roe: 100 * lucroFinal / plMed / ANOS_PROJ,
-        roic: 100 * lucroOp / ciMed / ANOS_PROJ,
-        plMed: plMed, ciMed: ciMed
-      };
+    var combos = [["cx", "ret"], ["cx", "dist"], ["pm", "ret"], ["pm", "dist"]];
+    var res = combos.map(function (c) {
+      var d = calcDemo(c[0], c[1]);
+      var pl = d.aporte.map(function (v, i) { return v + d.lucro[i] - d.dist[i]; });
+      var plMed = media(pl);
+      var ciMed = media(d.div.map(function (v, i) { return v + pl[i] - d.caixa[i]; }));
+      var lucroOp = d.rec[12] - M.custo * d.rec[12] / 100;
+      return { roe: 100 * d.lucro[12] / plMed / ANOS_PROJ, roic: 100 * lucroOp / ciMed / ANOS_PROJ,
+               plMed: plMed, ciMed: ciMed };
     });
+    function lin(nome, f, forte) {
+      var h = "<tr><td>" + nome + "</td>";
+      res.forEach(function (r) { h += "<td>" + (forte ? "<b>" + f(r) + "</b>" : f(r)) + "</td>"; });
+      return h + "</tr>";
+    }
     document.getElementById("ret100").innerHTML =
-      "<table><thead><tr><th></th><th>Terreno em caixa</th><th>Terreno permutado</th></tr></thead><tbody>" +
-      "<tr><td>ROE (lucro ÷ PL médio)</td><td><b>" + pct(res.cx.roe) + " a.a.</b></td><td><b>" + pct(res.pm.roe) + " a.a.</b></td></tr>" +
-      "<tr><td>ROIC (lucro antes dos juros ÷ capital investido médio)</td><td>" + pct(res.cx.roic) + " a.a.</td><td>" + pct(res.pm.roic) + " a.a.</td></tr>" +
-      "<tr><td>PL médio · capital investido médio</td><td>" + rs(res.cx.plMed) + " · " + rs(res.cx.ciMed) + "</td><td>" + rs(res.pm.plMed) + " · " + rs(res.pm.ciMed) + "</td></tr>" +
+      "<table><thead><tr><th></th><th>Caixa · retido</th><th>Caixa · distribuído</th><th>Permuta · retido</th><th>Permuta · distribuído</th></tr></thead><tbody>" +
+      lin("ROE (lucro ÷ PL médio)", function (r) { return pct(r.roe) + " a.a."; }, true) +
+      lin("ROIC (lucro antes dos juros ÷ capital investido médio)", function (r) { return pct(r.roic) + " a.a."; }, false) +
+      lin("PL médio · capital investido médio", function (r) { return rs(r.plMed) + " · " + rs(r.ciMed); }, false) +
       "</tbody></table>";
   }
 
   function demonstrativos() {
-    var d = calcDemo(ESC);
+    var d = calcDemo(ESC, CXPOL);
     var rec = d.rec, cogs = d.cogs, caixa = d.caixa, cr = d.cr, est = d.est,
-        div = d.div, adiant = d.adiant, aporte = d.aporte, lucro = d.lucro;
+        div = d.div, adiant = d.adiant, aporte = d.aporte, lucro = d.lucro, distA = d.dist;
     function linhaT(nome, arr, classe, formata) {
       var h = "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td>";
       for (var i = 0; i <= 12; i++) h += "<td>" + formata(arr[i]) + "</td>";
@@ -622,7 +637,12 @@
       linhaT("Adiantamento do terrenista", adiant, "", n1) +
       linhaT("Capital aportado", aporte, "", n1) +
       linhaT("Lucros acumulados", lucro, "", n1) +
-      linhaT("Passivo + PL", div.map(function (v, i) { return v + adiant[i] + aporte[i] + lucro[i]; }), "total", n1) +
+      linhaT("(−) Distribuições acumuladas", distA, "", function (v) { return v > 0.04 ? "(" + n1(v) + ")" : "0,0"; }) +
+      linhaT("Passivo + PL", div.map(function (v, i) { return v + adiant[i] + aporte[i] + lucro[i] - distA[i]; }), "total", n1) +
+      linhaT("Alavancagem (dívida ÷ PL)", div.map(function (v, i) {
+        var pl = aporte[i] + lucro[i] - distA[i];
+        return pl > 0.5 ? 100 * v / pl : null;
+      }), "", function (v) { return v == null ? "—" : pct(v); }) +
       "</tbody></table>";
     metricas();
   }

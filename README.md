@@ -4,7 +4,7 @@ Dashboard autocontido (HTML + SVG inline, sem dependências externas) do update 
 
 **Ver online:** https://rlavourinha.github.io/cyrela-update/
 
-## Conteúdo (v2.0 · 29/08/2026 · dados até 2T26)
+## Conteúdo (v2.1 · 29/08/2026 · dados até 2T26)
 
 - **Contabilidade** — visão geral das 7 normas que regem a incorporação imobiliária no Brasil e a ênfase-padrão dos relatórios de auditoria do setor.
 - **Projeto 100** — simulador interativo de um empreendimento de R$ 100 mi (regime SBPE) em dois cenários (terreno em caixa vs permutado), trimestre a trimestre. Estreia na aba PoC (vendas, PoC, receita e COGS com/sem juros capitalizados) e avançará pelas demais abas.
