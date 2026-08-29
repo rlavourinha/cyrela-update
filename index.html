@@ -156,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.14 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.15 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -338,6 +338,31 @@
       <p>A <b>margem REF</b> (lucro bruto a apropriar ÷ receita líquida a apropriar) é o indicador antecedente mais importante do setor: é a margem que a DRE vai reconhecer nos próximos 2–3 anos, se o orçamento de obra se confirmar. Companhias saudáveis operam com REF acima da margem corrente — a corrente converge para o backlog.</p>
       <p>O porém está na condicional: a REF é calculada sobre o <b>custo orçado</b>, uma estimativa gerencial. Estouro de custo (INCC, materiais, mão de obra) reduz a REF e, pior, obriga revisão que comprime a margem corrente de uma só vez.</p>
       <p class="efeito">Acompanhe a margem REF trimestre a trimestre e compare com a margem reconhecida: gap positivo e estável = margem contratada; REF em queda = o problema de amanhã já está no backlog de hoje.</p>
+
+      <h3 class="subtit">A conta de tradução — 2T26</h3>
+      <table>
+        <thead><tr><th>Passo</th><th>%</th><th>De onde vem</th></tr></thead>
+        <tbody>
+          <tr><td>Margem REF</td><td>36,2%</td><td>lucro bruto a apropriar ÷ receita líquida a apropriar — <b>ex-juros por construção</b> (o custo orçado não inclui juros a capitalizar) e já líquida dos impostos a apropriar (R$ 254 mi)</td></tr>
+          <tr><td>− juros capitalizados que entrarão no COGS</td><td>−2,9 p.p.</td><td>quando o backlog vira receita, carrega o custo do SFH: no 2T26, R$ 73 mi de juros apropriados ÷ R$ 2.481 mi de receita</td></tr>
+          <tr><td>± revisões de orçamento, distratos e mix de apropriação</td><td>residual</td><td>o custo orçado é estimativa; e o que se apropria num trimestre não é fatia proporcional do backlog (o Vivaz converte mais rápido)</td></tr>
+          <tr class="total"><td>≈ margem bruta reportada esperada</td><td>~33–34%</td><td>reportada efetiva do 2T26: <b>34,4%</b> — a tradução fecha</td></tr>
+          <tr><td>A régua na direção oposta: reportada + juros = ajustada</td><td>37,3%</td><td>34,4% + 2,9 p.p. — <b>esta</b> é a margem comparável à REF, e a própria Cyrela a divulga</td></tr>
+        </tbody>
+      </table>
+      <p class="efeito">REF e reportada nunca serão iguais <b>por construção</b>: a REF exclui os juros capitalizados que a reportada carrega no COGS (~3 p.p. hoje — pedágio que cresce com Selic e dívida de produção). A comparação honesta é <b>ajustada × REF</b>: no 2T26 a ajustada (37,3%) cruzou <b>acima</b> da REF (36,2%) — o que está sendo apropriado hoje roda melhor que a média do backlog, puxado pelo mix Vivaz. Margem contratada, não esticada.</p>
+
+      <h3 class="subtit">Margem bruta × margem REF — histórico (3T05–2T26)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Reportada (planilha RI)</span>
+        <span><i class="sw" style="background:var(--s3)"></i> Ajustada ex-juros (releases)</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Margem REF (releases)</span>
+      </div>
+      <figure id="figRefHist">
+        <svg viewBox="0 0 900 400"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">Três leituras. (1) A régua de 21 anos: nem o superciclo 2005–08 passou de ~45%, e os estouros de obra pós-IPO (4T10: 24,5%) e a crise (3T17: 24,6%) mostram o chão. (2) A REF é divulgada numa banda estreita — 35–36,5% por 18 trimestres — enquanto a ajustada subiu de 32,7% (1T23) até cruzá-la no 2T26: <b>a corrente convergiu para o backlog</b>, como a norma promete. (3) O vão entre reportada e ajustada é o juro do SFH dentro do COGS: ~1,8 p.p. em 2023, ~3 p.p. em 2026 — Selic alta cobra pedágio na margem bruta antes de aparecer no resultado financeiro.</p>
     </div>
   </section>
 
@@ -1285,6 +1310,55 @@
           });
         });
       }
+    });
+  })();
+
+  // ================= REF: historico de margens =================
+  (function () {
+    var LBL = ["3T05", "4T05", "1T06", "2T06", "3T06", "4T06", "1T07", "2T07", "3T07", "4T07", "1T08", "2T08", "3T08", "4T08", "1T09", "2T09", "3T09", "4T09", "1T10", "2T10", "3T10", "4T10", "1T11", "2T11", "3T11", "4T11", "1T12", "2T12", "3T12", "4T12", "1T13", "2T13", "3T13", "4T13", "1T14", "2T14", "3T14", "4T14", "1T15", "2T15", "3T15", "4T15", "1T16", "2T16", "3T16", "4T16", "1T17", "2T17", "3T17", "4T17", "1T18", "2T18", "3T18", "4T18", "1T19", "2T19", "3T19", "4T19", "1T20", "2T20", "3T20", "4T20", "1T21", "2T21", "3T21", "4T21", "1T22", "2T22", "3T22", "4T22", "1T23", "2T23", "3T23", "4T23", "1T24", "2T24", "3T24", "4T24", "1T25", "2T25", "3T25", "4T25", "1T26", "2T26"];
+    var MB = [47.8, 35.9, 44.7, 44.1, 42.6, 39.3, 41.5, 40.2, 43.5, 40.1, 41.9, 40.4, 42.3, 30.4, 37.5, 34.2, 34.0, 33.5, 34.8, 32.6, 35.2, 24.5, 27.4, 27.7, 28.6, 29.1, 29.5, 30.3, 30.9, 35.0, 33.3, 32.6, 32.8, 32.9, 33.3, 33.4, 29.9, 32.3, 34.8, 35.1, 34.7, 33.9, 34.8, 39.6, 31.7, 28.8, 31.1, 26.7, 24.6, 27.0, 27.7, 26.8, 28.3, 25.1, 30.1, 31.3, 30.9, 31.2, 34.1, 32.8, 32.5, 31.8, 34.5, 36.6, 34.7, 33.4, 31.1, 31.3, 33.9, 31.4, 30.7, 32.3, 33.5, 33.7, 31.4, 32.9, 33.3, 31.9, 32.5, 32.7, 33.0, 32.3, 32.9, 34.4];
+    var REF = [36.5, 35.8, 36.0, 36.0, 35.0, 34.8, 34.9, 35.9, 36.1, 36.3, 36.4, 36.4, 36.3, 36.3, 36.3, 36.0, 36.0, 36.2];
+    var AJ = [32.7, 34.1, 35.4, 35.4, 33.1, 34.7, 35.0, 33.4, 34.4, 34.9, 35.3, 33.7, 36.1, 37.3];
+    var R0 = LBL.indexOf("1T22"), A0 = LBL.indexOf("1T23");
+    var fig = document.getElementById("figRefHist");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = LBL.length, PASSO = 816 / (N - 1);
+    function X(i) { return 56 + i * PASSO; }
+    function Y(v) { return 340 - (v - 20) * (320 / 30); }
+    [20, 30, 40, 50].forEach(function (v) {
+      el("line", { x1: 56, y1: Y(v), x2: 872, y2: Y(v), stroke: v > 20 ? "var(--grid)" : "var(--baseline)", "stroke-width": v > 20 ? 1 : 1.5 }, g);
+      el("text", { x: 48, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    LBL.forEach(function (l, i) {
+      if (l.slice(0, 2) === "1T" && (+l.slice(2)) % 2 === 0)
+        el("text", { x: X(i), y: 366, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, "20" + l.slice(2));
+    });
+    function linha(vals, i0, cor, w) {
+      el("polyline", { points: vals.map(function (v, k) { return X(i0 + k) + "," + Y(v).toFixed(1); }).join(" "),
+        fill: "none", stroke: cor, "stroke-width": w, "stroke-linejoin": "round" }, gd);
+    }
+    linha(MB, 0, "var(--s1)", 2);
+    linha(AJ, A0, "var(--s3)", 2.2);
+    linha(REF, R0, "var(--s2)", 2.4);
+    [[AJ, A0, "var(--s3)"], [REF, R0, "var(--s2)"]].forEach(function (sr) {
+      sr[0].forEach(function (v, k) {
+        el("circle", { cx: X(sr[1] + k), cy: Y(v), r: 3, fill: sr[2], stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    LBL.forEach(function (l, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 20, width: PASSO, height: 320, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + l + "</b><div class='row'><span>Reportada</span><em>" + MB[i].toFixed(1) + "%</em></div>";
+        if (i >= A0 && i - A0 < AJ.length) h += "<div class='row'><span>Ajustada ex-juros</span><em>" + AJ[i - A0].toFixed(1) + "%</em></div>";
+        if (i >= R0 && i - R0 < REF.length) h += "<div class='row'><span>Margem REF</span><em>" + REF[i - R0].toFixed(1) + "%</em></div>";
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 250 > b.width) x = e.clientX - b.left - 260;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
     });
   })();
 
