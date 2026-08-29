@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v2.4 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v2.5 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -218,6 +218,12 @@
           <input type="range" id="sImp" min="0" max="6" step="0.5" value="4"></div>
         <div class="ctrl"><label>Rendimento do caixa (Selic, a.a.)<output id="oRc">14,0%</output></label>
           <input type="range" id="sRc" min="8" max="16" step="0.5" value="14"></div>
+        <div class="ctrl"><label>INCC (a.a.) — corrige custos e recebíveis<output id="oIncc">4,0%</output></label>
+          <input type="range" id="sIncc" min="2" max="8" step="0.5" value="4"></div>
+        <div class="ctrl"><label>Valorização do estoque (INCC + p.p.)<output id="oSpr">2,0%</output></label>
+          <input type="range" id="sSpr" min="0" max="4" step="0.5" value="2"></div>
+        <div class="ctrl"><label>G&amp;A marginal (% do VGV)<output id="oGaM">2,0%</output></label>
+          <input type="range" id="sGaM" min="0.5" max="4" step="0.5" value="2"></div>
       </div>
       <p class="readout" id="readout"></p>
       <p class="fonte">Evidência (DFP 2025 + Economatica): a Cyrela roda comerciais de 10,0% da receita (11,0% em 12M) — mas o consolidado dela carrega o selling de projetos por equivalência sem o lucro bruto correspondente, além do descasamento vendas de hoje × receita PoC de safras antigas. Nos pares que consolidam tudo, a mediana é <b>~9%</b> (Cury 9,2 · Direcional 9,4 · Moura Dubeux 8,9 · MRV 8,8 · EZTec 8,5 · Tenda 8,2 · Lavvi 7,8) — default calibrado aí. G&amp;A: Cyrela <b>5,6%</b>, em linha com os pares (4,4–7,0%) — default 5,5%.</p>
@@ -279,6 +285,10 @@
         <button data-cxpol="ret" class="on">Caixa retido até o fim</button>
         <button data-cxpol="dist">Caixa distribuído</button>
       </div>
+      <div class="seg" id="segGa" style="margin-left:10px">
+        <button data-gav="marg" class="on">G&amp;A marginal do projeto</button>
+        <button data-gav="rateio">G&amp;A rateio da companhia</button>
+      </div>
       <div class="tscroll" id="dre100"></div>
       <div class="tscroll" id="bs100"></div>
 
@@ -291,7 +301,7 @@
       </details>
 
       <p class="efeito">Quatro leituras: (1) o PoC nasce alto porque o terreno já está no custo incorrido; (2) a permuta antecipa a DRE (o terrenista conta como vendido no dia 0), mas os dois cenários terminam nos mesmos R$ 100 mi de receita; (3) os juros do SBPE saem por dentro do COGS — mesma obra, margem menor; (4) o gráfico 3 é a moral da história: a receita corre anos à frente do caixa, e o grosso do dinheiro só chega no repasse — mexa no controle de recebimento e veja quanto da espera ele alivia.</p>
-      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC. Política de caixa: "retido" acumula até T12; "distribuído" varre todo caixa livre ao acionista no fim de cada trimestre (o caixa do balanço fica zerado e o PL é reduzido pelas distribuições). DRE completo: comerciais incidem sobre a venda de mercado no trimestre em que ocorre (corretagem/marketing; permuta não paga comissão); G&A é linear em 13 trimestres; RET incide sobre a receita reconhecida e é pago no mesmo trimestre (diferença competência × caixa do RET ignorada); resultado financeiro = rendimento sobre o saldo de caixa do início do trimestre (na política "distribuído" é ~zero, pois o caixa é varrido). ROIC usa NOPAT ex-financeiro (lucro operacional após RET, antes dos juros capitalizados e do rendimento do caixa). Retornos: médias simples dos 13 saldos trimestrais; ROE = lucro do projeto (após juros capitalizados) ÷ PL médio; ROIC = lucro antes dos juros capitalizados ÷ capital investido médio (dívida + PL − caixa); anualizados pela vida de 3 anos do projeto.</p>
+      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC. Política de caixa: "retido" acumula até T12; "distribuído" varre todo caixa livre ao acionista no fim de cada trimestre (o caixa do balanço fica zerado e o PL é reduzido pelas distribuições). DRE completo: comerciais incidem sobre a venda nominal de mercado no trimestre em que ocorre (permuta não paga comissão); G&A é linear em 13 trimestres — com seletor entre <b>rateio da companhia</b> (5,5%, custo médio consolidado) e <b>marginal do projeto</b> (~2%, custo incremental de rodar mais uma SPE numa plataforma existente); RET incide sobre a receita reconhecida e é pago no mesmo trimestre; resultado financeiro = rendimento sobre o saldo de caixa do início do trimestre. Correções (v2.5): custos de obra e saldos devedores dos clientes corrigem pelo INCC (parcelas e repasse corrigidos até a data do pagamento; contratos liquidam no repasse); unidades em estoque valorizam a INCC + spread até serem vendidas (o estoque contábil permanece a custo — a valorização aparece como margem na venda); PoC segue a evolução física da obra. ROIC usa NOPAT ex-financeiro. <b>Ponto de atenção (não modelado)</b>: o terreno "em caixa" é pago à vista em T0; na prática paga-se parcelado e condicionado ao lançamento, o que reduziria o equity médio e elevaria o ROE do cenário caixa — e, em sentido contrário, o landbank real é comprado 1–2 anos antes do lançamento. Retornos: médias simples dos 13 saldos trimestrais; ROE = lucro do projeto (após juros capitalizados) ÷ PL médio; ROIC = lucro antes dos juros capitalizados ÷ capital investido médio (dívida + PL − caixa); anualizados pela vida de 3 anos do projeto.</p>
     </div>
 </section>
 
@@ -396,77 +406,135 @@
   });
   if (location.hash) show(location.hash.slice(1));
 
-  // ================= PROJETO 100 (parametrico) =================
+  // ================= PROJETO 100 — motor nominal =================
   var NS = "http://www.w3.org/2000/svg";
   var VMKT = [20, 28, 34, 42, 50, 58, 65, 72, 78, 82, 85, 92, 100];
   var OBRA_CUM = [0, 1, 3, 7, 13, 20, 27, 34, 40, 45, 48, 48, 48];
   var X = []; for (var t = 0; t <= 12; t++) X.push(48 + t * 47.33);
-  function Y(v) { return 296 - v * 2.68; }
+  function Y(v, max) { return 296 - v * (268 / (max || 100)); }
 
-  function modelo() {
-    var margem = +document.getElementById("sMargem").value;
-    var receb = +document.getElementById("sReceb").value;
-    var terreno = +document.getElementById("sTerreno").value;
-    var permSh = +document.getElementById("sPerm").value;
-    var alfa = +document.getElementById("sDivida").value;
-    var kd = +document.getElementById("sCusto").value;
-    var sell = +document.getElementById("sSell").value;
-    var ga = +document.getElementById("sGa").value;
-    var imp = +document.getElementById("sImp").value;
-    var rc = +document.getElementById("sRc").value;
-    var custo = 100 - margem, obra = custo - terreno;
-    var perm = terreno * permSh / 100;                       // % do VGV que fica com o terrenista
-    var juros = 0, pico = alfa / 100 * obra;
-    for (var q = 1; q <= 10; q++) juros += (alfa / 100) * (OBRA_CUM[q] * obra / 48) * (kd / 400);
-    var m = { margem: margem, receb: receb, juros: juros, perm: perm, permSh: permSh, alfa: alfa, kd: kd,
-      sell: sell, ga: ga, imp: imp, rc: rc,
-      pico: pico, custo: custo, terreno: terreno, obra: obra,
-      poc: [], vCx: [], vPm: [], rCx: [], rPm: [], cS: [], cC: [], cCpm: [], kCx: [], kPm: [] };
-    var i;
-    for (i = 0; i <= 12; i++) {
-      m.poc.push(100 * (terreno + OBRA_CUM[i] * obra / 48) / custo);
-      m.vCx.push(VMKT[i]);
-      m.vPm.push(perm + VMKT[i] * (100 - perm) / 100);
-    }
-    for (i = 0; i <= 12; i++) {
-      m.rCx.push(m.vCx[i] * m.poc[i] / 100);
-      m.rPm.push(m.vPm[i] * m.poc[i] / 100);
-      m.cS.push(custo * m.rCx[i] / 100);
-      m.cC.push((custo + juros) * m.rCx[i] / 100);
-      m.cCpm.push((custo + juros) * m.rPm[i] / 100);
-    }
-    function caixa(fator) {
-      var dv = [], out = [], q, acc, n, pagas;
-      for (i = 0; i <= 12; i++) dv.push((VMKT[i] - (i ? VMKT[i - 1] : 0)) * fator);
-      for (var tt = 0; tt <= 12; tt++) {
-        acc = 0;
-        for (q = 0; q <= tt; q++) {
-          if (q >= 10) { acc += dv[q]; continue; }
-          n = 11 - q;
-          pagas = Math.min(tt - q + 1, n);
-          acc += dv[q] * (m.receb / 100) * (pagas / n);
-          if (tt >= 10) acc += dv[q] * (1 - m.receb / 100);
-        }
-        out.push(acc);
-      }
-      return out;
-    }
-    m.kCx = caixa(1);
-    m.kPm = caixa((100 - perm) / 100);
-    return m;
+  var ESC = "cx", CXPOL = "ret", GAV = "marg";
+
+  function params() {
+    function g(id) { return +document.getElementById(id).value; }
+    return { margem: g("sMargem"), receb: g("sReceb"), terreno: g("sTerreno"), permSh: g("sPerm"),
+      alfa: g("sDivida"), kd: g("sCusto"), sell: g("sSell"), ga: g("sGa"), gam: g("sGaM"),
+      imp: g("sImp"), rc: g("sRc"), incc: g("sIncc"), spr: g("sSpr") };
   }
 
+  // nucleo independente de politica de caixa
+  function motor(P, esc) {
+    var custoConst = 100 - P.margem, terreno = P.terreno, obraConst = custoConst - terreno;
+    var perm = (esc === "pm") ? terreno * P.permSh / 100 : 0;
+    var fat = (100 - perm) / 100;
+    var iq = P.incc / 400, sq = (P.incc + P.spr) / 400, alfa = P.alfa / 100;
+    var q, t;
+    var vendU = [], poc = [];
+    for (t = 0; t <= 12; t++) {
+      vendU.push(perm + VMKT[t] * fat);
+      poc.push(100 * (terreno + OBRA_CUM[t] * obraConst / 48) / custoConst);
+    }
+    var dvU = [], Vq = [];
+    for (q = 0; q <= 12; q++) {
+      dvU.push((VMKT[q] - (q ? VMKT[q - 1] : 0)) * fat);
+      Vq.push(dvU[q] * Math.pow(1 + sq, q));            // estoque valoriza INCC+spread ate a venda
+    }
+    var obNom = [], desemb = [], jAcum = [], jj = 0, ob = 0;
+    for (t = 0; t <= 12; t++) {
+      ob += (OBRA_CUM[t] - (t ? OBRA_CUM[t - 1] : 0)) * obraConst / 48 * Math.pow(1 + iq, t);
+      obNom.push(ob);
+      desemb.push(alfa * ob);
+      if (t >= 1 && t <= 10) jj += desemb[t] * (P.kd / 400);
+      jAcum.push(jj);
+    }
+    var custoSemJ = terreno + obNom[12], jurosTot = jAcum[12];
+    // contratos de mercado corrigem INCC ate a liquidacao (T10; pos-entrega a vista)
+    function fCor(q, t) {
+      if (q >= 10) return 1;
+      return Math.pow(1 + iq, Math.min(t, 10) - q);
+    }
+    var contr = [], k = [], vendNomA = [], va = 0;
+    for (t = 0; t <= 12; t++) {
+      var cv = 0, kk = 0;
+      for (q = 0; q <= t; q++) {
+        cv += Vq[q] * fCor(q, t);
+        if (q >= 10) { kk += Vq[q]; continue; }
+        var n = 11 - q, pago = 0, u;
+        for (u = q; u <= Math.min(t, 10); u++) {
+          if (u < 10) pago += (P.receb / 100) * Vq[q] / n * Math.pow(1 + iq, u - q);
+        }
+        kk += pago;
+        if (t >= 10) kk += Vq[q] * Math.pow(1 + iq, 10 - q) -
+          (function () { var s = 0; for (u = q; u < 10; u++) s += (P.receb / 100) * Vq[q] / n * Math.pow(1 + iq, u - q); return s; })();
+      }
+      contr.push(cv); k.push(kk);
+      va += Vq[t]; vendNomA.push(va + perm);
+    }
+    var recM = [], rec = [], cogsC = [], cogsS = [], sellQ = [];
+    for (t = 0; t <= 12; t++) {
+      recM.push(poc[t] / 100 * contr[t]);
+      rec.push(recM[t] + perm * poc[t] / 100);
+      sellQ.push(P.sell / 100 * Vq[t]);
+    }
+    for (t = 0; t <= 12; t++) {
+      cogsC.push((custoSemJ + jurosTot) * rec[t] / rec[12]);
+      cogsS.push(custoSemJ * rec[t] / rec[12]);
+    }
+    return { perm: perm, vendU: vendU, poc: poc, rec: rec, recM: recM, k: k, cogsC: cogsC, cogsS: cogsS,
+      sellQ: sellQ, obNom: obNom, desemb: desemb, jAcum: jAcum, jurosTot: jurosTot,
+      custoSemJ: custoSemJ, obraConst: obraConst, terreno: terreno, vendNomA: vendNomA };
+  }
+
+  // demonstrativos completos por cenario x politica
+  function ledger(P, esc, pol) {
+    var m = motor(P, esc);
+    var distribui = (pol === "dist");
+    var gaTx = (GAV === "marg") ? P.gam : P.ga;
+    var caixa = [], cr = [], est = [], div = [], adiant = [], aporte = [], dist = [], lucro = [];
+    var recQ = [], cogsQ = [], gaQ = [], impQ = [], rfQ = [], llQ = [];
+    var cx = 0, ap = 0, dd = 0, la = 0, t;
+    for (t = 0; t <= 12; t++) {
+      var dr = m.rec[t] - (t ? m.rec[t - 1] : 0);
+      var dc = m.cogsC[t] - (t ? m.cogsC[t - 1] : 0);
+      var gq = gaTx / 13;
+      var iq2 = P.imp / 100 * dr;
+      var fq = cx * (P.rc / 400);
+      var lq = dr - dc - m.sellQ[t] - gq + fq - iq2;
+      la += lq;
+      var inn = (m.k[t] - (t ? m.k[t - 1] : 0)) + (m.desemb[t] - (t ? m.desemb[t - 1] : 0)) + fq;
+      var out = (m.obNom[t] - (t ? m.obNom[t - 1] : 0)) + m.sellQ[t] + gq + iq2;
+      if (t === 0) out += m.terreno - m.perm;
+      if (t === 10) out += m.desemb[10] + m.jurosTot;
+      cx += inn - out;
+      if (cx < -1e-9) { ap += -cx; cx = 0; }
+      if (distribui && cx > 0) { dd += cx; cx = 0; }
+      caixa.push(cx); aporte.push(ap); dist.push(dd); lucro.push(la);
+      cr.push(Math.max(0, m.recM[t] - m.k[t]));
+      est.push(Math.max(0, m.terreno + m.obNom[t] + m.jAcum[t] - m.cogsC[t]));
+      div.push(t >= 10 ? 0 : m.desemb[t] + m.jAcum[t]);
+      adiant.push(m.perm * (1 - m.poc[t] / 100));
+      recQ.push(dr); cogsQ.push(dc); gaQ.push(gq); impQ.push(iq2); rfQ.push(fq); llQ.push(lq);
+    }
+    return { m: m, caixa: caixa, cr: cr, est: est, div: div, adiant: adiant, aporte: aporte,
+      dist: dist, lucro: lucro, recQ: recQ, cogsQ: cogsQ, gaQ: gaQ, impQ: impQ, rfQ: rfQ, llQ: llQ,
+      sellQ: m.sellQ };
+  }
+
+  // ---------- desenho ----------
   function el(tag, attrs, parent, txt) {
     var e = document.createElementNS(NS, tag);
     Object.keys(attrs).forEach(function (a) { e.setAttribute(a, attrs[a]); });
     if (txt !== undefined) e.textContent = txt;
     parent.appendChild(e); return e;
   }
-  function eixos(fig, unidade) {
-    var g = fig.querySelector(".eixos");
-    [0, 25, 50, 75, 100].forEach(function (v) {
-      el("line", { x1: 48, y1: Y(v), x2: 616, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
-      el("text", { x: 42, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, unidade === "%" ? v + "%" : String(v));
+  function eixos(fig, unidade, max) {
+    var g = fig.querySelector(".eixos"); g.innerHTML = "";
+    var passo = (max || 100) / 4;
+    [0, 1, 2, 3, 4].forEach(function (i) {
+      var v = i * passo;
+      el("line", { x1: 48, y1: Y(v, max), x2: 616, y2: Y(v, max), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 42, y: Y(v, max) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g,
+        unidade === "%" ? v + "%" : String(Math.round(v)));
     });
     [[2, "T2 · obra"], [10, "T10 · entrega"]].forEach(function (mk) {
       el("line", { x1: X[mk[0]], y1: 22, x2: X[mk[0]], y2: 296, stroke: "var(--grid)", "stroke-width": 1, "stroke-dasharray": "3 4" }, g);
@@ -476,72 +544,65 @@
       el("text", { x: X[tk[0]], y: 322, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g, tk[1]);
     });
   }
-  function linha(g, serie, cor, w, dash) {
-    var pts = serie.map(function (v, i) { return X[i] + "," + Y(v).toFixed(1); }).join(" ");
+  function linha(g, serie, cor, w, dash, max) {
+    var pts = serie.map(function (v, i) { return X[i] + "," + Y(v, max).toFixed(1); }).join(" ");
     var a = { points: pts, fill: "none", stroke: cor, "stroke-width": w, "stroke-linejoin": "round" };
     if (dash) a["stroke-dasharray"] = dash;
     el("polyline", a, g);
-  }
-  function rotulo(g, texto, y, cor, negrito) {
-    el("text", { x: 834, y: y, fill: cor, "font-size": 13, "font-weight": negrito ? 650 : 400 }, g, texto);
   }
   function n1(v) { if (Math.abs(v) < 0.05) v = 0; return v.toFixed(1).replace(".", ","); }
   function pct(v) { return n1(v) + "%"; }
   function rs(v) { return "R$ " + n1(v) + " mi"; }
 
   var figA = document.getElementById("figA"), figB = document.getElementById("figB"), figC = document.getElementById("figC");
-  eixos(figA, "%"); eixos(figB, "R$"); eixos(figC, "R$");
+  var MAXB = 125;
+  eixos(figA, "%", 100); eixos(figB, "R$", MAXB); eixos(figC, "R$", MAXB);
 
-  var M;
+  var P, MC, MP;
   function desenha() {
-    M = modelo();
+    P = params();
+    MC = motor(P, "cx"); MP = motor(P, "pm");
+
     var gA = figA.querySelector(".dyn"); gA.innerHTML = "";
-    linha(gA, M.vPm, "var(--s2)", 2.2);
-    linha(gA, M.vCx, "var(--s1)", 2.2);
-    linha(gA, M.poc, "var(--s3)", 2.6);
+    linha(gA, MP.vendU, "var(--s2)", 2.2, null, 100);
+    linha(gA, MC.vendU, "var(--s1)", 2.2, null, 100);
+    linha(gA, MC.poc, "var(--s3)", 2.6, null, 100);
 
     var gB = figB.querySelector(".dyn"); gB.innerHTML = "";
-    linha(gB, M.cC, "var(--ink-1)", 1.8, "2 4");
-    linha(gB, M.cS, "var(--muted)", 1.8, "5 5");
-    linha(gB, M.rPm, "var(--s2)", 2.2);
-    linha(gB, M.rCx, "var(--s1)", 2.2);
+    linha(gB, MC.cogsC, "var(--ink-1)", 1.8, "2 4", MAXB);
+    linha(gB, MC.cogsS, "var(--muted)", 1.8, "5 5", MAXB);
+    linha(gB, MP.rec, "var(--s2)", 2.2, null, MAXB);
+    linha(gB, MC.rec, "var(--s1)", 2.2, null, MAXB);
 
     var gC = figC.querySelector(".dyn"); gC.innerHTML = "";
-    linha(gC, M.rCx, "var(--muted)", 1.8, "5 5");
-    linha(gC, M.kPm, "var(--s2)", 2.2);
-    linha(gC, M.kCx, "var(--s1)", 2.2);
+    linha(gC, MC.rec, "var(--muted)", 1.8, "5 5", MAXB);
+    linha(gC, MP.k.map(function (v, i) { return v; }), "var(--s2)", 2.2, null, MAXB);
+    linha(gC, MC.k, "var(--s1)", 2.2, null, MAXB);
 
-    document.getElementById("oMargem").textContent = M.margem + "%";
-    document.getElementById("oReceb").textContent = M.receb + "%";
-    document.getElementById("oTerreno").textContent = M.terreno + "%";
-    document.getElementById("oPerm").textContent = M.permSh + "%";
-    document.getElementById("oDivida").textContent = M.alfa + "%";
-    document.getElementById("oCusto").textContent = n1(M.kd) + "%";
-    document.getElementById("oSell").textContent = n1(M.sell) + "%";
-    document.getElementById("oGa").textContent = n1(M.ga) + "%";
-    document.getElementById("oImp").textContent = n1(M.imp) + "%";
-    document.getElementById("oRc").textContent = n1(M.rc) + "%";
+    ["Margem", "Receb", "Terreno", "Perm", "Divida", "Custo", "Sell", "Ga", "GaM", "Imp", "Rc", "Incc", "Spr"].forEach(function (nm) {
+      var o = document.getElementById("o" + nm), sld = document.getElementById("s" + nm);
+      if (o && sld) o.textContent = n1(+sld.value) + "%";
+    });
+    var pico = P.alfa / 100 * MC.obNom[12];
     document.getElementById("readout").innerHTML =
-      "Custo orçado: <b>" + rs(M.custo) + "</b> (terreno " + n1(M.terreno) + " + obra " + n1(M.obra) +
-      ") · dívida de produção: " + M.alfa + "% da obra (pico <b>" + rs(M.pico) + "</b>) a " + n1(M.kd) +
-      "% a.a. → juros capitalizados: <b>" + rs(M.juros) + "</b> · COGS contábil: <b>" + rs(M.custo + M.juros) +
-      "</b> · margem bruta contábil: <b>" + pct(100 - M.custo - M.juros) +
-      "</b> · na permuta, o terrenista fica com <b>" + rs(M.perm) + "</b> em unidades (" + M.permSh + "% do terreno; nunca vira caixa) e o mercado compra " + rs(100 - M.perm) + ".";
+      "Custo orçado nominal: <b>" + rs(MC.custoSemJ) + "</b> (terreno " + n1(MC.terreno) + " + obra " + n1(MC.obNom[12]) +
+      ", INCC " + n1(P.incc) + "% a.a.) · juros capitalizados: <b>" + rs(MC.jurosTot) + "</b> (dívida " + P.alfa + "% da obra, pico " + rs(pico) + ", a " + n1(P.kd) +
+      "% a.a.) · receita nominal do projeto: <b>" + rs(MC.rec[12]) + "</b> (estoque valoriza INCC+" + n1(P.spr) +
+      " p.p.) · na permuta, o terrenista fica com " + rs(MP.perm) + " em unidades.";
 
     var ht = "<table><thead><tr><th>Tri</th><th>PoC</th><th>Vendido cx</th><th>Vendido pm</th><th>Receita cx</th><th>Receita pm</th><th>COGS s/ juros</th><th>COGS c/ juros</th><th>Caixa cx</th><th>Caixa pm</th></tr></thead><tbody>";
     for (var i = 0; i <= 12; i++) {
-      ht += "<tr><td>T" + i + "</td><td>" + pct(M.poc[i]) + "</td><td>" + pct(M.vCx[i]) + "</td><td>" + pct(M.vPm[i]) +
-        "</td><td>" + n1(M.rCx[i]) + "</td><td>" + n1(M.rPm[i]) + "</td><td>" + n1(M.cS[i]) + "</td><td>" + n1(M.cC[i]) +
-        "</td><td>" + n1(M.kCx[i]) + "</td><td>" + n1(M.kPm[i]) + "</td></tr>";
+      ht += "<tr><td>T" + i + "</td><td>" + pct(MC.poc[i]) + "</td><td>" + pct(MC.vendU[i]) + "</td><td>" + pct(MP.vendU[i]) +
+        "</td><td>" + n1(MC.rec[i]) + "</td><td>" + n1(MP.rec[i]) + "</td><td>" + n1(MC.cogsS[i]) + "</td><td>" + n1(MC.cogsC[i]) +
+        "</td><td>" + n1(MC.k[i]) + "</td><td>" + n1(MP.k[i]) + "</td></tr>";
     }
     document.getElementById("tabela100").innerHTML = ht + "</tbody></table>";
     demonstrativos();
   }
-  ["sMargem", "sReceb", "sTerreno", "sPerm", "sDivida", "sCusto", "sSell", "sGa", "sImp", "sRc"].forEach(function (id) {
+  ["sMargem", "sReceb", "sTerreno", "sPerm", "sDivida", "sCusto", "sSell", "sGa", "sGaM", "sImp", "sRc", "sIncc", "sSpr"].forEach(function (id) {
     document.getElementById(id).addEventListener("input", desenha);
   });
 
-  var ESC = "cx", CXPOL = "ret";
   document.getElementById("segEsc").addEventListener("click", function (e) {
     var b = e.target.closest("button[data-esc]"); if (!b) return;
     ESC = b.dataset.esc;
@@ -554,72 +615,27 @@
     document.querySelectorAll("#segCx button").forEach(function (x) { x.classList.toggle("on", x === b); });
     demonstrativos();
   });
+  document.getElementById("segGa").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-gav]"); if (!b) return;
+    GAV = b.dataset.gav;
+    document.querySelectorAll("#segGa button").forEach(function (x) { x.classList.toggle("on", x === b); });
+    demonstrativos();
+  });
 
-  function calcDemo(esc, pol) {
-    var eh_cx = (esc === "cx");
-    var distribui = (pol === "dist");
-    var rec = eh_cx ? M.rCx : M.rPm;
-    var cogs = eh_cx ? M.cC : M.cCpm;
-    var k = eh_cx ? M.kCx : M.kPm;
-    var perm = eh_cx ? 0 : M.perm;
-    var jT = M.juros, alfa = M.alfa / 100, obra = M.obra, terreno = M.terreno;
-    var obraInc = [], jAcum = [], desemb = [], jj = 0;
-    for (var q = 0; q <= 12; q++) {
-      obraInc.push(OBRA_CUM[q] * obra / 48);
-      desemb.push(alfa * obraInc[q]);
-      if (q >= 1 && q <= 10) jj += alfa * obraInc[q] * (M.kd / 400);
-      jAcum.push(jj);
-    }
-    var caixa = [], cr = [], est = [], div = [], adiant = [], aporte = [], lucro = [], dist = [];
-    var selQ = [], gaQ = [], impQ = [], rfQ = [], llQ = [];
-    var fatorMkt = eh_cx ? 1 : (100 - perm) / 100;
-    var cx = 0, ap = 0, dd = 0, la = 0;
-    for (q = 0; q <= 12; q++) {
-      var recQ = rec[q] - (q ? rec[q - 1] : 0);
-      var cogsQ = cogs[q] - (q ? cogs[q - 1] : 0);
-      var sq = (M.sell / 100) * (VMKT[q] - (q ? VMKT[q - 1] : 0)) * fatorMkt;
-      var gq = M.ga / 13;
-      var iq = (M.imp / 100) * recQ;
-      var fq = cx * (M.rc / 400);
-      var lq = recQ - cogsQ - sq - gq + fq - iq;
-      la += lq;
-      var inn = (k[q] - (q ? k[q - 1] : 0)) + (desemb[q] - (q ? desemb[q - 1] : 0)) + fq;
-      var out = (obraInc[q] - (q ? obraInc[q - 1] : 0)) + sq + gq + iq;
-      if (q === 0) out += (eh_cx ? terreno : terreno - perm);
-      if (q === 10) out += alfa * obra + jT;
-      cx += inn - out;
-      if (cx < -1e-9) { ap += -cx; cx = 0; }
-      if (distribui && cx > 0) { dd += cx; cx = 0; }
-      aporte.push(ap);
-      dist.push(dd);
-      caixa.push(cx);
-      var recMkt = rec[q] - perm * M.poc[q] / 100;
-      cr.push(Math.max(0, recMkt - k[q]));
-      est.push(Math.max(0, terreno + obraInc[q] + jAcum[q] - cogs[q]));
-      div.push(q >= 10 ? 0 : desemb[q] + jAcum[q]);
-      adiant.push(perm * (1 - M.poc[q] / 100));
-      lucro.push(la);
-      selQ.push(sq); gaQ.push(gq); impQ.push(iq); rfQ.push(fq); llQ.push(lq);
-    }
-    return { rec: rec, cogs: cogs, caixa: caixa, cr: cr, est: est, div: div,
-             adiant: adiant, aporte: aporte, lucro: lucro, dist: dist,
-             selQ: selQ, gaQ: gaQ, impQ: impQ, rfQ: rfQ, llQ: llQ };
-  }
-
-  function media(arr) { var t = 0; for (var i = 0; i < arr.length; i++) t += arr[i]; return t / arr.length; }
+  function media(arr) { var s = 0; for (var i = 0; i < arr.length; i++) s += arr[i]; return s / arr.length; }
+  function soma(arr) { var s = 0; for (var i = 0; i < arr.length; i++) s += arr[i]; return s; }
 
   function metricas() {
     var ANOS_PROJ = 3;
     var combos = [["cx", "ret"], ["cx", "dist"], ["pm", "ret"], ["pm", "dist"]];
     var res = combos.map(function (c) {
-      var d = calcDemo(c[0], c[1]);
+      var d = ledger(P, c[0], c[1]);
       var pl = d.aporte.map(function (v, i) { return v + d.lucro[i] - d.dist[i]; });
       var plMed = media(pl);
       var ciMed = media(d.div.map(function (v, i) { return v + pl[i] - d.caixa[i]; }));
-      var soma = function (a) { var t = 0; for (var i = 0; i < a.length; i++) t += a[i]; return t; };
-      var nopat = (d.rec[12] - M.custo * d.rec[12] / 100) - soma(d.selQ) - soma(d.gaQ) - soma(d.impQ);
+      var nopat = d.m.rec[12] - d.m.custoSemJ - soma(d.sellQ) - soma(d.gaQ) - soma(d.impQ);
       return { roe: 100 * d.lucro[12] / plMed / ANOS_PROJ, roic: 100 * nopat / ciMed / ANOS_PROJ,
-               ll: d.lucro[12], plMed: plMed, ciMed: ciMed };
+        ll: d.lucro[12], plMed: plMed, ciMed: ciMed };
     });
     function lin(nome, f, forte) {
       var h = "<tr><td>" + nome + "</td>";
@@ -636,9 +652,7 @@
   }
 
   function demonstrativos() {
-    var d = calcDemo(ESC, CXPOL);
-    var rec = d.rec, cogs = d.cogs, caixa = d.caixa, cr = d.cr, est = d.est,
-        div = d.div, adiant = d.adiant, aporte = d.aporte, lucro = d.lucro, distA = d.dist;
+    var d = ledger(P, ESC, CXPOL);
     function linhaT(nome, arr, classe, formata) {
       var h = "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td>";
       for (var i = 0; i <= 12; i++) h += "<td>" + formata(arr[i]) + "</td>";
@@ -647,23 +661,21 @@
     var cab = "<thead><tr><th></th>";
     for (var i = 0; i <= 12; i++) cab += "<th>T" + i + "</th>";
     cab += "</tr></thead>";
-    var recQ = [], cogsQ = [], lbQ = [], mgQ = [], opQ = [], mlQ = [];
-    for (i = 0; i <= 12; i++) {
-      recQ.push(rec[i] - (i ? rec[i - 1] : 0));
-      cogsQ.push(cogs[i] - (i ? cogs[i - 1] : 0));
-      lbQ.push(recQ[i] - cogsQ[i]);
-      mgQ.push(recQ[i] > 0.01 ? 100 * lbQ[i] / recQ[i] : null);
-      opQ.push(lbQ[i] - d.selQ[i] - d.gaQ[i]);
-      mlQ.push(recQ[i] > 0.01 ? 100 * d.llQ[i] / recQ[i] : null);
-    }
     function par(v) { return "(" + n1(v) + ")"; }
+    var lbQ = [], mgQ = [], opQ = [], mlQ = [];
+    for (i = 0; i <= 12; i++) {
+      lbQ.push(d.recQ[i] - d.cogsQ[i]);
+      mgQ.push(d.recQ[i] > 0.01 ? 100 * lbQ[i] / d.recQ[i] : null);
+      opQ.push(lbQ[i] - d.sellQ[i] - d.gaQ[i]);
+      mlQ.push(d.recQ[i] > 0.01 ? 100 * d.llQ[i] / d.recQ[i] : null);
+    }
     document.getElementById("dre100").innerHTML = "<table>" + cab + "<tbody>" +
-      linhaT("Receita líquida", recQ, "", n1) +
-      linhaT("(−) COGS c/ juros", cogsQ, "", par) +
+      linhaT("Receita líquida (c/ atualização INCC)", d.recQ, "", n1) +
+      linhaT("(−) COGS c/ juros", d.cogsQ, "", par) +
       linhaT("Lucro bruto", lbQ, "total", n1) +
       linhaT("Margem bruta", mgQ, "", function (v) { return v == null ? "—" : pct(v); }) +
-      linhaT("(−) Despesas comerciais", d.selQ, "", par) +
-      linhaT("(−) G&amp;A", d.gaQ, "", par) +
+      linhaT("(−) Despesas comerciais", d.sellQ, "", par) +
+      linhaT("(−) G&amp;A (" + (GAV === "marg" ? "marginal" : "rateio") + ")", d.gaQ, "", par) +
       linhaT("Resultado operacional", opQ, "", n1) +
       linhaT("(+) Resultado financeiro", d.rfQ, "", n1) +
       linhaT("(−) Impostos (RET s/ receita)", d.impQ, "", par) +
@@ -671,18 +683,18 @@
       linhaT("Margem líquida", mlQ, "", function (v) { return v == null ? "—" : pct(v); }) +
       "</tbody></table>";
     document.getElementById("bs100").innerHTML = "<table>" + cab + "<tbody>" +
-      linhaT("Caixa", caixa, "", n1) +
-      linhaT("Contas a receber", cr, "", n1) +
-      linhaT("Estoques (obra em curso)", est, "", n1) +
-      linhaT("Ativo total", caixa.map(function (v, i) { return v + cr[i] + est[i]; }), "total", n1) +
-      linhaT("Dívida de produção", div, "", n1) +
-      linhaT("Adiantamento do terrenista", adiant, "", n1) +
-      linhaT("Capital aportado", aporte, "", n1) +
-      linhaT("Lucros acumulados", lucro, "", n1) +
-      linhaT("(−) Distribuições acumuladas", distA, "", function (v) { return v > 0.04 ? "(" + n1(v) + ")" : "0,0"; }) +
-      linhaT("Passivo + PL", div.map(function (v, i) { return v + adiant[i] + aporte[i] + lucro[i] - distA[i]; }), "total", n1) +
-      linhaT("Alavancagem (dívida ÷ PL)", div.map(function (v, i) {
-        var pl = aporte[i] + lucro[i] - distA[i];
+      linhaT("Caixa", d.caixa, "", n1) +
+      linhaT("Contas a receber", d.cr, "", n1) +
+      linhaT("Estoques (obra em curso)", d.est, "", n1) +
+      linhaT("Ativo total", d.caixa.map(function (v, i) { return v + d.cr[i] + d.est[i]; }), "total", n1) +
+      linhaT("Dívida de produção", d.div, "", n1) +
+      linhaT("Adiantamento do terrenista", d.adiant, "", n1) +
+      linhaT("Capital aportado", d.aporte, "", n1) +
+      linhaT("Lucros acumulados", d.lucro, "", n1) +
+      linhaT("(−) Distribuições acumuladas", d.dist, "", function (v) { return v > 0.04 ? "(" + n1(v) + ")" : "0,0"; }) +
+      linhaT("Passivo + PL", d.div.map(function (v, i) { return v + d.adiant[i] + d.aporte[i] + d.lucro[i] - d.dist[i]; }), "total", n1) +
+      linhaT("Alavancagem (dívida ÷ PL)", d.div.map(function (v, i) {
+        var pl = d.aporte[i] + d.lucro[i] - d.dist[i];
         return pl > 0.5 ? 100 * v / pl : null;
       }), "", function (v) { return v == null ? "—" : pct(v); }) +
       "</tbody></table>";
@@ -703,17 +715,17 @@
       r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
     })(i);
   }
-  function row(k, v) { return "<div class='row'><span>" + k + "</span><em>" + v + "</em></div>"; }
+  function row(k2, v) { return "<div class='row'><span>" + k2 + "</span><em>" + v + "</em></div>"; }
   bindCols(figA, function (i) {
-    return "<b>T" + i + "</b>" + row("Vendido (caixa)", pct(M.vCx[i])) + row("Vendido (permuta)", pct(M.vPm[i])) + row("PoC", pct(M.poc[i]));
+    return "<b>T" + i + "</b>" + row("Vendido (caixa)", pct(MC.vendU[i])) + row("Vendido (permuta)", pct(MP.vendU[i])) + row("PoC", pct(MC.poc[i]));
   });
   bindCols(figB, function (i) {
-    return "<b>T" + i + "</b>" + row("Receita (caixa)", rs(M.rCx[i])) + row("Receita (permuta)", rs(M.rPm[i])) +
-      row("COGS s/ juros", rs(M.cS[i])) + row("COGS c/ juros", rs(M.cC[i]));
+    return "<b>T" + i + "</b>" + row("Receita (caixa)", rs(MC.rec[i])) + row("Receita (permuta)", rs(MP.rec[i])) +
+      row("COGS s/ juros", rs(MC.cogsS[i])) + row("COGS c/ juros", rs(MC.cogsC[i]));
   });
   bindCols(figC, function (i) {
-    return "<b>T" + i + "</b>" + row("Caixa (caixa)", rs(M.kCx[i])) + row("Caixa (permuta)", rs(M.kPm[i])) +
-      row("Receita reconhecida", rs(M.rCx[i])) + row("Gap receita − caixa", rs(M.rCx[i] - M.kCx[i]));
+    return "<b>T" + i + "</b>" + row("Caixa (caixa)", rs(MC.k[i])) + row("Caixa (permuta)", rs(MP.k[i])) +
+      row("Receita reconhecida (cx)", rs(MC.rec[i])) + row("Gap receita − caixa", rs(MC.rec[i] - MC.k[i]));
   });
   desenha();
 })();
