@@ -109,6 +109,15 @@
   .q { min-width: 0; }
   .q .subtit { margin-top: 4px; }
   .qctrl .controles { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 10px; }
+  .lab { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 8px 22px; align-items: start; }
+  @media (max-width: 900px) { .lab { grid-template-columns: 1fr; } }
+  .labrail { position: sticky; top: 12px; }
+  .labrail .controles { grid-template-columns: 1fr; gap: 7px; padding: 10px 12px 8px; margin-bottom: 8px; }
+  .labrail .ctrl label { font-size: 11px; margin-bottom: 1px; }
+  .labrail .ctrl output { font-size: 11.5px; }
+  .labrail .seg { display: flex; width: 100%; margin: 0 0 6px; }
+  .labrail .seg button { flex: 1 1 50%; padding: 4px 4px; font-size: 11px; }
+  .labcharts .subtit { margin-top: 2px; }
   .seg { display: inline-flex; border: 1px solid var(--grid); border-radius: 8px; overflow: hidden; margin: 0 0 10px; }
   .seg button {
     appearance: none; border: none; background: none; font: inherit; font-size: 12.5px;
@@ -147,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v3.9 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.0 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -280,10 +289,9 @@
       <h2>Lançamento 100M</h2>
       <p class="desc">R$ 100 mi de VGV, regime SBPE, dois cenários: terreno em caixa ou permutado. Ajuste as premissas — tudo recalcula.</p>
 
-      <div class="grid2x2">
-      <div class="q qctrl">
-      <h3 class="subtit">Premissas</h3>
-      <div class="controles">
+      <div class="lab">
+        <div class="labrail">
+          <div class="controles">
         <div class="ctrl"><label>Margem bruta (ex-juros)<output id="oMargem">32%</output></label>
           <input type="range" id="sMargem" min="30" max="40" step="1" value="32"></div>
         <div class="ctrl"><label>Recebido durante a obra<output id="oReceb">30%</output></label>
@@ -309,12 +317,17 @@
         <div class="ctrl"><label>G&amp;A (% do VGV, linear)<output id="oGaM">2,0%</output></label>
           <input type="range" id="sGaM" min="0.5" max="8" step="0.5" value="2"></div>
       </div>
-      <p class="readout" id="readout"></p>
-      
+          <div class="seg" id="segEsc">
+        <button data-esc="cx" class="on">Terreno em caixa</button>
+        <button data-esc="pm">Terreno permutado</button>
       </div>
-
-      <div class="q">
-      <h3 class="subtit">1 · Vendas e PoC (% do total)</h3>
+          <div class="seg" id="segCx">
+        <button data-cxpol="ret" class="on">Caixa retido até o fim</button>
+        <button data-cxpol="dist">Caixa distribuído</button>
+      </div>
+        </div>
+        <div class="labcharts">
+          <h3 class="subtit">1 · Vendas e PoC (% do total)</h3>
       <div class="legend">
         <span><i class="sw" style="background:var(--s1)"></i> Vendido — terreno em caixa</span>
         <span><i class="sw" style="background:var(--s2)"></i> Vendido — permuta</span>
@@ -326,10 +339,7 @@
         </svg>
         <div class="tt"></div>
       </figure>
-      </div>
-
-      <div class="q">
-      <h3 class="subtit">2 · Receita e COGS acumulados (R$ milhões)</h3>
+          <h3 class="subtit">2 · Receita e COGS acumulados (R$ milhões)</h3>
       <div class="legend">
         <span><i class="sw" style="background:var(--s1)"></i> Receita — terreno em caixa</span>
         <span><i class="sw" style="background:var(--s2)"></i> Receita — permuta</span>
@@ -342,10 +352,7 @@
         </svg>
         <div class="tt"></div>
       </figure>
-      </div>
-
-      <div class="q">
-      <h3 class="subtit">3 · Caixa recebido acumulado (R$ milhões)</h3>
+          <h3 class="subtit">3 · Caixa recebido acumulado (R$ milhões)</h3>
       <div class="legend">
         <span><i class="sw" style="background:var(--s1)"></i> Recebido — terreno em caixa</span>
         <span><i class="sw" style="background:var(--s2)"></i> Recebido — permuta</span>
@@ -357,18 +364,13 @@
         </svg>
         <div class="tt"></div>
       </figure>
+        </div>
       </div>
-      </div>
+      <p class="readout" id="readout"></p>
 
       <h3 class="subtit">4 · DRE e Balanço trimestrais do projeto (R$ milhões)</h3>
-      <div class="seg" id="segEsc">
-        <button data-esc="cx" class="on">Terreno em caixa</button>
-        <button data-esc="pm">Terreno permutado</button>
-      </div>
-      <div class="seg" id="segCx" style="margin-left:10px">
-        <button data-cxpol="ret" class="on">Caixa retido até o fim</button>
-        <button data-cxpol="dist">Caixa distribuído</button>
-      </div>
+      
+      
       <div class="tscroll" id="dre100"></div>
       <div class="tscroll" id="bs100"></div>
 
