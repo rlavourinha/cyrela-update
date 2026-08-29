@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v2.2 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v2.3 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -210,16 +210,17 @@
           <input type="range" id="sDivida" min="0" max="80" step="5" value="60"></div>
         <div class="ctrl"><label>Custo da dívida (a.a.)<output id="oCusto">12,0%</output></label>
           <input type="range" id="sCusto" min="8" max="16" step="0.5" value="12"></div>
-        <div class="ctrl"><label>Comerciais (% do VGV vendido)<output id="oSell">4%</output></label>
-          <input type="range" id="sSell" min="2" max="6" step="0.5" value="4"></div>
-        <div class="ctrl"><label>G&amp;A (% do VGV, linear)<output id="oGa">4%</output></label>
-          <input type="range" id="sGa" min="2" max="6" step="0.5" value="4"></div>
+        <div class="ctrl"><label>Comerciais (% do VGV vendido)<output id="oSell">11%</output></label>
+          <input type="range" id="sSell" min="6" max="14" step="0.5" value="11"></div>
+        <div class="ctrl"><label>G&amp;A (% do VGV, linear)<output id="oGa">5,5%</output></label>
+          <input type="range" id="sGa" min="3" max="8" step="0.5" value="5.5"></div>
         <div class="ctrl"><label>Imposto s/ receita (RET)<output id="oImp">4,0%</output></label>
           <input type="range" id="sImp" min="0" max="6" step="0.5" value="4"></div>
-        <div class="ctrl"><label>Rendimento do caixa (a.a.)<output id="oRc">10,0%</output></label>
-          <input type="range" id="sRc" min="6" max="14" step="0.5" value="10"></div>
+        <div class="ctrl"><label>Rendimento do caixa (Selic, a.a.)<output id="oRc">14,0%</output></label>
+          <input type="range" id="sRc" min="8" max="16" step="0.5" value="14"></div>
       </div>
       <p class="readout" id="readout"></p>
+      <p class="fonte">Evidência Cyrela (Economatica, consolidado até 2T26): despesas comerciais = <b>11,0%</b> da receita nos últimos 12M (11,3% das vendas contratadas %CBR s/ permuta) e 9,9% em 36M; G&amp;A = <b>5,5%</b> da receita em 12M e 6,1% em 36M — defaults dos sliders calibrados no 12M.</p>
       </div>
 
       <div class="q">
@@ -618,7 +619,7 @@
       var soma = function (a) { var t = 0; for (var i = 0; i < a.length; i++) t += a[i]; return t; };
       var nopat = (d.rec[12] - M.custo * d.rec[12] / 100) - soma(d.selQ) - soma(d.gaQ) - soma(d.impQ);
       return { roe: 100 * d.lucro[12] / plMed / ANOS_PROJ, roic: 100 * nopat / ciMed / ANOS_PROJ,
-               plMed: plMed, ciMed: ciMed };
+               ll: d.lucro[12], plMed: plMed, ciMed: ciMed };
     });
     function lin(nome, f, forte) {
       var h = "<tr><td>" + nome + "</td>";
@@ -629,6 +630,7 @@
       "<table><thead><tr><th></th><th>Caixa · retido</th><th>Caixa · distribuído</th><th>Permuta · retido</th><th>Permuta · distribuído</th></tr></thead><tbody>" +
       lin("ROE (lucro líquido ÷ PL médio)", function (r) { return pct(r.roe) + " a.a."; }, true) +
       lin("ROIC (NOPAT ex-financeiro ÷ capital investido médio)", function (r) { return pct(r.roic) + " a.a."; }, false) +
+      lin("Lucro líquido do projeto (T0–T12)", function (r) { return rs(r.ll); }, false) +
       lin("PL médio · capital investido médio", function (r) { return rs(r.plMed) + " · " + rs(r.ciMed); }, false) +
       "</tbody></table>";
   }
