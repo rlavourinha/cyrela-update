@@ -104,6 +104,16 @@
   .q { min-width: 0; }
   .q .subtit { margin-top: 4px; }
   .qctrl .controles { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-bottom: 10px; }
+  .seg { display: inline-flex; border: 1px solid var(--grid); border-radius: 8px; overflow: hidden; margin: 0 0 10px; }
+  .seg button {
+    appearance: none; border: none; background: none; font: inherit; font-size: 12.5px;
+    color: var(--ink-2); padding: 6px 14px; cursor: pointer;
+  }
+  .seg button.on { background: var(--s1); color: #fff; font-weight: 650; }
+  .tscroll { overflow-x: auto; margin: 0 0 14px; }
+  .tscroll table { width: 100%; }
+  .tscroll th, .tscroll td { white-space: nowrap; }
+  .tscroll tr.total td { font-weight: 650; color: var(--ink-1); border-top: 1.5px solid var(--baseline); }
   .subtit { font-size: 13.5px; margin: 18px 0 6px; color: var(--ink-1); }
   .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-2); margin: 0 0 6px; }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -132,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v1.8 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v1.9 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -251,13 +261,21 @@
       </div>
       </div>
 
+      <h3 class="subtit">4 · DRE e Balanço trimestrais do projeto (R$ milhões)</h3>
+      <div class="seg" id="segEsc">
+        <button data-esc="cx" class="on">Terreno em caixa</button>
+        <button data-esc="pm">Terreno permutado</button>
+      </div>
+      <div class="tscroll" id="dre100"></div>
+      <div class="tscroll" id="bs100"></div>
+
       <details>
-        <summary>Ver tabela trimestral</summary>
+        <summary>Ver tabela trimestral das curvas</summary>
         <div id="tabela100"></div>
       </details>
 
       <p class="efeito">Quatro leituras: (1) o PoC nasce alto porque o terreno já está no custo incorrido; (2) a permuta antecipa a DRE (o terrenista conta como vendido no dia 0), mas os dois cenários terminam nos mesmos R$ 100 mi de receita; (3) os juros do SBPE saem por dentro do COGS — mesma obra, margem menor; (4) o gráfico 3 é a moral da história: a receita corre anos à frente do caixa, e o grosso do dinheiro só chega no repasse — mexa no controle de recebimento e veja quanto da espera ele alivia.</p>
-      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos ignorados.</p>
+      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC; sem distribuições até T12.</p>
     </div>
 </section>
 
@@ -382,7 +400,7 @@
     for (var q = 1; q <= 10; q++) juros += (alfa / 100) * (OBRA_CUM[q] * obra / 48) * (kd / 400);
     var m = { margem: margem, receb: receb, juros: juros, perm: perm, permSh: permSh, alfa: alfa, kd: kd,
       pico: pico, custo: custo, terreno: terreno, obra: obra,
-      poc: [], vCx: [], vPm: [], rCx: [], rPm: [], cS: [], cC: [], kCx: [], kPm: [] };
+      poc: [], vCx: [], vPm: [], rCx: [], rPm: [], cS: [], cC: [], cCpm: [], kCx: [], kPm: [] };
     var i;
     for (i = 0; i <= 12; i++) {
       m.poc.push(100 * (terreno + OBRA_CUM[i] * obra / 48) / custo);
@@ -394,6 +412,7 @@
       m.rPm.push(m.vPm[i] * m.poc[i] / 100);
       m.cS.push(custo * m.rCx[i] / 100);
       m.cC.push((custo + juros) * m.rCx[i] / 100);
+      m.cCpm.push((custo + juros) * m.rPm[i] / 100);
     }
     function caixa(fator) {
       var dv = [], out = [], q, acc, n, pagas;
@@ -491,10 +510,85 @@
         "</td><td>" + n1(M.kCx[i]) + "</td><td>" + n1(M.kPm[i]) + "</td></tr>";
     }
     document.getElementById("tabela100").innerHTML = ht + "</tbody></table>";
+    demonstrativos();
   }
   ["sMargem", "sReceb", "sTerreno", "sPerm", "sDivida", "sCusto"].forEach(function (id) {
     document.getElementById(id).addEventListener("input", desenha);
   });
+
+  var ESC = "cx";
+  document.getElementById("segEsc").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-esc]"); if (!b) return;
+    ESC = b.dataset.esc;
+    document.querySelectorAll("#segEsc button").forEach(function (x) { x.classList.toggle("on", x === b); });
+    demonstrativos();
+  });
+
+  function demonstrativos() {
+    var eh_cx = (ESC === "cx");
+    var rec = eh_cx ? M.rCx : M.rPm;
+    var cogs = eh_cx ? M.cC : M.cCpm;
+    var k = eh_cx ? M.kCx : M.kPm;
+    var perm = eh_cx ? 0 : M.perm;
+    var jT = M.juros, alfa = M.alfa / 100, obra = M.obra, terreno = M.terreno;
+    var obraInc = [], jAcum = [], desemb = [], jj = 0;
+    for (var q = 0; q <= 12; q++) {
+      obraInc.push(OBRA_CUM[q] * obra / 48);
+      desemb.push(alfa * obraInc[q]);
+      if (q >= 1 && q <= 10) jj += alfa * obraInc[q] * (M.kd / 400);
+      jAcum.push(jj);
+    }
+    var caixa = [], cr = [], est = [], div = [], adiant = [], aporte = [], lucro = [];
+    var cx = 0, ap = 0;
+    for (q = 0; q <= 12; q++) {
+      var inn = (k[q] - (q ? k[q - 1] : 0)) + (desemb[q] - (q ? desemb[q - 1] : 0));
+      var out = (obraInc[q] - (q ? obraInc[q - 1] : 0));
+      if (q === 0 && eh_cx) out += terreno;
+      if (q === 10) out += alfa * obra + jT;
+      cx += inn - out;
+      if (cx < -1e-9) { ap += -cx; cx = 0; }
+      aporte.push(ap);
+      caixa.push(cx);
+      var recMkt = rec[q] - perm * M.poc[q] / 100;
+      cr.push(Math.max(0, recMkt - k[q]));
+      est.push(Math.max(0, terreno + obraInc[q] + jAcum[q] - cogs[q]));
+      div.push(q >= 10 ? 0 : desemb[q] + jAcum[q]);
+      adiant.push(perm * (1 - M.poc[q] / 100));
+      lucro.push(rec[q] - cogs[q]);
+    }
+    function linhaT(nome, arr, classe, formata) {
+      var h = "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td>";
+      for (var i = 0; i <= 12; i++) h += "<td>" + formata(arr[i]) + "</td>";
+      return h + "</tr>";
+    }
+    var cab = "<thead><tr><th></th>";
+    for (var i = 0; i <= 12; i++) cab += "<th>T" + i + "</th>";
+    cab += "</tr></thead>";
+    var recQ = [], cogsQ = [], lbQ = [], mgQ = [];
+    for (i = 0; i <= 12; i++) {
+      recQ.push(rec[i] - (i ? rec[i - 1] : 0));
+      cogsQ.push(cogs[i] - (i ? cogs[i - 1] : 0));
+      lbQ.push(recQ[i] - cogsQ[i]);
+      mgQ.push(recQ[i] > 0.01 ? 100 * lbQ[i] / recQ[i] : null);
+    }
+    document.getElementById("dre100").innerHTML = "<table>" + cab + "<tbody>" +
+      linhaT("Receita líquida", recQ, "", n1) +
+      linhaT("(−) COGS c/ juros", cogsQ, "", function (v) { return "(" + n1(v) + ")"; }) +
+      linhaT("Lucro bruto", lbQ, "total", n1) +
+      linhaT("Margem bruta", mgQ, "", function (v) { return v == null ? "—" : pct(v); }) +
+      "</tbody></table>";
+    document.getElementById("bs100").innerHTML = "<table>" + cab + "<tbody>" +
+      linhaT("Caixa", caixa, "", n1) +
+      linhaT("Contas a receber", cr, "", n1) +
+      linhaT("Estoques (obra em curso)", est, "", n1) +
+      linhaT("Ativo total", caixa.map(function (v, i) { return v + cr[i] + est[i]; }), "total", n1) +
+      linhaT("Dívida de produção", div, "", n1) +
+      linhaT("Adiantamento do terrenista", adiant, "", n1) +
+      linhaT("Capital aportado", aporte, "", n1) +
+      linhaT("Lucros acumulados", lucro, "", n1) +
+      linhaT("Passivo + PL", div.map(function (v, i) { return v + adiant[i] + aporte[i] + lucro[i]; }), "total", n1) +
+      "</tbody></table>";
+  }
 
   function bindCols(fig, render) {
     var g = fig.querySelector(".cols"), tt = fig.querySelector(".tt");
