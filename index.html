@@ -156,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.8 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.9 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -297,16 +297,20 @@
       <p class="efeito">O ciclo de vida em uma foto: projetos recém-entrados apropriam em catch-up (até 49% num único trimestre); a obra a pleno vapor roda 5–10% por trimestre; o fim de vida pinga 0–3%. Os 40 nomeados somam R$ 1,3 bi no trimestre — 52% do total apropriado de R$ 2,5 bi.</p>
       <details><summary>Ver os 40 empreendimentos</summary><div class="tscroll" id="tabPoc"></div></details>
 
-      <h3 class="subtit">PoC acumulado real (1T24–2T26, 109 empreendimentos em 6 releases)</h3>
+      <h3 class="subtit">PoC acumulado real por safra (1T22–2T26, 14 releases)</h3>
       <div class="legend">
-        <span><i class="sw" style="background:var(--s1)"></i> Média por idade (acumulada)</span>
-        <span style="color:var(--muted)"><i class="sw" style="background:var(--baseline)"></i> <span style="color:var(--ink-2)">Projetos individuais (séries quase completas)</span></span>
+        <span><i class="sw" style="background:var(--s1)"></i> Média geral</span>
+        <span style="color:var(--muted)"><i class="sw dash" style="color:var(--muted)"></i> <span style="color:var(--ink-2)">Safra até 2022</span></span>
+        <span><i class="sw" style="background:var(--s3)"></i> Safra 2023</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Safra 2024</span>
+        <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">Safra 2025–26</span></span>
+        <span style="color:var(--muted)"><i class="sw" style="background:var(--baseline)"></i> <span style="color:var(--ink-2)">Projetos individuais</span></span>
       </div>
       <figure id="figPocAc">
         <svg viewBox="0 0 900 400"><g class="eixos"></g><g class="dyn"></g><g class="cols" fill="transparent"></g></svg>
         <div class="tt"></div>
       </figure>
-      <p class="efeito">Dois regimes de nascimento: projetos que entram reconhecendo 40–53% de uma vez (terreno comprado e obra acumulada) e projetos que nascem em ~1% e aceleram (consistente com terreno permutado — sem custo de terreno no incorrido). No agregado, o catch-up médio de entrada é 32%, o miolo da obra apropria 5–7,5% por trimestre (idades 5–9) e a média chega a ~91% na idade 12 — a cauda além disso é de obras longas e da censura do anexo (só os maiores de cada trimestre são nomeados).</p>
+      <p class="efeito">Dois achados. (1) Dois regimes de nascimento: projetos que entram reconhecendo 40–53% de uma vez (terreno comprado, obra acumulada) e projetos que nascem em ~1% e aceleram (consistente com terreno permutado). (2) <b>A velocidade mudou por safra</b>: as safras 2023–24 acumulam ~56% do PoC até a idade 6, contra ~29% nas safras até 2022 — reconhecimento ~2× mais rápido, puxado por catch-ups de entrada maiores e obra mais veloz; a safra 2025–26 segue o padrão novo. Ressalva: o anexo nomeia só os maiores de cada trimestre, e as idades baixas da safra "até 2022" vêm apenas dos projetos iniciados dentro de 2022.</p>
     </div>
 </section>
 
@@ -1137,49 +1141,59 @@
     });
     document.getElementById("tabPoc").innerHTML = ht + "</tbody></table>";
 
-    // ---- PoC acumulado real ----
-    var AC = {"acum": [32.2, 33.9, 35.7, 38.7, 42.4, 47.3, 53.3, 60.8, 67.8, 74.4, 80.2, 85.8, 90.7], "n": [47, 27, 26, 23, 18, 29, 26, 26, 27, 29, 20, 17, 14], "curvas": [{"n": "La Isla Residence Club", "s": "Alto Padrão", "ini": "mar-24", "p": [1.0, 2.0, 2.0, 4.0, 8.0, 13.0, 21.0, 30.0, 37.0, 43.0]}, {"n": "Ox Park Design By Edsa", "s": "Alto Padrão", "ini": "set-24", "p": [0.0, 0.0, 0.0, 1.0, 4.0, 9.0, 15.0, 24.0]}, {"n": "On The Sky – Wanders & Yoo", "s": "Alto Padrão", "ini": "dez-24", "p": [2.0, 4.0, 5.0, 7.0, 9.0, 11.0, 13.0]}, {"n": "Vivaz Santa Marina", "s": "MCMV 2 e 3", "ini": "jul-24", "p": [1.0, 2.0, 4.0, 8.0, 15.5, 26.5, 38.5, 48.5]}, {"n": "Vivaz Parque Prime Freguesia Do Ó", "s": "MCMV 2 e 3", "ini": "out-24", "p": [6.0, 12.0, 18.0, 26.0, 35.0, 45.0, 55.0]}, {"n": "Vista Venezia", "s": "Alto Padrão", "ini": "dez-24", "p": [3.0, 6.0, 7.0, 8.0, 9.0, 10.0]}]};
+    // ---- PoC acumulado real por safra ----
+    var AC = {"acum": [33.0, 34.6, 37.1, 41.0, 45.1, 51.3, 58.3, 65.8, 72.7, 79.0, 84.9, 90.1, 94.9, 99.4, 100], "n": [106, 58, 52, 53, 43, 63, 54, 53, 50, 49, 36, 33, 26, 16, 7], "curvas": [{"n": "Eden Park By Dror", "s": "Alto Padrão", "ini": "mar-23", "p": [4.0, 8.0, 10.0, 14.0, 17.0, 21.0, 26.0, 34.0, 42.0, 51.0, 60.0, 69.0, 76.0]}, {"n": "Mandarim The Legend", "s": "Alto Padrão", "ini": "mar-24", "p": [12, 19.0, 21.0, 24.0, 26.0, 29.0, 33.0, 41.0, 50.0, 60.0]}, {"n": "La Isla Residence Club", "s": "Alto Padrão", "ini": "mar-24", "p": [33, 34, 34, 36, 40, 45, 53, 62, 69, 75]}, {"n": "Lis Moema", "s": "Alto Padrão", "ini": "nov-23", "p": [48, 50, 52, 54, 57, 60, 66, 73, 81, 86, 91]}, {"n": "Ox Park Design By Edsa", "s": "Alto Padrão", "ini": "set-24", "p": [33, 33, 33, 34, 37.0, 42.0, 48.0, 57.0]}, {"n": "Casa Ibirapuera", "s": "Alto Padrão", "ini": "jul-22", "p": [2.0, 4.0, 5.0, 6.0, 7.0, 9.0, 12.0, 15.0, 20.0, 26.0, 31.0, 36.0, 41.0]}, {"n": "On The Sky Cyrela By Yoo", "s": "Alto Padrão", "ini": "jun-23", "p": [38, 38, 39, 41, 43, 46, 50, 55, 60, 66, 73, 78, 81]}, {"n": "Only By Living", "s": "Médio", "ini": "nov-23", "p": [1.0, 2.0, 5.0, 10.0, 19.0, 28.0, 40.0, 52.0, 62.0, 67.0, 72.0]}, {"n": "On The Sky – Wanders & Yoo", "s": "Alto Padrão", "ini": "dez-24", "p": [37, 39, 40, 42, 44.0, 46.0, 48.0]}, {"n": "Casa Eden By Yoo West", "s": "Alto Padrão", "ini": "dez-23", "p": [41, 41, 41, 41.5, 42.5, 45.5, 48.5, 52.5, 57.5, 63.5, 69.5]}, {"n": "Casa Eden By Yoo East", "s": "Alto Padrão", "ini": "dez-23", "p": [42, 42, 42, 43.0, 45.0, 47.0, 50.0, 54.5, 60.5, 67.5, 72.5]}, {"n": "Aura Moema", "s": "Alto Padrão", "ini": "ago-23", "p": [49, 50, 51, 53, 55, 57, 59.5, 62.5, 65.5, 70.5, 75.0, 79.0]}, {"n": "Living Wellness Aclimação", "s": "Médio", "ini": "mar-23", "p": [1.0, 2.0, 5.0, 9.0, 14.0, 20.0, 26.0, 32.0, 38.0, 43.0, 48.0, 52.0, 55.0]}, {"n": "Iconyc By Yoo", "s": "Alto Padrão", "ini": "set-23", "p": [37, 41, 46, 50, 60, 70, 77, 84, 91, 96, 98, 99]}, {"n": "Vivaz Santa Marina", "s": "MCMV 2 e 3", "ini": "jul-24", "p": [31, 32, 34, 38, 45.5, 56.5, 68.5, 78.5]}, {"n": "Living Grand Wish Jardim", "s": "Médio", "ini": "fev-24", "p": [31, 31, 33.5, 38.5, 41.5, 45.5, 52.5, 62.5, 69.5, 75.5]}, {"n": "Vivaz Parque Prime Freguesia Do Ó", "s": "MCMV 2 e 3", "ini": "out-24", "p": [25, 31, 37, 45, 54.0, 64.0, 74.0]}, {"n": "Living Address Alto Do Ipiranga", "s": "Médio", "ini": "jun-23", "p": [35, 35, 35.5, 36.5, 39.5, 43.5, 48.5, 56.5, 64.5, 72.5, 79.5, 84.5, 90.5]}, {"n": "Vista Venezia", "s": "Alto Padrão", "ini": "dez-24", "p": [51, 54, 55, 56, 57.0, 58.0]}, {"n": "Living Full Vila Nova Conceição", "s": "Médio", "ini": "ago-22", "p": [1.0, 2.0, 3.0, 4.0, 7.0, 12.0, 15.0, 21.0, 30.0, 37.0, 43.0, 49.0, 55.0]}, {"n": "Living Duett Mooca", "s": "Médio", "ini": "nov-22", "p": [1.0, 2.0, 5.0, 9.0, 15.0, 19.0, 25.0, 33.0, 40.0, 45.0, 50.0, 55.0, 59.0]}], "safras": [{"nome": "até 2022", "cor": "var(--muted)", "dash": "5 5", "p": [0.0, 2.1, 5.8, 10.7, 15.0, 21.5, 28.7, 35.8, 42.5, 48.3, 54.2, 59.5, 64.4, 68.8, 72.7]}, {"nome": "2023", "cor": "var(--s3)", "dash": null, "p": [34.4, 35.8, 37.8, 41.3, 45.3, 51.0, 57.1, 64.5, 71.7, 78.6, 84.6, 89.7, 94.3]}, {"nome": "2024", "cor": "var(--s2)", "dash": null, "p": [33.3, 34.5, 36.0, 38.9, 41.7, 48.3, 56.2, 65.8, 73.0, 80.3]}, {"nome": "2025–26", "cor": "var(--ink-1)", "dash": "2 4", "p": [32.2, 34.1, 36.2]}]};
+    var IDX = 14;
     var fig2 = document.getElementById("figPocAc");
     var g2 = fig2.querySelector(".eixos"), gd2 = fig2.querySelector(".dyn"), tt2 = fig2.querySelector(".tt");
-    function X2(idade) { return 70 + idade * 66; }
+    function X2(idade) { return 70 + idade * (792 / IDX); }
     function Y2(v) { return 340 - v * 3.0; }
     [0, 25, 50, 75, 100].forEach(function (v) {
       el("line", { x1: 70, y1: Y2(v), x2: 862, y2: Y2(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g2);
       el("text", { x: 62, y: Y2(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g2, v + "%");
     });
-    [0, 2, 4, 6, 8, 10, 12].forEach(function (t) {
+    [0, 2, 4, 6, 8, 10, 12, 14].forEach(function (t) {
       el("text", { x: X2(t), y: 366, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g2, t);
     });
     el("text", { x: 466, y: 392, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g2, "idade do reconhecimento (trimestres)");
-    AC.curvas.forEach(function (c) {
-      var pts = c.p.map(function (v, i) { return X2(i) + "," + Y2(Math.min(v, 100)).toFixed(1); }).join(" ");
-      var pl = el("polyline", { points: pts, fill: "none", stroke: "var(--baseline)", "stroke-width": 1.6, "stroke-linejoin": "round" }, gd2);
-      pl.addEventListener("mousemove", function (e) {
+    function tip(elm, render) {
+      elm.addEventListener("mousemove", function (e) {
         var b = fig2.getBoundingClientRect();
-        tt2.innerHTML = "<b>" + c.n + "</b><div class='row'><span>" + c.s + " · início " + c.ini + "</span></div>" +
-          "<div class='row'><span>PoC acumulado</span><em>" + c.p[c.p.length - 1] + "% após " + (c.p.length - 1) + " tri</em></div>";
-        tt2.style.opacity = 1;
+        tt2.innerHTML = render(); tt2.style.opacity = 1;
         var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
         if (x + 280 > b.width) x = e.clientX - b.left - 290;
         tt2.style.left = x + "px"; tt2.style.top = y + "px";
       });
-      pl.addEventListener("mouseleave", function () { tt2.style.opacity = 0; });
-    });
-    var ptsM = AC.acum.map(function (v, i) { return X2(i) + "," + Y2(v).toFixed(1); }).join(" ");
-    el("polyline", { points: ptsM, fill: "none", stroke: "var(--s1)", "stroke-width": 3, "stroke-linejoin": "round" }, gd2);
-    AC.acum.forEach(function (v, i) {
-      var c2 = el("circle", { cx: X2(i), cy: Y2(v), r: 4, fill: "var(--s1)", stroke: "var(--surface-1)", "stroke-width": 1.5 }, gd2);
-      c2.addEventListener("mousemove", function (e) {
-        var b = fig2.getBoundingClientRect();
-        tt2.innerHTML = "<b>Idade " + i + "</b>" +
-          "<div class='row'><span>PoC acumulado médio</span><em>" + v + "%</em></div>" +
-          "<div class='row'><span>Observações</span><em>" + AC.n[i] + " projetos</em></div>";
-        tt2.style.opacity = 1;
-        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
-        if (x + 260 > b.width) x = e.clientX - b.left - 270;
-        tt2.style.left = x + "px"; tt2.style.top = y + "px";
+      elm.addEventListener("mouseleave", function () { tt2.style.opacity = 0; });
+    }
+    AC.curvas.forEach(function (c) {
+      var pts = c.p.slice(0, IDX + 1).map(function (v, i2) { return X2(i2) + "," + Y2(Math.min(v, 100)).toFixed(1); }).join(" ");
+      var pl = el("polyline", { points: pts, fill: "none", stroke: "var(--baseline)", "stroke-width": 1.2,
+        "stroke-opacity": 0.7, "stroke-linejoin": "round" }, gd2);
+      tip(pl, function () {
+        return "<b>" + c.n + "</b><div class='row'><span>" + c.s + " · início " + c.ini + "</span></div>" +
+          "<div class='row'><span>PoC acumulado</span><em>" + c.p[c.p.length - 1] + "% após " + (c.p.length - 1) + " tri</em></div>";
       });
-      c2.addEventListener("mouseleave", function () { tt2.style.opacity = 0; });
+    });
+    AC.safras.forEach(function (sf) {
+      var pts = sf.p.map(function (v, i2) { return X2(i2) + "," + Y2(v).toFixed(1); }).join(" ");
+      var a = { points: pts, fill: "none", stroke: sf.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sf.dash) a["stroke-dasharray"] = sf.dash;
+      var pl = el("polyline", a, gd2);
+      tip(pl, function () {
+        return "<b>Safra " + sf.nome + "</b><div class='row'><span>PoC acumulado no fim da série</span><em>" +
+          sf.p[sf.p.length - 1] + "% (idade " + (sf.p.length - 1) + ")</em></div>";
+      });
+    });
+    var ptsM = AC.acum.map(function (v, i2) { return X2(i2) + "," + Y2(v).toFixed(1); }).join(" ");
+    el("polyline", { points: ptsM, fill: "none", stroke: "var(--s1)", "stroke-width": 3, "stroke-linejoin": "round" }, gd2);
+    AC.acum.forEach(function (v, i2) {
+      var c2 = el("circle", { cx: X2(i2), cy: Y2(v), r: 4, fill: "var(--s1)", stroke: "var(--surface-1)", "stroke-width": 1.5 }, gd2);
+      tip(c2, function () {
+        return "<b>Idade " + i2 + " · média geral</b>" +
+          "<div class='row'><span>PoC acumulado médio</span><em>" + v + "%</em></div>" +
+          "<div class='row'><span>Observações</span><em>" + AC.n[i2] + " projetos</em></div>";
+      });
     });
   })();
 
