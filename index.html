@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v3.2 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v3.3 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -303,20 +303,12 @@
 
     <div class="card">
       <h2>A companhia perpetuada: um Projeto 100 por trimestre</h2>
-      <p class="desc">Exercício de regime permanente: a companhia lança um projeto idêntico a cada trimestre, com o VGV corrigido pela inflação (slider de INCC). Em steady state, ela é a soma de 13 safras sobrepostas (idades T0–T12), cada uma menor por (1+inflação)^idade — todos os valores crescem à inflação e os índices ficam constantes. Valores por R$ 100 mi de VGV lançado no trimestre corrente; os seletores de cenário acima se aplicam.</p>
-      <div class="grid2x2">
-        <div class="q">
-          <h3 class="subtit">DRE trimestral da companhia (R$ mi)</h3>
-          <div class="tscroll" id="perpDre"></div>
-        </div>
-        <div class="q">
-          <h3 class="subtit">Balanço e off-balance da companhia (R$ mi)</h3>
-          <div class="tscroll" id="perpBs"></div>
-        </div>
-      </div>
-      <h3 class="subtit">Métricas da companhia perpetuada</h3>
-      <div class="tscroll" id="perpMet"></div>
-      <p class="fonte">Agregação: cada linha da companhia = Σ (linha do projeto na idade a) × (1+g)^(−a), a = 0…12, com g = inflação trimestral (INCC anual do slider). Na política "retido", o caixa final de cada projeto é devolvido ao acionista quando o projeto morre (idade 12) — em perpetuidade não existe reter para sempre. ROE/ROIC anualizados = 4 × fluxo trimestral ÷ saldo corrente. Para a escala da Cyrela real, multiplique por ~30× (lançamentos %CBR de ~R$ 3 bi/trimestre).</p>
+      <p class="desc">Exercício de regime permanente: a companhia lança um projeto idêntico a cada trimestre, com o VGV corrigido pela inflação (slider de INCC). Acompanhe a companhia se formando: 20 trimestres de agregação, começando do zero. Como cada projeto vive 13 trimestres, a partir de T13 a companhia está madura — as margens e retornos estabilizam e tudo passa a crescer exatamente à inflação ("perpetuável"). Valores por R$ 100 mi de VGV do primeiro lançamento; os seletores de cenário acima se aplicam.</p>
+      <h3 class="subtit">DRE da companhia, trimestre a trimestre (R$ mi)</h3>
+      <div class="tscroll" id="perpDre"></div>
+      <h3 class="subtit">Balanço, off-balance e retornos da companhia (fim de cada trimestre)</h3>
+      <div class="tscroll" id="perpBs"></div>
+      <p class="fonte">Agregação: no trimestre T da companhia, cada linha = Σ sobre os projetos vivos (lançados em ℓ = T−12 … T) do valor do projeto na idade T−ℓ, escalado por (1+g)^ℓ, com g = inflação trimestral (INCC anual do slider). Na política "retido", o caixa final de cada projeto é devolvido ao acionista quando o projeto morre (idade 12). ROE anualizado = 4 × lucro do trimestre ÷ PL corrente. Para a escala da Cyrela real, multiplique por ~30× (lançamentos %CBR de ~R$ 3 bi/trimestre).</p>
     </div>
 </section>
 
@@ -771,84 +763,89 @@
 
   function perpetua() {
     var d = ledger(P, ESC, CXPOL);
+    var m = d.m;
+    var NT = 20;
     var gq = Math.pow(1 + P.incc / 100, 0.25) - 1;
-    var w = []; for (var a = 0; a <= 12; a++) w.push(Math.pow(1 + gq, -a));
-    function agg(arr) { var t = 0; for (var a = 0; a <= 12; a++) t += arr[a] * w[a]; return t; }
-    function aggD(arr) {
+    // series por idade do projeto
+    var recApA = [], cusApA = [], cogsSQ = [], jurA = [], distQ = [], aporQ = [];
+    for (var a = 0; a <= 12; a++) {
+      recApA.push((m.contr[a] + m.perm) - m.rec[a]);
+      cusApA.push(m.custoSemJ * (m.vendU[a] / 100) - m.cogsS[a]);
+      var dcS = m.cogsS[a] - (a ? m.cogsS[a - 1] : 0);
+      cogsSQ.push(dcS);
+      jurA.push(d.cogsQ[a] - dcS);
+      distQ.push(d.dist[a] - (a ? d.dist[a - 1] : 0));
+      aporQ.push(d.aporte[a] - (a ? d.aporte[a - 1] : 0));
+    }
+    function fluxo(serie, T) {           // soma serie[idade] dos projetos vivos em T
       var t = 0;
-      for (var a = 0; a <= 12; a++) t += (arr[a] - (a ? arr[a - 1] : 0)) * w[a];
+      for (var l = Math.max(0, T - 12); l <= T; l++) t += Math.pow(1 + gq, l) * serie[T - l];
       return t;
     }
-    var m = d.m;
-    var rec = agg(d.recQ), cogsS = aggD(m.cogsS), jur = agg(d.cogsQ) - cogsS;
-    var lb = rec - cogsS - jur, sell = agg(d.sellQ), ga = agg(d.gaQ), rf = agg(d.rfQ), imp = agg(d.impQ);
-    var ll = agg(d.llQ);
-    function linha2(nome, vTri, formata, classe) {
-      return "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td><td>" +
-        formata(vTri) + "</td><td>" + formata(vTri * 4) + "</td></tr>";
+    var C = { rec: [], cogsS: [], jur: [], lb: [], mb: [], sell: [], ga: [], rf: [], imp: [], ll: [], ml: [],
+      caixa: [], cr: [], est: [], div: [], adiant: [], pl: [], alav: [], dlpl: [], recAp: [], cusAp: [], mref: [], roe: [] };
+    var plA = [];
+    for (a = 0; a <= 12; a++) plA.push(d.aporte[a] + d.lucro[a] - d.dist[a]);
+    for (var T = 0; T < NT; T++) {
+      var rec = fluxo(d.recQ, T);
+      var cS = fluxo(cogsSQ, T), jr = fluxo(jurA, T);
+      var lb = rec - cS - jr;
+      var sl = fluxo(d.sellQ, T), ga2 = fluxo(d.gaQ, T), rf2 = fluxo(d.rfQ, T), im = fluxo(d.impQ, T);
+      var ll = fluxo(d.llQ, T);
+      C.rec.push(rec); C.cogsS.push(cS); C.jur.push(jr); C.lb.push(lb);
+      C.mb.push(rec > 0.01 ? 100 * lb / rec : null);
+      C.sell.push(sl); C.ga.push(ga2); C.rf.push(rf2); C.imp.push(im);
+      C.ll.push(ll); C.ml.push(rec > 0.01 ? 100 * ll / rec : null);
+      var cx = fluxo(d.caixa, T), cr2 = fluxo(d.cr, T), es = fluxo(d.est, T);
+      var dv = fluxo(d.div, T), ad = fluxo(d.adiant, T), pl2 = fluxo(plA, T);
+      C.caixa.push(cx); C.cr.push(cr2); C.est.push(es); C.div.push(dv); C.adiant.push(ad); C.pl.push(pl2);
+      C.alav.push(pl2 > 0.5 ? 100 * dv / pl2 : null);
+      C.dlpl.push(pl2 > 0.5 ? 100 * (dv - cx) / pl2 : null);
+      var ra = fluxo(recApA, T), ca = fluxo(cusApA, T);
+      C.recAp.push(ra); C.cusAp.push(ca);
+      C.mref.push(ra > 0.3 ? 100 * (ra - ca) / ra : null);
+      C.roe.push(pl2 > 0.5 ? 400 * ll / pl2 : null);
     }
-    document.getElementById("perpDre").innerHTML =
-      "<table><thead><tr><th></th><th>Trimestre</th><th>Anualizado</th></tr></thead><tbody>" +
-      linha2("Receita líquida", rec, n1) +
-      linha2("(−) COGS ex-juros", cogsS, function (v) { return "(" + n1(v) + ")"; }) +
-      linha2("(−) Juros capitalizados", jur, function (v) { return "(" + n1(v) + ")"; }) +
-      linha2("Lucro bruto", lb, n1, "total") +
-      "<tr><td>Margem bruta</td><td colspan='2'>" + pct(100 * lb / rec) + "</td></tr>" +
-      linha2("(−) Despesas comerciais", sell, function (v) { return "(" + n1(v) + ")"; }) +
-      linha2("(−) G&amp;A", ga, function (v) { return "(" + n1(v) + ")"; }) +
-      linha2("(+) Resultado financeiro", rf, n1) +
-      linha2("(−) Impostos (RET)", imp, function (v) { return "(" + n1(v) + ")"; }) +
-      linha2("Lucro líquido", ll, n1, "total") +
-      "<tr><td>Margem líquida</td><td colspan='2'>" + pct(100 * ll / rec) + "</td></tr>" +
+    function cabP() {
+      var h = "<thead><tr><th></th>";
+      for (var T = 1; T <= NT; T++) h += "<th>T" + T + (T >= 13 ? " ✓" : "") + "</th>";
+      return h + "</tr></thead>";
+    }
+    function linhaP(nome, arr, classe, formata) {
+      var h = "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td>";
+      for (var T = 0; T < NT; T++) h += "<td>" + formata(arr[T]) + "</td>";
+      return h + "</tr>";
+    }
+    function par(v) { return "(" + n1(v) + ")"; }
+    function pn(v) { return v == null ? "—" : pct(v); }
+    document.getElementById("perpDre").innerHTML = "<table>" + cabP() + "<tbody>" +
+      linhaP("Receita líquida", C.rec, "", n1) +
+      linhaP("(−) COGS ex-juros", C.cogsS, "", par) +
+      linhaP("(−) Juros capitalizados", C.jur, "", par) +
+      linhaP("Lucro bruto", C.lb, "total", n1) +
+      linhaP("Margem bruta", C.mb, "", pn) +
+      linhaP("(−) Comerciais", C.sell, "", par) +
+      linhaP("(−) G&amp;A", C.ga, "", par) +
+      linhaP("(+) Resultado financeiro", C.rf, "", n1) +
+      linhaP("(−) Impostos (RET)", C.imp, "", par) +
+      linhaP("Lucro líquido", C.ll, "total", n1) +
+      linhaP("Margem líquida", C.ml, "", pn) +
       "</tbody></table>";
-
-    var caixa = agg(d.caixa), cr = agg(d.cr), est = agg(d.est), div = agg(d.div), adiant = agg(d.adiant);
-    var pl = 0; for (a = 0; a <= 12; a++) pl += (d.aporte[a] + d.lucro[a] - d.dist[a]) * w[a];
-    var recAp = 0, cusAp = 0;
-    for (a = 0; a <= 12; a++) {
-      recAp += ((m.contr[a] + m.perm) - m.rec[a]) * w[a];
-      cusAp += (m.custoSemJ * (m.vendU[a] / 100) - m.cogsS[a]) * w[a];
-    }
-    function l1(nome, v, formata, classe) {
-      return "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td><td>" + formata(v) + "</td></tr>";
-    }
-    document.getElementById("perpBs").innerHTML =
-      "<table><thead><tr><th></th><th>Saldo</th></tr></thead><tbody>" +
-      l1("Caixa", caixa, n1) +
-      l1("Contas a receber", cr, n1) +
-      l1("Estoques (obra em curso)", est, n1) +
-      l1("Ativo total", caixa + cr + est, n1, "total") +
-      l1("Dívida de produção", div, n1) +
-      l1("Adiantamentos de terrenistas", adiant, n1) +
-      l1("Patrimônio líquido", pl, n1) +
-      l1("Passivo + PL", div + adiant + pl, n1, "total") +
-      l1("Alavancagem (dívida ÷ PL)", 100 * div / pl, pct) +
-      l1("Dívida líquida ÷ PL", 100 * (div - caixa) / pl, pct) +
-      l1("Receita a apropriar (off-balance)", recAp, n1) +
-      l1("Custo a apropriar (ex-juros)", cusAp, n1) +
-      l1("Margem REF", 100 * (recAp - cusAp) / recAp, pct, "total") +
+    document.getElementById("perpBs").innerHTML = "<table>" + cabP() + "<tbody>" +
+      linhaP("Caixa", C.caixa, "", n1) +
+      linhaP("Contas a receber", C.cr, "", n1) +
+      linhaP("Estoques (obra em curso)", C.est, "", n1) +
+      linhaP("Ativo total", C.caixa.map(function (v, i2) { return v + C.cr[i2] + C.est[i2]; }), "total", n1) +
+      linhaP("Dívida de produção", C.div, "", n1) +
+      linhaP("Adiantamentos de terrenistas", C.adiant, "", n1) +
+      linhaP("Patrimônio líquido", C.pl, "", n1) +
+      linhaP("Alavancagem (dívida ÷ PL)", C.alav, "", pn) +
+      linhaP("Dívida líquida ÷ PL", C.dlpl, "", pn) +
+      linhaP("Receita a apropriar (off-balance)", C.recAp, "", n1) +
+      linhaP("(−) Custo a apropriar (ex-juros)", C.cusAp, "", par) +
+      linhaP("Margem REF", C.mref, "total", pn) +
+      linhaP("ROE anualizado (4×LL ÷ PL)", C.roe, "total", pn) +
       "</tbody></table>";
-
-    var mortoCx = d.caixa[12] * w[12];
-    var divid = 0, aportesQ = 0;
-    for (a = 0; a <= 12; a++) {
-      divid += (d.dist[a] - (a ? d.dist[a - 1] : 0)) * w[a];
-      aportesQ += (d.aporte[a] - (a ? d.aporte[a - 1] : 0)) * w[a];
-    }
-    divid += mortoCx;
-    var dividLiq = divid - aportesQ;             // fluxo liquido ao acionista (bruto - aportes em safras novas)
-    var nopat = rec - cogsS - sell - ga - imp;
-    var ci = div + pl - caixa;
-    document.getElementById("perpMet").innerHTML =
-      "<table><thead><tr><th>ROE</th><th>ROIC</th><th>Margem líquida</th><th>Alavancagem</th><th>Dividendo líquido/tri</th><th>Payout</th><th>Crescimento nominal</th></tr></thead><tbody><tr>" +
-      "<td><b>" + pct(400 * ll / pl) + " a.a.</b></td>" +
-      "<td>" + pct(400 * nopat / ci) + " a.a.</td>" +
-      "<td>" + pct(100 * ll / rec) + "</td>" +
-      "<td>" + pct(100 * div / pl) + "</td>" +
-      "<td>" + rs(dividLiq) + "</td>" +
-      "<td>" + pct(100 * dividLiq / ll) + "</td>" +
-      "<td>" + pct(P.incc) + " a.a.</td>" +
-      "</tr></tbody></table>";
   }
 
   function bindCols(fig, render) {
