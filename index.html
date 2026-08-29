@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v3.1 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v3.2 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -299,6 +299,24 @@
 
       <p class="efeito">Quatro leituras: (1) o PoC nasce alto porque o terreno já está no custo incorrido; (2) a permuta antecipa a DRE (o terrenista conta como vendido no dia 0), mas os dois cenários terminam nos mesmos R$ 100 mi de receita; (3) os juros do SBPE saem por dentro do COGS — mesma obra, margem menor; (4) o gráfico 3 é a moral da história: a receita corre anos à frente do caixa, e o grosso do dinheiro só chega no repasse — mexa no controle de recebimento e veja quanto da espera ele alivia.</p>
       <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC. Política de caixa: "retido" acumula até T12; "distribuído" varre todo caixa livre ao acionista no fim de cada trimestre (o caixa do balanço fica zerado e o PL é reduzido pelas distribuições). DRE completo: comerciais incidem sobre a venda nominal de mercado no trimestre em que ocorre (permuta não paga comissão); G&A é linear em 13 trimestres, com default na visão <b>marginal do projeto</b> (~2%, custo incremental de rodar mais uma SPE numa plataforma existente) — para a visão de rateio da companhia, deslize para ~5,5% (média Cyrela/pares); RET incide sobre a receita reconhecida e é pago no mesmo trimestre; resultado financeiro = rendimento sobre o saldo de caixa do início do trimestre. Correções (v2.5): custos de obra e saldos devedores dos clientes corrigem pelo INCC (parcelas e repasse corrigidos até a data do pagamento; contratos liquidam no repasse); unidades em estoque valorizam a INCC + spread até serem vendidas (o estoque contábil permanece a custo — a valorização aparece como margem na venda); PoC segue a evolução física da obra. ROIC usa NOPAT ex-financeiro. TIR do acionista: fluxo trimestral de equity = distribuições − aportes, com o caixa final de T12 entrando como liquidação (no cenário retido é onde quase todo o valor retorna); taxa trimestral anualizada.Off-balance (Deliberação CVM 561): receita a apropriar = valor corrigido dos contratos vendidos − receita reconhecida; custo a apropriar = custo orçado atribuído às unidades vendidas − custo apropriado, ex-juros (como no setor, a margem REF é por construção sem juros capitalizados — compare com a margem bruta reconhecida, que os inclui); estoque a valor de mercado = unidades não vendidas ao preço corrente (INCC + spread); VSO = vendas do trimestre ÷ oferta no início do trimestre (na permuta, o T0 inclui o terrenista). <b>Ponto de atenção (não modelado)</b>: o terreno "em caixa" é pago à vista em T0; na prática paga-se parcelado e condicionado ao lançamento, o que reduziria o equity médio e elevaria o ROE do cenário caixa — e, em sentido contrário, o landbank real é comprado 1–2 anos antes do lançamento. Retornos: médias simples dos 13 saldos trimestrais; ROE = lucro do projeto (após juros capitalizados) ÷ PL médio; ROIC = lucro antes dos juros capitalizados ÷ capital investido médio (dívida + PL − caixa); anualizados pela vida de 3 anos do projeto.</p>
+    </div>
+
+    <div class="card">
+      <h2>A companhia perpetuada: um Projeto 100 por trimestre</h2>
+      <p class="desc">Exercício de regime permanente: a companhia lança um projeto idêntico a cada trimestre, com o VGV corrigido pela inflação (slider de INCC). Em steady state, ela é a soma de 13 safras sobrepostas (idades T0–T12), cada uma menor por (1+inflação)^idade — todos os valores crescem à inflação e os índices ficam constantes. Valores por R$ 100 mi de VGV lançado no trimestre corrente; os seletores de cenário acima se aplicam.</p>
+      <div class="grid2x2">
+        <div class="q">
+          <h3 class="subtit">DRE trimestral da companhia (R$ mi)</h3>
+          <div class="tscroll" id="perpDre"></div>
+        </div>
+        <div class="q">
+          <h3 class="subtit">Balanço e off-balance da companhia (R$ mi)</h3>
+          <div class="tscroll" id="perpBs"></div>
+        </div>
+      </div>
+      <h3 class="subtit">Métricas da companhia perpetuada</h3>
+      <div class="tscroll" id="perpMet"></div>
+      <p class="fonte">Agregação: cada linha da companhia = Σ (linha do projeto na idade a) × (1+g)^(−a), a = 0…12, com g = inflação trimestral (INCC anual do slider). Na política "retido", o caixa final de cada projeto é devolvido ao acionista quando o projeto morre (idade 12) — em perpetuidade não existe reter para sempre. ROE/ROIC anualizados = 4 × fluxo trimestral ÷ saldo corrente. Para a escala da Cyrela real, multiplique por ~30× (lançamentos %CBR de ~R$ 3 bi/trimestre).</p>
     </div>
 </section>
 
@@ -748,6 +766,89 @@
       linhaT("Margem REF", mgRef, "total", function (v) { return v == null ? "—" : pct(v); }) +
       "</tbody></table>";
     metricas();
+    perpetua();
+  }
+
+  function perpetua() {
+    var d = ledger(P, ESC, CXPOL);
+    var gq = Math.pow(1 + P.incc / 100, 0.25) - 1;
+    var w = []; for (var a = 0; a <= 12; a++) w.push(Math.pow(1 + gq, -a));
+    function agg(arr) { var t = 0; for (var a = 0; a <= 12; a++) t += arr[a] * w[a]; return t; }
+    function aggD(arr) {
+      var t = 0;
+      for (var a = 0; a <= 12; a++) t += (arr[a] - (a ? arr[a - 1] : 0)) * w[a];
+      return t;
+    }
+    var m = d.m;
+    var rec = agg(d.recQ), cogsS = aggD(m.cogsS), jur = agg(d.cogsQ) - cogsS;
+    var lb = rec - cogsS - jur, sell = agg(d.sellQ), ga = agg(d.gaQ), rf = agg(d.rfQ), imp = agg(d.impQ);
+    var ll = agg(d.llQ);
+    function linha2(nome, vTri, formata, classe) {
+      return "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td><td>" +
+        formata(vTri) + "</td><td>" + formata(vTri * 4) + "</td></tr>";
+    }
+    document.getElementById("perpDre").innerHTML =
+      "<table><thead><tr><th></th><th>Trimestre</th><th>Anualizado</th></tr></thead><tbody>" +
+      linha2("Receita líquida", rec, n1) +
+      linha2("(−) COGS ex-juros", cogsS, function (v) { return "(" + n1(v) + ")"; }) +
+      linha2("(−) Juros capitalizados", jur, function (v) { return "(" + n1(v) + ")"; }) +
+      linha2("Lucro bruto", lb, n1, "total") +
+      "<tr><td>Margem bruta</td><td colspan='2'>" + pct(100 * lb / rec) + "</td></tr>" +
+      linha2("(−) Despesas comerciais", sell, function (v) { return "(" + n1(v) + ")"; }) +
+      linha2("(−) G&amp;A", ga, function (v) { return "(" + n1(v) + ")"; }) +
+      linha2("(+) Resultado financeiro", rf, n1) +
+      linha2("(−) Impostos (RET)", imp, function (v) { return "(" + n1(v) + ")"; }) +
+      linha2("Lucro líquido", ll, n1, "total") +
+      "<tr><td>Margem líquida</td><td colspan='2'>" + pct(100 * ll / rec) + "</td></tr>" +
+      "</tbody></table>";
+
+    var caixa = agg(d.caixa), cr = agg(d.cr), est = agg(d.est), div = agg(d.div), adiant = agg(d.adiant);
+    var pl = 0; for (a = 0; a <= 12; a++) pl += (d.aporte[a] + d.lucro[a] - d.dist[a]) * w[a];
+    var recAp = 0, cusAp = 0;
+    for (a = 0; a <= 12; a++) {
+      recAp += ((m.contr[a] + m.perm) - m.rec[a]) * w[a];
+      cusAp += (m.custoSemJ * (m.vendU[a] / 100) - m.cogsS[a]) * w[a];
+    }
+    function l1(nome, v, formata, classe) {
+      return "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td><td>" + formata(v) + "</td></tr>";
+    }
+    document.getElementById("perpBs").innerHTML =
+      "<table><thead><tr><th></th><th>Saldo</th></tr></thead><tbody>" +
+      l1("Caixa", caixa, n1) +
+      l1("Contas a receber", cr, n1) +
+      l1("Estoques (obra em curso)", est, n1) +
+      l1("Ativo total", caixa + cr + est, n1, "total") +
+      l1("Dívida de produção", div, n1) +
+      l1("Adiantamentos de terrenistas", adiant, n1) +
+      l1("Patrimônio líquido", pl, n1) +
+      l1("Passivo + PL", div + adiant + pl, n1, "total") +
+      l1("Alavancagem (dívida ÷ PL)", 100 * div / pl, pct) +
+      l1("Dívida líquida ÷ PL", 100 * (div - caixa) / pl, pct) +
+      l1("Receita a apropriar (off-balance)", recAp, n1) +
+      l1("Custo a apropriar (ex-juros)", cusAp, n1) +
+      l1("Margem REF", 100 * (recAp - cusAp) / recAp, pct, "total") +
+      "</tbody></table>";
+
+    var mortoCx = d.caixa[12] * w[12];
+    var divid = 0, aportesQ = 0;
+    for (a = 0; a <= 12; a++) {
+      divid += (d.dist[a] - (a ? d.dist[a - 1] : 0)) * w[a];
+      aportesQ += (d.aporte[a] - (a ? d.aporte[a - 1] : 0)) * w[a];
+    }
+    divid += mortoCx;
+    var dividLiq = divid - aportesQ;             // fluxo liquido ao acionista (bruto - aportes em safras novas)
+    var nopat = rec - cogsS - sell - ga - imp;
+    var ci = div + pl - caixa;
+    document.getElementById("perpMet").innerHTML =
+      "<table><thead><tr><th>ROE</th><th>ROIC</th><th>Margem líquida</th><th>Alavancagem</th><th>Dividendo líquido/tri</th><th>Payout</th><th>Crescimento nominal</th></tr></thead><tbody><tr>" +
+      "<td><b>" + pct(400 * ll / pl) + " a.a.</b></td>" +
+      "<td>" + pct(400 * nopat / ci) + " a.a.</td>" +
+      "<td>" + pct(100 * ll / rec) + "</td>" +
+      "<td>" + pct(100 * div / pl) + "</td>" +
+      "<td>" + rs(dividLiq) + "</td>" +
+      "<td>" + pct(100 * dividLiq / ll) + "</td>" +
+      "<td>" + pct(P.incc) + " a.a.</td>" +
+      "</tr></tbody></table>";
   }
 
   function bindCols(fig, render) {
