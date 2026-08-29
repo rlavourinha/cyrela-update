@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v3.4 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v3.5 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -304,6 +304,45 @@
     <div class="card">
       <h2>A companhia perpetuada: um Projeto 100 por trimestre</h2>
       <p class="desc">Exercício de regime permanente: a companhia lança um projeto idêntico a cada trimestre, com o VGV corrigido pela inflação (slider de INCC). Acompanhe a companhia se formando: 20 trimestres de agregação, começando do zero. Como cada projeto vive 13 trimestres, a partir de T13 a companhia está madura — as margens e retornos estabilizam e tudo passa a crescer exatamente à inflação ("perpetuável"). Valores por R$ 100 mi de VGV do primeiro lançamento; os seletores de cenário acima se aplicam.</p>
+      <div class="grid2x2">
+        <div class="q">
+          <h3 class="subtit">1 · Receita e lucro líquido por trimestre (R$ mi)</h3>
+          <div class="legend">
+            <span><i class="sw" style="background:var(--s1)"></i> Receita líquida</span>
+            <span><i class="sw" style="background:var(--s3)"></i> Lucro líquido</span>
+          </div>
+          <figure id="figP1"><svg viewBox="0 0 640 340"><g class="eixos"></g><g class="dyn"></g><g class="cols" fill="transparent"></g></svg><div class="tt"></div></figure>
+        </div>
+        <div class="q">
+          <h3 class="subtit">2 · Margens (%)</h3>
+          <div class="legend">
+            <span><i class="sw" style="background:var(--s1)"></i> Bruta</span>
+            <span style="color:var(--muted)"><i class="sw dash" style="color:var(--muted)"></i> <span style="color:var(--ink-2)">Bruta ex-juros</span></span>
+            <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">REF</span></span>
+            <span><i class="sw" style="background:var(--s2)"></i> Líquida</span>
+          </div>
+          <figure id="figP2"><svg viewBox="0 0 640 340"><g class="eixos"></g><g class="dyn"></g><g class="cols" fill="transparent"></g></svg><div class="tt"></div></figure>
+        </div>
+        <div class="q">
+          <h3 class="subtit">3 · Balanço (R$ mi)</h3>
+          <div class="legend">
+            <span><i class="sw" style="background:var(--s1)"></i> Patrimônio líquido</span>
+            <span><i class="sw" style="background:var(--s2)"></i> Dívida de produção</span>
+            <span><i class="sw" style="background:var(--s3)"></i> Caixa</span>
+          </div>
+          <figure id="figP3"><svg viewBox="0 0 640 340"><g class="eixos"></g><g class="dyn"></g><g class="cols" fill="transparent"></g></svg><div class="tt"></div></figure>
+        </div>
+        <div class="q">
+          <h3 class="subtit">4 · Retornos e alavancagem (%)</h3>
+          <div class="legend">
+            <span><i class="sw" style="background:var(--s1)"></i> ROE anualizado</span>
+            <span><i class="sw" style="background:var(--s2)"></i> Dívida ÷ PL</span>
+            <span style="color:var(--muted)"><i class="sw dash" style="color:var(--muted)"></i> <span style="color:var(--ink-2)">Dívida líquida ÷ PL</span></span>
+          </div>
+          <figure id="figP4"><svg viewBox="0 0 640 340"><g class="eixos"></g><g class="dyn"></g><g class="cols" fill="transparent"></g></svg><div class="tt"></div></figure>
+        </div>
+      </div>
+
       <h3 class="subtit">DRE da companhia, trimestre a trimestre (R$ mi)</h3>
       <div class="tscroll" id="perpDre"></div>
       <h3 class="subtit">Balanço, off-balance e retornos da companhia (fim de cada trimestre)</h3>
@@ -571,7 +610,7 @@
   var MAXB = 125;
   eixos(figA, "%", 100); eixos(figB, "R$", MAXB); eixos(figC, "R$", MAXB);
 
-  var P, MC, MP;
+  var P, MC, MP, CP = null;
   function desenha() {
     P = params();
     MC = motor(P, "cx"); MP = motor(P, "pm");
@@ -833,6 +872,60 @@
       linhaP("Lucro líquido", C.ll, "total", n1) +
       linhaP("Margem líquida", C.ml, "", pn) +
       "</tbody></table>";
+    CP = C;
+    var XP = []; for (T = 0; T < NT; T++) XP.push(48 + T * (568 / (NT - 1)));
+    function chartP(figId, series, min, max, unit) {
+      var fig = document.getElementById(figId);
+      var g = fig.querySelector(".eixos"); g.innerHTML = "";
+      var passo = (max - min) / 4;
+      for (var i2 = 0; i2 <= 4; i2++) {
+        var v = min + i2 * passo;
+        var y = 296 - (v - min) * 268 / (max - min);
+        el("line", { x1: 48, y1: y, x2: 616, y2: y, stroke: Math.abs(v) < 1e-9 ? "var(--baseline)" : "var(--grid)", "stroke-width": Math.abs(v) < 1e-9 ? 1.5 : 1 }, g);
+        el("text", { x: 42, y: y + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g,
+          unit === "%" ? Math.round(v) + "%" : String(Math.round(v)));
+      }
+      el("line", { x1: XP[12], y1: 22, x2: XP[12], y2: 296, stroke: "var(--grid)", "stroke-width": 1, "stroke-dasharray": "3 4" }, g);
+      el("text", { x: XP[12], y: 322, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g, "T13 · madura");
+      [[0, "T1"], [4, "T5"], [8, "T9"], [16, "T17"], [19, "T20"]].forEach(function (tk) {
+        el("text", { x: XP[tk[0]], y: 322, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g, tk[1]);
+      });
+      var gd = fig.querySelector(".dyn"); gd.innerHTML = "";
+      series.forEach(function (sr) {
+        var pts = [];
+        for (var T2 = 0; T2 < NT; T2++) {
+          var vv = sr.arr[T2];
+          if (vv == null) continue;
+          pts.push(XP[T2] + "," + (296 - (vv - min) * 268 / (max - min)).toFixed(1));
+        }
+        var at = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": sr.w || 2.2, "stroke-linejoin": "round" };
+        if (sr.dash) at["stroke-dasharray"] = sr.dash;
+        el("polyline", at, gd);
+      });
+    }
+    var topoRec = Math.max(140, Math.ceil(C.rec[NT - 1] / 20) * 20);
+    var topoBS = Math.max(200, Math.ceil((C.pl[NT - 1] + 40) / 100) * 100);
+    chartP("figP1", [
+      { arr: C.rec, cor: "var(--s1)" },
+      { arr: C.ll, cor: "var(--s3)" }
+    ], 0, topoRec, "R$");
+    chartP("figP2", [
+      { arr: C.mbx, cor: "var(--muted)", dash: "5 5", w: 1.8 },
+      { arr: C.mref, cor: "var(--ink-1)", dash: "2 4", w: 1.8 },
+      { arr: C.ml, cor: "var(--s2)" },
+      { arr: C.mb, cor: "var(--s1)" }
+    ], 0, 40, "%");
+    chartP("figP3", [
+      { arr: C.caixa, cor: "var(--s3)" },
+      { arr: C.div, cor: "var(--s2)" },
+      { arr: C.pl, cor: "var(--s1)" }
+    ], 0, topoBS, "R$");
+    chartP("figP4", [
+      { arr: C.dlpl, cor: "var(--muted)", dash: "5 5", w: 1.8 },
+      { arr: C.alav, cor: "var(--s2)" },
+      { arr: C.roe, cor: "var(--s1)" }
+    ], -20, 40, "%");
+
     document.getElementById("perpBs").innerHTML = "<table>" + cabP() + "<tbody>" +
       linhaP("Caixa", C.caixa, "", n1) +
       linhaP("Contas a receber", C.cr, "", n1) +
@@ -877,6 +970,38 @@
       row("Receita reconhecida (cx)", rs(MC.rec[i])) + row("Gap receita − caixa", rs(MC.rec[i] - MC.k[i]));
   });
   desenha();
+
+  function bindColsP(figId, render) {
+    var fig = document.getElementById(figId);
+    var g = fig.querySelector(".cols"), tt = fig.querySelector(".tt");
+    for (var i = 0; i < 20; i++) (function (i) {
+      var r = el("rect", { x: 48 + i * (568 / 19) - 14, y: 18, width: 28, height: 282 }, g);
+      r.addEventListener("mousemove", function (e) {
+        if (!CP) return;
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = render(i); tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 300 > b.width) x = e.clientX - b.left - 310;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    })(i);
+  }
+  function pn2(v) { return v == null ? "—" : pct(v); }
+  bindColsP("figP1", function (i) {
+    return "<b>T" + (i + 1) + "</b>" + row("Receita", rs(CP.rec[i])) + row("Lucro líquido", rs(CP.ll[i]));
+  });
+  bindColsP("figP2", function (i) {
+    return "<b>T" + (i + 1) + "</b>" + row("Margem bruta", pn2(CP.mb[i])) + row("Bruta ex-juros", pn2(CP.mbx[i])) +
+      row("Margem REF", pn2(CP.mref[i])) + row("Margem líquida", pn2(CP.ml[i]));
+  });
+  bindColsP("figP3", function (i) {
+    return "<b>T" + (i + 1) + "</b>" + row("PL", rs(CP.pl[i])) + row("Dívida", rs(CP.div[i])) + row("Caixa", rs(CP.caixa[i]));
+  });
+  bindColsP("figP4", function (i) {
+    return "<b>T" + (i + 1) + "</b>" + row("ROE anualizado", pn2(CP.roe[i])) + row("Dívida ÷ PL", pn2(CP.alav[i])) +
+      row("Dívida líq. ÷ PL", pn2(CP.dlpl[i]));
+  });
 })();
 </script>
 </body>
