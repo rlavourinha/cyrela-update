@@ -84,13 +84,41 @@
     padding: 10px 14px; margin: 14px 0 6px; font-size: 12px; color: var(--ink-2); line-height: 1.5;
   }
   .enfase b { color: var(--ink-1); }
+  .premissas {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 6px 16px;
+    background: var(--chip-bg); border-radius: 10px; padding: 12px 14px; margin: 0 0 16px;
+    font-size: 12px; color: var(--ink-2); line-height: 1.5;
+  }
+  .premissas b { color: var(--ink-1); }
+  .subtit { font-size: 13.5px; margin: 18px 0 6px; color: var(--ink-1); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-2); margin: 0 0 6px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .sw.dash { background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px); height: 3px; }
+  .sw.dot { background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 5px); height: 3px; }
+  figure { margin: 0; position: relative; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .tt {
+    position: absolute; pointer-events: none; opacity: 0; transition: opacity .12s;
+    background: var(--surface-1); border: 1px solid var(--ring); border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18); padding: 8px 11px; font-size: 12px;
+    color: var(--ink-1); max-width: 280px; z-index: 5;
+  }
+  .tt b { display: block; margin-bottom: 3px; }
+  .tt .row { display: flex; justify-content: space-between; gap: 14px; color: var(--ink-2); }
+  .tt .row em { font-style: normal; font-variant-numeric: tabular-nums; color: var(--ink-1); }
+  details { font-size: 12.5px; color: var(--ink-2); margin: 8px 0 6px; }
+  table { border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 3px 10px; border-bottom: 1px solid var(--grid); text-align: right; font-size: 12px; }
+  th:first-child, td:first-child { text-align: left; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v1.3 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v1.4 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -136,6 +164,129 @@
       <p>Regras operacionais que modulam a curva (FR da Cyrela, item 1.4): a obra só começa com <b>≥30% das unidades vendidas</b>, entre 6 e 12 meses após o lançamento, e dura em média ~26 meses. No lançamento, o PoC típico é baixo (~3%, o custo do terreno já incorrido); ele acelera com o concreto.</p>
       <p class="efeito">A margem bruta de hoje reflete a precificação de 2–3 anos atrás (efeito safra) e o lucro contábil anda anos à frente do caixa. Revisões do custo orçado mudam o denominador e batem na margem corrente de uma vez.</p>
       <p class="fonte">Fontes: CPC 47; Ofício-Circular CVM/SNC/SEP 02/2018; OCPC 01 (R1) e OCPC 04; FR 2026 da Cyrela, itens 1.4 e 2.3.</p>
+    </div>
+
+    <div class="card">
+      <h2>Projeto 100: acompanhando R$ 100 milhões de VGV</h2>
+      <p class="desc">Um empreendimento fictício de médio/alto padrão (regime SBPE), acompanhado trimestre a trimestre em dois cenários: terreno comprado em caixa e terreno permutado. Este mesmo projeto atravessará as demais abas.</p>
+
+      <div class="premissas">
+        <div><b>VGV / receita:</b> R$ 100 mi</div>
+        <div><b>Terreno:</b> R$ 20 mi — em caixa, ou permutado por 20% das unidades (valor justo)</div>
+        <div><b>Obra + projetos:</b> R$ 48 mi → custo orçado total R$ 68 mi</div>
+        <div><b>Juros capitalizados (SBPE à produção):</b> R$ 3 mi → COGS contábil R$ 71 mi</div>
+        <div><b>Margem bruta:</b> 32% sem juros · 29% com juros</div>
+        <div><b>Cronograma:</b> obra do T2 (≥30% vendido) ao T10 (entrega); 20% vendido no lançamento, 85% na entrega, 100% em T12</div>
+      </div>
+
+      <h3 class="subtit">1 · Vendas e PoC (% do total)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Vendido — terreno em caixa</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Vendido — permuta</span>
+        <span><i class="sw" style="background:var(--s3)"></i> PoC (custo incorrido ÷ orçado)</span>
+      </div>
+      <figure id="figA">
+        <svg viewBox="0 0 860 350" role="img" aria-label="Curvas de vendas acumuladas nos dois cenários e evolução do PoC, do lançamento ao pós-entrega">
+          <g stroke="var(--grid)" stroke-width="1">
+            <line x1="70" y1="232.5" x2="800" y2="232.5"/>
+            <line x1="70" y1="165"   x2="800" y2="165"/>
+            <line x1="70" y1="97.5"  x2="800" y2="97.5"/>
+            <line x1="70" y1="30"    x2="800" y2="30"/>
+          </g>
+          <line x1="70" y1="300" x2="800" y2="300" stroke="var(--baseline)" stroke-width="1.5"/>
+          <g fill="var(--muted)" font-size="11" text-anchor="end">
+            <text x="62" y="303.5">0%</text><text x="62" y="236">25%</text>
+            <text x="62" y="168.5">50%</text><text x="62" y="101">75%</text><text x="62" y="33.5">100%</text>
+          </g>
+          <g stroke="var(--grid)" stroke-width="1" stroke-dasharray="3 4">
+            <line x1="191.7" y1="24" x2="191.7" y2="300"/>
+            <line x1="678.3" y1="24" x2="678.3" y2="300"/>
+          </g>
+          <g fill="var(--muted)" font-size="10.5" text-anchor="middle">
+            <text x="70" y="330">T0</text><text x="70" y="343">lançamento</text>
+            <text x="191.7" y="330">T2</text><text x="191.7" y="343">início da obra</text>
+            <text x="435" y="330">T6</text>
+            <text x="678.3" y="330">T10</text><text x="678.3" y="343">entrega</text>
+            <text x="800" y="330">T12</text>
+          </g>
+          <polyline points="70,220.6 130.8,216.6 191.7,208.7 252.5,192.8 313.3,169.1 374.2,141.2 435,113.4 495.8,85.6 556.7,61.9 617.5,41.9 678.3,30 739.2,30 800,30"
+                    fill="none" stroke="var(--s3)" stroke-width="2.5"/>
+          <polyline points="70,202.8 130.8,185.5 191.7,172.6 252.5,155.3 313.3,138 374.2,120.7 435,105.6 495.8,90.5 556.7,77.5 617.5,68.9 678.3,62.4 739.2,47.3 800,30"
+                    fill="none" stroke="var(--s2)" stroke-width="2"/>
+          <polyline points="70,246 130.8,224.4 191.7,208.2 252.5,186.6 313.3,165 374.2,143.4 435,124.5 495.8,105.6 556.7,89.4 617.5,78.6 678.3,70.5 739.2,51.6 800,30"
+                    fill="none" stroke="var(--s1)" stroke-width="2"/>
+          <g fill="var(--muted)" font-size="10.5">
+            <text x="76" y="196">permuta parte de 36%: os 20% do</text>
+            <text x="76" y="209">terrenista contam como vendidos no dia 0</text>
+            <text x="500" y="52">PoC chega a 100% na entrega</text>
+            <text x="684" y="84">85% vendido na entrega</text>
+          </g>
+          <g id="colsA" fill="transparent"></g>
+        </svg>
+        <div class="tt" id="ttA"></div>
+      </figure>
+
+      <h3 class="subtit">2 · Receita e COGS acumulados (R$ milhões)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Receita — terreno em caixa</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Receita — permuta</span>
+        <span style="color:var(--muted)"><i class="sw dash" style="color:var(--muted)"></i> <span style="color:var(--ink-2)">COGS sem juros</span></span>
+        <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">COGS com juros capitalizados</span></span>
+      </div>
+      <figure id="figB">
+        <svg viewBox="0 0 860 350" role="img" aria-label="Receita acumulada nos dois cenários e COGS acumulado com e sem juros capitalizados">
+          <g stroke="var(--grid)" stroke-width="1">
+            <line x1="70" y1="232.5" x2="800" y2="232.5"/>
+            <line x1="70" y1="165"   x2="800" y2="165"/>
+            <line x1="70" y1="97.5"  x2="800" y2="97.5"/>
+            <line x1="70" y1="30"    x2="800" y2="30"/>
+          </g>
+          <line x1="70" y1="300" x2="800" y2="300" stroke="var(--baseline)" stroke-width="1.5"/>
+          <g fill="var(--muted)" font-size="11" text-anchor="end">
+            <text x="62" y="303.5">0</text><text x="62" y="236">25</text>
+            <text x="62" y="168.5">50</text><text x="62" y="101">75</text><text x="62" y="33.5">100</text>
+          </g>
+          <g stroke="var(--grid)" stroke-width="1" stroke-dasharray="3 4">
+            <line x1="191.7" y1="24" x2="191.7" y2="300"/>
+            <line x1="678.3" y1="24" x2="678.3" y2="300"/>
+          </g>
+          <g fill="var(--muted)" font-size="10.5" text-anchor="middle">
+            <text x="70" y="330">T0</text>
+            <text x="191.7" y="330">T2</text>
+            <text x="435" y="330">T6</text>
+            <text x="678.3" y="330">T10</text><text x="678.3" y="343">entrega</text>
+            <text x="800" y="330">T12</text>
+          </g>
+          <polyline points="70,288.7 130.8,283.3 191.7,277.9 252.5,268 313.3,253.4 374.2,234.6 435,213.9 495.8,190.4 556.7,168.1 617.5,149.7 678.3,137.1 739.2,123.6 800,108.3"
+                    fill="none" stroke="var(--ink-1)" stroke-width="1.8" stroke-dasharray="2 4" stroke-linecap="round"/>
+          <polyline points="70,289.2 130.8,284 191.7,278.9 252.5,269.3 313.3,255.4 374.2,237.4 435,217.6 495.8,195 556.7,173.7 617.5,156.1 678.3,143.9 739.2,131.1 800,116.4"
+                    fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-dasharray="5 5"/>
+          <polyline points="70,271.4 130.8,264.6 191.7,256.8 252.5,242.5 313.3,221.4 374.2,194.7 435,165.5 495.8,133.7 556.7,103.7 617.5,79.1 678.3,62.4 739.2,47.3 800,30"
+                    fill="none" stroke="var(--s2)" stroke-width="2"/>
+          <polyline points="70,284.1 130.8,276.5 191.7,269 252.5,254.9 313.3,234.4 374.2,207.9 435,178.8 495.8,145.6 556.7,114.2 617.5,88.3 678.3,70.5 739.2,51.6 800,30"
+                    fill="none" stroke="var(--s1)" stroke-width="2"/>
+          <g font-size="10.5" font-variant-numeric="tabular-nums">
+            <text x="796" y="24" fill="var(--ink-2)" text-anchor="end" font-weight="600">Receita: R$ 100 mi nos dois cenários</text>
+            <text x="796" y="103" fill="var(--ink-1)" text-anchor="end">COGS c/ juros: 71</text>
+            <text x="796" y="130" fill="var(--muted)" text-anchor="end">COGS s/ juros: 68</text>
+            <text x="796" y="160" fill="var(--ink-2)" text-anchor="end">lucro bruto: 32 (32%) s/ juros · 29 (29%) c/ juros</text>
+          </g>
+          <g fill="var(--muted)" font-size="10.5">
+            <text x="290" y="180">a permuta corre à frente: receita</text>
+            <text x="290" y="193">do terrenista entra por PoC desde T0</text>
+          </g>
+          <g id="colsB" fill="transparent"></g>
+        </svg>
+        <div class="tt" id="ttB"></div>
+      </figure>
+
+      <details>
+        <summary>Ver tabela trimestral</summary>
+        <div id="tabela100"></div>
+      </details>
+
+      <p class="efeito">Três leituras: (1) o PoC "nasce" em ~29% porque o terreno já está no custo incorrido — a receita de lançamento é vendas × PoC, poucos % do VGV; (2) a permuta antecipa a DRE: os 20% do terrenista contam como vendidos no dia 0, então a receita corre sempre à frente — mas os dois cenários terminam nos mesmos R$ 100 mi; (3) os R$ 3 mi de juros do SBPE saem por dentro do COGS: mesma obra, margem 3 p.p. menor. O que muda de verdade entre os cenários é o caixa — assunto das próximas abas.</p>
+      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); juros capitalizados apropriados proporcionalmente à receita; impostos ignorados. Estrutura SBPE (cliente: ~10% no ato + ~20% na obra + ~70% no repasse) entra em cena na discussão de caixa.</p>
     </div>
   </section>
 
@@ -240,6 +391,63 @@
     window.scrollTo(0, 0);
   });
   if (location.hash) show(location.hash.slice(1));
+
+  // ---- Projeto 100: dados trimestrais ----
+  var P100 = {
+    poc:   [29.4, 30.9, 33.8, 39.7, 48.5, 58.8, 69.1, 79.4, 88.2, 95.6, 100, 100, 100],
+    vendCx:[20, 28, 34, 42, 50, 58, 65, 72, 78, 82, 85, 92, 100],
+    vendPm:[36, 42.4, 47.2, 53.6, 60, 66.4, 72, 77.6, 82.4, 85.6, 88, 93.6, 100],
+    recCx: [5.9, 8.7, 11.5, 16.7, 24.3, 34.1, 44.9, 57.2, 68.8, 78.4, 85, 92, 100],
+    recPm: [10.6, 13.1, 16.0, 21.3, 29.1, 39.0, 49.8, 61.6, 72.7, 81.8, 88, 93.6, 100],
+    cogsS: [4.0, 5.9, 7.8, 11.4, 16.5, 23.2, 30.5, 38.9, 46.8, 53.3, 57.8, 62.6, 68],
+    cogsC: [4.2, 6.2, 8.2, 11.9, 17.3, 24.2, 31.9, 40.6, 48.9, 55.7, 60.4, 65.3, 71]
+  };
+  var TX = []; for (var t = 0; t <= 12; t++) TX.push(70 + t * 60.833);
+  var svgNS = "http://www.w3.org/2000/svg";
+  function pct(v) { return v.toFixed(1).replace(".", ",") + "%"; }
+  function rs(v) { return "R$ " + v.toFixed(1).replace(".", ",") + " mi"; }
+  function buildCols(figId, ttId, colsId, render) {
+    var fig = document.getElementById(figId), tt = document.getElementById(ttId),
+        g = document.getElementById(colsId);
+    for (var i = 0; i <= 12; i++) (function (i) {
+      var r = document.createElementNS(svgNS, "rect");
+      r.setAttribute("x", TX[i] - 30); r.setAttribute("y", 20);
+      r.setAttribute("width", 60); r.setAttribute("height", 285);
+      g.appendChild(r);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = render(i); tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 290 > b.width) x = e.clientX - b.left - 300;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    })(i);
+  }
+  buildCols("figA", "ttA", "colsA", function (i) {
+    return "<b>T" + i + "</b>" +
+      "<div class='row'><span>Vendido (caixa)</span><em>" + pct(P100.vendCx[i]) + "</em></div>" +
+      "<div class='row'><span>Vendido (permuta)</span><em>" + pct(P100.vendPm[i]) + "</em></div>" +
+      "<div class='row'><span>PoC</span><em>" + pct(P100.poc[i]) + "</em></div>";
+  });
+  buildCols("figB", "ttB", "colsB", function (i) {
+    return "<b>T" + i + "</b>" +
+      "<div class='row'><span>Receita (caixa)</span><em>" + rs(P100.recCx[i]) + "</em></div>" +
+      "<div class='row'><span>Receita (permuta)</span><em>" + rs(P100.recPm[i]) + "</em></div>" +
+      "<div class='row'><span>COGS s/ juros</span><em>" + rs(P100.cogsS[i]) + "</em></div>" +
+      "<div class='row'><span>COGS c/ juros</span><em>" + rs(P100.cogsC[i]) + "</em></div>";
+  });
+  // tabela trimestral
+  var ht = "<table><thead><tr><th>Tri</th><th>PoC</th><th>Vendido cx</th><th>Vendido pm</th>" +
+    "<th>Receita cx</th><th>Receita pm</th><th>COGS s/ juros</th><th>COGS c/ juros</th></tr></thead><tbody>";
+  for (var i = 0; i <= 12; i++) {
+    ht += "<tr><td>T" + i + "</td><td>" + pct(P100.poc[i]) + "</td><td>" + pct(P100.vendCx[i]) +
+      "</td><td>" + pct(P100.vendPm[i]) + "</td><td>" + P100.recCx[i].toFixed(1).replace(".", ",") +
+      "</td><td>" + P100.recPm[i].toFixed(1).replace(".", ",") + "</td><td>" + P100.cogsS[i].toFixed(1).replace(".", ",") +
+      "</td><td>" + P100.cogsC[i].toFixed(1).replace(".", ",") + "</td></tr>";
+  }
+  ht += "</tbody></table>";
+  document.getElementById("tabela100").innerHTML = ht;
 })();
 </script>
 </body>
