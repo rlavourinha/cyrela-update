@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v1.9 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v2.0 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -269,13 +269,16 @@
       <div class="tscroll" id="dre100"></div>
       <div class="tscroll" id="bs100"></div>
 
+      <h3 class="subtit">5 · Métricas de retorno (saldos médios do balanço, anualizadas)</h3>
+      <div class="tscroll" id="ret100"></div>
+
       <details>
         <summary>Ver tabela trimestral das curvas</summary>
         <div id="tabela100"></div>
       </details>
 
       <p class="efeito">Quatro leituras: (1) o PoC nasce alto porque o terreno já está no custo incorrido; (2) a permuta antecipa a DRE (o terrenista conta como vendido no dia 0), mas os dois cenários terminam nos mesmos R$ 100 mi de receita; (3) os juros do SBPE saem por dentro do COGS — mesma obra, margem menor; (4) o gráfico 3 é a moral da história: a receita corre anos à frente do caixa, e o grosso do dinheiro só chega no repasse — mexa no controle de recebimento e veja quanto da espera ele alivia.</p>
-      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC; sem distribuições até T12.</p>
+      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC; sem distribuições até T12. Retornos: médias simples dos 13 saldos trimestrais; ROE = lucro do projeto (após juros capitalizados) ÷ PL médio; ROIC = lucro antes dos juros capitalizados ÷ capital investido médio (dívida + PL − caixa); anualizados pela vida de 3 anos do projeto.</p>
     </div>
 </section>
 
@@ -524,8 +527,8 @@
     demonstrativos();
   });
 
-  function demonstrativos() {
-    var eh_cx = (ESC === "cx");
+  function calcDemo(esc) {
+    var eh_cx = (esc === "cx");
     var rec = eh_cx ? M.rCx : M.rPm;
     var cogs = eh_cx ? M.cC : M.cCpm;
     var k = eh_cx ? M.kCx : M.kPm;
@@ -543,7 +546,7 @@
     for (q = 0; q <= 12; q++) {
       var inn = (k[q] - (q ? k[q - 1] : 0)) + (desemb[q] - (q ? desemb[q - 1] : 0));
       var out = (obraInc[q] - (q ? obraInc[q - 1] : 0));
-      if (q === 0 && eh_cx) out += terreno;
+      if (q === 0) out += (eh_cx ? terreno : terreno - perm);
       if (q === 10) out += alfa * obra + jT;
       cx += inn - out;
       if (cx < -1e-9) { ap += -cx; cx = 0; }
@@ -556,6 +559,39 @@
       adiant.push(perm * (1 - M.poc[q] / 100));
       lucro.push(rec[q] - cogs[q]);
     }
+    return { rec: rec, cogs: cogs, caixa: caixa, cr: cr, est: est, div: div,
+             adiant: adiant, aporte: aporte, lucro: lucro };
+  }
+
+  function media(arr) { var t = 0; for (var i = 0; i < arr.length; i++) t += arr[i]; return t / arr.length; }
+
+  function metricas() {
+    var ANOS_PROJ = 3;
+    var res = {};
+    ["cx", "pm"].forEach(function (esc) {
+      var d = calcDemo(esc);
+      var plMed = media(d.aporte.map(function (v, i) { return v + d.lucro[i]; }));
+      var ciMed = media(d.div.map(function (v, i) { return v + d.aporte[i] + d.lucro[i] - d.caixa[i]; }));
+      var lucroFinal = d.lucro[12];
+      var lucroOp = d.rec[12] - M.custo * d.rec[12] / 100;   // antes dos juros capitalizados
+      res[esc] = {
+        roe: 100 * lucroFinal / plMed / ANOS_PROJ,
+        roic: 100 * lucroOp / ciMed / ANOS_PROJ,
+        plMed: plMed, ciMed: ciMed
+      };
+    });
+    document.getElementById("ret100").innerHTML =
+      "<table><thead><tr><th></th><th>Terreno em caixa</th><th>Terreno permutado</th></tr></thead><tbody>" +
+      "<tr><td>ROE (lucro ÷ PL médio)</td><td><b>" + pct(res.cx.roe) + " a.a.</b></td><td><b>" + pct(res.pm.roe) + " a.a.</b></td></tr>" +
+      "<tr><td>ROIC (lucro antes dos juros ÷ capital investido médio)</td><td>" + pct(res.cx.roic) + " a.a.</td><td>" + pct(res.pm.roic) + " a.a.</td></tr>" +
+      "<tr><td>PL médio · capital investido médio</td><td>" + rs(res.cx.plMed) + " · " + rs(res.cx.ciMed) + "</td><td>" + rs(res.pm.plMed) + " · " + rs(res.pm.ciMed) + "</td></tr>" +
+      "</tbody></table>";
+  }
+
+  function demonstrativos() {
+    var d = calcDemo(ESC);
+    var rec = d.rec, cogs = d.cogs, caixa = d.caixa, cr = d.cr, est = d.est,
+        div = d.div, adiant = d.adiant, aporte = d.aporte, lucro = d.lucro;
     function linhaT(nome, arr, classe, formata) {
       var h = "<tr" + (classe ? " class='" + classe + "'" : "") + "><td>" + nome + "</td>";
       for (var i = 0; i <= 12; i++) h += "<td>" + formata(arr[i]) + "</td>";
@@ -588,6 +624,7 @@
       linhaT("Lucros acumulados", lucro, "", n1) +
       linhaT("Passivo + PL", div.map(function (v, i) { return v + adiant[i] + aporte[i] + lucro[i]; }), "total", n1) +
       "</tbody></table>";
+    metricas();
   }
 
   function bindCols(fig, render) {
