@@ -156,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.7 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.8 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -296,6 +296,17 @@
       </figure>
       <p class="efeito">O ciclo de vida em uma foto: projetos recém-entrados apropriam em catch-up (até 49% num único trimestre); a obra a pleno vapor roda 5–10% por trimestre; o fim de vida pinga 0–3%. Os 40 nomeados somam R$ 1,3 bi no trimestre — 52% do total apropriado de R$ 2,5 bi.</p>
       <details><summary>Ver os 40 empreendimentos</summary><div class="tscroll" id="tabPoc"></div></details>
+
+      <h3 class="subtit">PoC acumulado real (1T24–2T26, 109 empreendimentos em 6 releases)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Média por idade (acumulada)</span>
+        <span style="color:var(--muted)"><i class="sw" style="background:var(--baseline)"></i> <span style="color:var(--ink-2)">Projetos individuais (séries quase completas)</span></span>
+      </div>
+      <figure id="figPocAc">
+        <svg viewBox="0 0 900 400"><g class="eixos"></g><g class="dyn"></g><g class="cols" fill="transparent"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">Dois regimes de nascimento: projetos que entram reconhecendo 40–53% de uma vez (terreno comprado e obra acumulada) e projetos que nascem em ~1% e aceleram (consistente com terreno permutado — sem custo de terreno no incorrido). No agregado, o catch-up médio de entrada é 32%, o miolo da obra apropria 5–7,5% por trimestre (idades 5–9) e a média chega a ~91% na idade 12 — a cauda além disso é de obras longas e da censura do anexo (só os maiores de cada trimestre são nomeados).</p>
     </div>
 </section>
 
@@ -1125,6 +1136,51 @@
       ht += "<tr><td>" + d[0] + "</td><td>" + d[1] + "</td><td>" + d[2] + "</td><td>" + d[3] + "</td><td>" + d[4] + "%</td><td>" + d[5].toFixed(0) + "</td></tr>";
     });
     document.getElementById("tabPoc").innerHTML = ht + "</tbody></table>";
+
+    // ---- PoC acumulado real ----
+    var AC = {"acum": [32.2, 33.9, 35.7, 38.7, 42.4, 47.3, 53.3, 60.8, 67.8, 74.4, 80.2, 85.8, 90.7], "n": [47, 27, 26, 23, 18, 29, 26, 26, 27, 29, 20, 17, 14], "curvas": [{"n": "La Isla Residence Club", "s": "Alto Padrão", "ini": "mar-24", "p": [1.0, 2.0, 2.0, 4.0, 8.0, 13.0, 21.0, 30.0, 37.0, 43.0]}, {"n": "Ox Park Design By Edsa", "s": "Alto Padrão", "ini": "set-24", "p": [0.0, 0.0, 0.0, 1.0, 4.0, 9.0, 15.0, 24.0]}, {"n": "On The Sky – Wanders & Yoo", "s": "Alto Padrão", "ini": "dez-24", "p": [2.0, 4.0, 5.0, 7.0, 9.0, 11.0, 13.0]}, {"n": "Vivaz Santa Marina", "s": "MCMV 2 e 3", "ini": "jul-24", "p": [1.0, 2.0, 4.0, 8.0, 15.5, 26.5, 38.5, 48.5]}, {"n": "Vivaz Parque Prime Freguesia Do Ó", "s": "MCMV 2 e 3", "ini": "out-24", "p": [6.0, 12.0, 18.0, 26.0, 35.0, 45.0, 55.0]}, {"n": "Vista Venezia", "s": "Alto Padrão", "ini": "dez-24", "p": [3.0, 6.0, 7.0, 8.0, 9.0, 10.0]}]};
+    var fig2 = document.getElementById("figPocAc");
+    var g2 = fig2.querySelector(".eixos"), gd2 = fig2.querySelector(".dyn"), tt2 = fig2.querySelector(".tt");
+    function X2(idade) { return 70 + idade * 66; }
+    function Y2(v) { return 340 - v * 3.0; }
+    [0, 25, 50, 75, 100].forEach(function (v) {
+      el("line", { x1: 70, y1: Y2(v), x2: 862, y2: Y2(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g2);
+      el("text", { x: 62, y: Y2(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g2, v + "%");
+    });
+    [0, 2, 4, 6, 8, 10, 12].forEach(function (t) {
+      el("text", { x: X2(t), y: 366, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g2, t);
+    });
+    el("text", { x: 466, y: 392, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g2, "idade do reconhecimento (trimestres)");
+    AC.curvas.forEach(function (c) {
+      var pts = c.p.map(function (v, i) { return X2(i) + "," + Y2(Math.min(v, 100)).toFixed(1); }).join(" ");
+      var pl = el("polyline", { points: pts, fill: "none", stroke: "var(--baseline)", "stroke-width": 1.6, "stroke-linejoin": "round" }, gd2);
+      pl.addEventListener("mousemove", function (e) {
+        var b = fig2.getBoundingClientRect();
+        tt2.innerHTML = "<b>" + c.n + "</b><div class='row'><span>" + c.s + " · início " + c.ini + "</span></div>" +
+          "<div class='row'><span>PoC acumulado</span><em>" + c.p[c.p.length - 1] + "% após " + (c.p.length - 1) + " tri</em></div>";
+        tt2.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 280 > b.width) x = e.clientX - b.left - 290;
+        tt2.style.left = x + "px"; tt2.style.top = y + "px";
+      });
+      pl.addEventListener("mouseleave", function () { tt2.style.opacity = 0; });
+    });
+    var ptsM = AC.acum.map(function (v, i) { return X2(i) + "," + Y2(v).toFixed(1); }).join(" ");
+    el("polyline", { points: ptsM, fill: "none", stroke: "var(--s1)", "stroke-width": 3, "stroke-linejoin": "round" }, gd2);
+    AC.acum.forEach(function (v, i) {
+      var c2 = el("circle", { cx: X2(i), cy: Y2(v), r: 4, fill: "var(--s1)", stroke: "var(--surface-1)", "stroke-width": 1.5 }, gd2);
+      c2.addEventListener("mousemove", function (e) {
+        var b = fig2.getBoundingClientRect();
+        tt2.innerHTML = "<b>Idade " + i + "</b>" +
+          "<div class='row'><span>PoC acumulado médio</span><em>" + v + "%</em></div>" +
+          "<div class='row'><span>Observações</span><em>" + AC.n[i] + " projetos</em></div>";
+        tt2.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 260 > b.width) x = e.clientX - b.left - 270;
+        tt2.style.left = x + "px"; tt2.style.top = y + "px";
+      });
+      c2.addEventListener("mouseleave", function () { tt2.style.opacity = 0; });
+    });
   })();
 
   function bindColsP(figId, render) {
