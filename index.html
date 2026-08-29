@@ -156,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.16 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.17 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -380,12 +380,13 @@
         <span><i class="sw" style="background:var(--s1)"></i> Lançamentos do trimestre</span>
         <span><i class="sw" style="background:var(--s2)"></i> Estoque em obra</span>
         <span><i class="sw" style="background:var(--s3)"></i> Estoque pronto</span>
+        <span style="color:var(--ink-2);white-space:nowrap"><i class="sw" style="background:var(--grid)"></i> Vendas totais (R$ mi, fundo — escala própria)</span>
       </div>
       <figure id="figVendOrig">
         <svg viewBox="0 0 900 400"><g class="eixos"></g><g class="dyn"></g></svg>
         <div class="tt"></div>
       </figure>
-      <p class="efeito">Metade do que a Cyrela vende num trimestre é lançamento do próprio trimestre (média ~49%); ~43% é estoque em obra e só 3–11% é pronto — o pronto não acumula porque gira rápido (10–19% dele vendido por trimestre, pelos releases). O extremo é o 4T24: R$ 6,7 bi lançados e R$ 3,8 bi vendidos no ato — 78% das vendas do tri.</p>
+      <p class="efeito">Metade do que a Cyrela vende num trimestre é lançamento do próprio trimestre (média ~49%); ~43% é estoque em obra e só 3–11% é pronto — o pronto não acumula porque gira rápido (10–19% dele vendido por trimestre, pelos releases). O extremo é o 4T24: R$ 6,7 bi lançados e R$ 3,8 bi vendidos no ato — 78% das vendas do tri. O fundo dá a escala e responde a pergunta certa: <b>o ganho de fatia dos lançamentos vem com venda total crescendo, não com o resto encolhendo</b> — no 4T24 as vendas totais foram recorde (R$ 4,9 bi) e o estoque em obra vendeu R$ 869 mi, só um pouco abaixo da média (~R$ 1,1 bi); o lançamento se soma, não canibaliza. O inverso no 4T25: fatia de lançamento normal, vendas totais fracas (R$ 2,4 bi).</p>
 
       <h3 class="subtit">Anatomia estimada da receita (% da receita líquida)</h3>
       <div class="legend">
@@ -393,12 +394,13 @@
         <span><i class="sw" style="background:var(--s2)"></i> Catch-up · estoque em obra</span>
         <span><i class="sw" style="background:var(--s3)"></i> Catch-up · lançamentos</span>
         <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">Estoque pronto</span></span>
+        <span style="color:var(--ink-2);white-space:nowrap"><i class="sw" style="background:var(--grid)"></i> Receita líquida (R$ mi, fundo — escala própria)</span>
       </div>
       <figure id="figRecAnat">
         <svg viewBox="0 0 900 400"><g class="eixos"></g><g class="dyn"></g></svg>
         <div class="tt"></div>
       </figure>
-      <p class="efeito">A fatia que já estava contratada antes do trimestre começar (obra do backlog) rodou estável em <b>42–47%</b> de 2023 ao 3T25 — e saltou para <b>54–72%</b> do 4T25 ao 2T26, quando os lançamentos desaceleraram e o colchão recorde de REF assumiu o volante. Catch-ups de vendas novas somam ~35–50% e o pronto, ~5–10%. Ressalva: estimativa — mistura VGV %CBR a valor de mercado com receita consolidada contábil, e o PoC na venda é premissa (±10 p.p. deslocam ~R$ 200–300 mi entre catch-up e backlog); a leitura robusta é a tendência, não o decimal.</p>
+      <p class="efeito">A fatia que já estava contratada antes do trimestre começar (obra do backlog) rodou estável em <b>42–47%</b> de 2023 ao 3T25 — e saltou para <b>54–72%</b> do 4T25 ao 2T26, quando os lançamentos desaceleraram e o colchão recorde de REF assumiu o volante. Catch-ups de vendas novas somam ~35–50% e o pronto, ~5–10%. Ressalva: estimativa — mistura VGV %CBR a valor de mercado com receita consolidada contábil, e o PoC na venda é premissa (±10 p.p. deslocam ~R$ 200–300 mi entre catch-up e backlog); a leitura robusta é a tendência, não o decimal. O fundo fecha o argumento: o salto da fatia do backlog no 4T25 veio junto com <b>receita recorde</b> (R$ 3,2 bi) — o backlog não ganhou espaço porque o resto sumiu, ele entregou mais receita absoluta (~R$ 2,3 bi no tri, contra ~R$ 0,7–1,1 bi de 2023–24): é o colchão de REF de 2023–24 maturando na DRE.</p>
     </div>
   </section>
 
@@ -1355,6 +1357,12 @@
     var SR = [{nome: "Lançamentos", cor: "var(--s1)", v: [31.0, 56.2, 43.6, 49.1, 41.9, 31.4, 60.5, 77.9, 52.6, 48.6, 58.7, 50.0, 36.1, 48.0]}, {nome: "Estoque em obra", cor: "var(--s2)", v: [60.6, 38.2, 50.3, 44.5, 49.8, 58.4, 31.8, 17.7, 42.2, 48.6, 36.1, 42.4, 53.5, 41.1]}, {nome: "Estoque pronto", cor: "var(--s3)", v: [8.4, 5.6, 6.1, 6.4, 8.2, 10.2, 7.8, 4.4, 5.2, 2.9, 5.2, 7.7, 10.4, 10.9]}];
     var fig = document.getElementById("figVendOrig");
     if (!fig) return;
+    var BG = [1545, 2492, 2263, 2593, 2146, 2371, 3200, 4906, 3028, 3258, 3547, 2368, 2164, 2562], BGMAX = 5200;
+    BG.forEach(function (v, i) {
+      var hh = v / BGMAX * 300;
+      el("rect", { x: 66 + i * (806 / (BG.length - 1)) - 15, y: 340 - hh, width: 30, height: hh,
+        rx: 3, fill: "var(--grid)", "fill-opacity": 0.6 }, fig.querySelector(".eixos"));
+    });
     var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
     var N = TRI.length, PASSO = 806 / (N - 1);
     function X(i) { return 66 + i * PASSO; }
@@ -1382,6 +1390,7 @@
         var h = "<b>" + l + "</b>";
         SR.forEach(function (sr) { h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + "%</em></div>"; });
         var RS = [[479.0, 936.0, 130.0], [1400.0, 952.0, 140.0], [987.0, 1138.0, 138.0], [1273.0, 1153.0, 167.0], [900.0, 1069.0, 177.0], [745.0, 1384.0, 242.0], [1936.0, 1016.0, 248.0], [3821.0, 869.0, 216.0], [1594.0, 1277.0, 157.0], [1583.0, 1582.0, 93.0], [2082.0, 1280.0, 185.0], [1183.0, 1003.0, 182.0], [782.0, 1158.0, 224.0], [1231.0, 1053.0, 278.0]][i]; h += "<div class='row'><span>R$ mi (lanç/obra/pronto)</span><em>" + RS[0].toFixed(0) + " / " + RS[1].toFixed(0) + " / " + RS[2].toFixed(0) + "</em></div>";
+        h += "<div class='row'><span>Vendas totais</span><em>R$ " + (RS[0] + RS[1] + RS[2]).toFixed(0) + " mi</em></div>";
         tt.innerHTML = h; tt.style.opacity = 1;
         var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
         if (x + 280 > b.width) x = e.clientX - b.left - 290;
@@ -1396,6 +1405,12 @@
     var SR = [{nome: "Obra do backlog", cor: "var(--s1)", v: [46.9, 46.1, 45.3, 42.6, 44.5, 43.0, 44.9, 44.4, 43.8, 43.5, 42.5, 72.1, 53.7, 58.8]}, {nome: "Catch-up estoque em obra", cor: "var(--s2)", v: [36.5, 29.1, 35.0, 33.7, 34.0, 37.3, 25.0, 17.3, 32.7, 37.5, 30.1, 15.5, 28.6, 21.2]}, {nome: "Catch-up lançamentos", cor: "var(--s3)", v: [7.5, 17.1, 12.1, 14.9, 11.4, 8.0, 19.1, 30.5, 16.3, 15.0, 19.6, 7.3, 7.7, 9.9]}, {nome: "Estoque pronto", cor: "var(--ink-1)", dash: "2 4", v: [9.1, 7.7, 7.6, 8.8, 10.1, 11.7, 11.0, 7.8, 7.2, 4.0, 7.8, 5.1, 10.0, 10.1]}];
     var fig = document.getElementById("figRecAnat");
     if (!fig) return;
+    var BG = [1283, 1633, 1626, 1710, 1573, 1857, 2030, 2506, 1953, 2107, 2128, 3235, 2025, 2481], BGMAX = 3429;
+    BG.forEach(function (v, i) {
+      var hh = v / BGMAX * 300;
+      el("rect", { x: 66 + i * (806 / (BG.length - 1)) - 15, y: 340 - hh, width: 30, height: hh,
+        rx: 3, fill: "var(--grid)", "fill-opacity": 0.6 }, fig.querySelector(".eixos"));
+    });
     var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
     var N = TRI.length, PASSO = 806 / (N - 1);
     function X(i) { return 66 + i * PASSO; }
