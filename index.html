@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v2.5 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v2.6 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -477,8 +477,11 @@
       sellQ.push(P.sell / 100 * Vq[t]);
     }
     for (t = 0; t <= 12; t++) {
-      cogsC.push((custoSemJ + jurosTot) * rec[t] / rec[12]);
-      cogsS.push(custoSemJ * rec[t] / rec[12]);
+      // custo apropriado por UNIDADE vendida (PoC x fracao de unidades), nao por receita:
+      // coortes tardias vendem a preco apreciado com o mesmo custo unitario -> margem sobe no tempo
+      var fracV = vendU[t] / 100;
+      cogsC.push((custoSemJ + jurosTot) * (poc[t] / 100) * fracV);
+      cogsS.push(custoSemJ * (poc[t] / 100) * fracV);
     }
     return { perm: perm, vendU: vendU, poc: poc, rec: rec, recM: recM, k: k, cogsC: cogsC, cogsS: cogsS,
       sellQ: sellQ, obNom: obNom, desemb: desemb, jAcum: jAcum, jurosTot: jurosTot,
