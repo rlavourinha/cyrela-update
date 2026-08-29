@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyrela (CYRE3) — Update</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface-1: #fcfcfb;
+    --ink-1: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --ring: rgba(11,11,11,0.10);
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+    --chip-bg: #f0efec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface-1: #1a1a19;
+      --ink-1: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --ring: rgba(255,255,255,0.10);
+      --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+      --chip-bg: #262624;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19;
+    --ink-1: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --ring: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --chip-bg: #262624;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink-1);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 26px 20px 56px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  header.top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+  h1 { font-size: 21px; margin: 0; }
+  .chip {
+    font-size: 11px; color: var(--ink-2); background: var(--chip-bg);
+    border: 1px solid var(--ring); border-radius: 999px; padding: 3px 10px;
+  }
+  .sub { color: var(--ink-2); font-size: 13px; margin: 0 0 16px; }
+  /* stat strip */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 0 0 18px; }
+  .stat { background: var(--surface-1); border: 1px solid var(--ring); border-radius: 10px; padding: 10px 12px; }
+  .stat .v { font-size: 18px; font-weight: 650; }
+  .stat .l { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+  /* tabs */
+  nav.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 18px; border-bottom: 1px solid var(--grid); padding-bottom: 0; }
+  nav.tabs button {
+    appearance: none; background: none; border: none; border-bottom: 2px solid transparent;
+    font: inherit; font-size: 13.5px; color: var(--ink-2); padding: 8px 12px 9px; cursor: pointer;
+  }
+  nav.tabs button.on { color: var(--ink-1); font-weight: 650; border-bottom-color: var(--s1); }
+  section.tab { display: none; }
+  section.tab.on { display: block; }
+  .card {
+    background: var(--surface-1); border: 1px solid var(--ring); border-radius: 12px;
+    padding: 18px 18px 10px; margin-bottom: 24px;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 2px; }
+  .card .desc { font-size: 12.5px; color: var(--ink-2); margin: 0 0 12px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-2); margin: 0 0 6px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .sw.bar { height: 10px; width: 10px; border-radius: 3px; }
+  .sw.dash { background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px); height: 3px; }
+  .sw.dot { background: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 5px); height: 3px; }
+  figure { margin: 0; position: relative; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .tt {
+    position: absolute; pointer-events: none; opacity: 0; transition: opacity .12s;
+    background: var(--surface-1); border: 1px solid var(--ring); border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18); padding: 8px 11px; font-size: 12px;
+    color: var(--ink-1); max-width: 270px; z-index: 5;
+  }
+  .tt b { display: block; margin-bottom: 3px; }
+  .tt .row { display: flex; justify-content: space-between; gap: 14px; color: var(--ink-2); }
+  .tt .row em { font-style: normal; font-variant-numeric: tabular-nums; color: var(--ink-1); }
+  details { font-size: 12.5px; color: var(--ink-2); margin: 8px 0 6px; }
+  table { border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 4px 12px; border-bottom: 1px solid var(--grid); text-align: right; font-size: 12.5px; }
+  th:first-child, td:first-child { text-align: left; }
+  .fonte { font-size: 11.5px; color: var(--muted); margin: 8px 2px 6px; }
+  .grid5 { display: grid; grid-template-columns: repeat(auto-fit, minmax(265px, 1fr)); gap: 14px; }
+  .panel { position: relative; border: 1px solid var(--grid); border-radius: 10px; padding: 10px 8px 4px; }
+  .panel h3 { font-size: 12.5px; margin: 0 0 2px 6px; color: var(--ink-1); }
+  .panel .pnota { font-size: 10px; color: var(--muted); margin: 0 0 4px 6px; min-height: 12px; }
+  .normas { display: grid; grid-template-columns: repeat(auto-fit, minmax(390px, 1fr)); gap: 12px; margin-top: 4px; }
+  .norma { border: 1px solid var(--grid); border-radius: 10px; padding: 12px 14px; }
+  .norma .tag, .evento .tag {
+    display: inline-block; font-size: 10.5px; color: var(--ink-2); background: var(--chip-bg);
+    border: 1px solid var(--ring); border-radius: 6px; padding: 2px 8px; margin: 0 0 7px;
+    font-variant-numeric: tabular-nums;
+  }
+  .norma h3, .evento h3 { font-size: 13px; margin: 0 0 5px; color: var(--ink-1); }
+  .norma p, .evento p { font-size: 12px; color: var(--ink-2); margin: 0 0 6px; line-height: 1.45; }
+  .norma .efeito, .evento .efeito { font-size: 12px; color: var(--ink-1); margin: 0; line-height: 1.45; }
+  .norma .efeito::before, .evento .efeito::before { content: "→ "; color: var(--muted); }
+  .enfase {
+    border-left: 3px solid var(--s2); background: var(--chip-bg); border-radius: 0 10px 10px 0;
+    padding: 10px 14px; margin: 14px 0 4px; font-size: 12px; color: var(--ink-2); line-height: 1.5;
+  }
+  .enfase b { color: var(--ink-1); }
+  .evento { border: 1px solid var(--grid); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  .duo { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  ul.tight { margin: 4px 0 8px; padding-left: 18px; font-size: 12px; color: var(--ink-2); line-height: 1.55; }
+  ul.tight li b { color: var(--ink-1); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Cyrela (CYRE3) — Update</h1>
+    <span class="chip">v1.1 · 29/08/2026 · dados até 2T26</span>
+  </header>
+  <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="v">R$ 2,48 bi</div><div class="l">Receita líquida 2T26 (+18% a/a)</div></div>
+    <div class="stat"><div class="v">34,4%</div><div class="l">Margem bruta 2T26</div></div>
+    <div class="stat"><div class="v">R$ 452 mi</div><div class="l">Lucro líquido 2T26 (+16% a/a)</div></div>
+    <div class="stat"><div class="v">20,9%</div><div class="l">ROE ajustado 12m</div></div>
+    <div class="stat"><div class="v">36,2%</div><div class="l">Margem REF (backlog 2T26)</div></div>
+    <div class="stat"><div class="v">16,5%</div><div class="l">Dívida líq. / PL ajustado</div></div>
+  </div>
+
+  
+
+  <!-- ================= ABA 1: CONTABILIDADE ================= -->
+  <section class="tab on" id="tab-contabilidade">
+
+    <div class="card">
+      <h2>As regras do jogo: a contabilidade da incorporação</h2>
+      <p class="desc">Sete normas explicam por que a DRE de uma incorporadora não se parece com a de nenhuma outra empresa — e de onde vêm as dinâmicas dos demais gráficos deste dashboard.</p>
+      <div class="normas">
+        <div class="norma">
+          <span class="tag">CPC 47 · Ofício-Circular CVM/SNC/SEP 02/2018 · OCPC 01/04</span>
+          <h3>Receita pelo andamento da obra (PoC)</h3>
+          <p>A receita da unidade vendida na planta é reconhecida pela <b>evolução financeira da obra</b> (custo incorrido ÷ custo orçado) aplicada às unidades vendidas — não na entrega das chaves. É uma jabuticaba aceita pela CVM: no IFRS aplicado no resto do mundo (IFRIC 15/ICPC 02), a receita só nasceria na entrega.</p>
+          <p class="efeito">A margem de hoje é a decisão comercial de 2–3 anos atrás (efeito safra); lucro contábil anda anos à frente do caixa (gráfico do ciclo abaixo).</p>
+        </div>
+        <div class="norma">
+          <span class="tag">Deliberações CVM 561/08 e 624/10</span>
+          <h3>REF: o resultado que fica fora do balanço</h3>
+          <p>Receita e custo orçado das unidades <b>vendidas mas ainda não construídas</b> não aparecem no balanço — só em nota explicativa (receita/custo "a apropriar"). A margem REF é a margem embutida nesse backlog.</p>
+          <p class="efeito">A REF antecipa a margem futura — mas é refém do <b>orçamento de obra</b>: revisão de custo bate na margem corrente de uma vez (caso Plano&amp;Plano no 2T26).</p>
+        </div>
+        <div class="norma">
+          <span class="tag">CPC 20 (IAS 23)</span>
+          <h3>Juros capitalizados no custo</h3>
+          <p>Os juros do financiamento à produção (SFH) não vão para o resultado financeiro: entram no <b>estoque</b> e saem anos depois dentro do <b>custo dos imóveis vendidos</b>, comprimindo a margem bruta contábil.</p>
+          <p class="efeito">Por isso os pares divulgam "margem ajustada ex-juros" (Direcional: 42,1% vs 39,7% contábil em 2025). Ciclo de Selic alta = margem contábil menor mesmo sem piora operacional.</p>
+        </div>
+        <div class="norma">
+          <span class="tag">CPC 36 / CPC 19 (IFRS 10/11) · Lei 4.591/64</span>
+          <h3>Uma SPE por projeto; JVs pela equivalência</h3>
+          <p>Cada empreendimento vive numa SPE. Controladas consolidam (com sócios minoritários); <b>JVs como Cury, Lavvi e Plano&amp;Plano entram numa linha só</b>, a equivalência patrimonial — a receita delas não passa pela receita da Cyrela.</p>
+          <p class="efeito">A receita consolidada subestima o grupo; o lucro captura tudo (R$ 548 mi de equivalência em 2025, ~27% do lucro da Cyrela). Base da futura visão de soma das partes.</p>
+        </div>
+        <div class="norma">
+          <span class="tag">Lei 10.931/2004</span>
+          <h3>Patrimônio de afetação + RET</h3>
+          <p>O patrimônio da obra pode ser <b>segregado</b> (afetação: protege o comprador da quebra da incorporadora) e tributado pelo <b>RET: 4% da receita bruta</b> (1% em faixas do MCMV) no lugar de IR/CS sobre o lucro, apurado SPE a SPE.</p>
+          <p class="efeito">Alíquota efetiva baixa e estável — e mais um motivo para o lucro por segmento não bater com contas feitas com alíquota cheia.</p>
+        </div>
+        <div class="norma">
+          <span class="tag">Lei 13.786/2018</span>
+          <h3>Lei do distrato</h3>
+          <p>Cancelou a loteria judicial pós-2015: a incorporadora pode <b>reter até 25% do que foi pago</b> (50% com patrimônio de afetação) quando o cliente desiste.</p>
+          <p class="efeito">Reduziu o risco de devolução em massa que destruiu as DREs de 2015–17 — mas o FR 2026 rebaixou o conforto: de "reduz o risco" para "não é possível garantir que elimina".</p>
+        </div>
+        <div class="norma">
+          <span class="tag">OCPC 01 · CPC 12 · CPC 48</span>
+          <h3>Permuta, AVP e recebíveis</h3>
+          <p>Terreno pago com unidades futuras (<b>permuta</b>) entra a valor justo no estoque contra adiantamento de clientes — sem consumir caixa (41% do landbank da Cyrela). Recebíveis longos sofrem <b>ajuste a valor presente</b> e, no pró-soluto e na CashMe, <b>provisão por perda esperada</b>.</p>
+          <p class="efeito">Permuta viabiliza crescer sem caixa (mas divide o VGV); AVP/PDD tornam o resultado financeiro tão importante quanto a margem bruta.</p>
+        </div>
+      </div>
+      <div class="enfase">
+        <b>O selo oficial da jabuticaba:</b> todo relatório de auditoria do setor carrega um parágrafo de ênfase. Na Cyrela (Deloitte, DFP 2025): as demonstrações seguem as práticas "<i>aplicáveis às entidades de incorporação imobiliária no Brasil registradas na CVM</i>", com o reconhecimento de receita de unidades não concluídas seguindo o entendimento da diretoria sobre o CPC 47 "<i>alinhado com aquele manifestado pela CVM no Ofício Circular CVM/SNC/SEP nº 02/2018</i>". Sem ressalva — mas é o lembrete de que a comparação com incorporadoras fora do Brasil exige tradução.
+      </div>
+      <p class="fonte">Fontes: FR 2026 item 2.3 (ênfase da auditoria) e 2.9 (REF/Deliberação CVM 561); releases das companhias (margens ajustadas); Leis 4.591/64, 10.931/04 e 13.786/18; CPC 47, CPC 20, CPC 36/19, CPC 12, CPC 48, OCPC 01/04.</p>
+    </div>
+
+    <div class="card">
+      <h2>O ciclo de um empreendimento: o lucro aparece anos antes do caixa</h2>
+      <p class="desc">Curvas estilizadas de um projeto de médio/alto padrão, em % do VGV. Passe o mouse sobre as fases.</p>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Caixa acumulado (médio/alto padrão)</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Receita reconhecida (PoC)</span>
+        <span style="color:var(--s3)"><i class="sw dash" style="color:var(--s3)"></i> <span style="color:var(--ink-2)">Caixa no MCMV (repasse na planta)</span></span>
+      </div>
+      <figure id="fig1">
+        <svg viewBox="0 0 860 400" role="img" aria-label="Curva do ciclo do negócio: caixa acumulado versus receita reconhecida por PoC ao longo de cinco anos de projeto">
+          <g stroke="var(--grid)" stroke-width="1">
+            <line x1="70" y1="274"   x2="820" y2="274"/>
+            <line x1="70" y1="187.4" x2="820" y2="187.4"/>
+            <line x1="70" y1="144.1" x2="820" y2="144.1"/>
+            <line x1="70" y1="100.7" x2="820" y2="100.7"/>
+            <line x1="70" y1="57.3"  x2="820" y2="57.3"/>
+          </g>
+          <line x1="70" y1="230.7" x2="820" y2="230.7" stroke="var(--baseline)" stroke-width="1.5"/>
+          <g fill="var(--muted)" font-size="11" text-anchor="end">
+            <text x="62" y="277.5">−25%</text>
+            <text x="62" y="234.2">0%</text>
+            <text x="62" y="191">+25%</text>
+            <text x="62" y="147.7">+50%</text>
+            <text x="62" y="104.3">+75%</text>
+            <text x="62" y="60.9">+100%</text>
+          </g>
+          <text x="70" y="26" fill="var(--muted)" font-size="11">% do VGV do projeto</text>
+          <g stroke="var(--grid)" stroke-width="1" stroke-dasharray="3 4">
+            <line x1="120" y1="40" x2="120" y2="310"/>
+            <line x1="295" y1="40" x2="295" y2="310"/>
+            <line x1="670" y1="40" x2="670" y2="310"/>
+            <line x1="745" y1="40" x2="745" y2="310"/>
+          </g>
+          <g fill="var(--ink-2)" font-size="11.5" text-anchor="middle">
+            <text x="95"  y="330">Terreno</text>
+            <text x="207" y="330">Desenvolvimento</text>
+            <text x="207" y="344" fill="var(--muted)" font-size="10.5">12–24 meses</text>
+            <text x="295" y="360">▲ Lançamento</text>
+            <text x="482" y="330">Vendas &amp; Construção</text>
+            <text x="482" y="344" fill="var(--muted)" font-size="10.5">24–36 meses · obra inicia com ≥30% vendido</text>
+            <text x="745" y="330">Entrega</text>
+            <text x="745" y="344" fill="var(--muted)" font-size="10.5">repasse</text>
+          </g>
+          <path d="M70,230.7 L295,230.7 L305,222 L370,201 L520,140 L670,72 L745,57.3 L820,57.3"
+                fill="none" stroke="var(--s3)" stroke-width="2" stroke-dasharray="5 5" stroke-linejoin="round"/>
+          <path d="M70,230.7 L295,230.7 L305,225.5 L370,209.9 L520,152.7 L670,83.3 L745,57.3 L820,57.3"
+                fill="none" stroke="var(--s2)" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M70,230.7 L95,274 L220,277.5 L295,282.7 L370,272.3 L520,258.4 L670,239.3 L707,196 L745,112.8 L820,109.3"
+                fill="none" stroke="var(--s1)" stroke-width="2.5" stroke-linejoin="round"/>
+          <g fill="var(--muted)" font-size="10.5">
+            <text x="100" y="296">−25% se o terreno é comprado</text>
+            <text x="100" y="309">(≈0 se permuta)</text>
+            <text x="300" y="299">−3% marketing</text>
+            <text x="430" y="248">cliente paga ~30% até as chaves</text>
+            <text x="628" y="150">+70% do VGV</text>
+            <text x="628" y="163">no repasse</text>
+          </g>
+          <g font-size="11.5" font-weight="600">
+            <text x="826" y="61"  fill="var(--ink-2)" text-anchor="end" dx="-6" dy="-8">PoC chega a 100% na entrega</text>
+            <text x="820" y="127" fill="var(--ink-2)" text-anchor="end">caixa só fecha no fim</text>
+          </g>
+          <g id="bands1" fill="transparent">
+            <rect data-i="0" x="70"  y="40" width="50"  height="270"/>
+            <rect data-i="1" x="120" y="40" width="175" height="270"/>
+            <rect data-i="2" x="295" y="40" width="375" height="270"/>
+            <rect data-i="3" x="670" y="40" width="150" height="270"/>
+          </g>
+        </svg>
+        <div class="tt" id="tt1"></div>
+      </figure>
+      <p class="fonte">Curvas esquemáticas a partir da Apresentação Institucional 4T25 (slide "Ciclo do Negócio e Econômico") e FR 2026 (item 1.4). Carteira real 2T26: R$ 18,7 bi de recebíveis, prazo médio 2,1 anos, 92% de unidades em construção; cronograma de recebimento: R$ 7,6 / 4,1 / 4,2 / 2,9 bi em 12 / 24 / 36 / +36 meses.</p>
+    </div>
+  </section>
+
+  <!-- ================= ABA 2: RESULTADOS ================= -->
+  
+
+  <!-- ================= ABA 3: SOCIETÁRIO ================= -->
+  
+
+  <p class="fonte" style="margin-top:4px">Cyrela Update · construído a partir de fontes primárias (RI da Cyrela, CVM, atas e releases oficiais dos pares). Seções futuras do roteiro (Operacional, Soma das partes, Valuation) serão adicionadas em novas versões.</p>
+</div>
+
+<script>
+(function () {
+  // ---- tooltips ----
+  var FASES = [
+    { t: "Terreno", c: "Caixa: consome ~25% do VGV se comprado; ~0 se permuta (41% do landbank).", p: "Contábil: nada." },
+    { t: "Desenvolvimento (12–24m)", c: "Caixa: baixo consumo (projetos, aprovações).", p: "Contábil: nada." },
+    { t: "Vendas & Construção (24–36m)", c: "Caixa: −3% marketing no lançamento; recupera ~5% + ~25% em parcelas. Obra inicia com ≥30% vendido.", p: "Contábil: ~3% no lançamento; depois receita sobe pelo PoC — o lucro aparece aqui." },
+    { t: "Entrega (3–12m)", c: "Caixa: ~70% do VGV entra de uma vez no repasse bancário.", p: "Contábil: chega a 100% — nada de novo a reconhecer." }
+  ];
+  function bindTT(figId, ttId, groupId, render) {
+    var fig = document.getElementById(figId), tt = document.getElementById(ttId);
+    document.getElementById(groupId).querySelectorAll("rect").forEach(function (r) {
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = render(+r.dataset.i);
+        tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 280 > b.width) x = e.clientX - b.left - 290;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  }
+  bindTT("fig1", "tt1", "bands1", function (i) {
+    var f = FASES[i];
+    return "<b>" + f.t + "</b><div>" + f.c + "</div><div style='margin-top:4px'>" + f.p + "</div>";
+  });
+
+})();
+</script>
+</body>
+</html>
