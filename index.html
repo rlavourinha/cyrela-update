@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v3.5 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v3.6 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -846,6 +846,16 @@
       C.mref.push(ra > 0.3 ? 100 * (ra - ca) / ra : null);
       C.roe.push(pl2 > 0.5 ? 400 * ll / pl2 : null);
     }
+    function cresc(arr, minBase) {
+      var out = [];
+      for (var T2 = 0; T2 < NT; T2++) {
+        if (T2 < 4 || arr[T2 - 4] == null || arr[T2] == null || Math.abs(arr[T2 - 4]) < (minBase || 0.3)) { out.push(null); continue; }
+        out.push(100 * (arr[T2] / arr[T2 - 4] - 1));
+      }
+      return out;
+    }
+    C.gRec = cresc(C.rec); C.gLl = cresc(C.ll); C.gPl = cresc(C.pl); C.gBk = cresc(C.recAp);
+    CP = C;
     function cabP() {
       var h = "<thead><tr><th></th>";
       for (var T = 1; T <= NT; T++) h += "<th>T" + T + (T >= 13 ? " ✓" : "") + "</th>";
@@ -858,8 +868,10 @@
     }
     function par(v) { return "(" + n1(v) + ")"; }
     function pn(v) { return v == null ? "—" : pct(v); }
+    function fg(v) { return v == null ? "—" : (v >= 0 ? "+" : "") + n1(v) + "%"; }
     document.getElementById("perpDre").innerHTML = "<table>" + cabP() + "<tbody>" +
       linhaP("Receita líquida", C.rec, "", n1) +
+      linhaP("Crescimento da receita (a/a)", C.gRec, "", fg) +
       linhaP("(−) COGS ex-juros", C.cogsS, "", par) +
       linhaP("(−) Juros capitalizados", C.jur, "", par) +
       linhaP("Lucro bruto", C.lb, "total", n1) +
@@ -870,9 +882,9 @@
       linhaP("(+) Resultado financeiro", C.rf, "", n1) +
       linhaP("(−) Impostos (RET)", C.imp, "", par) +
       linhaP("Lucro líquido", C.ll, "total", n1) +
+      linhaP("Crescimento do lucro (a/a)", C.gLl, "", fg) +
       linhaP("Margem líquida", C.ml, "", pn) +
       "</tbody></table>";
-    CP = C;
     var XP = []; for (T = 0; T < NT; T++) XP.push(48 + T * (568 / (NT - 1)));
     function chartP(figId, series, min, max, unit) {
       var fig = document.getElementById(figId);
@@ -934,9 +946,11 @@
       linhaP("Dívida de produção", C.div, "", n1) +
       linhaP("Adiantamentos de terrenistas", C.adiant, "", n1) +
       linhaP("Patrimônio líquido", C.pl, "", n1) +
+      linhaP("Crescimento do PL (a/a)", C.gPl, "", fg) +
       linhaP("Alavancagem (dívida ÷ PL)", C.alav, "", pn) +
       linhaP("Dívida líquida ÷ PL", C.dlpl, "", pn) +
       linhaP("Receita a apropriar (off-balance)", C.recAp, "", n1) +
+      linhaP("Crescimento do backlog (a/a)", C.gBk, "", fg) +
       linhaP("(−) Custo a apropriar (ex-juros)", C.cusAp, "", par) +
       linhaP("Margem REF", C.mref, "total", pn) +
       linhaP("ROE anualizado (4×LL ÷ PL)", C.roe, "total", pn) +
