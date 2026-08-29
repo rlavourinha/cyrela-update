@@ -156,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.4 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.5 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -214,48 +214,53 @@
       <div class="normas">
         <div class="norma">
           <h3>1 · Só a obra avança (+10 p.p. de PoC, 60% vendido)</h3>
+          <p class="desc">Premissa das colunas: quanto da receita do período o cliente paga.</p>
           <table>
+            <thead><tr><th></th><th>Entra 100%</th><th>Entra 50%</th><th>Entra 0%</th></tr></thead>
             <tbody>
-              <tr><td>Premissa · cliente paga no período</td><td>0%</td></tr>
-              <tr><td>DRE · Receita (10% × 60 vendidos)</td><td>+6,0</td></tr>
-              <tr><td>DRE · COGS (68 × 10% × 60%)</td><td>(4,1)</td></tr>
-              <tr class="total"><td>DRE · Lucro bruto</td><td>+1,9</td></tr>
-              <tr><td>Balanço · Estoques (obra +6,8 − apropriação 4,1)</td><td>+2,7</td></tr>
-              <tr><td>Balanço · Caixa (paga a obra; nada entra)</td><td>(6,8)</td></tr>
-              <tr><td>Balanço · Contas a receber</td><td>+6,0</td></tr>
+              <tr><td>DRE · Receita (10% × 60 vendidos)</td><td>+6,0</td><td>+6,0</td><td>+6,0</td></tr>
+              <tr><td>DRE · COGS (68 × 10% × 60%)</td><td>(4,1)</td><td>(4,1)</td><td>(4,1)</td></tr>
+              <tr class="total"><td>DRE · Lucro bruto</td><td>+1,9</td><td>+1,9</td><td>+1,9</td></tr>
+              <tr><td>Balanço · Estoques (obra +6,8 − apropriação 4,1)</td><td>+2,7</td><td>+2,7</td><td>+2,7</td></tr>
+              <tr><td>Balanço · Caixa (entra X% − 6,8 da obra)</td><td>(0,8)</td><td>(3,8)</td><td>(6,8)</td></tr>
+              <tr><td>Balanço · Contas a receber</td><td>0,0</td><td>+3,0</td><td>+6,0</td></tr>
             </tbody>
           </table>
-          <p class="efeito">Lucro de +1,9 sem entrar um centavo: o tijolo vira receita das unidades já vendidas e o caixa só sai.</p>
+          <p class="efeito">A DRE é idêntica nas três colunas — a competência não se move com o caixa; só o balanço redistribui entre caixa e contas a receber.</p>
         </div>
         <div class="norma">
           <h3>2 · Venda com obra a 40% (unidade de 1,00)</h3>
+          <p class="desc">Premissa das colunas: quanto do preço o cliente paga no ato.</p>
           <table>
+            <thead><tr><th></th><th>Entra 100%</th><th>Entra 50%</th><th>Entra 0%</th></tr></thead>
             <tbody>
-              <tr><td>Premissa · cliente paga no ato</td><td>100%</td></tr>
-              <tr><td>DRE · Receita (1,00 × 40%)</td><td>+0,40</td></tr>
-              <tr><td>DRE · COGS (0,68 × 40%)</td><td>(0,27)</td></tr>
-              <tr class="total"><td>DRE · Lucro bruto</td><td>+0,13</td></tr>
-              <tr><td>Balanço · Caixa</td><td>+1,00</td></tr>
-              <tr><td>Balanço · Estoques</td><td>(0,27)</td></tr>
-              <tr><td>Balanço · Adiantamento de clientes (passivo)</td><td>+0,60</td></tr>
+              <tr><td>DRE · Receita (1,00 × 40%)</td><td>+0,40</td><td>+0,40</td><td>+0,40</td></tr>
+              <tr><td>DRE · COGS (0,68 × 40%)</td><td>(0,27)</td><td>(0,27)</td><td>(0,27)</td></tr>
+              <tr class="total"><td>DRE · Lucro bruto</td><td>+0,13</td><td>+0,13</td><td>+0,13</td></tr>
+              <tr><td>Balanço · Caixa</td><td>+1,00</td><td>+0,50</td><td>0,0</td></tr>
+              <tr><td>Balanço · Estoques</td><td>(0,27)</td><td>(0,27)</td><td>(0,27)</td></tr>
+              <tr><td>Balanço · Contas a receber</td><td>0,0</td><td>0,0</td><td>+0,40</td></tr>
+              <tr><td>Balanço · Adiantamento de clientes (passivo)</td><td>+0,60</td><td>+0,10</td><td>0,0</td></tr>
             </tbody>
           </table>
-          <p class="efeito">A venda puxa todo o PoC acumulado de uma vez — e o caixa recebido além do reconhecido (0,60) vira passivo: a receita dele só nasce com a obra.</p>
+          <p class="efeito">A venda puxa todo o PoC acumulado de uma vez; o que o cliente paga além do reconhecido vira passivo — a receita desse caixa só nasce com a obra.</p>
         </div>
         <div class="norma">
           <h3>3 · Estouro de orçamento (68 → 74; obra 70%, 80% vendido)</h3>
+          <p class="desc">Premissa das colunas: quanto do preço das unidades vendidas o cliente já pagou. Novo PoC = 47,6 ÷ 74 = 64,3% (cai de 70%).</p>
           <table>
+            <thead><tr><th></th><th>Entra 100%</th><th>Entra 50%</th><th>Entra 0%</th></tr></thead>
             <tbody>
-              <tr><td>Premissa · cliente já pagou</td><td>50% (40 de 80)</td></tr>
-              <tr><td>Novo PoC: 47,6 incorrido ÷ 74 orçado</td><td>64,3% (cai)</td></tr>
-              <tr><td>DRE · Receita (estorno: 64,3% × 80 vs 70% × 80)</td><td>(4,5)</td></tr>
-              <tr><td>DRE · COGS (incorrido das vendidas não muda)</td><td>0,0</td></tr>
-              <tr class="total"><td>DRE · Lucro bruto</td><td>(4,5)</td></tr>
-              <tr><td>Balanço · Contas a receber (16,0 → 11,5; caixa intocado)</td><td>(4,5)</td></tr>
-              <tr><td>Margem do projeto (vida inteira, de uma vez)</td><td>32% → 26%</td></tr>
+              <tr><td>DRE · Receita (estorno: 64,3% × 80 vs 70% × 80)</td><td>(4,5)</td><td>(4,5)</td><td>(4,5)</td></tr>
+              <tr><td>DRE · COGS (incorrido das vendidas não muda)</td><td>0,0</td><td>0,0</td><td>0,0</td></tr>
+              <tr class="total"><td>DRE · Lucro bruto</td><td>(4,5)</td><td>(4,5)</td><td>(4,5)</td></tr>
+              <tr><td>Balanço · Caixa</td><td>0,0</td><td>0,0</td><td>0,0</td></tr>
+              <tr><td>Balanço · Contas a receber</td><td>0,0</td><td>(4,5)</td><td>(4,5)</td></tr>
+              <tr><td>Balanço · Adiantamento de clientes (passivo)</td><td>+4,5</td><td>0,0</td><td>0,0</td></tr>
+              <tr><td>Margem do projeto (vida inteira, de uma vez)</td><td colspan="3">32% → 26%</td></tr>
             </tbody>
           </table>
-          <p class="efeito">Cumulative catch-up: a revisão reprecifica o passado num trimestre — o estorno não devolve caixa, só encolhe o accrual. É o mecanismo do tombo da Plano&amp;Plano no 2T26; a margem REF cai junto.</p>
+          <p class="efeito">O estorno nunca devolve caixa: encolhe o contas a receber — e, se o cliente já pagou tudo, <b>aumenta o passivo de adiantamento</b>. Cumulative catch-up: o passado reprecificado num trimestre (o tombo da Plano&amp;Plano no 2T26); a margem REF cai junto.</p>
         </div>
       </div>
     </div>
