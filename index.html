@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v2.1 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v2.2 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -210,6 +210,14 @@
           <input type="range" id="sDivida" min="0" max="80" step="5" value="60"></div>
         <div class="ctrl"><label>Custo da dívida (a.a.)<output id="oCusto">12,0%</output></label>
           <input type="range" id="sCusto" min="8" max="16" step="0.5" value="12"></div>
+        <div class="ctrl"><label>Comerciais (% do VGV vendido)<output id="oSell">4%</output></label>
+          <input type="range" id="sSell" min="2" max="6" step="0.5" value="4"></div>
+        <div class="ctrl"><label>G&amp;A (% do VGV, linear)<output id="oGa">4%</output></label>
+          <input type="range" id="sGa" min="2" max="6" step="0.5" value="4"></div>
+        <div class="ctrl"><label>Imposto s/ receita (RET)<output id="oImp">4,0%</output></label>
+          <input type="range" id="sImp" min="0" max="6" step="0.5" value="4"></div>
+        <div class="ctrl"><label>Rendimento do caixa (a.a.)<output id="oRc">10,0%</output></label>
+          <input type="range" id="sRc" min="6" max="14" step="0.5" value="10"></div>
       </div>
       <p class="readout" id="readout"></p>
       </div>
@@ -282,7 +290,7 @@
       </details>
 
       <p class="efeito">Quatro leituras: (1) o PoC nasce alto porque o terreno já está no custo incorrido; (2) a permuta antecipa a DRE (o terrenista conta como vendido no dia 0), mas os dois cenários terminam nos mesmos R$ 100 mi de receita; (3) os juros do SBPE saem por dentro do COGS — mesma obra, margem menor; (4) o gráfico 3 é a moral da história: a receita corre anos à frente do caixa, e o grosso do dinheiro só chega no repasse — mexa no controle de recebimento e veja quanto da espera ele alivia.</p>
-      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC. Política de caixa: "retido" acumula até T12; "distribuído" varre todo caixa livre ao acionista no fim de cada trimestre (o caixa do balanço fica zerado e o PL é reduzido pelas distribuições). Retornos: médias simples dos 13 saldos trimestrais; ROE = lucro do projeto (após juros capitalizados) ÷ PL médio; ROIC = lucro antes dos juros capitalizados ÷ capital investido médio (dívida + PL − caixa); anualizados pela vida de 3 anos do projeto.</p>
+      <p class="fonte">Exemplo didático com números redondos e simplificações declaradas: vendas a preço constante; PoC sobre custo orçado total (terreno incluído desde T0, nos dois cenários, a valor justo); a dívida de produção desembolsa proporcionalmente ao custo de obra incorrido e é quitada no repasse — juros capitalizados = saldo trimestral × custo da dívida, apropriados ao COGS proporcionalmente à receita; o terreno é bancado com equity (ou permuta); cada comprador paga o percentual "durante a obra" em parcelas iguais até a entrega e o restante no repasse (T10); vendas pós-entrega são recebidas à vista; a parte do terrenista nunca vira caixa; impostos e despesas operacionais ignorados. No balanço: obra paga à vista conforme incorre; os juros acrescem ao saldo da dívida, quitada com o principal no repasse (T10); o sócio aporta capital apenas quando o caixa iria a negativo (aporte mínimo); adiantamento do terrenista é consumido pelo PoC. Política de caixa: "retido" acumula até T12; "distribuído" varre todo caixa livre ao acionista no fim de cada trimestre (o caixa do balanço fica zerado e o PL é reduzido pelas distribuições). DRE completo: comerciais incidem sobre a venda de mercado no trimestre em que ocorre (corretagem/marketing; permuta não paga comissão); G&A é linear em 13 trimestres; RET incide sobre a receita reconhecida e é pago no mesmo trimestre (diferença competência × caixa do RET ignorada); resultado financeiro = rendimento sobre o saldo de caixa do início do trimestre (na política "distribuído" é ~zero, pois o caixa é varrido). ROIC usa NOPAT ex-financeiro (lucro operacional após RET, antes dos juros capitalizados e do rendimento do caixa). Retornos: médias simples dos 13 saldos trimestrais; ROE = lucro do projeto (após juros capitalizados) ÷ PL médio; ROIC = lucro antes dos juros capitalizados ÷ capital investido médio (dívida + PL − caixa); anualizados pela vida de 3 anos do projeto.</p>
     </div>
 </section>
 
@@ -401,11 +409,16 @@
     var permSh = +document.getElementById("sPerm").value;
     var alfa = +document.getElementById("sDivida").value;
     var kd = +document.getElementById("sCusto").value;
+    var sell = +document.getElementById("sSell").value;
+    var ga = +document.getElementById("sGa").value;
+    var imp = +document.getElementById("sImp").value;
+    var rc = +document.getElementById("sRc").value;
     var custo = 100 - margem, obra = custo - terreno;
     var perm = terreno * permSh / 100;                       // % do VGV que fica com o terrenista
     var juros = 0, pico = alfa / 100 * obra;
     for (var q = 1; q <= 10; q++) juros += (alfa / 100) * (OBRA_CUM[q] * obra / 48) * (kd / 400);
     var m = { margem: margem, receb: receb, juros: juros, perm: perm, permSh: permSh, alfa: alfa, kd: kd,
+      sell: sell, ga: ga, imp: imp, rc: rc,
       pico: pico, custo: custo, terreno: terreno, obra: obra,
       poc: [], vCx: [], vPm: [], rCx: [], rPm: [], cS: [], cC: [], cCpm: [], kCx: [], kPm: [] };
     var i;
@@ -503,6 +516,10 @@
     document.getElementById("oPerm").textContent = M.permSh + "%";
     document.getElementById("oDivida").textContent = M.alfa + "%";
     document.getElementById("oCusto").textContent = n1(M.kd) + "%";
+    document.getElementById("oSell").textContent = n1(M.sell) + "%";
+    document.getElementById("oGa").textContent = n1(M.ga) + "%";
+    document.getElementById("oImp").textContent = n1(M.imp) + "%";
+    document.getElementById("oRc").textContent = n1(M.rc) + "%";
     document.getElementById("readout").innerHTML =
       "Custo orçado: <b>" + rs(M.custo) + "</b> (terreno " + n1(M.terreno) + " + obra " + n1(M.obra) +
       ") · dívida de produção: " + M.alfa + "% da obra (pico <b>" + rs(M.pico) + "</b>) a " + n1(M.kd) +
@@ -519,7 +536,7 @@
     document.getElementById("tabela100").innerHTML = ht + "</tbody></table>";
     demonstrativos();
   }
-  ["sMargem", "sReceb", "sTerreno", "sPerm", "sDivida", "sCusto"].forEach(function (id) {
+  ["sMargem", "sReceb", "sTerreno", "sPerm", "sDivida", "sCusto", "sSell", "sGa", "sImp", "sRc"].forEach(function (id) {
     document.getElementById(id).addEventListener("input", desenha);
   });
 
@@ -553,10 +570,20 @@
       jAcum.push(jj);
     }
     var caixa = [], cr = [], est = [], div = [], adiant = [], aporte = [], lucro = [], dist = [];
-    var cx = 0, ap = 0, dd = 0;
+    var selQ = [], gaQ = [], impQ = [], rfQ = [], llQ = [];
+    var fatorMkt = eh_cx ? 1 : (100 - perm) / 100;
+    var cx = 0, ap = 0, dd = 0, la = 0;
     for (q = 0; q <= 12; q++) {
-      var inn = (k[q] - (q ? k[q - 1] : 0)) + (desemb[q] - (q ? desemb[q - 1] : 0));
-      var out = (obraInc[q] - (q ? obraInc[q - 1] : 0));
+      var recQ = rec[q] - (q ? rec[q - 1] : 0);
+      var cogsQ = cogs[q] - (q ? cogs[q - 1] : 0);
+      var sq = (M.sell / 100) * (VMKT[q] - (q ? VMKT[q - 1] : 0)) * fatorMkt;
+      var gq = M.ga / 13;
+      var iq = (M.imp / 100) * recQ;
+      var fq = cx * (M.rc / 400);
+      var lq = recQ - cogsQ - sq - gq + fq - iq;
+      la += lq;
+      var inn = (k[q] - (q ? k[q - 1] : 0)) + (desemb[q] - (q ? desemb[q - 1] : 0)) + fq;
+      var out = (obraInc[q] - (q ? obraInc[q - 1] : 0)) + sq + gq + iq;
       if (q === 0) out += (eh_cx ? terreno : terreno - perm);
       if (q === 10) out += alfa * obra + jT;
       cx += inn - out;
@@ -570,10 +597,12 @@
       est.push(Math.max(0, terreno + obraInc[q] + jAcum[q] - cogs[q]));
       div.push(q >= 10 ? 0 : desemb[q] + jAcum[q]);
       adiant.push(perm * (1 - M.poc[q] / 100));
-      lucro.push(rec[q] - cogs[q]);
+      lucro.push(la);
+      selQ.push(sq); gaQ.push(gq); impQ.push(iq); rfQ.push(fq); llQ.push(lq);
     }
     return { rec: rec, cogs: cogs, caixa: caixa, cr: cr, est: est, div: div,
-             adiant: adiant, aporte: aporte, lucro: lucro, dist: dist };
+             adiant: adiant, aporte: aporte, lucro: lucro, dist: dist,
+             selQ: selQ, gaQ: gaQ, impQ: impQ, rfQ: rfQ, llQ: llQ };
   }
 
   function media(arr) { var t = 0; for (var i = 0; i < arr.length; i++) t += arr[i]; return t / arr.length; }
@@ -586,8 +615,9 @@
       var pl = d.aporte.map(function (v, i) { return v + d.lucro[i] - d.dist[i]; });
       var plMed = media(pl);
       var ciMed = media(d.div.map(function (v, i) { return v + pl[i] - d.caixa[i]; }));
-      var lucroOp = d.rec[12] - M.custo * d.rec[12] / 100;
-      return { roe: 100 * d.lucro[12] / plMed / ANOS_PROJ, roic: 100 * lucroOp / ciMed / ANOS_PROJ,
+      var soma = function (a) { var t = 0; for (var i = 0; i < a.length; i++) t += a[i]; return t; };
+      var nopat = (d.rec[12] - M.custo * d.rec[12] / 100) - soma(d.selQ) - soma(d.gaQ) - soma(d.impQ);
+      return { roe: 100 * d.lucro[12] / plMed / ANOS_PROJ, roic: 100 * nopat / ciMed / ANOS_PROJ,
                plMed: plMed, ciMed: ciMed };
     });
     function lin(nome, f, forte) {
@@ -597,8 +627,8 @@
     }
     document.getElementById("ret100").innerHTML =
       "<table><thead><tr><th></th><th>Caixa · retido</th><th>Caixa · distribuído</th><th>Permuta · retido</th><th>Permuta · distribuído</th></tr></thead><tbody>" +
-      lin("ROE (lucro ÷ PL médio)", function (r) { return pct(r.roe) + " a.a."; }, true) +
-      lin("ROIC (lucro antes dos juros ÷ capital investido médio)", function (r) { return pct(r.roic) + " a.a."; }, false) +
+      lin("ROE (lucro líquido ÷ PL médio)", function (r) { return pct(r.roe) + " a.a."; }, true) +
+      lin("ROIC (NOPAT ex-financeiro ÷ capital investido médio)", function (r) { return pct(r.roic) + " a.a."; }, false) +
       lin("PL médio · capital investido médio", function (r) { return rs(r.plMed) + " · " + rs(r.ciMed); }, false) +
       "</tbody></table>";
   }
@@ -615,18 +645,28 @@
     var cab = "<thead><tr><th></th>";
     for (var i = 0; i <= 12; i++) cab += "<th>T" + i + "</th>";
     cab += "</tr></thead>";
-    var recQ = [], cogsQ = [], lbQ = [], mgQ = [];
+    var recQ = [], cogsQ = [], lbQ = [], mgQ = [], opQ = [], mlQ = [];
     for (i = 0; i <= 12; i++) {
       recQ.push(rec[i] - (i ? rec[i - 1] : 0));
       cogsQ.push(cogs[i] - (i ? cogs[i - 1] : 0));
       lbQ.push(recQ[i] - cogsQ[i]);
       mgQ.push(recQ[i] > 0.01 ? 100 * lbQ[i] / recQ[i] : null);
+      opQ.push(lbQ[i] - d.selQ[i] - d.gaQ[i]);
+      mlQ.push(recQ[i] > 0.01 ? 100 * d.llQ[i] / recQ[i] : null);
     }
+    function par(v) { return "(" + n1(v) + ")"; }
     document.getElementById("dre100").innerHTML = "<table>" + cab + "<tbody>" +
       linhaT("Receita líquida", recQ, "", n1) +
-      linhaT("(−) COGS c/ juros", cogsQ, "", function (v) { return "(" + n1(v) + ")"; }) +
+      linhaT("(−) COGS c/ juros", cogsQ, "", par) +
       linhaT("Lucro bruto", lbQ, "total", n1) +
       linhaT("Margem bruta", mgQ, "", function (v) { return v == null ? "—" : pct(v); }) +
+      linhaT("(−) Despesas comerciais", d.selQ, "", par) +
+      linhaT("(−) G&amp;A", d.gaQ, "", par) +
+      linhaT("Resultado operacional", opQ, "", n1) +
+      linhaT("(+) Resultado financeiro", d.rfQ, "", n1) +
+      linhaT("(−) Impostos (RET s/ receita)", d.impQ, "", par) +
+      linhaT("Lucro líquido", d.llQ, "total", n1) +
+      linhaT("Margem líquida", mlQ, "", function (v) { return v == null ? "—" : pct(v); }) +
       "</tbody></table>";
     document.getElementById("bs100").innerHTML = "<table>" + cab + "<tbody>" +
       linhaT("Caixa", caixa, "", n1) +
