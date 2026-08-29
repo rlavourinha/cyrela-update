@@ -45,7 +45,12 @@
     border: 1px solid var(--ring); border-radius: 999px; padding: 3px 10px;
   }
   .sub { color: var(--ink-2); font-size: 13px; margin: 0 0 16px; }
-  nav.tabs { display: flex; gap: 2px; flex-wrap: wrap; margin: 0 0 18px; border-bottom: 1px solid var(--grid); }
+  nav.tabs { margin: 0 0 18px; border-bottom: 1px solid var(--grid); padding-bottom: 4px; }
+  .navgrupo { display: flex; gap: 2px; flex-wrap: wrap; align-items: center; }
+  .navlabel {
+    flex: 0 0 auto; width: 118px; font-size: 10.5px; font-weight: 650; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--muted);
+  }
   nav.tabs button {
     appearance: none; background: none; border: none; border-bottom: 2px solid transparent;
     font: inherit; font-size: 13px; color: var(--ink-2); padding: 8px 10px 9px; cursor: pointer;
@@ -142,21 +147,27 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v3.7 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v3.8 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
   <nav class="tabs" id="tabs">
-    <button data-tab="contabilidade" class="on">Contabilidade</button>
-    <button data-tab="poc">PoC</button>
-    <button data-tab="ref">REF</button>
-    <button data-tab="juros">Juros capitalizados</button>
-    <button data-tab="spes">SPEs e JVs</button>
-    <button data-tab="ret">Afetação + RET</button>
-    <button data-tab="distrato">Distrato</button>
-    <button data-tab="permuta">Permuta e AVP</button>
-    <button data-tab="p100">Projeto 100</button>
-    <button data-tab="consol">Consolidado</button>
+    <div class="navgrupo">
+      <span class="navlabel">Contabilidade</span>
+      <button data-tab="contabilidade" class="on">Visão geral</button>
+      <button data-tab="poc">PoC</button>
+      <button data-tab="ref">REF</button>
+      <button data-tab="juros">Juros capitalizados</button>
+      <button data-tab="spes">SPEs e JVs</button>
+      <button data-tab="ret">Afetação + RET</button>
+      <button data-tab="distrato">Distrato</button>
+      <button data-tab="permuta">Permuta e AVP</button>
+    </div>
+    <div class="navgrupo">
+      <span class="navlabel">Projetos</span>
+      <button data-tab="p100">Projeto 100</button>
+      <button data-tab="consol">Consolidado</button>
+    </div>
   </nav>
 
   <!-- ============ ABA: CONTABILIDADE (VISÃO GERAL) ============ -->
