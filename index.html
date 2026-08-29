@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v2.9 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v3.0 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -659,18 +659,21 @@
     for (var i = 0; i <= 12; i++) cab += "<th>T" + i + "</th>";
     cab += "</tr></thead>";
     function par(v) { return "(" + n1(v) + ")"; }
-    var lbQ = [], mgQ = [], mgSJ = [], opQ = [], mlQ = [];
+    var lbQ = [], mgQ = [], mgSJ = [], opQ = [], mlQ = [], cogsSQ = [], jurQ = [];
     for (i = 0; i <= 12; i++) {
       lbQ.push(d.recQ[i] - d.cogsQ[i]);
       mgQ.push(d.recQ[i] > 0.01 ? 100 * lbQ[i] / d.recQ[i] : null);
       var dcS = d.m.cogsS[i] - (i ? d.m.cogsS[i - 1] : 0);
+      cogsSQ.push(dcS);
+      jurQ.push(d.cogsQ[i] - dcS);
       mgSJ.push(d.recQ[i] > 0.01 ? 100 * (d.recQ[i] - dcS) / d.recQ[i] : null);
       opQ.push(lbQ[i] - d.sellQ[i] - d.gaQ[i]);
       mlQ.push(d.recQ[i] > 0.01 ? 100 * d.llQ[i] / d.recQ[i] : null);
     }
     document.getElementById("dre100").innerHTML = "<table>" + cab + "<tbody>" +
       linhaT("Receita líquida (c/ atualização INCC)", d.recQ, "", n1) +
-      linhaT("(−) COGS c/ juros", d.cogsQ, "", par) +
+      linhaT("(−) COGS ex-juros", cogsSQ, "", par) +
+      linhaT("(−) Juros capitalizados no custo", jurQ, "", par) +
       linhaT("Lucro bruto", lbQ, "total", n1) +
       linhaT("Margem bruta", mgQ, "", function (v) { return v == null ? "—" : pct(v); }) +
       linhaT("Margem bruta ex-juros (comparável à REF)", mgSJ, "", function (v) { return v == null ? "—" : pct(v); }) +
