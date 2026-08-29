@@ -142,7 +142,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v3.3 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v3.4 · 29/08/2026 · dados até 2T26</span>
   </header>
   <p class="sub">Monitoramento a partir de fontes primárias: planilhas e releases do RI, Formulário de Referência (CVM) e atas. Sem sell-side.</p>
 
@@ -782,7 +782,7 @@
       for (var l = Math.max(0, T - 12); l <= T; l++) t += Math.pow(1 + gq, l) * serie[T - l];
       return t;
     }
-    var C = { rec: [], cogsS: [], jur: [], lb: [], mb: [], sell: [], ga: [], rf: [], imp: [], ll: [], ml: [],
+    var C = { rec: [], cogsS: [], jur: [], lb: [], mb: [], mbx: [], sell: [], ga: [], rf: [], imp: [], ll: [], ml: [],
       caixa: [], cr: [], est: [], div: [], adiant: [], pl: [], alav: [], dlpl: [], recAp: [], cusAp: [], mref: [], roe: [] };
     var plA = [];
     for (a = 0; a <= 12; a++) plA.push(d.aporte[a] + d.lucro[a] - d.dist[a]);
@@ -794,6 +794,7 @@
       var ll = fluxo(d.llQ, T);
       C.rec.push(rec); C.cogsS.push(cS); C.jur.push(jr); C.lb.push(lb);
       C.mb.push(rec > 0.01 ? 100 * lb / rec : null);
+      C.mbx.push(rec > 0.01 ? 100 * (rec - cS) / rec : null);
       C.sell.push(sl); C.ga.push(ga2); C.rf.push(rf2); C.imp.push(im);
       C.ll.push(ll); C.ml.push(rec > 0.01 ? 100 * ll / rec : null);
       var cx = fluxo(d.caixa, T), cr2 = fluxo(d.cr, T), es = fluxo(d.est, T);
@@ -824,6 +825,7 @@
       linhaP("(−) Juros capitalizados", C.jur, "", par) +
       linhaP("Lucro bruto", C.lb, "total", n1) +
       linhaP("Margem bruta", C.mb, "", pn) +
+      linhaP("Margem bruta ex-juros (comparável à REF)", C.mbx, "", pn) +
       linhaP("(−) Comerciais", C.sell, "", par) +
       linhaP("(−) G&amp;A", C.ga, "", par) +
       linhaP("(+) Resultado financeiro", C.rf, "", n1) +
