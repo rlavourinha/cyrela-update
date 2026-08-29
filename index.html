@@ -156,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.2 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.3 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -201,14 +201,76 @@
   <!-- ============ ABA: POC ============ -->
   <section class="tab" id="tab-poc">
     <div class="card">
-      <span class="tag">CPC 47 (IFRS 15) · Ofício-Circular CVM/SNC/SEP 02/2018 · OCPC 01/04 · ICPC 02</span>
+      <span class="tag">CPC 47 (IFRS 15) · Ofício-Circular CVM/SNC/SEP 02/2018 · OCPC 01/04</span>
       <h2>Receita pelo andamento da obra (PoC)</h2>
-      <p>A receita de uma unidade vendida na planta é reconhecida ao longo da construção, pela <b>evolução financeira da obra</b>: custo incorrido ÷ custo total orçado (incluindo o terreno), aplicado às unidades vendidas. Vendeu na planta e a obra está 40% executada? 40% do preço daquela venda já está na DRE — muito antes de qualquer chave.</p>
-      <p>É uma <b>jabuticaba brasileira</b>. Na aplicação internacional do IFRS 15 (e antes dele, IFRIC 15/ICPC 02), a venda de imóvel residencial em construção normalmente só vira receita na entrega, quando o controle é transferido. A CVM aceitou a tese da <b>transferência contínua de controle</b> — o regime jurídico da incorporação (Lei 4.591/64) faz o comprador "dono" da fração ideal desde cedo — e consolidou o entendimento no Ofício-Circular CVM/SNC/SEP 02/2018. Todo o setor listado usa PoC.</p>
-      <p>Regras operacionais que modulam a curva (FR da Cyrela, item 1.4): a obra só começa com <b>≥30% das unidades vendidas</b>, entre 6 e 12 meses após o lançamento, e dura em média ~26 meses. No lançamento, o PoC típico é baixo (~3%, o custo do terreno já incorrido); ele acelera com o concreto.</p>
-      <p class="efeito">A margem bruta de hoje reflete a precificação de 2–3 anos atrás (efeito safra) e o lucro contábil anda anos à frente do caixa. Revisões do custo orçado mudam o denominador e batem na margem corrente de uma vez.</p>
+      <p>A receita da unidade vendida na planta é reconhecida pela <b>evolução financeira da obra</b> — custo incorrido ÷ custo orçado (terreno incluído) — aplicada às unidades vendidas. É uma jabuticaba aceita pela CVM (transferência contínua de controle, Lei 4.591/64): no IFRS aplicado no resto do mundo, a receita só nasceria na entrega.</p>
+      <p>Na Cyrela, a obra só começa com <b>≥30% vendido</b>, 6–12 meses após o lançamento, e dura ~26 meses; o reconhecimento de cada projeto inicia junto com a obra e apropria de uma vez o custo já acumulado.</p>
+      <p class="efeito">A margem de hoje é a decisão comercial de 2–3 anos atrás; o lucro anda anos à frente do caixa; revisões do custo orçado batem na margem corrente de uma vez.</p>
     </div>
 
+    <div class="card">
+      <h2>Três movimentos que explicam tudo</h2>
+      <p class="desc">Razonetes com os números do Lançamento 100M (VGV 100, custo orçado 68).</p>
+      <div class="normas">
+        <div class="norma">
+          <h3>1 · Só a obra avança (+10 p.p. de PoC, 60% vendido)</h3>
+          <table>
+            <tbody>
+              <tr><td>Balanço · Estoques (obra incorrida +6,8 − apropriação 4,1)</td><td>+2,7</td></tr>
+              <tr><td>Balanço · Caixa (paga a obra)</td><td>(6,8)</td></tr>
+              <tr><td>Balanço · Contas a receber</td><td>+6,0</td></tr>
+              <tr><td>DRE · Receita (10% × 60 vendidos)</td><td>+6,0</td></tr>
+              <tr><td>DRE · COGS (68 × 10% × 60%)</td><td>(4,1)</td></tr>
+              <tr class="total"><td>DRE · Lucro bruto</td><td>+1,9</td></tr>
+            </tbody>
+          </table>
+          <p class="efeito">Sem vender nada, o tijolo assentado vira receita das unidades já vendidas — e consome caixa.</p>
+        </div>
+        <div class="norma">
+          <h3>2 · Venda com obra a 40% (unidade de 1,00)</h3>
+          <table>
+            <tbody>
+              <tr><td>DRE · Receita (1,00 × 40%)</td><td>+0,40</td></tr>
+              <tr><td>DRE · COGS (0,68 × 40%)</td><td>(0,27)</td></tr>
+              <tr class="total"><td>DRE · Lucro bruto</td><td>+0,13</td></tr>
+              <tr><td>Balanço · Contas a receber (menos a entrada em caixa)</td><td>+0,40</td></tr>
+              <tr><td>Balanço · Estoques</td><td>(0,27)</td></tr>
+            </tbody>
+          </table>
+          <p class="efeito">A venda puxa de uma vez todo o PoC acumulado: quanto mais tarde, maior o reconhecimento instantâneo — é o catch-up das bolhas jovens do gráfico abaixo.</p>
+        </div>
+        <div class="norma">
+          <h3>3 · Estouro de orçamento (68 → 74; obra 70%, 80% vendido)</h3>
+          <table>
+            <tbody>
+              <tr><td>Novo PoC: 47,6 incorrido ÷ 74 orçado</td><td>64,3% (cai)</td></tr>
+              <tr><td>DRE · Receita (estorno: 64,3% × 80 vs 70% × 80)</td><td>(4,5)</td></tr>
+              <tr><td>DRE · COGS (incorrido das vendidas não muda)</td><td>0,0</td></tr>
+              <tr class="total"><td>DRE · Lucro bruto</td><td>(4,5)</td></tr>
+              <tr><td>Balanço · Contas a receber</td><td>(4,5)</td></tr>
+              <tr><td>Margem do projeto (vida inteira, de uma vez)</td><td>32% → 26%</td></tr>
+            </tbody>
+          </table>
+          <p class="efeito">Cumulative catch-up: a revisão reprecifica o passado num único trimestre — e a margem REF do backlog cai junto. É o mecanismo do tombo da Plano&amp;Plano no 2T26.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>O PoC na prática — 2T26</h2>
+      <p class="desc">Cada bolha é um empreendimento real: evolução financeira reconhecida no trimestre × idade do reconhecimento. Tamanho = receita apropriada no 2T26.</p>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Alto Padrão</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Médio</span>
+        <span><i class="sw" style="background:var(--s3)"></i> MCMV 2 e 3</span>
+      </div>
+      <figure id="figPoc">
+        <svg viewBox="0 0 900 400"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">O ciclo de vida em uma foto: projetos recém-entrados apropriam em catch-up (até 49% num único trimestre); a obra a pleno vapor roda 5–10% por trimestre; o fim de vida pinga 0–3%. Os 40 nomeados somam R$ 1,3 bi no trimestre — 52% do total apropriado de R$ 2,5 bi.</p>
+      <details><summary>Ver os 40 empreendimentos</summary><div class="tscroll" id="tabPoc"></div></details>
+    </div>
 </section>
 
   <!-- ============ ABA: REF ============ -->
@@ -442,8 +504,6 @@
       <details class="fonte"><summary>Notas do modelo</summary><p class="fonte">Agregação: no trimestre T da companhia, cada linha = Σ sobre os projetos vivos (lançados em ℓ = T−12 … T) do valor do projeto na idade T−ℓ, escalado por (1+g)^ℓ, com g = inflação trimestral (INCC anual do slider). Na política "retido", o caixa final de cada projeto é devolvido ao acionista quando o projeto morre (idade 12). ROE anualizado = 4 × lucro do trimestre ÷ PL corrente. Para a escala da Cyrela real, multiplique por ~30× (lançamentos %CBR de ~R$ 3 bi/trimestre).</p></details>
     </div>
   </section>
-
-  <p class="fonte" style="margin-top:4px">Cyrela Update · construído a partir de fontes primárias (RI da Cyrela, CVM, atas e releases oficiais). Seções futuras do roteiro (Operacional, Resultados, Soma das partes, Valuation) serão adicionadas em novas versões.</p>
   <p class="fonte">Fontes: RI da Cyrela (planilhas, releases, Formulário de Referência), CVM (dados abertos, DFP) e atas; releases oficiais dos pares.</p>
 </div>
 
@@ -999,6 +1059,47 @@
       row("Receita reconhecida (cx)", rs(MC.rec[i])) + row("Gap receita − caixa", rs(MC.rec[i] - MC.k[i]));
   });
   desenha();
+
+  // ================= PoC na pratica (Anexo III, dados reais) =================
+  (function () {
+    var D = [["Eden Park By Dror", "Alto Padrão", "mar-23", 13, 7, 129.0], ["Cyrela Moema By Yoo", "Alto Padrão", "set-21", 19, 0, 43.0], ["Mandarim The Legend", "Alto Padrão", "mar-24", 9, 10, 39.0], ["La Isla Residence Club", "Alto Padrão", "mar-24", 9, 6, 39.0], ["Lis Moema", "Alto Padrão", "nov-23", 10, 5, 36.0], ["Ox Park Design By Edsa", "Alto Padrão", "set-24", 7, 9, 36.0], ["Casa Ibirapuera", "Alto Padrão", "jul-22", 15, 4, 30.0], ["On The Sky Cyrela By Yoo", "Alto Padrão", "jun-23", 12, 3, 29.0], ["Woods Park Design By Edsa", "Alto Padrão", "set-24", 7, 7, 29.0], ["Only By Living", "Médio", "nov-23", 10, 5, 28.0], ["On The Sky – Wanders & Yoo", "Alto Padrão", "dez-24", 6, 2, 27.0], ["Casa Eden By Yoo West", "Alto Padrão", "dez-23", 10, 6, 26.0], ["Casa Eden By Yoo East", "Alto Padrão", "dez-23", 10, 5, 25.0], ["The Park Inspired By Dror", "Alto Padrão", "abr-21", 20, 0, 25.0], ["Aura Moema", "Alto Padrão", "ago-23", 11, 4, 25.0], ["United Living Ipiranga", "Médio", "jun-23", 12, 4, 24.0], ["Living Wellness Aclimação", "Médio", "mar-23", 13, 3, 24.0], ["Iconyc By Yoo", "Alto Padrão", "set-23", 11, 1, 23.0], ["Vista Praia De Belas", "Alto Padrão", "ago-24", 7, 14, 22.0], ["Vivaz Santa Marina", "MCMV 2 e 3", "jul-24", 7, 10, 21.0], ["Escape Eden", "Alto Padrão", "jun-24", 8, 6, 21.0], ["Coupé Tower 2 - Edifício Coupé", "Alto Padrão", "fev-25", 5, 2, 21.0], ["Living Grand Wish Jardim", "Médio", "fev-24", 9, 6, 21.0], ["Vivaz Parque Prime Freguesia Do Ó", "MCMV 2 e 3", "out-24", 6, 10, 21.0], ["Living Address Alto Do Ipiranga", "Médio", "jun-23", 12, 6, 20.0], ["La Galerie", "Alto Padrão", "jun-26", 0, 49, 141.0], ["We Barra By Living", "Alto Padrão", "jun-26", 0, 25, 87.0], ["The Grand Residence Brooklin", "Médio", "jun-26", 0, 39, 48.0], ["Cyrela Zen By Yoo", "Alto Padrão", "dez-25", 2, 1, 39.0], ["Vista Milano", "Alto Padrão", "dez-25", 2, 0, 26.0], ["Grand Vivaz Estação Giovanni Gronchi", "MCMV 2 e 3", "jun-26", 0, 25, 23.0], ["Endless Península By Edsa", "Alto Padrão", "dez-25", 2, 0, 18.0], ["Casa Senses", "Alto Padrão", "dez-25", 2, 0, 17.0], ["Vivaz Selection Santo Amaro", "MCMV 2 e 3", "dez-25", 2, 1, 17.0], ["Capri", "Alto Padrão", "dez-25", 2, 0, 17.0], ["Vivaz Jardim De Versalhes", "MCMV 2 e 3", "jun-26", 0, 29, 17.0], ["In The Park Cidade Jardim", "Alto Padrão", "mar-26", 1, 0, 17.0], ["Grand Vivaz Lapa 2", "MCMV 2 e 3", "jun-26", 0, 23, 17.0], ["Skyline Menino Deus", "Alto Padrão", "dez-25", 2, 3, 16.0], ["Grand Vivaz Estação Tamanduateí 3", "MCMV 2 e 3", "jun-26", 0, 21, 16.0]];
+    var CORSEG = { "Alto Padrão": "var(--s1)", "Médio": "var(--s2)", "MCMV 2 e 3": "var(--s3)" };
+    var fig = document.getElementById("figPoc");
+    if (!fig) return;
+    var svg = fig.querySelector("svg"), g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"),
+        tt = fig.querySelector(".tt");
+    function XX(idade) { return 70 + idade * 39; }
+    function YY(v) { return 340 - v * 5.8; }
+    [0, 10, 20, 30, 40, 50].forEach(function (v) {
+      el("line", { x1: 70, y1: YY(v), x2: 870, y2: YY(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 62, y: YY(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    [0, 4, 8, 12, 16, 20].forEach(function (t) {
+      el("text", { x: XX(t), y: 366, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g, t);
+    });
+    el("text", { x: 470, y: 392, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g, "idade do reconhecimento (trimestres até o 2T26)");
+    D.forEach(function (d) {
+      var c = el("circle", { cx: XX(d[3]), cy: YY(d[4]), r: 4 + Math.sqrt(d[5]) / 2,
+        fill: CORSEG[d[1]], "fill-opacity": 0.72, stroke: "var(--surface-1)", "stroke-width": 1.5 }, gd);
+      c.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = "<b>" + d[0] + "</b>" +
+          "<div class='row'><span>" + d[1] + " · início " + d[2] + "</span></div>" +
+          "<div class='row'><span>Evolução no 2T26</span><em>" + d[4] + "%</em></div>" +
+          "<div class='row'><span>Receita apropriada</span><em>R$ " + d[5].toFixed(0) + " mi</em></div>";
+        tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 280 > b.width) x = e.clientX - b.left - 290;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      c.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+    var ht = "<table><thead><tr><th>Empreendimento</th><th>Segmento</th><th>Início</th><th>Idade (tri)</th><th>Evolução 2T26</th><th>Receita 2T26 (R$ mi)</th></tr></thead><tbody>";
+    D.slice().sort(function (a, b) { return b[5] - a[5]; }).forEach(function (d) {
+      ht += "<tr><td>" + d[0] + "</td><td>" + d[1] + "</td><td>" + d[2] + "</td><td>" + d[3] + "</td><td>" + d[4] + "%</td><td>" + d[5].toFixed(0) + "</td></tr>";
+    });
+    document.getElementById("tabPoc").innerHTML = ht + "</tbody></table>";
+  })();
 
   function bindColsP(figId, render) {
     var fig = document.getElementById(figId);
