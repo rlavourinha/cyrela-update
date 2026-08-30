@@ -156,7 +156,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.17 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.18 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -400,7 +400,7 @@
         <svg viewBox="0 0 900 400"><g class="eixos"></g><g class="dyn"></g></svg>
         <div class="tt"></div>
       </figure>
-      <p class="efeito">A fatia que já estava contratada antes do trimestre começar (obra do backlog) rodou estável em <b>42–47%</b> de 2023 ao 3T25 — e saltou para <b>54–72%</b> do 4T25 ao 2T26, quando os lançamentos desaceleraram e o colchão recorde de REF assumiu o volante. Catch-ups de vendas novas somam ~35–50% e o pronto, ~5–10%. Ressalva: estimativa — mistura VGV %CBR a valor de mercado com receita consolidada contábil, e o PoC na venda é premissa (±10 p.p. deslocam ~R$ 200–300 mi entre catch-up e backlog); a leitura robusta é a tendência, não o decimal. O fundo fecha o argumento: o salto da fatia do backlog no 4T25 veio junto com <b>receita recorde</b> (R$ 3,2 bi) — o backlog não ganhou espaço porque o resto sumiu, ele entregou mais receita absoluta (~R$ 2,3 bi no tri, contra ~R$ 0,7–1,1 bi de 2023–24): é o colchão de REF de 2023–24 maturando na DRE.</p>
+      <p class="efeito">A fatia que já estava contratada antes do trimestre começar (obra do backlog) rodou estável em <b>42–47%</b> de 2023 ao 3T25 — e saltou para <b>54–72%</b> do 4T25 ao 2T26, quando os lançamentos desaceleraram e o colchão recorde de REF assumiu o volante. Catch-ups de vendas novas somam ~35–50% e o pronto, ~5–10%. Ressalva: estimativa — mistura VGV %CBR a valor de mercado com receita consolidada contábil, e o PoC na venda é premissa (±10 p.p. deslocam ~R$ 200–300 mi entre catch-up e backlog); a leitura robusta é a tendência, não o decimal. E o salto do 4T25 tem dois motores — um deles é <b>perímetro, não economia</b>: a fatia consolidada do estoque pulou de 78% para 90% exatamente no 4T25 (equivalência caiu de R$ 3,2 bi para R$ 1,2 bi; o release informa 85% dos lançamentos e 82% das vendas do tri reconhecidos via consolidação, com %CBR dos lançamentos subindo a 76%). Projetos que eram equivalência entraram inteiros na receita consolidada sem nunca terem passado pelas premissas %CBR das vendas — e o residual "backlog" infla mecanicamente. O segundo motor é real: receita recorde (R$ 3,2 bi) com o colchão de REF de 2023–24 maturando. Leitura honesta: o degrau de 43–47% para ~55% é em parte <b>quebra de série</b> (linha pontilhada no gráfico); compare níveis dentro de cada regime, não através deles.</p>
     </div>
   </section>
 
@@ -1406,6 +1406,11 @@
     var fig = document.getElementById("figRecAnat");
     if (!fig) return;
     var BG = [1283, 1633, 1626, 1710, 1573, 1857, 2030, 2506, 1953, 2107, 2128, 3235, 2025, 2481], BGMAX = 3429;
+    var xq = 66 + (11 - 0.5) * (806 / (BG.length - 1));
+    el("line", { x1: xq, y1: 20, x2: xq, y2: 340, stroke: "var(--ink-1)", "stroke-width": 1,
+      "stroke-dasharray": "3 4", "stroke-opacity": 0.5 }, fig.querySelector(".eixos"));
+    el("text", { x: xq - 6, y: 34, fill: "var(--muted)", "font-size": 11, "text-anchor": "end" },
+      fig.querySelector(".eixos"), "quebra de perímetro (consolidação 78% → 90%)");
     BG.forEach(function (v, i) {
       var hh = v / BGMAX * 300;
       el("rect", { x: 66 + i * (806 / (BG.length - 1)) - 15, y: 340 - hh, width: 30, height: hh,
