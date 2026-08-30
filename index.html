@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.34 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.35 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -874,7 +874,7 @@
         <span><i class="sw" style="background:var(--s2)"></i> Exigibilidade (65% × saldo SBPE)</span>
       </div>
       <figure id="figFundExig"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
-      <p class="efeito">O termômetro do racionamento do SFH: em 2018 os bancos aplicavam <b>130% da exigibilidade</b> — R$ 120 bi de folga voluntária, porque poupança era o funding mais barato disponível. A folga foi consumida em ondas (o vale de 2020 é mecânico: a poupança saltou 20% na pandemia e a carteira demorou a acompanhar) e hoje o sistema opera em <b>~99% — no fio da régua</b>. Tradução: não existe mais SFH "espontâneo"; crédito novo a 12% depende de poupança crescer (não cresce) ou das muletas contábeis (FCVS, CRI computável). É o pano de fundo quantitativo do novo modelo de 2027 — o direcionamento morre porque, na prática, já não sobra o que direcionar.</p>
+      <p class="efeito">O termômetro do racionamento do SFH: em 2018 os bancos aplicavam <b>130% da exigibilidade</b> — R$ 120 bi de folga voluntária, porque poupança era o funding mais barato disponível. A folga foi consumida em ondas (o vale de 2020 é mecânico: a poupança saltou 20% na pandemia e a carteira demorou a acompanhar) e hoje o sistema opera em <b>~99% — no fio da régua</b>. Tradução: não existe mais SFH "espontâneo"; crédito novo a 12% depende de poupança crescer (não cresce) ou das muletas contábeis (FCVS, CRI computável). Os dois degraus da linha vinho são canetadas, não crédito sumindo: <b>jan/2019</b> (Res. CMN 4.676 cortou o FCVS virtual e outras muletas computáveis, −R$ 70 bi num mês) e <b>jan/2026</b> (nova limpeza de computáveis na transição do novo modelo, −R$ 54 bi). O deslize de 2023–25, esse sim, é real: carteira amortizando mais do que concede. É o pano de fundo quantitativo do novo modelo de 2027 — o direcionamento morre porque, na prática, já não sobra o que direcionar.</p>
 
       <h3 class="subtit">O cardápio que substitui a poupança</h3>
       <table>
@@ -2585,6 +2585,14 @@
     if (!fig) return;
     var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
     var N = MESES.length, PASSO = 812 / (N - 1), YMAX = 700;
+    [["2019-01", "Res. 4.676: fim do FCVS virtual"], ["2026-01", "transição do novo modelo"]].forEach(function (mk) {
+      var i = MESES.indexOf(mk[0]);
+      if (i < 0) return;
+      var xq = 60 + i * PASSO;
+      el("line", { x1: xq, y1: 30, x2: xq, y2: 330, stroke: "var(--ink-1)", "stroke-width": 1,
+        "stroke-dasharray": "3 4", "stroke-opacity": 0.45 }, g);
+      el("text", { x: xq - 5, y: 44, fill: "var(--muted)", "font-size": 11, "text-anchor": "end" }, g, mk[1]);
+    });
     function X(i) { return 60 + i * PASSO; }
     function Y(v) { return 330 - v * (300 / YMAX); }
     for (var v = 0; v <= YMAX; v += 175) {
