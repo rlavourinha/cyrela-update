@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.35 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.36 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -195,6 +195,7 @@
       <button data-tab="liquidez">Liquidez</button>
       <button data-tab="perfil">Perfil Oferta – SP</button>
       <button data-tab="funding">Funding</button>
+      <button data-tab="demanda">Demanda</button>
     </div>
   </nav>
 
@@ -888,6 +889,57 @@
         </tbody>
       </table>
       <p class="efeito">A escada de custo — FGTS ~4-5% &lt; poupança ~7,7% &lt; LCI/LIG ~13–14% &lt; CRI IPCA+ — é a raiz da bifurcação que o resto do grupo Mercado mostra: <b>o MCMV bebe do FGTS e não sente a Selic; o MAP perdeu a âncora barata e paga preço de mercado</b> (taxa PF em 14,3%, máxima da série). Dois riscos regulatórios no radar de 2026: o governo quer rever a <b>isenção dos títulos incentivados</b> (LCI/CRI/LIG — encareceria o substituto da poupança bem no meio da transição) e os bancos disputam o desenho do teto de juros do novo modelo. Quando a Selic ceder, o caminho inverso é igualmente poderoso: funding de mercado barateando junto com a demanda destravando.</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: DEMANDA ============ -->
+  <section class="tab" id="tab-demanda">
+    <div class="card">
+      <span class="tag">BCB (Estatísticas do Mercado Imobiliário + SGS) · FipeZap · PNADC/IBGE · premissas declaradas</span>
+      <h2>Demanda e affordability</h2>
+      <p>A demanda por imóvel é o encontro de quatro curvas: o custo do crédito, quanto o banco financia (LTV), o preço do imóvel e a renda de quem compra. Esta aba monta as quatro e fecha na régua única: <b>quanto da renda média a primeira parcela consome</b>.</p>
+
+      <h3 class="subtit">O custo do crédito — taxa média de contratação (% a.a.)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> SFH (pessoa física)</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Taxa livre (PF)</span>
+        <span><i class="sw" style="background:var(--s3)"></i> FGTS (MCMV)</span>
+        <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">PJ SFH (plano empresário)</span></span>
+      </div>
+      <figure id="figDemTaxa"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">O SFH saiu de 8,3% (2019) para <b>14,0%</b> — colado no teto legal de 12%+TR: o racionamento por preço chegou ao limite. O FGTS conta a outra metade da bifurcação: subiu só de 6,1% para 9,1% — o MCMV atravessa o ciclo quase imune. E a linha pontilhada é o custo de produção da Cyrela (plano empresário): 8,0% → ~14%, o pedágio que aparece como juros capitalizados no COGS (aba REF).</p>
+
+      <h3 class="subtit">Quanto o banco financia — LTV médio de contratação (%)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> SFH</span>
+        <span><i class="sw" style="background:var(--s3)"></i> FGTS (MCMV)</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Taxa livre</span>
+      </div>
+      <figure id="figDemLtv"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">A disciplina que evita a bolha: o LTV do SFH está <b>estável em ~66%</b> há uma década — o banco não afrouxou a entrada para compensar o juro. A exceção é o FGTS em <b>73,7%, máxima da série</b>: o MCMV esticando a alavancagem para caber demanda — o único ponto de atenção prudencial do sistema (com inadimplência FGTS de 2,1% vs 1,0% do SFH).</p>
+
+      <h3 class="subtit">Preço do imóvel financiado × renda (índices, 100 = jan/2018)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Valor mediano de compra financiada (BR)</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Renda média nominal (PNADC, derivada)</span>
+      </div>
+      <figure id="figDemPr"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">Surpresa construtiva: até 2024, preço do imóvel <i>financiado</i> (+52%) e renda nominal (+53%) andaram <b>empatados</b> — o financiado mediano é MCMV-adjacente (R$ 280 mil BR, R$ 320 mil SP) e o teto do programa acompanhou a renda. O aperto de affordability atual vem <b>do juro, não do preço</b>. Nota: renda nominal derivada da série real do IBGE (recomposta pelo IPCA), pois a PNADC divulgada no SGS é re-deflacionada a preços de hoje.</p>
+
+      <h3 class="subtit">Compra ÷ avaliação — quanto do laudo o comprador paga (%)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Valor de compra ÷ valor de avaliação (medianas, BR)</span>
+      </div>
+      <figure id="figDemCa"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">O "desconto" com dado bancário: em 2024 os compradores pagavam <b>acima do laudo</b> (104%); em abr/26, <b>93,3%</b> — fechando ~7% abaixo da avaliação. É a confirmação oficial, com outra fonte e outra amostra, do desconto recorde que o Raio-X FipeZap mostra na aba Perfil da Oferta.</p>
+
+      <h3 class="subtit">A régua final — 1ª parcela (SAC) ÷ renda média nominal (%)</h3>
+      <p class="desc">Apto de 60 m² ao preço médio FipeZap-SP, 80% de LTV, 360 meses, taxa média BCB; primeira parcela SAC dividida pela renda média nominal.</p>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> 1ª parcela ÷ renda (%)</span>
+      </div>
+      <figure id="figDemAff"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">O ciclo inteiro do poder de compra: o inferno era 2012–14 (<b>até 411% da renda</b>, juro de 17% com renda baixa), o paraíso foi 2019–21 (<b>~147%</b> — a razão do boom), e hoje estamos em <b>213% — o pior nível desde ~2017</b>, +45% de aperto desde o vale de 2021. A régua é termômetro temporal (a renda média não é o comprador MAP), mas a direção vale para todas as faixas — e mostra a convexidade da tese: cada ponto de Selic a menos desce esta curva e destrava a fila recorde de intenção de compra (52%). No MCMV a régua não se aplica: juro FGTS de 9,1% e teto acompanhando a renda mantêm a conta em pé — a demanda bifurcou junto com o funding.</p>
     </div>
   </section>
 
@@ -2624,6 +2676,213 @@
       tt.innerHTML = h; tt.style.opacity = 1;
       var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
       if (x + 250 > b.width) x = e.clientX - b.left - 260;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+
+  // ================= DEMANDA =================
+  (function () {
+    var MESES = ["2014-04", "2014-05", "2014-06", "2014-07", "2014-08", "2014-09", "2014-10", "2014-11", "2014-12", "2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"];
+    var SR = [{nome: "SFH (PF)", cor: "var(--s1)", v: [9.0, 9.0, 9.0, 9.2, 9.1, 9.2, 9.3, 9.1, 9.2, 9.2, 9.1, 9.6, 9.5, 10.0, 10.8, 11.1, 10.7, 12.1, 12.1, 11.7, 12.3, 11.6, 11.2, 12.2, 11.5, 11.7, 12.2, 11.9, 13.0, 12.5, 12.6, 12.8, 13.2, 12.9, 11.3, 12.6, 10.7, 11.7, 11.4, 11.5, 11.2, 10.4, 10.3, 9.9, 9.8, 9.8, 9.8, 9.8, 9.7, 9.5, 9.5, 9.4, 9.4, 9.3, 9.3, 9.3, 9.3, 9.3, 9.2, 9.3, 9.3, 9.3, 9.2, 9.0, 8.9, 8.8, 8.5, 8.2, 8.3, 8.2, 8.2, 8.0, 7.8, 7.9, 7.9, 7.7, 7.6, 7.7, 7.6, 7.7, 7.7, 7.5, 7.5, 7.4, 7.1, 7.2, 7.1, 7.2, 7.3, 7.5, 7.8, 8.1, 9.2, 9.6, 9.0, 10.2, 9.9, 11.2, 11.0, 11.2, 12.1, 11.6, 11.3, 11.3, 11.8, 11.9, 10.7, 12.2, 11.0, 12.7, 12.4, 12.2, 12.7, 11.8, 11.6, 11.3, 11.2, 11.4, 10.4, 10.7, 11.5, 11.3, 10.7, 11.1, 11.1, 11.1, 11.5, 11.3, 11.5, 13.1, 12.8, 12.5, 13.1, 13.0, 12.9, 12.5, 12.5, 12.3, 12.6, 13.8, 13.8, 13.8, 13.4, 13.8, 13.9, 14.0]}, {nome: "Taxa livre (PF)", cor: "var(--s2)", v: [9.3, 9.3, 9.2, 9.6, 9.3, 9.4, 9.6, 9.2, 9.5, 9.4, 9.2, 10.2, 10.2, 10.7, 11.6, 12.1, 11.9, 12.5, 12.5, 12.0, 13.4, 12.5, 12.1, 13.9, 13.1, 13.3, 14.1, 13.6, 14.6, 13.5, 13.4, 13.5, 13.8, 13.6, 11.8, 13.0, 11.3, 12.1, 11.8, 11.9, 11.1, 10.3, 10.3, 10.1, 9.9, 9.8, 9.9, 9.9, 9.7, 9.6, 9.5, 9.5, 9.3, 9.2, 9.1, 9.2, 9.2, 9.3, 9.0, 8.9, 8.8, 8.8, 8.8, 8.5, 8.4, 8.3, 7.9, 7.8, 7.7, 7.7, 7.6, 7.5, 7.5, 7.5, 7.5, 7.4, 7.3, 7.4, 7.5, 7.5, 7.5, 7.3, 7.3, 7.2, 7.2, 7.2, 7.2, 7.2, 7.3, 7.5, 7.7, 8.1, 9.0, 9.5, 8.9, 10.2, 9.9, 11.2, 11.0, 11.3, 12.3, 11.7, 11.5, 11.5, 12.0, 12.1, 10.9, 12.7, 11.4, 13.1, 12.8, 12.6, 13.2, 12.1, 12.0, 11.7, 11.4, 11.6, 10.7, 11.0, 11.7, 11.5, 11.0, 11.3, 11.4, 11.3, 11.6, 11.6, 11.6, 12.9, 13.2, 13.3, 14.3, 14.5, 14.8, 14.7, 15.1, 14.8, 14.7, 14.9, 14.7, 14.6, 14.6, 14.4, 14.5, 14.5]}, {nome: "FGTS", cor: "var(--s3)", v: [5.5, 5.5, 5.4, 5.7, 5.5, 5.6, 5.6, 5.5, 5.6, 5.6, 5.4, 5.6, 5.7, 5.7, 5.8, 5.8, 5.7, 7.8, 7.7, 7.1, 8.1, 7.3, 7.1, 8.5, 7.7, 8.1, 8.7, 8.3, 9.3, 8.3, 8.4, 8.2, 8.5, 8.4, 6.8, 8.0, 6.2, 7.1, 6.9, 7.0, 6.7, 6.2, 6.0, 5.9, 5.8, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.0, 6.2, 6.1, 6.3, 6.1, 6.1, 6.2, 6.2, 6.1, 6.2, 7.3, 6.1, 6.0, 6.1, 6.1, 6.2, 6.2, 6.0, 6.1, 6.1, 6.1, 6.1, 6.1, 6.1, 6.1, 6.1, 6.0, 6.0, 6.0, 6.0, 6.0, 6.1, 6.0, 6.0, 6.1, 6.1, 6.1, 6.0, 6.6, 6.9, 6.2, 7.5, 7.1, 8.3, 8.1, 8.2, 8.8, 8.4, 8.1, 8.2, 8.8, 8.7, 7.5, 9.1, 7.6, 8.9, 8.7, 8.5, 9.3, 8.2, 8.0, 7.9, 7.7, 7.9, 7.0, 7.0, 8.1, 7.8, 7.2, 7.5, 7.7, 7.3, 7.6, 7.3, 7.5, 8.3, 8.2, 8.2, 9.0, 8.7, 8.9, 8.6, 8.8, 8.6, 8.5, 8.7, 8.7, 8.6, 8.3, 8.6, 9.0, 9.1]}, {nome: "PJ SFH (plano empresário)", cor: "var(--ink-1)", dash: "2 4", v: [10.2, 10.6, 10.3, 10.5, 10.4, 10.5, 10.9, 10.4, 11.0, 10.8, 9.9, 11.5, 11.4, 11.6, 12.6, 13.1, 12.9, 12.5, 12.3, 13.0, 14.1, 12.5, 12.8, 13.8, 13.3, 12.9, 13.8, 13.1, 14.4, 13.2, 12.9, 13.2, 13.3, 13.7, 12.2, 12.8, 11.3, 11.8, 12.1, 11.9, 10.7, 11.1, 11.1, 11.2, 11.4, 10.6, 10.8, 10.1, 9.9, 10.4, 10.7, 10.5, 10.3, 9.5, 10.0, 9.9, 9.5, 10.5, 9.2, 9.9, 9.2, 9.4, 9.8, 8.9, 9.1, 9.1, 8.4, 8.3, 8.0, 8.2, 7.5, 8.0, 7.5, 7.0, 7.8, 7.8, 7.0, 7.9, 7.3, 7.4, 6.5, 6.8, 7.0, 6.6, 6.5, 6.2, 6.4, 6.8, 7.3, 7.0, 7.5, 8.1, 9.3, 9.7, 8.9, 10.2, 9.9, 11.1, 10.7, 10.7, 11.9, 11.6, 11.7, 11.3, 11.8, 11.9, 10.1, 12.0, 11.0, 12.4, 11.8, 11.8, 12.0, 11.4, 11.0, 11.1, 11.1, 10.5, 9.8, 10.2, 10.9, 10.4, 9.9, 10.8, 9.6, 10.4, 10.6, 11.6, 10.4, 10.5, 11.0, 11.0, 11.5, 11.6, 11.5, 11.4, 12.6, 12.1, 12.1, 12.3, 11.7, 11.3, null, null, 14.2, null]}];
+    var fig = document.getElementById("figDemTaxa");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1), YMIN = 0, YMAX = 18;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - (v - YMIN) * (300 / (YMAX - YMIN)); }
+    [0, 6, 12, 18].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 0 || v === 100 && 0 > 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": 1 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      var h = "<b>" + MESES[i] + "</b>";
+      SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + "%</em></div>"; });
+      
+      tt.innerHTML = h; tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 260 > b.width) x = e.clientX - b.left - 270;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+  (function () {
+    var MESES = ["2014-04", "2014-05", "2014-06", "2014-07", "2014-08", "2014-09", "2014-10", "2014-11", "2014-12", "2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"];
+    var SR = [{nome: "SFH", cor: "var(--s1)", v: [73.4, 74.0, 72.9, 73.0, 72.6, 72.8, 71.9, 72.3, 72.6, 72.5, 71.8, 71.8, 72.8, 67.9, 65.9, 65.2, 65.1, 64.3, 63.7, 64.0, 66.0, 65.0, 64.6, 62.3, 63.5, 63.9, 64.3, 63.8, 63.8, 64.2, 65.0, 64.2, 64.2, 63.8, 63.4, 59.1, 63.9, 63.9, 63.9, 63.9, 63.5, 64.0, 63.2, 63.0, 63.0, 63.7, 63.6, 64.2, 64.4, 64.8, 65.2, 65.4, 65.0, 65.1, 65.0, 64.6, 66.7, 70.0, 66.0, 63.9, 64.3, 65.5, 64.7, 64.8, 65.0, 65.1, 66.0, 65.4, 66.8, 66.5, 66.9, 66.8, 67.4, 67.1, 67.6, 67.8, 67.8, 67.9, 67.8, 67.8, 68.3, 67.6, 68.0, 68.4, 68.7, 69.6, 68.6, 69.4, 69.4, 68.9, 68.5, 68.3, 68.5, 68.0, 68.3, 69.1, 68.6, 69.1, 69.0, 69.2, 69.3, 69.6, 70.1, 69.8, 70.0, 69.4, 69.7, 69.6, 68.7, 68.9, 68.7, 67.8, 68.0, 67.4, 67.5, 67.3, 67.1, 66.4, 67.7, 66.9, 67.1, 67.5, 67.4, 67.6, 68.2, 68.1, 68.7, 68.1, 67.8, 65.0, 64.1, 63.9, 63.2, 63.8, 63.1, 63.8, 63.8, 64.2, 63.9, 64.3, 65.3, 65.4, 65.3, 66.0, 66.2, 65.7]}, {nome: "FGTS", cor: "var(--s3)", v: [77.8, 78.3, 78.2, 77.8, 78.1, 78.2, 78.5, 78.5, 78.6, 78.2, 78.4, 78.6, 78.6, 78.2, 78.1, 77.8, 77.6, 77.0, 77.1, 77.4, 71.9, 72.3, 76.0, 76.4, 76.3, 75.4, 76.2, 76.2, 76.2, 75.9, 76.3, 74.3, 75.0, 73.4, 74.9, 74.7, 74.6, 75.2, 75.3, 75.2, 75.8, 74.8, 74.3, 74.4, 73.6, 73.7, 73.7, 72.7, 72.4, 72.5, 72.3, 72.1, 72.7, 72.8, 73.2, 73.2, 73.4, 80.1, 73.5, 73.5, 73.6, 73.4, 73.8, 73.8, 73.6, 73.8, 73.4, 73.7, 73.2, 73.3, 73.5, 73.7, 73.6, 73.6, 73.8, 73.8, 73.6, 73.5, 73.7, 73.7, 73.2, 73.0, 73.2, 73.1, 73.4, 73.5, 73.4, 73.3, 73.5, 73.0, 72.8, 72.7, 72.3, 72.7, 72.7, 72.6, 72.6, 72.6, 72.3, 72.2, 71.8, 71.2, 71.2, 71.2, 71.0, 71.2, 71.4, 71.8, 72.4, 72.7, 72.9, 72.3, 71.9, 71.7, 71.4, 71.5, 70.9, 71.9, 71.9, 72.4, 72.4, 73.3, 72.6, 72.6, 72.4, 72.2, 72.1, 72.3, 72.5, 73.3, 72.5, 72.9, 73.2, 72.3, 73.7, 73.5, 73.4, 73.2, 73.2, 73.2, 73.1, 72.9, 73.2, 73.0, 73.7, 73.7]}, {nome: "Taxa livre", cor: "var(--s2)", v: [62.9, 63.8, 63.6, 63.6, 63.1, 62.9, 56.6, 62.5, 62.7, 63.5, 61.8, 62.0, 63.5, 61.2, 60.7, 60.2, 59.3, 59.2, 58.9, 59.1, 54.8, 54.9, 54.8, 55.1, 54.3, 54.6, 55.4, 53.6, 53.6, 56.4, 56.1, 54.4, 55.0, 55.3, 54.2, 48.1, 56.8, 54.9, 55.7, 56.0, 56.6, 59.7, 57.4, 55.1, 58.2, 55.1, 57.5, 57.0, 57.5, 57.8, 56.5, 56.9, 57.2, 57.5, 58.7, 59.8, 62.6, 69.8, 64.6, 58.4, 59.6, 59.8, 58.2, 57.6, 60.6, 57.5, 56.3, 57.6, 61.1, 60.5, 60.5, 58.7, 59.1, 58.4, 58.8, 60.1, 60.1, 60.9, 60.5, 60.5, 61.2, 60.6, 61.0, 60.9, 62.9, 62.6, 63.4, 63.9, 62.6, 61.9, 62.9, 62.2, 62.3, 61.5, 62.3, 61.9, 63.0, 62.3, 62.3, 62.7, 62.5, 64.2, 64.3, 64.4, 63.7, 62.8, 62.6, 61.3, 62.6, 63.3, 62.8, 62.8, 63.4, 62.1, 63.4, 62.0, 62.0, 60.2, 62.0, 62.3, 62.8, 62.9, 63.2, 63.1, 61.9, 63.0, 62.8, 62.6, 61.3, 63.2, 62.9, 63.2, 62.5, 61.6, 61.1, 61.8, 65.5, 62.5, 63.5, 63.5, 64.4, 64.3, 66.7, 64.6, 63.6, 65.2]}];
+    var fig = document.getElementById("figDemLtv");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1), YMIN = 40, YMAX = 80;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - (v - YMIN) * (300 / (YMAX - YMIN)); }
+    [40, 50, 60, 70, 80].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 40 || v === 100 && 40 > 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": 1 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      var h = "<b>" + MESES[i] + "</b>";
+      SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + "%</em></div>"; });
+      
+      tt.innerHTML = h; tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 260 > b.width) x = e.clientX - b.left - 270;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+  (function () {
+    var MESES = ["2014-04", "2014-05", "2014-06", "2014-07", "2014-08", "2014-09", "2014-10", "2014-11", "2014-12", "2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"];
+    var SR = [{nome: "Preço financiado (BR)", cor: "var(--s1)", v: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 100.0, 100.3, 97.3, 100.3, 99.1, 100.3, 102.2, 101.0, 102.2, 103.4, 106.4, 104.0, 167.2, 100.3, 103.4, 103.4, 106.4, 103.4, 109.5, 154.5, 103.4, 103.4, 103.4, 106.4, 127.7, 118.6, 109.5, 114.9, 109.5, 109.5, 115.2, 118.6, 121.6, 122.2, 127.7, 128.9, 139.9, 137.4, 136.8, 139.9, 136.8, 139.9, 140.5, 146.0, 142.9, 142.9, 145.3, 122.4, 139.9, 130.8, 129.9, 133.8, 130.8, 133.8, 139.9, 127.7, 131.4, 133.8, 136.5, 127.1, 143.5, 144.1, 150.8, 133.8, 146.0, 160.6, 175.6, 152.0, 152.0, 155.1, 152.0, 150.8, 142.9, 148.4, 143.2, 153.3, 149.0, 157.9, 160.6, 161.2, 161.2, 161.2, 159.2, 152.0, 160.6, 161.2, 158.1, 155.1, 152.0, 152.0, 152.0, 152.0, 151.7, 152.0, 156.0, 158.5, 160.6, 163.0, 164.2, 170.3, null]}, {nome: "Renda nominal", cor: "var(--s2)", v: [70.9, 70.7, 70.7, 71.1, 71.4, 72.2, 72.0, 72.9, 76.3, 77.2, 77.6, 75.7, 75.7, 76.6, 76.7, 76.7, 76.6, 76.9, 77.4, 80.8, 89.3, 90.3, 88.8, 81.2, 81.5, 81.3, 81.7, 82.9, 83.0, 82.9, 83.0, 86.4, 94.7, 95.9, 94.1, 86.2, 85.6, 85.3, 85.4, 85.9, 86.4, 86.5, 86.9, 90.1, 98.9, 100.0, 97.4, 89.7, 89.6, 89.8, 91.0, 91.8, 91.3, 91.4, 91.5, 94.9, 104.4, 105.6, 102.6, 94.1, 93.5, 93.8, 93.8, 94.8, 94.5, 94.8, 95.1, 99.0, 109.5, 110.1, 107.4, 98.6, 96.0, 94.1, 94.4, 96.2, 98.5, 98.7, 99.8, 102.1, 111.3, 111.2, 110.0, 102.7, 102.8, 102.6, 102.4, 102.3, 101.3, 100.8, 100.6, 103.4, 113.4, 114.5, 114.0, 107.0, 108.5, 109.9, 111.9, 112.2, 112.8, 113.1, 114.7, 119.6, 129.9, 131.1, 128.7, 120.8, 120.5, 120.7, 120.9, 122.0, 123.5, 123.6, 124.3, 128.4, 141.3, 143.2, 140.1, 131.1, 131.8, 133.0, 132.5, 134.1, 134.1, 134.9, 135.8, 141.1, 152.9, 154.7, 153.0, 142.8, 142.8, 144.1, 144.8, 145.5, 145.7, 146.3, 147.8, 153.8, 166.7, 168.3, 166.3, 156.0, 155.3, 155.7]}];
+    var fig = document.getElementById("figDemPr");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1), YMIN = 60, YMAX = 180;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - (v - YMIN) * (300 / (YMAX - YMIN)); }
+    [60, 100, 140, 180].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 60 || v === 100 && 60 > 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": 1 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "");
+    });
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      var h = "<b>" + MESES[i] + "</b>";
+      SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + "</em></div>"; });
+      
+      tt.innerHTML = h; tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 260 > b.width) x = e.clientX - b.left - 270;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+  (function () {
+    var MESES = ["2014-04", "2014-05", "2014-06", "2014-07", "2014-08", "2014-09", "2014-10", "2014-11", "2014-12", "2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"];
+    var SR = [{nome: "Compra ÷ avaliação", cor: "var(--s1)", v: [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 97.8, 97.1, 96.9, 97.1, 95.9, 97.1, 97.1, 97.6, 97.6, 97.5, 97.2, 95.0, 96.5, 97.1, 97.1, 94.4, 97.2, 97.1, 97.3, 94.8, 96.6, 98.0, 94.4, 97.2, 95.5, 95.1, 96.8, 96.9, 95.7, 95.2, 97.1, 94.7, 93.7, 93.5, 95.0, 95.9, 95.8, 96.2, 97.0, 97.0, 97.4, 97.9, 95.9, 96.0, 95.9, 95.9, 96.4, 93.6, 95.8, 95.6, 95.0, 95.7, 95.6, 95.7, 95.8, 95.0, 95.3, 95.7, 94.9, 96.8, 95.5, 96.0, 97.9, 92.8, 96.2, 95.7, 95.9, 95.1, 96.2, 94.4, 96.2, 96.1, 95.9, 96.1, 95.5, 95.5, 97.2, 98.7, 100.0, 100.4, 101.9, 103.9, 104.7, 104.2, 107.5, 104.4, 102.9, 98.1, 96.5, 98.0, 98.8, 94.7, 96.0, 95.0, 95.0, 94.4, 94.3, 94.0, 94.4, 93.3, null]}];
+    var fig = document.getElementById("figDemCa");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1), YMIN = 85, YMAX = 110;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - (v - YMIN) * (300 / (YMAX - YMIN)); }
+    [85, 90, 95, 100, 105, 110].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 85 || v === 100 && 85 > 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": 1 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      var h = "<b>" + MESES[i] + "</b>";
+      SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + "%</em></div>"; });
+      
+      tt.innerHTML = h; tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 260 > b.width) x = e.clientX - b.left - 270;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+  (function () {
+    var MESES = ["2012-02", "2012-03", "2012-04", "2012-05", "2012-06", "2012-07", "2012-08", "2012-09", "2012-10", "2012-11", "2012-12", "2013-01", "2013-02", "2013-03", "2013-04", "2013-05", "2013-06", "2013-07", "2013-08", "2013-09", "2013-10", "2013-11", "2013-12", "2014-01", "2014-02", "2014-03", "2014-04", "2014-05", "2014-06", "2014-07", "2014-08", "2014-09", "2014-10", "2014-11", "2014-12", "2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"];
+    var SR = [{nome: "1ª parcela ÷ renda", cor: "var(--s1)", v: [410.7, 324.8, 313.2, 286.3, 261.2, 258.0, 267.6, 282.0, 284.4, 286.1, 265.3, 263.0, 261.8, 268.6, 269.2, 264.5, 263.6, 272.0, 274.8, 279.7, 286.6, 307.5, 296.2, 313.9, 301.6, 347.3, 332.4, 310.7, 305.7, 314.1, 309.7, 301.6, 300.0, 296.8, 265.8, 269.0, 277.0, 291.6, 288.3, 303.1, 311.5, 314.8, 310.8, 316.1, 314.1, 302.8, 261.6, 271.4, 270.9, 304.8, 299.0, 312.0, 309.6, 307.5, 304.4, 303.2, 292.6, 291.1, 263.3, 259.7, 260.9, 277.6, 268.8, 284.4, 262.5, 256.9, 237.9, 242.7, 240.1, 233.0, 199.3, 201.5, 203.7, 217.4, 217.8, 212.3, 205.3, 202.0, 200.3, 197.9, 195.8, 189.7, 173.1, 168.6, 176.2, 192.6, 192.6, 191.4, 190.7, 188.7, 185.4, 182.2, 179.1, 167.8, 149.3, 148.9, 152.4, 168.2, 170.9, 175.5, 175.0, 170.2, 164.7, 165.0, 164.7, 162.9, 149.9, 146.6, 149.9, 165.7, 160.7, 162.8, 164.6, 165.0, 168.5, 173.3, 178.3, 179.8, 175.8, 180.5, 168.2, 199.7, 197.8, 205.1, 203.6, 208.6, 209.4, 204.8, 201.3, 196.0, 188.0, 188.8, 179.8, 207.0, 208.1, 219.2, 219.4, 221.7, 214.8, 208.6, 205.0, 201.2, 177.5, 176.6, 176.9, 195.2, 192.6, 193.4, 197.3, 193.9, 195.3, 194.7, 196.8, 190.4, 181.9, 192.8, 190.2, 220.9, 222.1, 225.9, 227.0, 228.9, 229.5, 229.8, 228.1, 218.8, 201.9, 199.2, 196.8, 213.2, 213.9, 214.6, 213.2]}];
+    var fig = document.getElementById("figDemAff");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1), YMIN = 0, YMAX = 450;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - (v - YMIN) * (300 / (YMAX - YMIN)); }
+    [0, 150, 300, 450].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 0 || v === 100 && 0 > 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": 1 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      var h = "<b>" + MESES[i] + "</b>";
+      SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + "%</em></div>"; });
+      
+      tt.innerHTML = h; tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 260 > b.width) x = e.clientX - b.left - 270;
       tt.style.left = x + "px"; tt.style.top = y + "px";
     });
     hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
