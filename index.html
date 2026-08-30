@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.32 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.33 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -194,6 +194,7 @@
       <button data-tab="mercado">Preços</button>
       <button data-tab="liquidez">Liquidez</button>
       <button data-tab="perfil">Perfil Oferta – SP</button>
+      <button data-tab="funding">Funding</button>
     </div>
   </nav>
 
@@ -813,6 +814,62 @@
       </div>
       <figure id="figPerfRaiox"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
       <p class="efeito">Série completa, extraída dos rótulos dos gráficos da própria pesquisa (edição 2T26 — a Fipe re-amostra o acumulado 12m, então pontos antigos são revisados: dez/25 marcou 71% na leitura da época e foi revisado a 67%). A leitura de 13 anos: as transações com desconto rodam numa banda 53–70% — pisos na euforia (54% em 2014, 56% em mar/23) e tetos nas crises (70% em 2016 e 2019); hoje, 65%, acima da média de 64%. O <b>desconto médio nas transações com desconto voltou a 14% — o teto histórico, visto só em 2016 e 2020</b>. E o investidor: de 53% das compras em 2013 para mínima de 34% (2019), pico de 49% (jan/24, era dos compactos) e <b>40% hoje, abaixo da média de 43%</b> — o comprador marginal de investimento está saindo da mesa exatamente quando a oferta de compactos é recorde. Combinação: mesa dura para vender estoque MAP, exatamente o que trava o caixa da Cyrela. <b>Nota de leitura — este termômetro é, na prática, ex-MCMV</b>: 68% dos respondentes têm renda acima de R$ 10 mil e 74% das compras são de usados, enquanto o MCMV (novo, na planta, preço ancorado no teto do programa, repasse pela Caixa) quase não transaciona com desconto — se ~25% da amostra fosse MCMV com incidência de 40%, a incidência ex-MCMV seria ~73%, o teto histórico em regime permanente. E como o FipeZap da aba Preços também é de anúncios MAP/usados, o preço <i>efetivo</i> de fechamento no MAP cai mais do que o índice sugere: anúncio em queda real + 9% de desconto médio na transação.</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: FUNDING ============ -->
+  <section class="tab" id="tab-funding">
+    <div class="card">
+      <span class="tag">Lei 4.380/64 (SFH) · Lei 9.514/97 (SFI) · Res. CMN 4.676/18 · Lei 13.097/15 (LIG) · BCB/SGS · B3</span>
+      <h2>Funding: as regras do jogo do crédito imobiliário</h2>
+      <p>Quem financia o setor define quem constrói o quê. O sistema tem dois trilhos — SFH (regulado, funding subsidiado) e SFI (livre, funding de mercado) — e a poupança é a âncora histórica do primeiro. Ela está secando, e o cardápio que a substitui muda o preço de tudo.</p>
+
+      <h3 class="subtit">Os dois trilhos: SFH × SFI</h3>
+      <table>
+        <thead><tr><th></th><th>SFH (Lei 4.380/64)</th><th>SFI (Lei 9.514/97)</th></tr></thead>
+        <tbody>
+          <tr><td>Teto de taxa</td><td><b>12% a.a. + TR</b> (efetivo)</td><td>Livre</td></tr>
+          <tr><td>Teto do imóvel</td><td><b>R$ 2,25 milhões</b></td><td>Sem teto</td></tr>
+          <tr><td>Funding</td><td>Poupança SBPE + FGTS</td><td>LCI, LIG, CRI, captações de mercado</td></tr>
+          <tr><td>FGTS do comprador (entrada/amortização)</td><td>Sim</td><td>Não</td></tr>
+          <tr><td>Quota máxima de financiamento</td><td>80% do valor (e o novo modelo consolida o cap)</td><td>Negociada</td></tr>
+          <tr><td>Para a Cyrela</td><td>Plano empresário (dívida de produção a TR+~10,5%) e o repasse do cliente até o teto</td><td>Alto padrão acima de R$ 2,25 mi — taxa cheia; é o cap que ameaça o luxo paulistano no longo prazo</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="subtit">A regra-mãe: o direcionamento da poupança (SBPE)</h3>
+      <p>De cada R$ 100 depositados na poupança dos bancos do SBPE:</p>
+      <svg viewBox="0 0 900 70" style="width:100%;max-width:900px">
+        <rect x="10" y="12" width="573" height="34" rx="6" fill="var(--s1)" fill-opacity="0.85"></rect>
+        <rect x="587" y="12" width="176" height="34" rx="6" fill="var(--s3)" fill-opacity="0.85"></rect>
+        <rect x="767" y="12" width="123" height="34" rx="6" fill="var(--grid)"></rect>
+        <text x="296" y="34" fill="var(--surface-1)" font-size="14" font-weight="650" text-anchor="middle">65% crédito imobiliário obrigatório (≥80% em SFH)</text>
+        <text x="675" y="34" fill="var(--surface-1)" font-size="13.5" font-weight="650" text-anchor="middle">20% compulsório</text>
+        <text x="828" y="34" fill="var(--ink-1)" font-size="13.5" text-anchor="middle">15% livre</text>
+        <text x="10" y="64" fill="var(--muted)" font-size="12">Remuneração ao poupador: TR + 0,5% a.m. quando a Selic &gt; 8,5% (≈ TR + 6,2% a.a.) — o funding barato que ancora o teto de 12% do SFH.</text>
+      </svg>
+      <p class="efeito">A mágica e a maldição num só desenho: enquanto a poupança cresce, o SFH empresta abaixo do mercado; quando ela seca, a exigibilidade encolhe junto — e o crédito migra para funding a preço cheio. O <b>novo modelo do BCB (testes em 2026, vigência jan/2027)</b> desmonta isso gradualmente: compulsório de 20% → zero em ~10 anos, direcionamento se dissolve, e o banco passa a compor o funding livremente (poupança + LCI/LIG/CRI), com subsídio focalizado.</p>
+
+      <h3 class="subtit">A âncora secando — poupança: saldo nominal × real (R$ bi)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Saldo real (R$ de hoje, deflacionado pelo IPCA)</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Saldo nominal</span>
+      </div>
+      <figure id="figFundPoup"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">O saldo nominal está <b>parado há seis anos</b> (R$ 1,04 tri em dez/2020 → R$ 1,03 tri hoje) — em termos reais, <b>−28% desde o pico</b>. Com captação líquida negativa na maior parte dos anos desde 2015 (Abecip/BCB), o que segura o saldo é só o juro creditado. Cada real que sai daqui é um real de SFH a 12% que vira LCI a preço de mercado.</p>
+
+      <h3 class="subtit">O cardápio que substitui a poupança</h3>
+      <table>
+        <thead><tr><th>Instrumento</th><th>Estoque</th><th>Custo típico do funding</th><th>O que é</th></tr></thead>
+        <tbody>
+          <tr><td><b>FGTS</b></td><td>fundo parafiscal</td><td>TR + ~3% a.a.</td><td>O motor do MCMV — juro definido pelo Conselho Curador, imune à Selic; é por ele que o MCMV não sente o ciclo</td></tr>
+          <tr><td><b>Poupança SBPE</b></td><td>R$ 1,03 tri (total)</td><td>≈ TR + 6,2% a.a.</td><td>A âncora histórica do SFH — encolhendo 28% em termos reais desde 2020</td></tr>
+          <tr><td><b>LCI</b></td><td><b>&gt; R$ 500 bi</b> (~20% do funding)</td><td>~85–95% do CDI ≈ 13–14% a.a.</td><td>Emissão bancária lastreada na carteira imobiliária; <b>isenta de IR para PF</b> (o subsídio que a viabiliza); prazo mínimo de 9–12 meses (CMN 2024)</td></tr>
+          <tr><td><b>LIG</b></td><td>&gt; R$ 100 bi</td><td>mercado (isenta p/ PF e estrangeiro)</td><td>O covered bond brasileiro (Lei 13.097/15): dupla garantia — banco + carteira segregada em regime fiduciário; prazo ≥ 24 meses</td></tr>
+          <tr><td><b>CRI</b></td><td>R$ 261 bi (mar/26, +13% a/a)</td><td>IPCA + 7–9%</td><td>Securitização (trilho SFI): recebíveis imobiliários vendidos ao mercado de capitais; isento p/ PF; é onde a CashMe se financia</td></tr>
+        </tbody>
+      </table>
+      <p class="efeito">A escada de custo — FGTS ~4-5% &lt; poupança ~7,7% &lt; LCI/LIG ~13–14% &lt; CRI IPCA+ — é a raiz da bifurcação que o resto do grupo Mercado mostra: <b>o MCMV bebe do FGTS e não sente a Selic; o MAP perdeu a âncora barata e paga preço de mercado</b> (taxa PF em 14,3%, máxima da série). Dois riscos regulatórios no radar de 2026: o governo quer rever a <b>isenção dos títulos incentivados</b> (LCI/CRI/LIG — encareceria o substituto da poupança bem no meio da transição) e os bancos disputam o desenho do teto de juros do novo modelo. Quando a Selic ceder, o caminho inverso é igualmente poderoso: funding de mercado barateando junto com a demanda destravando.</p>
     </div>
   </section>
 
@@ -2417,6 +2474,48 @@
       });
       r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
     });
+  })();
+
+  // ================= MERCADO: funding (poupanca nominal x real) =================
+  (function () {
+    var MESES = ["2011-01", "2011-02", "2011-03", "2011-04", "2011-05", "2011-06", "2011-07", "2011-08", "2011-09", "2011-10", "2011-11", "2011-12", "2012-01", "2012-02", "2012-03", "2012-04", "2012-05", "2012-06", "2012-07", "2012-08", "2012-09", "2012-10", "2012-11", "2012-12", "2013-01", "2013-02", "2013-03", "2013-04", "2013-05", "2013-06", "2013-07", "2013-08", "2013-09", "2013-10", "2013-11", "2013-12", "2014-01", "2014-02", "2014-03", "2014-04", "2014-05", "2014-06", "2014-07", "2014-08", "2014-09", "2014-10", "2014-11", "2014-12", "2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07"];
+    var NOM = [382.0, 383.3, 385.7, 386.1, 387.0, 389.6, 398.0, 402.7, 409.3, 412.7, 415.0, 420.9, 423.3, 425.1, 429.9, 434.1, 442.5, 449.8, 460.2, 465.9, 474.1, 479.5, 485.7, 497.1, 501.7, 506.4, 514.7, 519.5, 527.9, 539.3, 551.2, 558.4, 567.9, 575.4, 584.8, 599.8, 604.8, 609.9, 614.9, 616.8, 622.3, 628.9, 636.4, 640.6, 645.5, 649.7, 655.8, 664.8, 663.5, 660.2, 652.5, 650.4, 651.1, 648.9, 650.7, 647.5, 646.4, 647.2, 650.0, 659.0, 651.0, 648.3, 647.0, 642.8, 640.2, 640.7, 643.8, 643.7, 645.4, 646.8, 652.7, 669.3, 662.2, 664.1, 662.9, 665.2, 669.0, 678.7, 684.7, 690.4, 697.4, 698.6, 705.6, 728.0, 725.7, 727.8, 734.8, 738.8, 744.0, 752.5, 759.1, 768.0, 779.2, 779.7, 783.4, 800.9, 792.6, 791.4, 796.4, 796.5, 798.9, 804.3, 805.7, 810.1, 821.6, 824.2, 829.3, 849.2, 839.3, 838.0, 852.6, 885.5, 924.8, 947.4, 977.5, 990.6, 1005.5, 1014.1, 1017.2, 1039.9, 1022.6, 1019.0, 1017.2, 1022.9, 1025.1, 1035.1, 1044.6, 1041.9, 1037.3, 1033.3, 1024.8, 1037.5, 1023.0, 1022.8, 1013.0, 1008.9, 1013.5, 1016.0, 1009.8, 994.4, 994.8, 990.0, 988.8, 1001.5, 975.1, 970.1, 969.9, 969.6, 963.9, 972.7, 975.2, 971.5, 971.7, 965.1, 967.2, 986.3, 971.4, 972.3, 979.2, 983.2, 996.8, 1015.1, 1019.9, 1025.0, 1023.3, 1022.7, 1025.3, 1036.0, 1011.6, 1014.1, 1008.8, 1009.0, 1015.5, 1024.1, 1024.5, 1023.5, 1014.9, 1011.8, 1015.2, 1028.5, 1011.2, 1011.2, 1006.8, 1013.0, 1021.6, 1028.4, 1027.9];
+    var REA = [907.9, 903.7, 902.3, 896.3, 894.2, 898.7, 916.7, 924.1, 934.3, 938.0, 938.3, 946.9, 947.0, 946.7, 955.4, 958.6, 973.8, 989.0, 1007.6, 1015.9, 1027.8, 1033.4, 1040.6, 1056.8, 1057.3, 1060.9, 1073.2, 1077.4, 1090.6, 1111.4, 1135.5, 1147.7, 1163.1, 1171.7, 1184.5, 1203.9, 1207.3, 1209.0, 1207.8, 1203.6, 1208.8, 1216.7, 1231.1, 1236.0, 1238.4, 1241.2, 1246.6, 1254.0, 1236.2, 1215.2, 1185.5, 1173.3, 1165.8, 1152.8, 1148.9, 1140.8, 1132.6, 1124.9, 1118.4, 1123.1, 1095.6, 1081.3, 1074.5, 1061.0, 1048.7, 1045.7, 1045.4, 1040.6, 1042.6, 1042.1, 1049.7, 1073.2, 1057.8, 1057.4, 1052.8, 1054.9, 1057.7, 1075.6, 1082.5, 1089.4, 1098.7, 1095.9, 1103.8, 1133.9, 1127.1, 1126.8, 1136.6, 1140.2, 1143.7, 1142.4, 1148.6, 1163.0, 1174.5, 1169.9, 1177.9, 1202.4, 1186.1, 1179.3, 1177.9, 1171.4, 1173.3, 1181.2, 1181.0, 1186.1, 1203.5, 1206.1, 1207.5, 1222.3, 1205.6, 1200.7, 1220.8, 1271.7, 1333.3, 1362.3, 1400.5, 1415.9, 1428.0, 1428.0, 1419.7, 1432.1, 1404.7, 1387.8, 1372.6, 1376.1, 1367.7, 1373.7, 1373.2, 1357.8, 1336.3, 1314.7, 1291.6, 1298.2, 1273.2, 1260.2, 1228.2, 1210.4, 1210.2, 1205.1, 1206.0, 1191.8, 1195.9, 1183.0, 1176.9, 1184.6, 1147.3, 1131.9, 1123.7, 1116.5, 1107.4, 1118.4, 1120.0, 1113.2, 1110.5, 1100.3, 1099.6, 1115.1, 1093.6, 1085.7, 1091.6, 1092.0, 1101.9, 1119.8, 1120.9, 1126.7, 1119.9, 1113.0, 1111.6, 1117.3, 1089.2, 1077.9, 1066.2, 1061.9, 1065.9, 1072.4, 1070.0, 1070.1, 1056.1, 1051.9, 1053.6, 1063.9, 1042.6, 1035.3, 1021.8, 1021.3, 1024.0, 1029.1, 1027.9];
+    var fig = document.getElementById("figFundPoup");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1), YMAX = 1500;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - v * (300 / YMAX); }
+    [0, 500, 1000, 1500].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v);
+    });
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    [[REA, "var(--s1)", 2.4], [NOM, "var(--s2)", 2]].forEach(function (sr) {
+      var pts = [];
+      sr[0].forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      el("polyline", { points: pts.join(" "), fill: "none", stroke: sr[1], "stroke-width": sr[2], "stroke-linejoin": "round" }, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      tt.innerHTML = "<b>" + MESES[i] + "</b>" +
+        "<div class='row'><span>Real (R$ de hoje)</span><em>R$ " + (REA[i] || 0).toFixed(0) + " bi</em></div>" +
+        "<div class='row'><span>Nominal</span><em>R$ " + (NOM[i] || 0).toFixed(0) + " bi</em></div>";
+      tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 240 > b.width) x = e.clientX - b.left - 250;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
   })();
 
   // ================= OPERACIONAL: meses de estoque por segmento =================
