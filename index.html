@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.40 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.41 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -949,6 +949,27 @@
       </div>
       <figure id="figDemAff"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
       <p class="efeito">O ciclo inteiro do poder de compra (renda em MM12 para tirar o ruído da PNADC): o inferno era 2013–14 (<b>até 361% da renda</b>, juro de 17% com renda baixa), o paraíso foi 2019–21 (<b>~162%</b> — a razão do boom), e hoje estamos em <b>215% — o pior nível desde ~2017</b>, um terço a mais de aperto que no vale de 2021. A régua é termômetro temporal (a renda média não é o comprador MAP), mas a direção vale para todas as faixas — e mostra a convexidade da tese: cada ponto de Selic a menos desce esta curva e destrava a fila recorde de intenção de compra (52%). No MCMV a régua não se aplica: juro FGTS de 9,1% e teto acompanhando a renda mantêm a conta em pé — a demanda bifurcou junto com o funding.</p>
+
+      <h3 class="subtit">Dinâmica do crédito — o balanço do comprador (simulação)</h3>
+      <p class="desc">Mesmo apto de R$ 723 mil (60 m² ao FipeZap-SP de jun/26), dois caminhos, premissas vigentes: taxa SFH de <b>14,0% a.a.</b> (BCB, mai/26), SAC em 360 meses, INCC a <b>6,4% a.a.</b> (ritmo atual) e valorização a mercado pela cesta de cada produto — novo/financiado a <b>8,3% a.a.</b> (IGMI-R SP, média 2014–26) e usado a <b>3,5% a.a.</b> (FipeZap SP). Na planta: 10% no ato, 20% em 36 mensais corrigidas pelo INCC, saldo financiado nas chaves. No usado: entrada de 34% — o LTV médio efetivamente praticado no SFH é <b>66%</b>, não os 80% do teto — e financiamento no ato. Patrimônio = imóvel marcado a mercado − saldo devedor.</p>
+
+      <h3 class="subtit">Caso 1 — compra na planta (SFH nas chaves)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> imóvel a mercado</span>
+        <span><i class="sw" style="background:var(--s2)"></i> saldo devedor (INCC na obra → SFH)</span>
+        <span><i class="sw" style="background:var(--s3)"></i> patrimônio do comprador</span>
+      </div>
+      <figure id="figDemDinA"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">A alavancagem da planta: o comprador entra com <b>R$ 72 mil no ato</b> (10%) e mensais de ~R$ 4,0 mil corrigidas pelo INCC — desembolso total até as chaves de <b>R$ 232 mil</b>, espalhado em 3 anos. Nas chaves ele deve R$ 610 mil (o saldo cresceu com o INCC) sobre um imóvel que já vale R$ 918 mil — LTV de 66%, exatamente o que os bancos praticam; a parcela SAC nasce em ~R$ 8,4 mil. Como o ativo roda a 8,3% e o saldo corrige a 6,4% (e depois amortiza), o patrimônio decola: <b>R$ 308 mil nas chaves</b> e <b>R$ 1.132 mil no ano 10</b> — 4,9× o que saiu do bolso até as chaves. É o carrego da incorporação transferido ao cliente: alavancado no ativo que mais valoriza, pagando correção menor que a valorização.</p>
+
+      <h3 class="subtit">Caso 2 — compra de um usado (SFH no ato)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> imóvel a mercado</span>
+        <span><i class="sw" style="background:var(--s2)"></i> saldo devedor (SAC 360m)</span>
+        <span><i class="sw" style="background:var(--s3)"></i> patrimônio do comprador</span>
+      </div>
+      <figure id="figDemDinB"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">No usado, o cheque é no dia 0: <b>R$ 246 mil de entrada</b> (34%) — quase 3,4× o ato da planta — e a parcela SAC já nasce em R$ 6,6 mil. O patrimônio parte de R$ 246 mil e cresce quase só pela amortização: com a cesta do usado rodando a 3,5% a.a., chega a <b>R$ 704 mil no ano 10</b> — contra R$ 1.132 mil da planta. A diferença é quase toda a valorização da cesta (novo 8,3% × usado 3,5%), a mesma bifurcação do gráfico IGMI-R × FipeZap acima — é simulação com médias históricas, não promessa: se a bifurcação fechar, os dois casos convergem. O que não é hipótese: a barreira de entrada — juro a 14% com LTV de 66% exige ter um terço do imóvel à vista, e é isso que o affordability acima mede batendo no pior nível desde 2017.</p>
     </div>
   </section>
 
@@ -1836,6 +1857,55 @@
           });
         });
       }
+    });
+  })();
+  (function () {
+    var CASOS = [
+      { id: "figDemDinA", chaves: 36, ativo: [723.0, 727.8, 732.6, 737.5, 742.4, 747.3, 752.3, 757.3, 762.3, 767.4, 772.5, 777.6, 782.8, 788.0, 793.2, 798.5, 803.8, 809.1, 814.5, 819.9, 825.3, 830.8, 836.3, 841.9, 847.5, 853.1, 858.8, 864.5, 870.2, 876.0, 881.8, 887.6, 893.5, 899.5, 905.4, 911.5, 917.5, 923.6, 929.7, 935.9, 942.1, 948.4, 954.7, 961.0, 967.4, 973.8, 980.3, 986.8, 993.3, 999.9, 1006.6, 1013.3, 1020.0, 1026.8, 1033.6, 1040.4, 1047.4, 1054.3, 1061.3, 1068.4, 1075.5, 1082.6, 1089.8, 1097.0, 1104.3, 1111.6, 1119.0, 1126.4, 1133.9, 1141.5, 1149.0, 1156.7, 1164.3, 1172.1, 1179.9, 1187.7, 1195.6, 1203.5, 1211.5, 1219.6, 1227.7, 1235.8, 1244.0, 1252.3, 1260.6, 1269.0, 1277.4, 1285.9, 1294.4, 1303.0, 1311.6, 1320.4, 1329.1, 1338.0, 1346.8, 1355.8, 1364.8, 1373.8, 1383.0, 1392.1, 1401.4, 1410.7, 1420.1, 1429.5, 1439.0, 1448.5, 1458.2, 1467.8, 1477.6, 1487.4, 1497.3, 1507.2, 1517.2, 1527.3, 1537.4, 1547.7, 1557.9, 1568.3, 1578.7, 1589.2, 1599.7], divida: [650.7, 650.0, 649.3, 648.6, 647.9, 647.1, 646.3, 645.5, 644.7, 643.8, 642.9, 642.0, 641.1, 640.1, 639.1, 638.1, 637.0, 635.9, 634.8, 633.7, 632.5, 631.3, 630.1, 628.8, 627.5, 626.2, 624.9, 623.5, 622.1, 620.6, 619.1, 617.6, 616.1, 614.5, 612.9, 611.3, 609.6, 607.9, 606.2, 604.5, 602.8, 601.2, 599.5, 597.8, 596.1, 594.4, 592.7, 591.0, 589.3, 587.6, 585.9, 584.2, 582.5, 580.8, 579.1, 577.4, 575.8, 574.1, 572.4, 570.7, 569.0, 567.3, 565.6, 563.9, 562.2, 560.5, 558.8, 557.1, 555.4, 553.7, 552.0, 550.4, 548.7, 547.0, 545.3, 543.6, 541.9, 540.2, 538.5, 536.8, 535.1, 533.4, 531.7, 530.0, 528.3, 526.6, 525.0, 523.3, 521.6, 519.9, 518.2, 516.5, 514.8, 513.1, 511.4, 509.7, 508.0, 506.3, 504.6, 502.9, 501.2, 499.6, 497.9, 496.2, 494.5, 492.8, 491.1, 489.4, 487.7, 486.0, 484.3, 482.6, 480.9, 479.2, 477.5, 475.8, 474.2, 472.5, 470.8, 469.1, 467.4], pat: [72.3, 77.8, 83.3, 88.9, 94.5, 100.2, 105.9, 111.8, 117.6, 123.6, 129.5, 135.6, 141.7, 147.9, 154.1, 160.4, 166.8, 173.2, 179.7, 186.2, 192.8, 199.5, 206.3, 213.1, 219.9, 226.9, 233.9, 241.0, 248.1, 255.4, 262.6, 270.0, 277.4, 284.9, 292.5, 300.2, 307.9, 315.7, 323.5, 331.4, 339.3, 347.2, 355.2, 363.2, 371.3, 379.4, 387.6, 395.8, 404.0, 412.3, 420.7, 429.0, 437.5, 445.9, 454.4, 463.0, 471.6, 480.2, 488.9, 497.7, 506.5, 515.3, 524.2, 533.1, 542.1, 551.1, 560.2, 569.3, 578.5, 587.7, 597.0, 606.3, 615.7, 625.1, 634.6, 644.1, 653.7, 663.3, 673.0, 682.7, 692.5, 702.4, 712.3, 722.2, 732.2, 742.3, 752.4, 762.6, 772.8, 783.1, 793.5, 803.9, 814.3, 824.9, 835.4, 846.1, 856.8, 867.5, 878.3, 889.2, 900.1, 911.1, 922.2, 933.3, 944.5, 955.8, 967.1, 978.5, 989.9, 1001.4, 1013.0, 1024.6, 1036.3, 1048.1, 1059.9, 1071.8, 1083.8, 1095.8, 1107.9, 1120.1, 1132.3] },
+      { id: "figDemDinB", chaves: null, ativo: [723.0, 725.1, 727.2, 729.3, 731.4, 733.5, 735.6, 737.8, 739.9, 742.0, 744.2, 746.3, 748.5, 750.7, 752.8, 755.0, 757.2, 759.4, 761.6, 763.8, 766.0, 768.2, 770.4, 772.7, 774.9, 777.1, 779.4, 781.6, 783.9, 786.2, 788.4, 790.7, 793.0, 795.3, 797.6, 799.9, 802.2, 804.5, 806.9, 809.2, 811.5, 813.9, 816.2, 818.6, 821.0, 823.3, 825.7, 828.1, 830.5, 832.9, 835.3, 837.7, 840.2, 842.6, 845.0, 847.5, 849.9, 852.4, 854.8, 857.3, 859.8, 862.3, 864.8, 867.3, 869.8, 872.3, 874.8, 877.4, 879.9, 882.4, 885.0, 887.5, 890.1, 892.7, 895.3, 897.9, 900.5, 903.1, 905.7, 908.3, 910.9, 913.6, 916.2, 918.8, 921.5, 924.2, 926.8, 929.5, 932.2, 934.9, 937.6, 940.3, 943.0, 945.8, 948.5, 951.2, 954.0, 956.8, 959.5, 962.3, 965.1, 967.9, 970.7, 973.5, 976.3, 979.1, 981.9, 984.8, 987.6, 990.5, 993.4, 996.2, 999.1, 1002.0, 1004.9, 1007.8, 1010.7, 1013.6, 1016.6, 1019.5, 1022.5], divida: [477.2, 475.9, 474.5, 473.2, 471.9, 470.6, 469.2, 467.9, 466.6, 465.3, 463.9, 462.6, 461.3, 459.9, 458.6, 457.3, 456.0, 454.6, 453.3, 452.0, 450.7, 449.3, 448.0, 446.7, 445.4, 444.0, 442.7, 441.4, 440.1, 438.7, 437.4, 436.1, 434.8, 433.4, 432.1, 430.8, 429.5, 428.1, 426.8, 425.5, 424.2, 422.8, 421.5, 420.2, 418.9, 417.5, 416.2, 414.9, 413.6, 412.2, 410.9, 409.6, 408.3, 406.9, 405.6, 404.3, 403.0, 401.6, 400.3, 399.0, 397.7, 396.3, 395.0, 393.7, 392.3, 391.0, 389.7, 388.4, 387.0, 385.7, 384.4, 383.1, 381.7, 380.4, 379.1, 377.8, 376.4, 375.1, 373.8, 372.5, 371.1, 369.8, 368.5, 367.2, 365.8, 364.5, 363.2, 361.9, 360.5, 359.2, 357.9, 356.6, 355.2, 353.9, 352.6, 351.3, 349.9, 348.6, 347.3, 346.0, 344.6, 343.3, 342.0, 340.7, 339.3, 338.0, 336.7, 335.4, 334.0, 332.7, 331.4, 330.0, 328.7, 327.4, 326.1, 324.7, 323.4, 322.1, 320.8, 319.4, 318.1], pat: [245.8, 249.2, 252.7, 256.1, 259.5, 263.0, 266.4, 269.9, 273.3, 276.8, 280.3, 283.7, 287.2, 290.7, 294.2, 297.7, 301.2, 304.7, 308.3, 311.8, 315.3, 318.9, 322.4, 326.0, 329.5, 333.1, 336.7, 340.2, 343.8, 347.4, 351.0, 354.6, 358.2, 361.9, 365.5, 369.1, 372.8, 376.4, 380.1, 383.7, 387.4, 391.0, 394.7, 398.4, 402.1, 405.8, 409.5, 413.2, 416.9, 420.7, 424.4, 428.2, 431.9, 435.7, 439.4, 443.2, 447.0, 450.7, 454.5, 458.3, 462.1, 466.0, 469.8, 473.6, 477.4, 481.3, 485.1, 489.0, 492.8, 496.7, 500.6, 504.5, 508.4, 512.3, 516.2, 520.1, 524.0, 527.9, 531.9, 535.8, 539.8, 543.7, 547.7, 551.7, 555.7, 559.7, 563.7, 567.7, 571.7, 575.7, 579.7, 583.8, 587.8, 591.9, 595.9, 600.0, 604.1, 608.1, 612.2, 616.3, 620.4, 624.6, 628.7, 632.8, 637.0, 641.1, 645.3, 649.4, 653.6, 657.8, 662.0, 666.2, 670.4, 674.6, 678.8, 683.1, 687.3, 691.5, 695.8, 700.1, 704.3] }
+    ];
+    CASOS.forEach(function (cs) {
+      var fig = document.getElementById(cs.id);
+      if (!fig) return;
+      var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+      var N = 121, PASSO = 812 / (N - 1), YMAX = 1600;
+      function X(i) { return 60 + i * PASSO; }
+      function Y(v) { return 330 - v * (300 / YMAX); }
+      [0, 400, 800, 1200, 1600].forEach(function (v) {
+        el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": 1 }, g);
+        el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v);
+      });
+      for (var a = 0; a <= 10; a += 2)
+        el("text", { x: X(a * 12), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, "ano " + a);
+      el("text", { x: 60, y: 22, fill: "var(--muted)", "font-size": 12 }, g, "R$ mil");
+      if (cs.chaves !== null) {
+        el("line", { x1: X(cs.chaves), y1: 30, x2: X(cs.chaves), y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "4 3", opacity: 0.7 }, g);
+        el("text", { x: X(cs.chaves) + 6, y: 44, fill: "var(--muted)", "font-size": 12 }, g, "chaves: saldo vira SFH");
+      }
+      [["ativo", "var(--s1)", 2], ["divida", "var(--s2)", 2], ["pat", "var(--s3)", 2.8]].forEach(function (sr) {
+        var pts = [];
+        cs[sr[0]].forEach(function (v, i) { pts.push(X(i) + "," + Y(Math.min(v, YMAX)).toFixed(1)); });
+        el("polyline", { points: pts.join(" "), fill: "none", stroke: sr[1], "stroke-width": sr[2], "stroke-linejoin": "round" }, gd);
+      });
+      var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+      var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+      hit.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+        i = Math.max(0, Math.min(N - 1, i));
+        hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+        var f0 = function (v) { return Math.round(v).toLocaleString("pt-BR"); };
+        var h = "<b>ano " + Math.floor(i / 12) + " \u00b7 m\u00eas " + i + "</b>";
+        h += "<div class='row'><span>im\u00f3vel a mercado</span><em>R$ " + f0(cs.ativo[i]) + " mil</em></div>";
+        h += "<div class='row'><span>saldo devedor</span><em>R$ " + f0(cs.divida[i]) + " mil</em></div>";
+        h += "<div class='row'><span>patrim\u00f4nio</span><em>R$ " + f0(cs.pat[i]) + " mil</em></div>";
+        h += "<div class='row'><span>LTV impl\u00edcito</span><em>" + Math.round(100 * cs.divida[i] / cs.ativo[i]) + "%</em></div>";
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 300 > b.width) x = e.clientX - b.left - 310;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
     });
   })();
   (function () {
