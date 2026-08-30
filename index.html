@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.31 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.32 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -179,6 +179,10 @@
       <span class="navlabel">Projetos</span>
       <button data-tab="p100">Lançamento 100M</button>
       <button data-tab="consol">Consolidado</button>
+    </div>
+    <div class="navgrupo">
+      <span class="navlabel">Operacional</span>
+      <button data-tab="opestoque">Estoque</button>
     </div>
     <div class="navgrupo">
       <span class="navlabel">Gestão</span>
@@ -809,6 +813,23 @@
       </div>
       <figure id="figPerfRaiox"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
       <p class="efeito">Série completa, extraída dos rótulos dos gráficos da própria pesquisa (edição 2T26 — a Fipe re-amostra o acumulado 12m, então pontos antigos são revisados: dez/25 marcou 71% na leitura da época e foi revisado a 67%). A leitura de 13 anos: as transações com desconto rodam numa banda 53–70% — pisos na euforia (54% em 2014, 56% em mar/23) e tetos nas crises (70% em 2016 e 2019); hoje, 65%, acima da média de 64%. O <b>desconto médio nas transações com desconto voltou a 14% — o teto histórico, visto só em 2016 e 2020</b>. E o investidor: de 53% das compras em 2013 para mínima de 34% (2019), pico de 49% (jan/24, era dos compactos) e <b>40% hoje, abaixo da média de 43%</b> — o comprador marginal de investimento está saindo da mesa exatamente quando a oferta de compactos é recorde. Combinação: mesa dura para vender estoque MAP, exatamente o que trava o caixa da Cyrela. <b>Nota de leitura — este termômetro é, na prática, ex-MCMV</b>: 68% dos respondentes têm renda acima de R$ 10 mil e 74% das compras são de usados, enquanto o MCMV (novo, na planta, preço ancorado no teto do programa, repasse pela Caixa) quase não transaciona com desconto — se ~25% da amostra fosse MCMV com incidência de 40%, a incidência ex-MCMV seria ~73%, o teto histórico em regime permanente. E como o FipeZap da aba Preços também é de anúncios MAP/usados, o preço <i>efetivo</i> de fechamento no MAP cai mais do que o índice sugere: anúncio em queda real + 9% de desconto médio na transação.</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: OPERACIONAL / ESTOQUE ============ -->
+  <section class="tab" id="tab-opestoque">
+    <div class="card">
+      <span class="tag">Planilha de dados operacionais do RI · estoque a valor de mercado %CBR ÷ vendas %CBR (com permuta) · trimestral</span>
+      <h2>Estoque da Cyrela — meses de venda por segmento</h2>
+      <p>Para cada trimestre, o estoque a valor de mercado (%CBR) dividido pela venda mensal média dos 4 trimestres anteriores — quantos meses levaria para zerar o estoque no ritmo corrente. Série de 14 anos, por segmento.</p>
+
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Alto Padrão</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Médio</span>
+        <span><i class="sw" style="background:var(--s3)"></i> MCMV (Vivaz)</span>
+      </div>
+      <figure id="figOpEst"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">O ciclo inteiro numa imagem: na ressaca de 2015–18 o Alto Padrão chegou a <b>41,5 meses de estoque</b> (1T18) e o Médio a 37,6 — o vale que forjou a disciplina atual da casa. O boom pós-pandemia limpou tudo (mínimas de ~11 e ~7 meses em 2021–22). De lá para cá, a subida é contínua: <b>Alto em 20,2 meses no 2T26</b> (13,8 há um ano), Médio em 16,9 — metade do pesadelo de 2018, mas o dobro do conforto de 2021 e acima das réguas de mercado da aba Liquidez. A <b>Vivaz vive outro ciclo: 8,7 meses</b>, na banda saudável em que opera desde 2022. Ressalvas: o estoque é a <i>valor de mercado</i> e inclui lançamentos recém-saídos (2025 foi recorde em AP — parte da alta é pipeline novo, não encalhe), e a base é R$, que o ticket alto do AP infla; a comparação boa é da série com ela mesma.</p>
     </div>
   </section>
 
@@ -2396,6 +2417,48 @@
       });
       r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
     });
+  })();
+
+  // ================= OPERACIONAL: meses de estoque por segmento =================
+  (function () {
+    var TRI = ["4T12", "1T13", "2T13", "3T13", "4T13", "1T14", "2T14", "3T14", "4T14", "1T15", "2T15", "3T15", "4T15", "1T16", "2T16", "3T16", "4T16", "1T17", "2T17", "3T17", "4T17", "1T18", "2T18", "3T18", "4T18", "1T19", "2T19", "3T19", "4T19", "1T20", "2T20", "3T20", "4T20", "1T21", "2T21", "3T21", "4T21", "1T22", "2T22", "3T22", "4T22", "1T23", "2T23", "3T23", "4T23", "1T24", "2T24", "3T24", "4T24", "1T25", "2T25", "3T25", "4T25", "1T26", "2T26"];
+    var SR = [{nome: "Alto Padrão", cor: "var(--s1)", v: [15.6, 15.2, 14.4, 16.0, 14.5, 14.6, 15.0, 15.5, 16.5, 19.7, 23.3, 22.6, 29.8, 32.1, 33.4, 41.4, 38.3, 40.1, 38.4, 36.5, 39.5, 41.5, 37.2, 31.7, 17.5, 13.8, 13.2, 12.3, 15.2, 15.7, 18.9, 14.4, 15.1, 13.5, 11.4, 13.9, 15.4, 14.3, 16.8, 17.5, 16.3, 16.3, 15.9, 15.7, 16.2, 13.2, 13.8, 11.8, 11.3, 13.3, 13.8, 14.7, 19.0, 18.6, 20.2]},
+      {nome: "Médio", cor: "var(--s2)", v: [13.6, 12.9, 12.7, 13.8, 14.5, 13.9, 15.1, 14.8, 15.2, 15.0, 19.1, 18.6, 23.2, 25.6, 30.3, 34.8, 36.8, 37.6, 32.2, 26.0, 20.9, 17.3, 17.0, 17.5, 18.9, 13.6, 11.0, 8.1, 7.6, 6.9, 8.4, 6.6, 7.7, 6.7, 6.8, 9.9, 18.5, 10.9, 14.6, 12.0, 10.8, 10.4, 12.4, 13.4, 14.0, 12.5, 10.3, 10.1, 9.9, 9.4, 10.7, 12.0, 12.8, 13.9, 16.9]},
+      {nome: "MCMV (Vivaz)", cor: "var(--s3)", v: [7.6, 5.9, 4.7, 3.9, 4.1, 3.5, 3.5, 3.7, 5.6, 6.6, 9.6, 6.7, 10.2, 8.1, 8.2, 8.1, 7.8, 7.9, 7.8, 7.4, 7.1, 8.9, 9.4, 6.4, 7.7, 2.5, 3.8, 6.5, 8.9, 10.4, 9.3, 12.9, 15.8, 11.7, 11.8, 14.0, 17.5, 17.5, 14.5, 14.5, 12.8, 11.7, 10.1, 9.1, 7.9, 7.5, 7.0, 6.8, 7.4, 7.4, 6.3, 7.7, 9.6, 8.2, 8.7]}];
+    var fig = document.getElementById("figOpEst");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = TRI.length, PASSO = 812 / (N - 1), YMAX = 45;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - v * (300 / YMAX); }
+    [0, 15, 30, 45].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "m");
+    });
+    TRI.forEach(function (a, i) {
+      if (a.slice(0, 2) === "1T" && (+a.slice(2)) % 2 === 1)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, "20" + a.slice(2));
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(Math.min(v, YMAX)).toFixed(1)); });
+      el("polyline", { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" }, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      var h = "<b>" + TRI[i] + "</b>";
+      SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + " meses</em></div>"; });
+      tt.innerHTML = h; tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 240 > b.width) x = e.clientX - b.left - 250;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
   })();
 
   // ================= GOVERNANCA =================
