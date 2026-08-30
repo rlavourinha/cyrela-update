@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.25 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.26 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -188,6 +188,7 @@
     <div class="navgrupo">
       <span class="navlabel">Mercado</span>
       <button data-tab="mercado">Preços</button>
+      <button data-tab="liquidez">Liquidez</button>
     </div>
   </nav>
 
@@ -682,6 +683,51 @@
         <div class="tt"></div>
       </figure>
       <p class="efeito">A régua da margem em uma imagem: quem entregou no superciclo (janelas terminando em 2012–15) viu o preço subir 2–3× o INCC — as margens de 35% de então. De 2016 em diante as curvas de preço passam a correr <b>coladas ou abaixo</b> do INCC — e na janela que termina hoje (48m), SP acumula +21,6% contra INCC de +23,4% (<b>spread −1,8 p.p.</b>) e o RJ +13,8% (<b>−9,6 p.p.</b>); em 36m os spreads são −4,3 e −7,5 p.p. Duas leituras: (1) a margem de quem entrega hoje não ganhou nada do mercado — veio de compra de terreno e execução; (2) a premissa do simulador de estoque valorizando a <b>INCC + spread</b> foi generosa no ciclo recente — o mercado pagou INCC − 2 a − 10 p.p. no MAP. É o outro lado do hedge INCC: os recebíveis corrigem, mas o estoque não acompanha.</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: LIQUIDEZ ============ -->
+  <section class="tab" id="tab-liquidez">
+    <div class="card">
+      <span class="tag">Abrainc-Fipe (~20 incorporadoras associadas, Cyrela incluída) · mensal, acumulados 12m · dez/2015–abr/2026</span>
+      <h2>Liquidez do mercado: oferta × demanda</h2>
+      <p>Unidades lançadas, vendidas e em oferta das associadas da Abrainc, separadas por segmento — a amostra que melhor espelha o mix da Cyrela (MAP = Cyrela/Living; MCMV = Vivaz). A régua de liquidez é <b>meses de estoque</b>: oferta ÷ venda média mensal dos últimos 12 meses.</p>
+
+      <h3 class="subtit">Médio e alto padrão — lançamentos × vendas (12m, mil unidades)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Vendas 12m</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Lançamentos 12m</span>
+        <span style="color:var(--ink-2);white-space:nowrap"><i class="sw" style="background:var(--grid)"></i> Oferta (mil unid., fundo — escala própria)</span>
+      </div>
+      <figure id="figLiqMap">
+        <svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">O aperto do segmento core da Cyrela está na linha vinho: <b>vendas 12m caíram de ~43 mil unidades (abr/24) para 32,6 mil (−24% em dois anos)</b> — o juro a 14,3% mordendo a demanda. Os lançamentos recuaram junto (28,2 mil) — a disciplina da amostra evitou inundar o mercado — e a oferta ficou em 30,8 mil unidades.</p>
+
+      <h3 class="subtit">MCMV — lançamentos × vendas (12m, mil unidades)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Vendas 12m</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Lançamentos 12m</span>
+        <span style="color:var(--ink-2);white-space:nowrap"><i class="sw" style="background:var(--grid)"></i> Oferta (mil unid., fundo — escala própria)</span>
+      </div>
+      <figure id="figLiqMcmv">
+        <svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">O motor do mercado: vendas 12m de <b>162 mil unidades (+22% em dois anos)</b>, sustentadas pelos tetos novos do programa. Mas os lançamentos correm à frente (166 mil) e <b>a oferta subiu 40% em dois anos</b> (82 → 114 mil unidades) — a competição crescente que o CFO da Cyrela admite nos calls. O segmento ainda é líquido, e o Faixa 4 abre demanda nova; o sinal amarelo é o estoque acumulando pela primeira vez na série.</p>
+
+      <h3 class="subtit">A régua da liquidez — meses de estoque (oferta ÷ venda mensal média 12m)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Médio e alto padrão</span>
+        <span><i class="sw" style="background:var(--s3)"></i> MCMV</span>
+        <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">Total</span></span>
+      </div>
+      <figure id="figLiqMeses">
+        <svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">O MAP chegou a <b>26,5 meses no fim de 2021</b> — a ressaca da orgia de lançamentos pós-pandemia — e normalizou para ~11 desde 2024. A distância entre as duas pontas do mix da Cyrela: <b>MAP em 11,3 meses de estoque</b> contra <b>8,5 do MCMV</b> (que era 7,4 há dois anos — deteriorando na margem). Na cidade de São Paulo o quadro é mais apertado que a média nacional das associadas: 9,6 meses no total e <b>12,9 meses no MAP</b> (Secovi-SP, jun/26). A tradução para a tese: a liquidez sustenta o giro rápido da Vivaz (nossas curvas de conversão) e explica o VSO 12m da Cyrela cedendo a 42,8% e o estoque pronto de alto padrão dobrando desde 2T24 — o risco de volume mora no MAP, exatamente onde os preços correm abaixo do INCC (aba Preços).</p>
     </div>
   </section>
 
@@ -1854,6 +1900,139 @@
     }
     sl.addEventListener("input", draw);
     draw();
+  })();
+
+  // ================= MERCADO: liquidez (Abrainc-Fipe) =================
+  (function () {
+    var MESES = ["2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04"];
+    var V = [32.0, 31.4, 30.9, 30.7, 30.2, 30.5, 30.1, 29.4, 28.6, 27.9, 27.4, 27.0, 27.1, 26.8, 26.5, 25.4, 25.3, 24.6, 24.0, 23.4, 23.4, 23.2, 23.1, 23.3, 23.0, 23.0, 22.9, 22.8, 22.7, 22.7, 22.5, 22.5, 22.6, 22.4, 23.0, 22.8, 23.1, 22.7, 22.3, 22.3, 22.1, 21.9, 21.9, 21.6, 21.3, 21.3, 20.5, 20.6, 20.0, 20.2, 20.6, 20.2, 19.3, 18.7, 18.5, 19.6, 20.2, 20.6, 21.2, 21.1, 21.2, 21.2, 21.0, 21.4, 22.4, 23.6, 25.2, 24.9, 25.0, 25.4, 25.8, 26.0, 27.4, 28.2, 29.1, 30.8, 31.8, 32.3, 31.9, 32.4, 33.4, 34.8, 36.4, 37.5, 37.7, 38.3, 38.6, 38.9, 39.4, 39.6, 40.4, 41.3, 41.8, 41.5, 41.3, 41.5, 41.2, 41.6, 41.8, 42.5, 42.9, 43.1, 43.0, 42.4, 42.1, 42.4, 41.8, 41.2, 41.0, 39.9, 39.7, 38.1, 37.0, 37.7, 37.0, 36.1, 35.4, 34.6, 34.6, 33.9, 32.8, 32.8, 31.8, 32.8, 32.6], L = [7.8, 7.7, 7.2, 7.9, 7.6, 9.0, 8.1, 8.2, 8.2, 8.5, 9.2, 9.1, 9.5, 8.9, 8.9, 7.9, 8.3, 7.3, 8.4, 8.0, 8.9, 8.7, 9.2, 10.8, 11.6, 13.3, 13.5, 14.5, 15.3, 16.0, 15.3, 16.9, 16.8, 17.6, 20.9, 20.7, 21.1, 19.7, 19.5, 20.3, 19.8, 19.2, 21.4, 20.0, 20.3, 19.9, 16.3, 17.1, 16.1, 16.5, 17.6, 18.0, 17.1, 16.6, 14.4, 15.4, 15.2, 15.4, 16.1, 15.0, 17.9, 17.3, 16.8, 20.9, 22.3, 27.1, 33.8, 35.8, 38.4, 43.6, 47.5, 50.8, 59.9, 62.9, 65.3, 62.3, 63.3, 60.2, 61.4, 60.5, 59.3, 55.8, 53.4, 51.0, 39.6, 36.6, 34.0, 32.3, 31.4, 31.2, 25.3, 25.5, 24.7, 24.4, 23.8, 24.0, 22.6, 23.1, 23.7, 25.2, 25.9, 26.2, 25.6, 24.5, 24.3, 24.2, 24.6, 23.7, 26.4, 25.8, 27.6, 26.6, 26.5, 27.5, 28.1, 26.8, 28.6, 28.5, 29.4, 29.5, 27.1, 27.2, 25.2, 28.0, 28.2], OF = [32.2, 33.0, 32.2, 31.4, 31.5, 32.2, 30.9, 31.3, 30.9, 30.1, 30.6, 30.5, 29.7, 29.5, 29.2, 28.0, 27.9, 27.8, 27.2, 25.5, 25.6, 25.4, 26.2, 26.6, 27.1, 27.2, 26.4, 25.2, 27.5, 24.3, 23.6, 24.3, 26.7, 22.1, 25.0, 24.9, 25.3, 25.4, 24.6, 24.9, 24.7, 23.2, 25.3, 24.5, 25.4, 25.1, 25.1, 26.1, 27.5, 29.1, 29.6, 29.5, 29.9, 29.4, 28.1, 27.3, 27.8, 27.0, 26.9, 27.0, 30.1, 30.7, 29.8, 34.0, 34.2, 36.8, 42.1, 44.0, 45.9, 48.6, 51.3, 51.7, 60.5, 60.2, 61.4, 61.6, 60.7, 60.1, 66.4, 66.8, 67.5, 66.6, 64.1, 67.2, 64.9, 60.4, 61.0, 60.4, 58.7, 57.1, 57.0, 56.5, 54.5, 56.2, 47.9, 46.8, 45.0, 42.7, 43.5, 41.1, 40.0, 37.7, 37.1, 36.3, 34.4, 33.9, 33.1, 32.8, 33.8, 32.3, 31.2, 33.8, 32.7, 32.5, 32.9, 32.0, 32.2, 32.0, 30.3, 31.2, 30.2, 28.6, 29.1, 29.5, 30.8];
+    var fig = document.getElementById("figLiqMap");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1);
+    var YMAX = Math.ceil(Math.max.apply(null, V.concat(L)) / 50) * 50;
+    var BMAX = Math.max.apply(null, OF) * 1.06;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - v * (300 / YMAX); }
+    OF.forEach(function (v, i) {
+      if (v > 0) el("rect", { x: X(i) - PASSO * 0.42, y: 330 - v / BMAX * 300, width: PASSO * 0.84,
+        height: v / BMAX * 300, fill: "var(--grid)", "fill-opacity": 0.5 }, g);
+    });
+    for (var v = 0; v <= YMAX; v += YMAX / 5) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v);
+    }
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    [[V, "var(--s1)"], [L, "var(--s2)"]].forEach(function (sr) {
+      el("polyline", { points: sr[0].map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); }).join(" "),
+        fill: "none", stroke: sr[1], "stroke-width": 2.2, "stroke-linejoin": "round" }, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      tt.innerHTML = "<b>" + MESES[i] + "</b>" +
+        "<div class='row'><span>Vendas 12m</span><em>" + V[i].toFixed(1) + " mil</em></div>" +
+        "<div class='row'><span>Lançamentos 12m</span><em>" + L[i].toFixed(1) + " mil</em></div>" +
+        "<div class='row'><span>Oferta</span><em>" + OF[i].toFixed(1) + " mil unid.</em></div>";
+      tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 240 > b.width) x = e.clientX - b.left - 250;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+  (function () {
+    var MESES = ["2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04"];
+    var V = [52.8, 51.9, 51.0, 51.3, 50.8, 50.3, 50.2, 50.3, 51.4, 52.2, 52.7, 54.4, 54.9, 56.8, 57.3, 58.0, 59.0, 61.1, 61.7, 62.5, 64.0, 65.4, 68.1, 68.6, 70.4, 71.9, 73.1, 73.9, 75.2, 76.5, 76.8, 77.8, 78.1, 78.1, 78.6, 80.2, 79.9, 78.3, 79.6, 80.9, 80.5, 80.0, 80.6, 80.5, 79.2, 81.4, 79.9, 79.6, 80.5, 82.6, 83.5, 83.3, 85.0, 85.7, 88.1, 91.3, 95.2, 96.8, 101.0, 102.5, 105.2, 105.7, 107.4, 110.5, 112.1, 113.6, 114.6, 113.1, 111.3, 109.0, 106.6, 104.6, 102.2, 101.3, 98.8, 96.6, 96.1, 95.3, 91.5, 89.6, 88.8, 87.1, 85.5, 83.8, 82.6, 81.5, 81.8, 82.1, 82.9, 83.5, 85.4, 89.5, 95.2, 99.7, 103.9, 110.9, 122.1, 126.0, 128.1, 130.9, 132.5, 135.2, 139.7, 141.8, 140.5, 145.3, 147.1, 146.5, 138.7, 139.9, 143.0, 143.8, 145.2, 147.4, 148.7, 147.5, 147.3, 146.6, 148.9, 150.0, 153.9, 157.0, 157.5, 161.4, 162.0], L = [48.2, 48.4, 48.7, 49.4, 48.0, 50.1, 51.0, 52.3, 54.9, 52.0, 51.6, 55.1, 55.9, 57.0, 57.0, 56.6, 57.7, 59.6, 58.1, 62.0, 60.7, 63.8, 66.2, 65.7, 65.6, 65.2, 66.2, 63.4, 63.3, 66.0, 70.0, 68.1, 69.9, 76.2, 76.3, 74.9, 78.6, 79.0, 78.6, 84.1, 83.3, 82.7, 84.5, 83.5, 84.6, 84.9, 85.5, 87.4, 88.8, 88.2, 87.6, 84.1, 86.2, 80.2, 78.8, 79.8, 80.8, 81.8, 85.7, 87.7, 86.5, 89.6, 93.5, 93.2, 94.8, 98.1, 95.5, 95.2, 92.7, 85.5, 81.7, 81.1, 80.4, 83.4, 80.7, 80.2, 78.0, 79.3, 78.4, 76.1, 77.7, 79.8, 79.7, 83.1, 79.9, 75.3, 77.9, 80.4, 86.0, 87.2, 89.6, 94.3, 96.2, 96.5, 96.5, 93.4, 98.8, 102.9, 102.8, 105.2, 104.6, 108.1, 115.2, 118.9, 122.2, 121.6, 124.3, 129.9, 124.8, 132.6, 136.9, 142.5, 142.8, 145.4, 145.9, 140.9, 146.7, 160.8, 167.0, 168.9, 169.6, 162.1, 163.0, 164.3, 166.4], OF = [49.8, 49.3, 48.8, 52.2, 51.3, 51.0, 55.5, 54.7, 54.5, 55.7, 55.3, 57.9, 60.2, 59.9, 58.6, 60.1, 58.9, 59.4, 61.5, 64.3, 61.8, 64.5, 63.8, 64.2, 68.1, 66.4, 64.5, 63.7, 60.3, 63.8, 69.6, 67.7, 62.7, 68.8, 68.8, 67.1, 76.2, 73.2, 72.2, 73.4, 71.2, 71.6, 75.7, 75.2, 77.5, 81.3, 83.5, 85.8, 98.3, 93.7, 91.6, 90.3, 86.5, 81.8, 82.0, 78.5, 82.1, 87.8, 90.2, 90.9, 87.5, 93.2, 84.4, 85.8, 85.7, 82.9, 84.4, 83.1, 79.7, 81.5, 78.4, 76.8, 80.2, 77.4, 74.5, 72.1, 66.4, 65.2, 68.7, 64.3, 65.2, 70.2, 69.1, 72.8, 79.9, 73.7, 70.7, 79.6, 79.8, 79.7, 83.2, 79.8, 78.7, 83.2, 82.4, 82.9, 85.2, 85.0, 84.8, 84.1, 81.8, 79.5, 88.3, 88.6, 83.9, 87.3, 84.3, 89.2, 88.5, 95.9, 96.7, 95.5, 91.1, 93.2, 98.5, 97.7, 102.8, 111.7, 117.1, 121.3, 118.0, 117.0, 110.1, 115.2, 114.4];
+    var fig = document.getElementById("figLiqMcmv");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1);
+    var YMAX = Math.ceil(Math.max.apply(null, V.concat(L)) / 50) * 50;
+    var BMAX = Math.max.apply(null, OF) * 1.06;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - v * (300 / YMAX); }
+    OF.forEach(function (v, i) {
+      if (v > 0) el("rect", { x: X(i) - PASSO * 0.42, y: 330 - v / BMAX * 300, width: PASSO * 0.84,
+        height: v / BMAX * 300, fill: "var(--grid)", "fill-opacity": 0.5 }, g);
+    });
+    for (var v = 0; v <= YMAX; v += YMAX / 5) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v);
+    }
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    [[V, "var(--s1)"], [L, "var(--s2)"]].forEach(function (sr) {
+      el("polyline", { points: sr[0].map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); }).join(" "),
+        fill: "none", stroke: sr[1], "stroke-width": 2.2, "stroke-linejoin": "round" }, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      tt.innerHTML = "<b>" + MESES[i] + "</b>" +
+        "<div class='row'><span>Vendas 12m</span><em>" + V[i].toFixed(1) + " mil</em></div>" +
+        "<div class='row'><span>Lançamentos 12m</span><em>" + L[i].toFixed(1) + " mil</em></div>" +
+        "<div class='row'><span>Oferta</span><em>" + OF[i].toFixed(1) + " mil unid.</em></div>";
+      tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 240 > b.width) x = e.clientX - b.left - 250;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+  (function () {
+    var MESES = ["2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04"];
+    var SR = [{nome: "Médio e alto padrão", cor: "var(--s1)", v: [12.1, 12.6, 12.5, 12.3, 12.5, 12.7, 12.3, 12.8, 13.0, 12.9, 13.4, 13.6, 13.2, 13.2, 13.2, 13.2, 13.2, 13.6, 13.6, 13.1, 13.1, 13.1, 13.6, 13.7, 14.1, 14.2, 13.8, 13.3, 14.5, 12.8, 12.6, 13.0, 14.2, 11.8, 13.0, 13.1, 13.1, 13.4, 13.2, 13.4, 13.4, 12.7, 13.9, 13.6, 14.3, 14.1, 14.7, 15.2, 16.5, 17.3, 17.2, 17.5, 18.6, 18.9, 18.2, 16.7, 16.5, 15.7, 15.2, 15.4, 17.0, 17.4, 17.0, 19.1, 18.3, 18.7, 20.0, 21.2, 22.0, 23.0, 23.9, 23.9, 26.5, 25.6, 25.3, 24.0, 22.9, 22.3, 25.0, 24.7, 24.3, 23.0, 21.1, 21.5, 20.7, 18.9, 19.0, 18.6, 17.9, 17.3, 16.9, 16.4, 15.6, 16.3, 13.9, 13.5, 13.1, 12.3, 12.5, 11.6, 11.2, 10.5, 10.4, 10.3, 9.8, 9.6, 9.5, 9.6, 9.9, 9.7, 9.4, 10.6, 10.6, 10.3, 10.7, 10.6, 10.9, 11.1, 10.5, 11.0, 11.0, 10.5, 11.0, 10.8, 11.3]},
+      {nome: "MCMV", cor: "var(--s3)", v: [11.3, 11.4, 11.5, 12.2, 12.1, 12.2, 13.3, 13.0, 12.7, 12.8, 12.6, 12.8, 13.2, 12.7, 12.3, 12.4, 12.0, 11.7, 12.0, 12.3, 11.6, 11.8, 11.2, 11.2, 11.6, 11.1, 10.6, 10.3, 9.6, 10.0, 10.9, 10.4, 9.6, 10.6, 10.5, 10.0, 11.4, 11.2, 10.9, 10.9, 10.6, 10.7, 11.3, 11.2, 11.7, 12.0, 12.5, 12.9, 14.7, 13.6, 13.2, 13.0, 12.2, 11.5, 11.2, 10.3, 10.3, 10.9, 10.7, 10.6, 10.0, 10.6, 9.4, 9.3, 9.2, 8.8, 8.8, 8.8, 8.6, 9.0, 8.8, 8.8, 9.4, 9.2, 9.0, 9.0, 8.3, 8.2, 9.0, 8.6, 8.8, 9.7, 9.7, 10.4, 11.6, 10.9, 10.4, 11.6, 11.6, 11.5, 11.7, 10.7, 9.9, 10.0, 9.5, 9.0, 8.4, 8.1, 7.9, 7.7, 7.4, 7.1, 7.6, 7.5, 7.2, 7.2, 6.9, 7.3, 7.7, 8.2, 8.1, 8.0, 7.5, 7.6, 7.9, 7.9, 8.4, 9.1, 9.4, 9.7, 9.2, 8.9, 8.4, 8.6, 8.5]},
+      {nome: "Total", cor: "var(--ink-1)", dash: "2 4", v: [12.2, 12.3, 12.4, 12.8, 12.8, 13.0, 13.6, 13.6, 13.5, 13.6, 13.6, 13.7, 13.7, 13.3, 13.1, 13.4, 13.0, 12.8, 13.0, 13.1, 12.5, 12.8, 12.4, 12.4, 12.8, 12.3, 12.0, 11.7, 11.3, 11.2, 11.8, 11.4, 11.1, 11.3, 11.5, 11.2, 12.3, 12.2, 11.9, 11.9, 11.6, 11.6, 12.2, 12.0, 12.6, 12.8, 13.3, 13.6, 15.2, 14.5, 14.2, 14.1, 13.6, 13.1, 12.7, 11.7, 11.6, 12.0, 11.7, 11.6, 11.4, 11.9, 10.9, 11.1, 10.7, 10.5, 10.9, 11.1, 11.1, 11.6, 11.8, 11.8, 13.1, 12.8, 12.8, 12.7, 12.1, 12.0, 13.4, 13.0, 13.1, 13.6, 13.2, 14.1, 14.6, 13.4, 13.2, 14.0, 13.6, 13.4, 13.5, 12.6, 11.8, 12.0, 10.9, 10.4, 9.9, 9.4, 9.4, 9.0, 8.6, 8.3, 8.6, 8.5, 8.1, 8.1, 7.8, 8.1, 8.5, 8.8, 8.6, 8.7, 8.4, 8.4, 8.7, 8.7, 9.0, 9.6, 9.7, 10.0, 9.6, 9.4, 9.0, 9.1, 9.1]}];
+    var fig = document.getElementById("figLiqMeses");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1), YMAX = 28;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - v * (300 / YMAX); }
+    for (var v = 0; v <= YMAX; v += 7) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "m");
+    }
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    SR.forEach(function (sr) {
+      var a = { points: sr.v.map(function (v, i) { return X(i) + "," + Y(Math.min(v, YMAX)).toFixed(1); }).join(" "),
+        fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+    });
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      var h = "<b>" + MESES[i] + "</b>";
+      SR.forEach(function (sr) { if (sr.v[i]) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + " meses</em></div>"; });
+      tt.innerHTML = h; tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 240 > b.width) x = e.clientX - b.left - 250;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
   })();
 
   // ================= GOVERNANCA =================
