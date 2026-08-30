@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.21 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.22 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -183,6 +183,7 @@
     <div class="navgrupo">
       <span class="navlabel">Gestão</span>
       <button data-tab="calls">Conference calls</button>
+      <button data-tab="gov">Governança</button>
     </div>
   </nav>
 
@@ -630,6 +631,52 @@
       <details class="fonte"><summary>Notas do modelo</summary><p class="fonte">Agregação: no trimestre T da companhia, cada linha = Σ sobre os projetos vivos (lançados em ℓ = T−12 … T) do valor do projeto na idade T−ℓ, escalado por (1+g)^ℓ, com g = inflação trimestral (INCC anual do slider). Na política "retido", o caixa final de cada projeto é devolvido ao acionista quando o projeto morre (idade 12). ROE anualizado = 4 × lucro do trimestre ÷ PL corrente. Para a escala da Cyrela real, multiplique por ~30× (lançamentos %CBR de ~R$ 3 bi/trimestre).</p></details>
     </div>
   </section>
+  <!-- ============ ABA: GOVERNANCA ============ -->
+  <section class="tab" id="tab-gov">
+    <div class="card">
+      <span class="tag">FR 2026 (seções 1.13, 6, 7, 8) · FRE/CVM dados abertos 2010–2026 · DFP</span>
+      <h2>Governança: dono no comando, bônus de sócio</h2>
+      <p><b>Capital:</b> 384,0 mi ON + 69,4 mi PN (CYRE4) = 453,4 mi ações. <b>Bloco Elie Horn ~28,6%</b> (PF 20,9% + Eirenor/Uruguai 5,7% + EH Capital/BVI 2,0%), <b>sem acordo de acionistas</b> (seção 1.13 vazia) — controle familiar puro, congelado desde 2021. Free float 67,2% (73,7 mil CPFs); tesouraria 17,7 mi ON (4,6% das ordinárias). Institucionais: BlackRock 5,6%, Invesco 5,0% das ON — e Absolute (10,6%) e SPX (5,2%) concentradas nas <b>PN</b>, provável arbitragem do resgate da CYRE4 que o CFO admitiu estudar no call do 2T26.</p>
+
+      <h3 class="subtit">Composição societária — evolução (FRE 2010–2026, % do capital total)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Bloco Elie Horn</span>
+        <span><i class="sw" style="background:var(--s3)"></i> Tesouraria</span>
+      </div>
+      <figure id="figGovSoc">
+        <svg viewBox="0 0 900 360"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">Três capítulos: o bloco Horn rodou <b>~30–32%</b> até 2018, caiu a <b>25,5%</b> em 2019–20 (as doações filantrópicas do Elie — ele prometeu doar a maior parte da fortuna) e voltou a <b>28,6%</b> sem comprar uma ação: recompras e cancelamentos fazem o controle crescer passivamente (tesouraria chegou a 6,2% em 2023). No passageiro da história institucional: Carmignac (2010) → Tarpon (2011–13) → Oppenheimer/Orbis (2014–16) → <b>Dynamo com ~10% por quase uma década</b> (2014–21) → BlackRock/Invesco hoje, com as gestoras locais migrando para as PN. Passe o mouse: o maior institucional de cada ano está no tooltip.</p>
+
+      <h3 class="subtit">O desenho do bônus (FR, seção 8.1) — a cláusula que vale o dossiê</h3>
+      <p>A variável da diretoria é apurada sobre <b>"apenas o resultado dos projetos entregues até aquele exercício"</b>, e só sobre <b>"o valor que exceder o custo de capital estipulado pela Companhia"</b>. Esse lucro econômico forma um pool de curto e longo prazo: parte paga no ano, parte <b>"retida para pagamento de forma diferida por aproximadamente 5 anos, quando os terrenos comprados naquele mesmo exercício forem entregues"</b>. E <b>zero remuneração em ações</b> — nenhuma opção ou ação restrita em 17 anos de FRE.</p>
+      <p class="efeito">É bônus de sócio, não de executivo: (1) paga sobre obra <b>entregue</b>, não sobre PoC — ninguém enche o bolso lançando muito e reconhecendo catch-up; (2) exige retorno <b>acima do custo de capital</b> — margem sem ROE não paga; (3) o diferimento casa o bônus de hoje com a safra de terrenos comprada hoje — quem compra terreno ruim devolve no futuro. É a versão contratual do "Conselho chato que nos remunera pelo ROE". O custo total (~R$ 34 mi, ~1,7% do lucro) é modesto; o alinhamento verdadeiro está na propriedade: o CEO é filho do controlador e a família tem ~R$ 3 bi em ações — ~90× a remuneração anual de toda a administração.</p>
+
+      <h3 class="subtit">A prova de que o mecanismo funciona — remuneração da diretoria × lucro (2009–2026)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Remuneração total da diretoria (R$ mi)</span>
+        <span style="color:var(--ink-2);white-space:nowrap"><i class="sw" style="background:var(--grid)"></i> Lucro líquido do ano (R$ mi, fundo — escala própria)</span>
+      </div>
+      <figure id="figGovRem">
+        <svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">O bônus respira com o ciclo de <b>entregas</b>, não com o lucro do ano: pico de R$ 29 mi em 2013 (entregas do superciclo 2010–11), colapso para <b>R$ 5,7–8,8 mi em 2015–20</b> (projetos entregues sem lucro econômico acima do custo de capital — o pool secou por seis anos), retomada a R$ 20–35 mi com as safras lucrativas pós-2021. Uma diretoria que aceitou seis anos de bônus perto de zero e não foi embora é o teste de estresse que nenhuma política escrita substitui. Nota: 2026 = previsto no FR; lucro de 2026 = 1S.</p>
+
+      <h3 class="subtit">Comitês do Conselho (FR 7.4)</h3>
+      <table>
+        <thead><tr><th>Comitê</th><th>Membros</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td><b>Auditoria</b> (estatutário, Res. CVM 23/21)</td><td>Afonso Bevilaqua, Marcela Drigo, Rafaella Corti, Rosangela dos Santos</td><td>Bevilaqua: ex-diretor executivo do FMI e ex-BC</td></tr>
+          <tr><td><b>Estratégia e Finanças</b></td><td>Bevilaqua (coord.), Sérgio Rial, João Tourinho, Ricardo Sales; Miguel Mickelberg secretário</td><td>Rial no comitê que desafia a alocação de capital</td></tr>
+          <tr><td><b>Pessoas e Sustentabilidade</b></td><td>Rogério Melzi (coord.), Celso Alves, Rafael Novellino</td><td>Propõe a política de remuneração ao CA</td></tr>
+        </tbody>
+      </table>
+      <p class="efeito">Membros de comitê recebem só remuneração fixa (sem variável, sem benefícios) e o Conselho inteiro não tem bônus — independência barata de verificar. O risco simétrico do modelo é o de todo controle familiar sem acordo: sucessão e partes relacionadas dependem da família; os mitigantes são estes comitês com independentes de peso e o histórico de 20 anos de tratamento ao minoritário.</p>
+    </div>
+  </section>
+
   <!-- ============ ABA: CONFERENCE CALLS ============ -->
   <section class="tab" id="tab-calls">
     <div class="card">
@@ -1547,6 +1594,95 @@
         tt.innerHTML = h; tt.style.opacity = 1;
         var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
         if (x + 250 > b.width) x = e.clientX - b.left - 260;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+
+  // ================= GOVERNANCA =================
+  (function () {
+    var ANOS = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    var HORN = [31.3, 30.1, 30.6, 30.6, 31.9, 31.9, 31.9, 30.0, 30.1, 25.5, 25.5, 27.3, 27.3, 27.3, 28.4, 28.2, 28.6];
+    var TES = [0.0, 2.9, 1.1, 3.2, 3.9, 4.7, 4.5, 4.2, 3.9, 3.8, 3.8, 3.8, 6.0, 6.2, 4.6, 4.6, 3.9];
+    var INST = ["Carmignac Gestion 7.8%", "Grupo Tarpon 10.0%", "Grupo Tarpon 7.1%", "Grupo Tarpon 9.5%", "Oppenheimer Funds, Inc, 8.1%", "Dynamo 9.2%", "Orbis Investment Management Limite 10.1%", "Dynamo 10.0%", "Dynamo 9.9%", "Dynamo Administra\u00e7\u00e3o de Recursos L 5.2%", "Dynamo Administra\u00e7\u00e3o de Recursos L 5.2%", "Dynamo Administra\u00e7\u00e3o de Recursos L 9.9%", "BlackRock Inc. 10.2%", "\u2014", "\u2014", "BlackRock, Inc. 5.5%", "BlackRock, Inc. 5.6%"];
+    var fig = document.getElementById("figGovSoc");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = ANOS.length, PASSO = 816 / (N - 1);
+    function X(i) { return 56 + i * PASSO; }
+    function Y(v) { return 300 - v * (270 / 40); }
+    [0, 10, 20, 30, 40].forEach(function (v) {
+      el("line", { x1: 56, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 48, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    ANOS.forEach(function (a, i) {
+      if (i % 2 === 0) el("text", { x: X(i), y: 324, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    [[HORN, "var(--s1)", 2.6], [TES, "var(--s3)", 2.2]].forEach(function (sr) {
+      el("polyline", { points: sr[0].map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); }).join(" "),
+        fill: "none", stroke: sr[1], "stroke-width": sr[2], "stroke-linejoin": "round" }, gd);
+      sr[0].forEach(function (v, i) {
+        el("circle", { cx: X(i), cy: Y(v), r: 3.2, fill: sr[1], stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    ANOS.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 20, width: PASSO, height: 290, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = "<b>FRE " + a + "</b><div class='row'><span>Bloco Horn</span><em>" + HORN[i].toFixed(1) + "%</em></div>" +
+          "<div class='row'><span>Tesouraria</span><em>" + TES[i].toFixed(1) + "%</em></div>" +
+          "<div class='row'><span>Maior institucional</span><em>" + INST[i] + "</em></div>";
+        tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 300 > b.width) x = e.clientX - b.left - 310;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+
+  (function () {
+    var ANOS = ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    var DIR = [8.7, 6.7, 8.9, 14.3, 29.2, 21.0, 5.7, 10.3, 8.0, 6.6, 6.4, 8.8, 20.1, 27.1, 26.0, 28.9, 27.9, 34.5];
+    var TOT = [9.3, 7.9, 9.6, 16.4, 33.7, 22.4, 9.2, 14.2, 12.6, 11.8, 11.3, 14.4, 24.1, 31.2, 31.0, 34.3, 34.1, 42.9];
+    var LL = [729, 600, 498, 660, 719, 661, 448, 151, -95, -84, 416, 1760, 914, 809, 942, 1649, 2007, 748];
+    var fig = document.getElementById("figGovRem");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = ANOS.length, PASSO = 816 / (N - 1);
+    var LMAX = Math.max.apply(null, LL) * 1.06;
+    function X(i) { return 56 + i * PASSO; }
+    function Y(v) { return 320 - v * (290 / 40); }
+    LL.forEach(function (v, i) {
+      if (v <= 0) return;
+      var hh = v / LMAX * 300;
+      el("rect", { x: X(i) - 14, y: 320 - hh, width: 28, height: hh, rx: 3,
+        fill: "var(--grid)", "fill-opacity": 0.6 }, g);
+    });
+    [0, 10, 20, 30, 40].forEach(function (v) {
+      el("line", { x1: 56, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 48, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v);
+    });
+    ANOS.forEach(function (a, i) {
+      if (i % 2 === 1) el("text", { x: X(i), y: 344, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    el("polyline", { points: DIR.map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); }).join(" "),
+      fill: "none", stroke: "var(--s1)", "stroke-width": 2.6, "stroke-linejoin": "round" }, gd);
+    DIR.forEach(function (v, i) {
+      el("circle", { cx: X(i), cy: Y(v), r: 3.4, fill: "var(--s1)", stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+    });
+    ANOS.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 20, width: PASSO, height: 310, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var pctl = LL[i] > 0 ? (100 * TOT[i] / LL[i]).toFixed(1) + "% do lucro" : "—";
+        tt.innerHTML = "<b>" + a + "</b><div class='row'><span>Diretoria</span><em>R$ " + DIR[i].toFixed(1) + " mi</em></div>" +
+          "<div class='row'><span>Administração total</span><em>R$ " + TOT[i].toFixed(1) + " mi (" + pctl + ")</em></div>" +
+          "<div class='row'><span>Lucro líquido</span><em>R$ " + LL[i] + " mi</em></div>";
+        tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 300 > b.width) x = e.clientX - b.left - 310;
         tt.style.left = x + "px"; tt.style.top = y + "px";
       });
       r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
