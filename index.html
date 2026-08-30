@@ -150,13 +150,16 @@
   table { border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
   th, td { padding: 3px 10px; border-bottom: 1px solid var(--grid); text-align: right; font-size: 12px; }
   th:first-child, td:first-child { text-align: left; }
+  .qgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; margin: 12px 0; }
+  .q { border-left: 3px solid var(--s1); padding: 8px 14px; font-style: italic; color: var(--ink-1); }
+  .q b { display: block; font-style: normal; color: var(--muted); font-size: .82em; margin-top: 5px; font-weight: 600; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.20 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.21 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -176,6 +179,10 @@
       <span class="navlabel">Projetos</span>
       <button data-tab="p100">Lançamento 100M</button>
       <button data-tab="consol">Consolidado</button>
+    </div>
+    <div class="navgrupo">
+      <span class="navlabel">Gestão</span>
+      <button data-tab="calls">Conference calls</button>
     </div>
   </nav>
 
@@ -623,7 +630,58 @@
       <details class="fonte"><summary>Notas do modelo</summary><p class="fonte">Agregação: no trimestre T da companhia, cada linha = Σ sobre os projetos vivos (lançados em ℓ = T−12 … T) do valor do projeto na idade T−ℓ, escalado por (1+g)^ℓ, com g = inflação trimestral (INCC anual do slider). Na política "retido", o caixa final de cada projeto é devolvido ao acionista quando o projeto morre (idade 12). ROE anualizado = 4 × lucro do trimestre ÷ PL corrente. Para a escala da Cyrela real, multiplique por ~30× (lançamentos %CBR de ~R$ 3 bi/trimestre).</p></details>
     </div>
   </section>
-  <p class="fonte">Fontes: RI da Cyrela (planilhas, releases, Formulário de Referência), CVM (dados abertos, DFP) e atas; releases oficiais dos pares.</p>
+  <!-- ============ ABA: CONFERENCE CALLS ============ -->
+  <section class="tab" id="tab-calls">
+    <div class="card">
+      <span class="tag">14 teleconferências lidas na íntegra · 1T23–2T26 · transcrições oficiais</span>
+      <h2>O que a gestão disse — e o que entregou</h2>
+      <p>A Cyrela não dá guidance formal ("a Companhia é Companhia de donos"), mas os calls estão cheios de quase-guidance verificável: range de margem, faixa de geração de caixa, trajetória de usinagem. Esta aba confronta o dito com o entregue — e registra a cultura que explica os dois.</p>
+
+      <h3 class="subtit">Cultura: as regras da casa, nas palavras deles</h3>
+      <div class="qgrid">
+        <div class="q">"Nós não somos estratégicos, nós somos compradores de terreno."<b>Raphael Horn · 2T23</b></div>
+        <div class="q">"ROE para nós é muito importante, volume não é. [...] Temos a verba [de terrenos], essa verba é sagrada."<b>Raphael Horn · 3T24</b></div>
+        <div class="q">"Nosso Conselho é chato e nos remunera pelo nosso ROE. Não adianta ficarmos crescendo para crescer."<b>Raphael Horn · 4T25</b></div>
+        <div class="q">"A Cyrela está confiante com a sua grade, não com o mercado. Não estamos bullish no setor, estamos bullish no nosso produto."<b>Raphael Horn · 2T24</b></div>
+        <div class="q">"Se nós vamos dar guidance de ROE mais que 20, é o dia que eu não estiver aqui. [...] Você tem que sonhar 20 para entregar 15, mas 20 era sonho."<b>Raphael Horn · 4T24</b></div>
+        <div class="q">"Na nossa indústria nós começamos o jogo do zero toda vez. Lança um projeto, vende, ótimo. Nenhuma garantia nos próximos."<b>Miguel Mickelberg · 1T24</b></div>
+        <div class="q">"No nosso setor uma coisa é a foto e outra é o filme. Quando você acelera a compra de terreno e a venda não corresponde, a dívida líquida sobe rapidinho."<b>Miguel Mickelberg · 4T24</b></div>
+        <div class="q">"Quando começa o oba-oba, nem é muito bom, porque aí vira guerra de preço, guerra de compra de terreno."<b>Raphael Horn · 2T23</b></div>
+      </div>
+      <p class="efeito">Tradução operacional: alocação 100% bottom-up (terreno a terreno, sem meta de mix ou volume), capital racionado por ROE com verba fixa de terrenos, e anti-euforia deliberada como traço cultural — consistente nos 14 calls, sem exceção. O tom nunca acompanha o ciclo: nos recordes de 2024–25, a mensagem era "estamos sempre dormindo mal".</p>
+
+      <h3 class="subtit">Placar do guidance — geração de caixa recorrente (R$ mi)</h3>
+      <div class="legend">
+        <span style="color:var(--ink-2)"><i class="sw" style="background:var(--grid)"></i> faixa guiada no início do ano</span>
+        <span><i class="sw" style="background:var(--s1)"></i> entregue (recorrente, ex-venda de ações de JVs)</span>
+      </div>
+      <figure id="figCallsCx">
+        <svg viewBox="0 0 900 260"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">Três anos de credibilidade e um tropeço admitido: 2023 queimou <b>menos</b> que o guiado; 2024 entregou dentro da faixa (+R$ 53 mi recorrente; +R$ 259 mi com a venda de ações da Cury); <b>2025 falhou</b> — guiou +300–500 e queimou R$ 190 mi recorrentes (o +R$ 65 mi reportado só existe pelos R$ 251 mi da Cury), com mea culpa raro no 3T25: <i>"nós acabamos errando... foi a primeira vez em muito tempo"</i> (Miguel). A causa, repetida em três calls: venda de estoque pronto abaixo do plano. 2026 guiado em 0–200 e correndo acima (~R$ 230 mi recorrentes no 1S).</p>
+
+      <h3 class="subtit">Placar do guidance — margem, receita e Vivaz</h3>
+      <table>
+        <thead><tr><th>O que foi dito</th><th>Quando</th><th>O que aconteceu</th></tr></thead>
+        <tbody>
+          <tr><td>Margem bruta normalizada em <b>32–34%</b></td><td>desde 3T23</td><td>Todas as safras de lançamento 2021–25 dentro do range; reportada saiu de 30,7% (1T23) para 34,4% (2T26) ✓</td></tr>
+          <tr><td>"Vejo <b>pouco espaço</b> para crescimento da margem sobre o patamar atual" (~34%)</td><td>2T26</td><td>Teto declarado — mas sustentado pelo mix: Vivaz é 20% da receita e ~40% das vendas do 1S26; o receitamento dela ainda cresce</td></tr>
+          <tr><td>Melhora da margem Vivaz (rodava a 28–29%)</td><td>3T23</td><td>Cumprido: 4T25 ~36%, ano 34,5%; safras 2024–25 acima de 36% ✓</td></tr>
+          <tr><td>Usinagem (receita de obra): R$ 4 bi → R$ 5 bi → <b>R$ 5,5–6 bi</b></td><td>4T25</td><td>2024 e 2025 confirmados; 2026 é o guidance vivo — a régua mais objetiva de receita que a companhia já deu</td></tr>
+          <tr><td>"O nosso ROE é para cima — ou sobe, ou pagamos mais dividendo"</td><td>4T23 (ROE 13,1%)</td><td>Entregou os dois: ROE 20,9% (2024) e 22,3% (2025) + R$ 1,4 bi de dividendos em 2025, incluindo extraordinário de R$ 1 bi ✓</td></tr>
+          <tr><td>Safra de entrega saudável: 2026 <b>88% vendida / 59% paga</b>; 2027 <b>90% / 38%</b></td><td>2T26</td><td>Risco de distrato contido nas duas próximas safras de entrega</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="subtit">Perspectivas — o que a gestão enxerga daqui pra frente</h3>
+      <p><b>Receita:</b> as "três caixinhas" do CFO (usinagem + vendas de unidades + reconhecimentos iniciais) apontam crescimento carregado pela usinagem (+R$ 0,5–1 bi em 2026) e pelo gap acumulado de ~R$ 3 bi entre vendas-consolidação e receita de 2024–25; receita a apropriar de R$ 12,2 bi. <b>Margem:</b> platô de ~34%, com o mix Vivaz como último vetor de alta. <b>Hedge INCC:</b> recebíveis corrigidos a INCC de R$ 10,8 bi contra custo a incorrer de R$ 8,2 bi — <i>overhedge</i> de ~R$ 2,6 bi: INCC alto ajuda o resultado no curto prazo (2021, de INCC explosivo, foi a maior margem em 10–15 anos). <b>Ciclo:</b> obra da marca Cyrela alongou de ~36 para ~48 meses (prédios mais altos, uso misto); Vivaz em 30–36.</p>
+      <p><b>Capital:</b> com o caixa forte e a eventual venda de ativos à TRX (MoU de R$ 2,14 bi — sob risco: o TRXF11 cancelou a compra do Pátio Malzoni em 27/08/26 e a 13ª emissão não cita os ativos da Cyrela), a gestão listou dividendo, recompra e — inédito — <b>possível resgate das ações preferenciais</b>. <b>JVs:</b> saiu dos conselhos das três listadas em 2026 (Cury em março; Lavvi e P&amp;P em agosto), com a Cury em 15,08% — o limiar do acordo de acionistas. <b>Riscos que a própria gestão assume:</b> VSO 12m caiu de 55% para 42,8% ("já foi padrão Suíça"); novo modelo de crédito com SFH capado em 80% para imóveis até R$ 2,25 mi ameaça o alto padrão paulistano no longo prazo; reforma tributária pesa contra média/alta renda (obrigação de NF em dez/26; adesão nos lançamentos de 2029).</p>
+      <p class="efeito">A síntese de 14 calls em uma linha: gestão que promete pouco, numera o que promete, entrega quase sempre — e quando erra (caixa 2025), diz "erramos" no call seguinte. O risco não está na execução; está nos vetores exógenos que eles mesmos listam: juro longo, funding imobiliário e tributação.</p>
+    </div>
+  </section>
+
+  <p class="fonte">Fontes: RI da Cyrela (planilhas, releases, Formulário de Referência), CVM (dados abertos, DFP) e atas; transcrições oficiais das teleconferências 1T23–2T26; releases oficiais dos pares.</p>
 </div>
 
 <script>
@@ -1492,6 +1550,46 @@
         tt.style.left = x + "px"; tt.style.top = y + "px";
       });
       r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+
+  // ================= CALLS: guidance x entrega de caixa =================
+  (function () {
+    var D = [
+      { ano: "2023", g0: -500, g1: -300, real: -180, nota: "guiado como queima; queimou menos" },
+      { ano: "2024", g0: 0, g1: 200, real: 53, nota: "+R$ 259 mi com venda de ações Cury" },
+      { ano: "2025", g0: 300, g1: 500, real: -190, nota: "falhou — estoque pronto abaixo do plano; +R$ 65 mi só com Cury (R$ 251 mi)" },
+      { ano: "2026", g0: 0, g1: 200, real: 230, nota: "em curso — recorrente do 1S26" }
+    ];
+    var fig = document.getElementById("figCallsCx");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    function X(v) { return 450 + v * 0.62; }
+    function Y(i) { return 42 + i * 52; }
+    [-500, -250, 0, 250, 500].forEach(function (v) {
+      el("line", { x1: X(v), y1: 22, x2: X(v), y2: 236, stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: X(v), y: 254, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g, v);
+    });
+    D.forEach(function (d, i) {
+      el("text", { x: 60, y: Y(i) + 5, fill: "var(--ink-1)", "font-size": 14, "font-weight": 600 }, gd, d.ano);
+      el("rect", { x: X(Math.min(d.g0, d.g1)), y: Y(i) - 9, width: Math.abs(X(d.g1) - X(d.g0)), height: 18,
+        rx: 4, fill: "var(--grid)", "fill-opacity": 0.85 }, gd);
+      var ok = d.real >= Math.min(d.g0, d.g1);
+      var c = el("circle", { cx: X(d.real), cy: Y(i), r: 6, fill: "var(--s1)", stroke: "var(--surface-1)", "stroke-width": 2 }, gd);
+      el("text", { x: X(d.real) + (d.real > d.g1 ? 12 : -12), y: Y(i) + 5, fill: "var(--ink-2)", "font-size": 12.5,
+        "text-anchor": d.real > d.g1 ? "start" : "end" }, gd, (d.real > 0 ? "+" : "") + d.real);
+      var hit = el("rect", { x: 40, y: Y(i) - 22, width: 830, height: 44, fill: "transparent" }, gd);
+      hit.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = "<b>" + d.ano + "</b><div class='row'><span>Guiado</span><em>" + d.g0 + " a " + d.g1 + "</em></div>" +
+          "<div class='row'><span>Entregue (recorrente)</span><em>" + (d.real > 0 ? "+" : "") + d.real + "</em></div>" +
+          "<div class='row'><span>" + d.nota + "</span></div>";
+        tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 300 > b.width) x = e.clientX - b.left - 310;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
     });
   })();
 
