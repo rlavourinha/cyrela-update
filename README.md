@@ -4,7 +4,7 @@ Dashboard autocontido (HTML + SVG inline, sem dependências externas) do update 
 
 **Ver online:** https://rlavourinha.github.io/cyrela-update/
 
-## Conteúdo (v4.26 · 30/08/2026 · dados até 2T26)
+## Conteúdo (v4.27 · 30/08/2026 · dados até 2T26)
 
 - **Contabilidade** — visão geral das 7 normas que regem a incorporação imobiliária no Brasil e a ênfase-padrão dos relatórios de auditoria do setor.
 - **Lançamento 100M** — simulador interativo de um empreendimento de R$ 100 mi de VGV (regime SBPE): 13 premissas deslizáveis (margem, recebimento na obra, terreno % do VGV, permuta 0–100%, dívida de produção e custo, comerciais, G&A rateio/marginal, RET, Selic, INCC, valorização do estoque), motor nominal com correções INCC em custos e recebíveis, curvas de venda/PoC/receita/COGS/caixa em grade 2×2, DRE completo e Balanço trimestrais (fecham por partida dobrada), linha de alavancagem e métricas ROE/ROIC sobre saldos médios em 4 cenários (terreno caixa/permuta × caixa retido/distribuído). Premissas calibradas em evidência (DFP 2025/CVM dos pares e demonstrações da Cyrela).

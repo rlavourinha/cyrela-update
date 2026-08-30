@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.26 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.27 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -682,7 +682,7 @@
         <svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg>
         <div class="tt"></div>
       </figure>
-      <p class="efeito">A régua da margem em uma imagem: quem entregou no superciclo (janelas terminando em 2012–15) viu o preço subir 2–3× o INCC — as margens de 35% de então. De 2016 em diante as curvas de preço passam a correr <b>coladas ou abaixo</b> do INCC — e na janela que termina hoje (48m), SP acumula +21,6% contra INCC de +23,4% (<b>spread −1,8 p.p.</b>) e o RJ +13,8% (<b>−9,6 p.p.</b>); em 36m os spreads são −4,3 e −7,5 p.p. Duas leituras: (1) a margem de quem entrega hoje não ganhou nada do mercado — veio de compra de terreno e execução; (2) a premissa do simulador de estoque valorizando a <b>INCC + spread</b> foi generosa no ciclo recente — o mercado pagou INCC − 2 a − 10 p.p. no MAP. É o outro lado do hedge INCC: os recebíveis corrigem, mas o estoque não acompanha.</p>
+      <p class="efeito">A régua da margem em uma imagem: quem entregou no superciclo (janelas terminando em 2012–15) viu o preço subir 2–3× o INCC — as margens de 35% de então. De 2016 em diante as curvas de preço passam a correr <b>coladas ou abaixo</b> do INCC — o Rio chegou a ter janelas de 48 meses com preço nominal <b>caindo</b> (2018–22) — e na janela que termina hoje (48m), SP acumula +21,6% contra INCC de +23,4% (<b>spread −1,8 p.p.</b>) e o RJ +13,8% (<b>−9,6 p.p.</b>); em 36m os spreads são −4,3 e −7,5 p.p. Duas leituras: (1) a margem de quem entrega hoje não ganhou nada do mercado — veio de compra de terreno e execução; (2) a premissa do simulador de estoque valorizando a <b>INCC + spread</b> foi generosa no ciclo recente — o mercado pagou INCC − 2 a − 10 p.p. no MAP. É o outro lado do hedge INCC: os recebíveis corrigem, mas o estoque não acompanha.</p>
     </div>
   </section>
 
@@ -1859,13 +1859,14 @@
       var series = [{nome: "São Paulo", cor: "var(--s1)", v: acum(SP, X0)},
         {nome: "Rio de Janeiro", cor: "var(--s2)", v: acum(RJ, X0)},
         {nome: "INCC", cor: "var(--s3)", v: acum(INCC, X0)}];
-      var vmax = 0;
-      series.forEach(function (sr) { sr.v.forEach(function (v) { if (v !== null && v > vmax) vmax = v; }); });
-      var YMAX = Math.ceil(vmax / 50) * 50, PASSO = 812 / (N - 1 - X0);
+      var vmax = 0, vmin = 0;
+      series.forEach(function (sr) { sr.v.forEach(function (v) { if (v !== null) { if (v > vmax) vmax = v; if (v < vmin) vmin = v; } }); });
+      var YMAX = Math.ceil(vmax / 25) * 25, YMIN = Math.floor(vmin / 25) * 25, PASSO = 812 / (N - 1 - X0);
+      var STEP = (YMAX - YMIN) > 150 ? 50 : 25;
       function X(i) { return 60 + (i - X0) * PASSO; }
-      function Y(v) { return 330 - v * (300 / YMAX); }
-      for (var v = 0; v <= YMAX; v += YMAX / 5) {
-        el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      function Y(v) { return 330 - (v - YMIN) * (300 / (YMAX - YMIN)); }
+      for (var v = YMIN; v <= YMAX; v += STEP) {
+        el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": v === 0 ? 1.5 : 1 }, g);
         el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
       }
       MESES.forEach(function (m, i) {
@@ -1874,7 +1875,7 @@
       });
       series.forEach(function (sr) {
         var pts = [];
-        sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(Math.max(v, 0)).toFixed(1)); });
+        sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
         el("polyline", { points: pts.join(" "), fill: "none", stroke: sr.cor,
           "stroke-width": sr.nome === "INCC" ? 2.6 : 2, "stroke-linejoin": "round" }, gd);
       });
