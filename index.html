@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.27 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.28 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -189,6 +189,7 @@
       <span class="navlabel">Mercado</span>
       <button data-tab="mercado">Preços</button>
       <button data-tab="liquidez">Liquidez</button>
+      <button data-tab="perfil">Perfil Oferta – SP</button>
     </div>
   </nav>
 
@@ -728,6 +729,69 @@
         <div class="tt"></div>
       </figure>
       <p class="efeito">O MAP chegou a <b>26,5 meses no fim de 2021</b> — a ressaca da orgia de lançamentos pós-pandemia — e normalizou para ~11 desde 2024. A distância entre as duas pontas do mix da Cyrela: <b>MAP em 11,3 meses de estoque</b> contra <b>8,5 do MCMV</b> (que era 7,4 há dois anos — deteriorando na margem). Na cidade de São Paulo o quadro é mais apertado que a média nacional das associadas: 9,6 meses no total e <b>12,9 meses no MAP</b> (Secovi-SP, jun/26). A tradução para a tese: a liquidez sustenta o giro rápido da Vivaz (nossas curvas de conversão) e explica o VSO 12m da Cyrela cedendo a 42,8% e o estoque pronto de alto padrão dobrando desde 2T24 — o risco de volume mora no MAP, exatamente onde os preços correm abaixo do INCC (aba Preços).</p>
+    </div>
+  </section>
+
+  <!-- ============ ABA: PERFIL OFERTA SP ============ -->
+  <section class="tab" id="tab-perfil">
+    <div class="card">
+      <span class="tag">Anuário Secovi-SP 2025 (11ª ed., cidade de SP) · Raio-X FipeZap (Fipe/Grupo OLX, nacional)</span>
+      <h2>Perfil da oferta — cidade de São Paulo</h2>
+      <p>O que a cidade está produzindo (dormitórios, metragem, faixa de preço), a que velocidade vende (VSO) — e os dois termômetros micro da mesa de negociação: desconto e participação de investidores. SP concentra 73% do estoque da Cyrela.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0 4px">
+        <div style="border:1px solid var(--grid);border-radius:10px;padding:10px 14px"><div style="font-size:12.5px;color:var(--ink-2)">Transações com desconto (12m, BR)</div><div style="font-size:22px;font-weight:650">65%</div><div style="font-size:11.5px;color:var(--muted)">Raio-X 2T26 · média hist. 64% · recorde 71% (dez/25)</div></div>
+        <div style="border:1px solid var(--grid);border-radius:10px;padding:10px 14px"><div style="font-size:12.5px;color:var(--ink-2)">Desconto médio (quando há)</div><div style="font-size:22px;font-weight:650">14%</div><div style="font-size:11.5px;color:var(--muted)">máxima histórica (= 2016 e 2020)</div></div>
+        <div style="border:1px solid var(--grid);border-radius:10px;padding:10px 14px"><div style="font-size:12.5px;color:var(--ink-2)">Compradores investidores (12m)</div><div style="font-size:22px;font-weight:650">40%</div><div style="font-size:11.5px;color:var(--muted)">74% deles para alugar · média hist. 43%</div></div>
+        <div style="border:1px solid var(--grid);border-radius:10px;padding:10px 14px"><div style="font-size:12.5px;color:var(--ink-2)">Oferta final — cidade de SP</div><div style="font-size:22px;font-weight:650">85,2 mil</div><div style="font-size:11.5px;color:var(--muted)">+40% a/a · VGO R$ 62,2 bi (dez/25)</div></div>
+      </div>
+
+      <h3 class="subtit">Lançamentos por dormitórios (% das unidades, 2016–2025)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> 1 dormitório</span>
+        <span><i class="sw" style="background:var(--s2)"></i> 2 dormitórios</span>
+        <span><i class="sw" style="background:var(--s3)"></i> 3 dormitórios</span>
+        <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">4 dormitórios</span></span>
+      </div>
+      <figure id="figPerfDorm"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">A cidade parou de produzir apartamento de família: <b>1 dormitório saiu de 15% para 31%</b> dos lançamentos e <b>3 dormitórios despencaram de 21% para 5%</b> — mínima da série. Dois dormitórios (hoje majoritariamente compactos de MCMV) seguram ~62%.</p>
+
+      <h3 class="subtit">Vendas por faixa de área útil (% das unidades, 2016–2025)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> até 30 m²</span>
+        <span><i class="sw" style="background:var(--s2)"></i> 31–45 m²</span>
+        <span><i class="sw" style="background:var(--s3)"></i> 46–65 m²</span>
+        <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">acima de 65 m²</span></span>
+      </div>
+      <figure id="figPerfArea"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">Em 2016, o clássico 46–65 m² era 41% das vendas; hoje é <b>6%</b>. Até 45 m² virou <b>86% do mercado</b> (22% abaixo de 30 m²). A metragem que a Cyrela/Living vende no MAP virou nicho — e é onde o estoque da cidade está mais pesado (12,9 meses).</p>
+
+      <h3 class="subtit">Lançamentos por faixa de preço (% das unidades, 2021–2025)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> até R$ 264 mil</span>
+        <span><i class="sw" style="background:var(--s2)"></i> R$ 264–350 mil</span>
+        <span><i class="sw" style="background:var(--s3)"></i> R$ 350–700 mil</span>
+        <span style="color:var(--ink-1)"><i class="sw dot" style="color:var(--ink-1)"></i> <span style="color:var(--ink-2)">acima de R$ 700 mil</span></span>
+      </div>
+      <figure id="figPerfPreco"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">O efeito-teto do MCMV em tempo real: a faixa <b>R$ 264–350 mil saltou de 16% para 36%</b> dos lançamentos quando o teto da Faixa 2 subiu — é o corredor onde a Vivaz opera. Acima de R$ 700 mil (Cyrela/Living) encolheu para 9% das unidades, mas o anuário registra o luxo &gt;R$ 5 mi como a faixa que mais cresceu (+169%): o MAP virou barra-bell.</p>
+
+      <h3 class="subtit">VSO da cidade de São Paulo (média do ano, %)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> VSO 12 meses</span>
+        <span><i class="sw" style="background:var(--s2)"></i> VSO mensal médio</span>
+      </div>
+      <figure id="figPerfVso"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">O VSO 12m de 61% parece o melhor da série — mas é retrovisor: o <b>mensal médio caiu para 12,3%</b> (−7% a/a) com a oferta final recorde de 85,2 mil unidades. O par confirma os 9,6 meses de estoque da aba Liquidez.</p>
+
+      <h3 class="subtit">Mesa de negociação — Raio-X FipeZap (pontos citados nas edições, nacional)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Transações com desconto (%)</span>
+        <span><i class="sw" style="background:var(--s2)"></i> Compradores investidores (12m, %)</span>
+        <span><i class="sw" style="background:var(--s3)"></i> Desconto médio quando há (%)</span>
+      </div>
+      <figure id="figPerfRaiox"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">Só pontos citados por extenso nas edições (a série completa vive nos gráficos-imagem dos PDFs; o parser incorpora cada edição nova). O desenho já basta: as transações com desconto escalaram de 61% para o <b>recorde de 71% em dez/25</b> (recuando a 65% em jun/26) e o desconto médio subiu de ~10% para <b>14% — teto histórico</b> — enquanto o investidor (40%) segue abaixo da média de 43%. Âncoras da série: piso de 56% das transações com desconto em mar/23, teto ~70% (2018 e 2022); desconto médio de 12m rodava 7,5–9,4% em 2015–16.</p>
     </div>
   </section>
 
@@ -2034,6 +2098,208 @@
       tt.style.left = x + "px"; tt.style.top = y + "px";
     });
     hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+
+  // ================= MERCADO: perfil da oferta SP =================
+  (function () {
+    var L = ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+    var SR = [{nome: "1 dorm", cor: "var(--s1)", v: [15,19,20,29,33,29,26,24,27,31]}, {nome: "2 dorms", cor: "var(--s2)", v: [60,66,66,56,56,58,62,64,65,62]}, {nome: "3 dorms", cor: "var(--s3)", v: [21,12,10,11,9,10,9,9,6,5]}, {nome: "4 dorms", cor: "var(--ink-1)", dash: "2 4", v: [4,3,4,4,2,3,2,2,2,2]}];
+    var fig = document.getElementById("figPerfDorm");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = L.length, PASSO = 812 / (N - 1), YMAX = 75;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 290 - v * (260 / YMAX); }
+    for (var v = 0; v <= YMAX; v += 25) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    }
+    L.forEach(function (a, i) {
+      el("text", { x: X(i), y: 316, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+      sr.v.forEach(function (v, i) {
+        if (v !== null) el("circle", { cx: X(i), cy: Y(v), r: 3, fill: sr.cor, stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    L.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 16, width: PASSO, height: 280, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + a + "</b>";
+        SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i] + "%</em></div>"; });
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 240 > b.width) x = e.clientX - b.left - 250;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+  (function () {
+    var L = ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+    var SR = [{nome: "até 30 m²", cor: "var(--s1)", v: [3,9,10,14,19,22,24,18,22,22]}, {nome: "31–45 m²", cor: "var(--s2)", v: [29,42,49,50,53,57,55,58,59,64]}, {nome: "46–65 m²", cor: "var(--s3)", v: [41,25,18,14,11,8,9,9,8,6]}, {nome: "acima de 65 m²", cor: "var(--ink-1)", dash: "2 4", v: [28,24,22,21,17,13,11,15,11,8]}];
+    var fig = document.getElementById("figPerfArea");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = L.length, PASSO = 812 / (N - 1), YMAX = 75;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 290 - v * (260 / YMAX); }
+    for (var v = 0; v <= YMAX; v += 25) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    }
+    L.forEach(function (a, i) {
+      el("text", { x: X(i), y: 316, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+      sr.v.forEach(function (v, i) {
+        if (v !== null) el("circle", { cx: X(i), cy: Y(v), r: 3, fill: sr.cor, stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    L.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 16, width: PASSO, height: 280, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + a + "</b>";
+        SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i] + "%</em></div>"; });
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 240 > b.width) x = e.clientX - b.left - 250;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+  (function () {
+    var L = ["2021", "2022", "2023", "2024", "2025"];
+    var SR = [{nome: "até R$ 264 mil", cor: "var(--s1)", v: [50,45,38,44,30]}, {nome: "R$ 264–350 mil", cor: "var(--s2)", v: [16,19,22,22,36]}, {nome: "R$ 350–700 mil", cor: "var(--s3)", v: [18,20,24,22,23]}, {nome: "acima de R$ 700 mil", cor: "var(--ink-1)", dash: "2 4", v: [16,15,15,12,9]}];
+    var fig = document.getElementById("figPerfPreco");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = L.length, PASSO = 812 / (N - 1), YMAX = 60;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 290 - v * (260 / YMAX); }
+    for (var v = 0; v <= YMAX; v += 20) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    }
+    L.forEach(function (a, i) {
+      el("text", { x: X(i), y: 316, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+      sr.v.forEach(function (v, i) {
+        if (v !== null) el("circle", { cx: X(i), cy: Y(v), r: 3, fill: sr.cor, stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    L.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 16, width: PASSO, height: 280, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + a + "</b>";
+        SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i] + "%</em></div>"; });
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 240 > b.width) x = e.clientX - b.left - 250;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+  (function () {
+    var L = ["2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+    var SR = [{nome: "VSO 12 meses", cor: "var(--s1)", v: [39.1,39.5,52.8,56.6,59.2,56.5,52.0,52.5,59.5,61.1]}, {nome: "VSO mensal médio", cor: "var(--s2)", v: [5.1,8.4,11.5,13.4,11.0,10.1,8.2,9.1,13.2,12.3]}];
+    var fig = document.getElementById("figPerfVso");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = L.length, PASSO = 812 / (N - 1), YMAX = 70;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 290 - v * (260 / YMAX); }
+    for (var v = 0; v <= YMAX; v += 14) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    }
+    L.forEach(function (a, i) {
+      el("text", { x: X(i), y: 316, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+      sr.v.forEach(function (v, i) {
+        if (v !== null) el("circle", { cx: X(i), cy: Y(v), r: 3, fill: sr.cor, stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    L.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 16, width: PASSO, height: 280, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + a + "</b>";
+        SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i] + "%</em></div>"; });
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 240 > b.width) x = e.clientX - b.left - 250;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+  (function () {
+    var L = ["mar/25", "jun/25", "set/25", "dez/25", "mar/26", "jun/26"];
+    var SR = [{nome: "Transações com desconto", cor: "var(--s1)", v: [61,63,68,71,67,65]}, {nome: "Investidores (12m)", cor: "var(--s2)", v: [null,39,null,42,40,40]}, {nome: "Desconto médio (quando há)", cor: "var(--s3)", v: [10,10,11,14,13,14]}];
+    var fig = document.getElementById("figPerfRaiox");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = L.length, PASSO = 812 / (N - 1), YMAX = 80;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 290 - v * (260 / YMAX); }
+    for (var v = 0; v <= YMAX; v += 20) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    }
+    L.forEach(function (a, i) {
+      el("text", { x: X(i), y: 316, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.2, "stroke-linejoin": "round" };
+      if (sr.dash) a["stroke-dasharray"] = sr.dash;
+      el("polyline", a, gd);
+      sr.v.forEach(function (v, i) {
+        if (v !== null) el("circle", { cx: X(i), cy: Y(v), r: 3, fill: sr.cor, stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    L.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 16, width: PASSO, height: 280, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + a + "</b>";
+        SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i] + "%</em></div>"; });
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 240 > b.width) x = e.clientX - b.left - 250;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
   })();
 
   // ================= GOVERNANCA =================
