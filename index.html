@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.39 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.40 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -932,7 +932,15 @@
         <span><i class="sw" style="background:var(--s2)"></i> FipeZap SP (anúncios de venda)</span>
       </div>
       <figure id="figDemTrAn"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
-      <p class="efeito">A régua mais próxima de "SBPE puro" que existe publicamente — e ela conta a bifurcação em versão preço: desde 2014, o que <b>transaciona com financiamento</b> (IGMI-R: laudos de avaliação dos contratos, novo e compacto no mix) subiu <b>+162%</b>, enquanto o que <b>está anunciado</b> (FipeZap: usado, MAP) subiu +55% — as duas andavam coladas até 2020 e descolaram de vez no ciclo MCMV/compactos. Leia como cestas, não como prêmio: o produto que gira valorizou; o estoque anunciado, não. Nota metodológica: retiramos daqui a razão compra÷avaliação do BCB — são medianas mistas (FGTS+SBPE) contaminadas por composição (a mediana de compra colou no teto do MCMV no boom de 2024–25) e o dataset não oferece recorte por modalidade; para desconto de mesa, a régua segue sendo o Raio-X na aba Perfil da Oferta.</p>
+      <p class="efeito">A régua mais próxima de "SBPE puro" que existe publicamente — e ela conta a bifurcação em versão preço: desde 2014, o que <b>transaciona com financiamento</b> (IGMI-R: laudos de avaliação dos contratos, novo e compacto no mix) subiu <b>+162%</b>, enquanto o que <b>está anunciado</b> (FipeZap: usado, MAP) subiu +55% — as duas andavam coladas até 2020 e descolaram de vez no ciclo MCMV/compactos. Leia como cestas, não como prêmio: o produto que gira valorizou; o estoque anunciado, não. Leia junto com o compra÷avaliação logo abaixo — que volta ao ar com a quebra estrutural devidamente marcada.</p>
+
+      <h3 class="subtit">Compra ÷ avaliação — quanto do laudo o comprador paga (%)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> compra ÷ avaliação (mediana BR, FGTS + SBPE)</span>
+        <span><i class="sw" style="background:var(--muted);opacity:.55"></i> jul/24–mar/25: mediana colada no teto MCMV — artefato, fora das médias</span>
+      </div>
+      <figure id="figDemCa"><svg viewBox="0 0 900 380"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">Três regimes, um corte. <b>Até jun/24</b>, a razão se comporta: o comprador paga em média <b>96,1% do laudo</b> — desconto de mesa de ~4%. <b>De jul/24 a mar/25</b> a série perde o sentido: a mediana de compra fica <b>pregada em R$ 264–265 mil por nove meses seguidos</b> — exatamente o teto do MCMV Faixa 2 — enquanto a avaliação mediana cai com a enxurrada de unidades baratas contratadas no boom; a razão passa de 100% (pico 107,5% em jan/25) e vira artefato de composição, não prêmio sobre laudo. O trecho está tracejado e <b>excluído de qualquer média</b>. <b>De abr/25 em diante</b> a mediana descola do teto e a série volta a fazer sentido — mas num degrau mais baixo: média de <b>95,6%</b> desde então, <b>94,1% nos últimos seis meses</b>. O desconto de mesa saiu de ~4% para ~6% do laudo — quase 2 p.p. a mais de poder de barganha do comprador, consistente com o mercado pós-boom mais frouxo. Ressalva de sempre: mediana mista FGTS+SBPE, sem recorte por modalidade.</p>
 
       <h3 class="subtit">A régua final — 1ª parcela (SAC) ÷ renda média nominal (%)</h3>
       <p class="desc">A conta, por extenso: <b>1ª parcela SAC = F/360 + F × i<sub>m</sub></b>, onde F = 80% × preço do apto (60 m² × R$/m² médio FipeZap-SP), i<sub>m</sub> = (1 + taxa média de aquisição PF do BCB)<sup>1/12</sup> − 1, prazo de 360 meses. O índice divide essa parcela pela renda média nominal (PNADC recomposta pelo IPCA, média móvel de 12 meses). Exemplo em jun/26: apto R$ 723 mil → F = R$ 578 mil; taxa 14,3% a.a. → i<sub>m</sub> = 1,12%; parcela = 1.606 + 6.475 = <b>R$ 8.081</b> ÷ renda R$ 3.763 = 215%.</p>
@@ -1829,6 +1837,68 @@
         });
       }
     });
+  })();
+  (function () {
+    var MESES = ["2014-04", "2014-05", "2014-06", "2014-07", "2014-08", "2014-09", "2014-10", "2014-11", "2014-12", "2015-01", "2015-02", "2015-03", "2015-04", "2015-05", "2015-06", "2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12", "2016-01", "2016-02", "2016-03", "2016-04", "2016-05", "2016-06", "2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12", "2017-01", "2017-02", "2017-03", "2017-04", "2017-05", "2017-06", "2017-07", "2017-08", "2017-09", "2017-10", "2017-11", "2017-12", "2018-01", "2018-02", "2018-03", "2018-04", "2018-05", "2018-06", "2018-07", "2018-08", "2018-09", "2018-10", "2018-11", "2018-12", "2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"];
+    var PRE = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 97.8, 97.1, 96.9, 97.1, 95.9, 97.1, 97.1, 97.6, 97.6, 97.5, 97.2, 95.0, 96.5, 97.1, 97.1, 94.4, 97.2, 97.1, 97.3, 94.8, 96.6, 98.0, 94.4, 97.2, 95.5, 95.1, 96.8, 96.9, 95.7, 95.2, 97.1, 94.7, 93.7, 93.5, 95.0, 95.9, 95.8, 96.2, 97.0, 97.0, 97.4, 97.9, 95.9, 96.0, 95.9, 95.9, 96.4, 93.6, 95.8, 95.6, 95.0, 95.7, 95.6, 95.7, 95.8, 95.0, 95.3, 95.7, 94.9, 96.8, 95.5, 96.0, 97.9, 92.8, 96.2, 95.7, 95.9, 95.1, 96.2, 94.4, 96.2, 96.1, 95.9, 96.1, 95.5, 95.5, 97.2, 98.7, 100.0];
+    var EP = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 98.7, 100.0, 100.4, 101.9, 103.9, 104.7, 104.2, 107.5, 104.4, 102.9, 98.1];
+    var POS = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 98.1, 96.5, 98.0, 98.8, 94.7, 96.0, 95.0, 95.0, 94.4, 94.3, 94.0, 94.4, 93.3, null];
+    var CA = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 97.8, 97.1, 96.9, 97.1, 95.9, 97.1, 97.1, 97.6, 97.6, 97.5, 97.2, 95.0, 96.5, 97.1, 97.1, 94.4, 97.2, 97.1, 97.3, 94.8, 96.6, 98.0, 94.4, 97.2, 95.5, 95.1, 96.8, 96.9, 95.7, 95.2, 97.1, 94.7, 93.7, 93.5, 95.0, 95.9, 95.8, 96.2, 97.0, 97.0, 97.4, 97.9, 95.9, 96.0, 95.9, 95.9, 96.4, 93.6, 95.8, 95.6, 95.0, 95.7, 95.6, 95.7, 95.8, 95.0, 95.3, 95.7, 94.9, 96.8, 95.5, 96.0, 97.9, 92.8, 96.2, 95.7, 95.9, 95.1, 96.2, 94.4, 96.2, 96.1, 95.9, 96.1, 95.5, 95.5, 97.2, 98.7, 100.0, 100.4, 101.9, 103.9, 104.7, 104.2, 107.5, 104.4, 102.9, 98.1, 96.5, 98.0, 98.8, 94.7, 96.0, 95.0, 95.0, 94.4, 94.3, 94.0, 94.4, 93.3, null];
+    var I_EP0 = 123, I_EP1 = 131, I_PRE0 = 45;
+    var AVG_PRE = 96.1, AVG_POS = 95.6;
+    var fig = document.getElementById("figDemCa");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = MESES.length, PASSO = 812 / (N - 1), YMIN = 90, YMAX = 110;
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 330 - (v - YMIN) * (300 / (YMAX - YMIN)); }
+    [90, 95, 100, 105, 110].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 100 ? "var(--baseline)" : "var(--grid)", "stroke-width": v === 100 ? 1.3 : 1 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v);
+    });
+    MESES.forEach(function (m, i) {
+      if (m.slice(5) === "01" && (+m.slice(0, 4)) % 2 === 0)
+        el("text", { x: X(i), y: 354, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, m.slice(0, 4));
+    });
+    el("rect", { x: X(I_EP0), y: 30, width: X(I_EP1) - X(I_EP0), height: 300, fill: "var(--muted)", opacity: 0.08 }, g);
+    el("line", { x1: X(I_EP0), y1: 30, x2: X(I_EP0), y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "4 3", opacity: 0.7 }, g);
+    el("line", { x1: X(I_EP1), y1: 30, x2: X(I_EP1), y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "4 3", opacity: 0.7 }, g);
+    el("text", { x: (X(I_EP0) + X(I_EP1)) / 2, y: 46, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle", "font-weight": 600 }, g, "quebra estrutural");
+    el("text", { x: (X(I_EP0) + X(I_EP1)) / 2, y: 62, fill: "var(--muted)", "font-size": 11.5, "text-anchor": "middle" }, g, "mediana de compra colada no");
+    el("text", { x: (X(I_EP0) + X(I_EP1)) / 2, y: 76, fill: "var(--muted)", "font-size": 11.5, "text-anchor": "middle" }, g, "teto MCMV F2 (R$ 264\u2013265 mil)");
+    function tra(vals, cor, w, op, dash) {
+      var pts = [];
+      vals.forEach(function (v, i) { if (v !== null && v !== undefined) pts.push(X(i) + "," + Y(Math.max(YMIN, Math.min(v, YMAX))).toFixed(1)); });
+      var a = { points: pts.join(" "), fill: "none", stroke: cor, "stroke-width": w, "stroke-opacity": op, "stroke-linejoin": "round" };
+      if (dash) a["stroke-dasharray"] = dash;
+      el("polyline", a, gd);
+    }
+    el("line", { x1: X(I_PRE0), y1: Y(AVG_PRE), x2: X(I_EP0), y2: Y(AVG_PRE), stroke: "var(--s1)", "stroke-width": 1.2, "stroke-dasharray": "7 4", opacity: 0.65 }, gd);
+    el("text", { x: X(I_PRE0) + 6, y: Y(AVG_PRE) - 7, fill: "var(--s1)", "font-size": 12.5, "font-weight": 600 }, gd, "m\u00e9dia " + AVG_PRE.toFixed(1).replace(".", ",") + "%");
+    el("line", { x1: X(I_EP1 + 1), y1: Y(AVG_POS), x2: 872, y2: Y(AVG_POS), stroke: "var(--s1)", "stroke-width": 1.2, "stroke-dasharray": "7 4", opacity: 0.65 }, gd);
+    el("text", { x: 866, y: Y(AVG_POS) + 18, fill: "var(--s1)", "font-size": 12.5, "font-weight": 600, "text-anchor": "end" }, gd, "m\u00e9dia " + AVG_POS.toFixed(1).replace(".", ",") + "%");
+    tra(EP, "var(--muted)", 1.6, 0.55, "5 4");
+    tra(PRE, "var(--s1)", 2, 1);
+    tra(POS, "var(--s1)", 2, 1);
+    var hover = el("line", { x1: 0, y1: 30, x2: 0, y2: 330, stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 }, gd);
+    var hit = el("rect", { x: 60, y: 20, width: 812, height: 320, fill: "transparent" }, gd);
+    hit.addEventListener("mousemove", function (e) {
+      var b = fig.getBoundingClientRect();
+      var i = Math.round((((e.clientX - b.left) / b.width * 900) - 60) / PASSO);
+      i = Math.max(0, Math.min(N - 1, i));
+      hover.setAttribute("x1", X(i)); hover.setAttribute("x2", X(i)); hover.setAttribute("opacity", 0.6);
+      var h = "<b>" + MESES[i] + "</b>";
+      if (CA[i] !== null) {
+        h += "<div class='row'><span>compra \u00f7 avalia\u00e7\u00e3o</span><em>" + CA[i].toFixed(1).replace(".", ",") + "%</em></div>";
+        var reg = i < I_EP0 ? "regime antigo (m\u00e9dia " + AVG_PRE.toFixed(1).replace(".", ",") + "%)" : (i <= I_EP1 ? "artefato \u2014 teto MCMV F2" : "regime novo (m\u00e9dia " + AVG_POS.toFixed(1).replace(".", ",") + "%)");
+        h += "<div class='row'><span>" + reg + "</span><em></em></div>";
+      }
+      tt.innerHTML = h; tt.style.opacity = 1;
+      var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+      if (x + 300 > b.width) x = e.clientX - b.left - 310;
+      tt.style.left = x + "px"; tt.style.top = y + "px";
+    });
+    hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
   })();
 
   // ================= RECEITA: origem das vendas e anatomia (base unica: ex-permuta %CBR) =================
