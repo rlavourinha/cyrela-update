@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.22 · 29/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.23 · 29/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -663,6 +663,51 @@
         <div class="tt"></div>
       </figure>
       <p class="efeito">O bônus respira com o ciclo de <b>entregas</b>, não com o lucro do ano: pico de R$ 29 mi em 2013 (entregas do superciclo 2010–11), colapso para <b>R$ 5,7–8,8 mi em 2015–20</b> (projetos entregues sem lucro econômico acima do custo de capital — o pool secou por seis anos), retomada a R$ 20–35 mi com as safras lucrativas pós-2021. Uma diretoria que aceitou seis anos de bônus perto de zero e não foi embora é o teste de estresse que nenhuma política escrita substitui. Nota: 2026 = previsto no FR; lucro de 2026 = 1S.</p>
+
+      <h3 class="subtit">Remuneração por diretor — mínima, média e máxima (R$ mi/ano)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Média por diretor</span>
+        <span style="color:var(--ink-2)"><i class="sw" style="background:var(--grid)"></i> Faixa mín–máx</span>
+      </div>
+      <figure id="figGovMm">
+        <svg viewBox="0 0 900 360"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">O topo da tabela respira 8× com o ciclo: o diretor mais bem pago levou <b>R$ 11,6 mi em 2013</b> (entregas do superciclo), <b>R$ 1,4 mi em 2019</b> (pool seco) e R$ 10,2 mi em 2025. O espalhamento máx/mín de ~6× dentro de uma diretoria de 6 é meritocracia interna real — não é rateio igualitário. Média 2025: R$ 4,6 mi/diretor. Nomes individuais não são públicos (a CVM exige só mín/média/máx).</p>
+
+      <h3 class="subtit">Diretoria — quebra da remuneração (R$ mi)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s2)"></i> Fixa (salário)</span>
+        <span><i class="sw" style="background:var(--s3)"></i> Benefícios</span>
+        <span><i class="sw" style="background:var(--s1)"></i> Variável</span>
+      </div>
+      <figure id="figGovQuebra">
+        <svg viewBox="0 0 900 360"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">A linha azul é a assinatura da casa: <b>o fixo dos 6 diretores está nominalmente parado há 15 anos</b> (R$ 2,5–4,7 mi → R$ 3,0 mi em 2025 — em termos reais, caiu mais da metade). Toda a expansão do pacote veio do variável (R$ 21 mi) e de benefícios. Alavancagem de ~7× fixo→variável: um pacote de sócio de partnership, não de executivo de corporação.</p>
+
+      <h3 class="subtit">Variável da diretoria — pago × orçado (R$ mi)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s2)"></i> Orçado na proposta do ano</span>
+        <span><i class="sw" style="background:var(--s1)"></i> Pago (reportado no FRE seguinte)</span>
+      </div>
+      <figure id="figGovPo">
+        <svg viewBox="0 0 900 360"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">Desde 2017, o pago fica entre <b>81% e 105% do orçado</b> (média ~93%) — e nos três últimos anos, consistentemente abaixo (89% / 83% / 81%): o orçamento não é âncora inflada para legitimar pagamento. Os desvios grandes são antigos: 41% em 2010 e 135% em 2015. Para 2026 estão orçados R$ 26,3 mi. Alguns anos (2012–14, 2017) ficam fora do gráfico porque a proposta da época não itemizava o variável.</p>
+
+      <h3 class="subtit">O Conselho — mínima, média e máxima por conselheiro (R$ mi/ano)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Média por conselheiro</span>
+        <span style="color:var(--ink-2)"><i class="sw" style="background:var(--grid)"></i> Faixa mín–máx</span>
+      </div>
+      <figure id="figGovCa">
+        <svg viewBox="0 0 900 360"><g class="eixos"></g><g class="dyn"></g></svg>
+        <div class="tt"></div>
+      </figure>
+      <p class="efeito">O conselheiro médio custa <b>R$ 630 mil/ano</b> (2025), 100% fixo + benefícios — <b>zero variável, zero ações</b>: o CA que aprova o bônus da diretoria não tem incentivo a inflá-lo. O máximo (na prática, a presidência — Elie Horn, no cargo desde 1993) saltou de ~R$ 0,7 mi para R$ 2,8–3,4 mi entre 2016–20, logo depois de Elie deixar o executivo (2014) e virar chairman dedicado; hoje R$ 2,1 mi. O órgão inteiro custa R$ 6,2 mi (~0,3% do lucro), e os membros detêm 875 mil ações fora do bloco de controle (8.13) — o alinhamento do conselho é reputacional e familiar, não financeiro.</p>
 
       <h3 class="subtit">Comitês do Conselho (FR 7.4)</h3>
       <table>
@@ -1683,6 +1728,167 @@
         tt.style.opacity = 1;
         var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
         if (x + 300 > b.width) x = e.clientX - b.left - 310;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+
+  // ================= GOVERNANCA: por cabeca, quebra e pago x orcado =================
+  (function () {
+    var ANOS = ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+    var MAXV = [2.21, 0.7, 0.76, 3.5, 11.56, 4.06, 3.69, 3.04, 2.29, 1.51, 1.4, 3.68, 6.0, 7.62, 8.55, 10.1, 10.2], MEDV = [1.45, 0.46, 0.54, 2.11, 4.78, 3.69, 0.95, 1.81, 1.15, 1.14, 0.93, 1.85, 1.85, 3.35, 4.34, 4.82, 4.65], MINV = [0.23, 0.22, 0.24, 0.33, 1.07, 0.55, 1.33, 0.66, 0.33, 0.27, 0.55, 0.77, 0.98, 1.16, 1.6, 0.91, 1.64];
+    var fig = document.getElementById("figGovMm");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = ANOS.length, PASSO = 816 / (N - 1), YMAX = 12;
+    function X(i) { return 56 + i * PASSO; }
+    function Y(v) { return 300 - v * (270 / YMAX); }
+    for (var v = 0; v <= YMAX; v += YMAX / 4) {
+      el("line", { x1: 56, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 48, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v.toFixed(0));
+    }
+    ANOS.forEach(function (a, i) {
+      if (i % 2 === 0) el("text", { x: X(i), y: 324, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    var pts = MAXV.map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); })
+      .concat(MINV.map(function (v, i) { return X(N - 1 - i) + "," + Y(MINV[N - 1 - i]).toFixed(1); })).join(" ");
+    el("polygon", { points: pts, fill: "var(--grid)", "fill-opacity": 0.55 }, gd);
+    el("polyline", { points: MEDV.map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); }).join(" "),
+      fill: "none", stroke: "var(--s1)", "stroke-width": 2.6, "stroke-linejoin": "round" }, gd);
+    MEDV.forEach(function (v, i) {
+      el("circle", { cx: X(i), cy: Y(v), r: 3.2, fill: "var(--s1)", stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+    });
+    ANOS.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 20, width: PASSO, height: 290, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = "<b>" + a + "</b><div class='row'><span>Máxima</span><em>R$ " + MAXV[i].toFixed(1) + " mi</em></div>" +
+          "<div class='row'><span>Média</span><em>R$ " + MEDV[i].toFixed(2) + " mi</em></div>" +
+          "<div class='row'><span>Mínima</span><em>R$ " + MINV[i].toFixed(2) + " mi</em></div>";
+        tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 260 > b.width) x = e.clientX - b.left - 270;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+  (function () {
+    var ANOS = ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+    var MAXV = [0.13, 0.66, 0.15, 0.86, 2.06, 0.27, 0.28, 2.82, 3.17, 3.35, 3.3, 3.37, 1.59, 1.62, 1.83, 2.52, 2.1], MEDV = [0.12, 0.4, 0.15, 0.45, 1.1, 0.27, 0.64, 0.77, 0.66, 0.75, 0.68, 0.83, 0.48, 0.51, 0.54, 0.62, 0.63], MINV = [0.11, 0.14, 0.14, 0.11, 0.19, 0.15, 0.12, 0.24, 0.1, 0.24, 0.2, 0.38, 0.22, 0.32, 0.28, 0.29, 0.3];
+    var fig = document.getElementById("figGovCa");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = ANOS.length, PASSO = 816 / (N - 1), YMAX = 4;
+    function X(i) { return 56 + i * PASSO; }
+    function Y(v) { return 300 - v * (270 / YMAX); }
+    for (var v = 0; v <= YMAX; v += YMAX / 4) {
+      el("line", { x1: 56, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 48, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v.toFixed(1));
+    }
+    ANOS.forEach(function (a, i) {
+      if (i % 2 === 0) el("text", { x: X(i), y: 324, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    var pts = MAXV.map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); })
+      .concat(MINV.map(function (v, i) { return X(N - 1 - i) + "," + Y(MINV[N - 1 - i]).toFixed(1); })).join(" ");
+    el("polygon", { points: pts, fill: "var(--grid)", "fill-opacity": 0.55 }, gd);
+    el("polyline", { points: MEDV.map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); }).join(" "),
+      fill: "none", stroke: "var(--s1)", "stroke-width": 2.6, "stroke-linejoin": "round" }, gd);
+    MEDV.forEach(function (v, i) {
+      el("circle", { cx: X(i), cy: Y(v), r: 3.2, fill: "var(--s1)", stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+    });
+    ANOS.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 20, width: PASSO, height: 290, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = "<b>" + a + "</b><div class='row'><span>Máxima</span><em>R$ " + MAXV[i].toFixed(1) + " mi</em></div>" +
+          "<div class='row'><span>Média</span><em>R$ " + MEDV[i].toFixed(2) + " mi</em></div>" +
+          "<div class='row'><span>Mínima</span><em>R$ " + MINV[i].toFixed(2) + " mi</em></div>";
+        tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 260 > b.width) x = e.clientX - b.left - 270;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+
+  (function () {
+    var ANOS = ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+    var SR = [{nome: "Fixa", cor: "var(--s2)", v: [2.6, 2.8, 4.3, 4.7, 3.6, 3.1, 3.4, 3.7, 3.5, 3.2, 3.0, 3.0, 2.5, 2.6, 2.7, 2.7, 3.0]},
+      {nome: "Benefícios", cor: "var(--s3)", v: [0.1, 0.2, 0.2, 0.6, 2.0, 2.4, 2.6, 0.3, 0.2, 0.3, 0.4, 0.5, 2.9, 3.0, 3.5, 5.0, 4.2]},
+      {nome: "Variável", cor: "var(--s1)", v: [6.0, 3.7, 4.4, 9.1, 23.5, 4.5, 7.7, 6.3, 4.3, 3.1, 3.5, 5.8, 14.7, 21.5, 19.9, 21.2, 20.6]}];
+    var fig = document.getElementById("figGovQuebra");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = ANOS.length, PASSO = 816 / (N - 1);
+    function X(i) { return 56 + i * PASSO; }
+    function Y(v) { return 300 - v * (270 / 25); }
+    [0, 5, 10, 15, 20, 25].forEach(function (v) {
+      el("line", { x1: 56, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 48, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v);
+    });
+    ANOS.forEach(function (a, i) {
+      if (i % 2 === 0) el("text", { x: X(i), y: 324, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    SR.forEach(function (sr) {
+      el("polyline", { points: sr.v.map(function (v, i) { return X(i) + "," + Y(Math.min(v, 25)).toFixed(1); }).join(" "),
+        fill: "none", stroke: sr.cor, "stroke-width": 2.4, "stroke-linejoin": "round" }, gd);
+      sr.v.forEach(function (v, i) {
+        el("circle", { cx: X(i), cy: Y(Math.min(v, 25)), r: 3, fill: sr.cor, stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    ANOS.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 20, width: PASSO, height: 290, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + a + "</b>";
+        SR.forEach(function (sr) { h += "<div class='row'><span>" + sr.nome + "</span><em>R$ " + sr.v[i].toFixed(1) + " mi</em></div>"; });
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 240 > b.width) x = e.clientX - b.left - 250;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+
+  (function () {
+    var ANOS = ["2010", "2011", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"];
+    var ORC = [3.0, 4.5, 4.2, 4.3, 3.0, 3.5, 3.5, 5.5, 15.6, 21.4, 22.3, 25.4, 25.6], PAGO = [1.2, 4.4, 5.7, 2.8, 2.8, 2.9, 3.5, 5.8, 14.7, 21.5, 19.9, 21.2, 20.6];
+    var fig = document.getElementById("figGovPo");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = ANOS.length, PASSO = 816 / (N - 1);
+    function X(i) { return 56 + i * PASSO; }
+    function Y(v) { return 300 - v * (270 / 28); }
+    [0, 7, 14, 21, 28].forEach(function (v) {
+      el("line", { x1: 56, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 48, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v);
+    });
+    ANOS.forEach(function (a, i) {
+      el("text", { x: X(i), y: 324, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    [[ORC, "var(--s2)", "4 4"], [PAGO, "var(--s1)", null]].forEach(function (sr) {
+      var at = { points: sr[0].map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); }).join(" "),
+        fill: "none", stroke: sr[1], "stroke-width": 2.4, "stroke-linejoin": "round" };
+      if (sr[2]) at["stroke-dasharray"] = sr[2];
+      el("polyline", at, gd);
+      sr[0].forEach(function (v, i) {
+        el("circle", { cx: X(i), cy: Y(v), r: 3.2, fill: sr[1], stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    ANOS.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 20, width: PASSO, height: 290, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        tt.innerHTML = "<b>" + a + "</b><div class='row'><span>Orçado</span><em>R$ " + ORC[i].toFixed(1) + " mi</em></div>" +
+          "<div class='row'><span>Pago</span><em>R$ " + PAGO[i].toFixed(1) + " mi</em></div>" +
+          "<div class='row'><span>Realização</span><em>" + (100 * PAGO[i] / ORC[i]).toFixed(0) + "%</em></div>";
+        tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 240 > b.width) x = e.clientX - b.left - 250;
         tt.style.left = x + "px"; tt.style.top = y + "px";
       });
       r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
