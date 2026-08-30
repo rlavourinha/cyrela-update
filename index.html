@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.29 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.30 · 30/08/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -783,6 +783,22 @@
       </div>
       <figure id="figPerfVso"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
       <p class="efeito">O VSO 12m de 61% parece o melhor da série — mas é retrovisor: o <b>mensal médio caiu para 12,3%</b> (−7% a/a) com a oferta final recorde de 85,2 mil unidades. O par confirma os 9,6 meses de estoque da aba Liquidez.</p>
+
+      <h3 class="subtit">O mercado sem o MCMV — VSO médio por segmento (cidade de SP, %)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Outros mercados (MAP)</span>
+        <span><i class="sw" style="background:var(--s3)"></i> MCMV</span>
+      </div>
+      <figure id="figPerfSegVso"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">O headline da cidade é <i>blended</i> — e o MCMV mascara o resto: em 2025, o MAP girou a <b>9,9% ao mês contra 14,3% do MCMV</b>, com as <b>vendas MAP caindo 11%</b> (45,8 → 41,0 mil unidades) enquanto o MCMV crescia 25%. Por metragem, é mais duro ainda: tudo acima de 65 m² — o produto clássico Cyrela/Living — gira a ~6% ao mês (≈15 meses implícitos); só o 31–45 m² segura os 14%.</p>
+
+      <h3 class="subtit">Escoamento da oferta — meses para zerar o estoque (dez de cada ano)</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> Outros mercados (MAP)</span>
+        <span><i class="sw" style="background:var(--s3)"></i> MCMV</span>
+      </div>
+      <figure id="figPerfEsc"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">A régua que responde "está muito pior sem o MCMV?": <b>sim</b>. O MAP paulistano saiu de 7 meses (dez/24) para <b>11 meses em dez/25 e 12,9 em jun/26</b> (Secovi mensal) — oferta +38% num ano contra vendas −11%. O MCMV segue líquido em ~8 meses. E o nacional das grandes incorporadoras confirma (Abrainc, abr/26): MAP em 13,6 meses de consumo com vendas −24% em dois anos. O "mercado ok" dos headlines é um mercado MCMV; o segmento das marcas Cyrela e Living opera em deterioração rápida de liquidez — com o agravante da aba anterior: essa oferta MAP é majoritariamente compacto desenhado para o investidor que saiu da mesa.</p>
 
       <h3 class="subtit">Mesa de negociação — Raio-X FipeZap (2013–2026, nacional)</h3>
       <div class="legend">
@@ -2299,6 +2315,86 @@
         });
         c.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
       });
+    });
+  })();
+
+  (function () {
+    var ANOS = ["2016","2017","2018","2019","2020","2021","2022","2023","2024","2025"];
+    var SR = [{nome: "Outros mercados (MAP)", cor: "var(--s1)", v: [4.4,6.9,9.5,12.2,10.9,9.5,6.8,7.5,11.0,9.9]},
+      {nome: "MCMV", cor: "var(--s3)", v: [35.0,21.8,18.6,15.3,11.0,10.7,10.2,11.9,15.9,14.3]}];
+    var fig = document.getElementById("figPerfSegVso");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = ANOS.length, PASSO = 812 / (N - 1);
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 290 - v * (260 / 40); }
+    [0, 10, 20, 30, 40].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    ANOS.forEach(function (a, i) {
+      el("text", { x: X(i), y: 316, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    SR.forEach(function (sr) {
+      el("polyline", { points: sr.v.map(function (v, i) { return X(i) + "," + Y(v).toFixed(1); }).join(" "),
+        fill: "none", stroke: sr.cor, "stroke-width": 2.4, "stroke-linejoin": "round" }, gd);
+      sr.v.forEach(function (v, i) {
+        el("circle", { cx: X(i), cy: Y(v), r: 3.2, fill: sr.cor, stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    ANOS.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 16, width: PASSO, height: 280, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + a + "</b>";
+        SR.forEach(function (sr) { h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i].toFixed(1) + "%</em></div>"; });
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 240 > b.width) x = e.clientX - b.left - 250;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
+    });
+  })();
+
+  (function () {
+    var L = ["dez/21", "dez/22", "dez/23", "dez/24", "dez/25", "jun/26"];
+    var SR = [{nome: "Outros mercados (MAP)", cor: "var(--s1)", v: [14, 16, 12, 7, 11, 12.9]},
+      {nome: "MCMV", cor: "var(--s3)", v: [10, 9, 8, 7, 8, null]}];
+    var fig = document.getElementById("figPerfEsc");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = L.length, PASSO = 812 / (N - 1);
+    function X(i) { return 60 + i * PASSO; }
+    function Y(v) { return 290 - v * (260 / 18); }
+    [0, 6, 12, 18].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v ? "var(--grid)" : "var(--baseline)", "stroke-width": v ? 1 : 1.5 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "m");
+    });
+    L.forEach(function (a, i) {
+      el("text", { x: X(i), y: 316, fill: "var(--muted)", "font-size": 12, "text-anchor": "middle" }, g, a);
+    });
+    SR.forEach(function (sr) {
+      var pts = [];
+      sr.v.forEach(function (v, i) { if (v !== null) pts.push(X(i) + "," + Y(v).toFixed(1)); });
+      el("polyline", { points: pts.join(" "), fill: "none", stroke: sr.cor, "stroke-width": 2.4, "stroke-linejoin": "round" }, gd);
+      sr.v.forEach(function (v, i) {
+        if (v !== null) el("circle", { cx: X(i), cy: Y(v), r: 3.4, fill: sr.cor, stroke: "var(--surface-1)", "stroke-width": 1.2 }, gd);
+      });
+    });
+    L.forEach(function (a, i) {
+      var r = el("rect", { x: X(i) - PASSO / 2, y: 16, width: PASSO, height: 280, fill: "transparent" }, gd);
+      r.addEventListener("mousemove", function (e) {
+        var b = fig.getBoundingClientRect();
+        var h = "<b>" + a + "</b>";
+        SR.forEach(function (sr) { if (sr.v[i] !== null) h += "<div class='row'><span>" + sr.nome + "</span><em>" + sr.v[i] + " meses</em></div>"; });
+        if (a === "jun/26") h += "<div class='row'><span>fonte: pesquisa mensal Secovi (MAP)</span></div>";
+        tt.innerHTML = h; tt.style.opacity = 1;
+        var x = e.clientX - b.left + 14, y = e.clientY - b.top - 10;
+        if (x + 260 > b.width) x = e.clientX - b.left - 270;
+        tt.style.left = x + "px"; tt.style.top = y + "px";
+      });
+      r.addEventListener("mouseleave", function () { tt.style.opacity = 0; });
     });
   })();
 
