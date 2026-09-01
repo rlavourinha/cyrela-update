@@ -40,7 +40,9 @@
   body:not(.deck-on) .deck, body:not(.deck-on) .dots { display: none; }
   .deck { height: calc(100vh - 86px); overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; }
   .deck::-webkit-scrollbar { display: none; }
-  .slide { min-height: 100%; scroll-snap-align: start; display: flex; align-items: center; padding: 12px 6px 30px; }
+  .slide { min-height: 100%; scroll-snap-align: start; display: flex; align-items: center; padding: 12px 6px 30px; position: relative; }
+  .slidenum { position: absolute; bottom: 9px; right: 16px; font-size: 10.5px; color: var(--muted);
+    opacity: .65; letter-spacing: .05em; font-variant-numeric: tabular-nums; pointer-events: none; }
   .sl-in { max-width: 1020px; margin: 0 auto; width: 100%;
            opacity: 0; transform: translateY(22px);
            transition: opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1); }
@@ -218,7 +220,7 @@
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
     <button class="chip modoBtn" id="modoBtn" onclick="setDeck(!document.body.classList.contains('deck-on'))">análise completa</button>
-    <span class="chip">v5.3 · 01/09/2026 · dados até 2T26</span>
+    <span class="chip">v5.4 · 01/09/2026 · dados até 2T26</span>
   </header>
 
 <div class="deck" id="deck">
@@ -4177,6 +4179,16 @@
       } else if (e.key === "ArrowUp" || e.key === "ArrowLeft" || e.key === "PageUp") {
         e.preventDefault(); if (cur > 0) slides[cur - 1].scrollIntoView({ behavior: "smooth" });
       }
+    });
+  })();
+  // marcador discreto "slide x / y" (referencia para pedidos de mudanca)
+  (function () {
+    var sl = document.querySelectorAll('.deck .slide');
+    sl.forEach(function (s, i) {
+      var d = document.createElement('div');
+      d.className = 'slidenum';
+      d.textContent = (i + 1) + ' / ' + sl.length;
+      s.appendChild(d);
     });
   })();
 </script>
