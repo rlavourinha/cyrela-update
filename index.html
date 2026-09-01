@@ -70,6 +70,15 @@
   .fw-s2 { font-size: 10px; fill: var(--muted); }
   .fw-c2 { font-family: "Fraunces", Georgia, serif; font-size: 24px; font-weight: 550; fill: var(--ink-1); }
   .fw-h { font-size: 12px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+  .fwgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+  .fwcard { background: var(--surface-1); border: 1px solid var(--ring); border-radius: 14px; overflow: hidden; }
+  .fwcard header { padding: 12px 18px 10px; font-size: 12.5px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; border-bottom: 2px solid; }
+  .fwcard.map header { color: var(--s1); border-color: var(--s1); }
+  .fwcard.mcmv header { color: var(--s2); border-color: var(--s2); }
+  .fwcard dl { margin: 0; padding: 6px 18px 12px; }
+  .fwcard dt { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-top: 11px; }
+  .fwcard dd { margin: 3px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--ink-1); }
+  @media (max-width: 760px) { .fwgrid { grid-template-columns: 1fr; } }
   .fw-cs { font-size: 11.5px; fill: var(--muted); letter-spacing: .06em; }
   .chips2 { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
   .chip2 { background: var(--chip-bg); border: 1px solid var(--ring); border-radius: 999px; padding: 9px 16px; font-size: 13.5px; color: var(--ink-2); }
@@ -224,7 +233,7 @@
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
     <button class="chip modoBtn" id="modoBtn" onclick="setDeck(!document.body.classList.contains('deck-on'))">análise completa</button>
-    <span class="chip">v5.5 · 01/09/2026 · dados até 2T26</span>
+    <span class="chip">v5.6 · 01/09/2026 · dados até 2T26</span>
   </header>
 
 <div class="deck" id="deck">
@@ -305,6 +314,36 @@
 <text x="672" y="286" class="fw-cs" text-anchor="middle">caixa durante a obra</text>
 </svg></div>
       <p class="sub-xl">São <b>duas rodas diferentes</b>. No médio e alto padrão, a incorporadora financia terreno e obra e só recebe o grosso no repasse, anos depois. No MCMV, o <b>crédito associativo</b> inverte o jogo: o banco assume o cliente <b>na planta</b> e desembolsa durante a obra — a roda gira em metade do tempo, com margem hoje maior.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="sl-in">
+      <p class="kick">parte 1 · o negócio</p>
+      <h2 class="head-xl">A mesma indústria, dois contratos com o macro.</h2>
+      <div class="fwgrid">
+        <div class="fwcard map">
+          <header>Médio e alto padrão</header>
+          <dl>
+            <dt>Motor da demanda</dt><dd>Renda privada + apetite do investidor — ninguém obriga essa compra.</dd>
+            <dt>Ciclo que manda</dt><dd><b>PIB e juros.</b> A Selic define o financiamento, o custo de carregar o balanço e o humor do investidor.</dd>
+            <dt>Inflação</dt><dd><b>Repassa:</b> o recebível corrige INCC durante a obra e IPCA/IGP-M + 12% a.a. depois das chaves.</dd>
+            <dt>Capital alocado</dt><dd><b>Pesado.</b> Terreno caro (a permuta mitiga) e obra financiada no balanço — pico de exposição ~41% do VGV.</dd>
+            <dt>Risco de distrato</dt><dd><b>Alto na entrega:</b> se o preço caiu, o investidor devolve a unidade pronta — e o estoque volta.</dd>
+          </dl>
+        </div>
+        <div class="fwcard mcmv">
+          <header>MCMV (Vivaz)</header>
+          <dl>
+            <dt>Motor da demanda</dt><dd><b>Governo:</b> subsídio, tetos por faixa e funding FGTS — a fila anda porque o programa existe.</dd>
+            <dt>Ciclo que manda</dt><dd>O <b>orçamento do programa</b>, não a Selic — a taxa do FGTS é administrada, quase imune ao ciclo.</dd>
+            <dt>Inflação</dt><dd><b>Espreme:</b> o custo corre INCC, mas a parcela associativa não tem correção e o preço tem teto.</dd>
+            <dt>Capital alocado</dt><dd><b>Leve.</b> Terreno menor e a CEF desembolsa por medição durante a obra — o balanço quase não entra.</dd>
+            <dt>Risco de distrato</dt><dd><b>Baixo:</b> o cliente vira mutuário do banco ainda na planta — quem carrega o crédito é a CEF.</dd>
+          </dl>
+        </div>
+      </div>
+      <p class="sub-xl">Cinco linhas, cinco capítulos desta apresentação — cada uma volta com dados mais adiante.</p>
     </div>
   </section>
 
