@@ -111,6 +111,9 @@
     font: inherit; font-size: 13px; color: var(--ink-2); padding: 8px 10px 9px; cursor: pointer;
   }
   nav.tabs button.on { color: var(--ink-1); font-weight: 650; border-bottom-color: var(--s1); }
+  /* selo de conteudo novo da v5.3 — na proxima versao, trocar #c0392b por var(--muted) */
+  .novo53::after { content: "novo"; color: #c0392b; font-size: 9.5px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; vertical-align: super; margin-left: 4px; }
   section.tab { display: none; }
   section.tab.on { display: block; }
   .card {
@@ -215,7 +218,7 @@
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
     <button class="chip modoBtn" id="modoBtn" onclick="setDeck(!document.body.classList.contains('deck-on'))">análise completa</button>
-    <span class="chip">v5.2 · 01/09/2026 · dados até 2T26</span>
+    <span class="chip">v5.3 · 01/09/2026 · dados até 2T26</span>
   </header>
 
 <div class="deck" id="deck">
@@ -691,6 +694,7 @@
       <span class="navlabel">Cyrela</span>
       <button data-tab="calls">Conference calls</button>
       <button data-tab="gov">Governança</button>
+      <button data-tab="zoneamento" class="novo53">Zoneamento SP</button>
     </div>
     <div class="navgrupo">
       <span class="navlabel">Operacional</span>
@@ -1539,6 +1543,61 @@
   </section>
 
   <!-- ============ ABA: OPERACIONAL / ESTOQUE ============ -->
+  <section class="tab" id="tab-zoneamento">
+    <div class="card">
+      <span class="tag" style="color:#c0392b;border-color:#c0392b">TJ-SP · 26/08/2026 · art. 8º da Lei 18.177/2024 · novo na v5.3</span>
+      <h2>Risco de zoneamento — São Paulo</h2>
+      <p>Em 26/08/2026 o Órgão Especial do TJ-SP (25 desembargadores, unânime) declarou inconstitucional o <b>art. 8º da Lei 18.177/2024</b> — a "revisão da revisão" do zoneamento paulistano, de julho/2024. O vício foi de <b>rito, não de mérito</b>: um projeto vendido como "ajustes finos" voltou da Câmara com 38–40 emendas que ampliaram verticalização sem passar por audiência pública ("desvirtuamento do objeto"). Volta a valer o mapa da <b>Lei 18.081, de janeiro/2024</b>.</p>
+
+      <h3 class="subtit">O que caiu × o que ficou de pé</h3>
+      <table>
+        <thead><tr><th>Camada regulatória</th><th>Status</th><th>O que representa</th></tr></thead>
+        <tbody>
+          <tr><td>PDE revisado (Lei 17.975/2023) + <b>Lei 18.081/jan-2024</b></td><td><b>Vigente</b></td><td>A grande ampliação de eixos (ZEU) perto de metrô e corredores — potencial estimado em até <b>+148%</b> de área de eixos (Insper). É a base da tese de adensamento.</td></tr>
+          <tr><td>Arts. 1º–2º da 18.177/jul-2024</td><td><b>Vigentes</b></td><td>Flexibilizações de elegibilidade a eixo: fim da trava de declividade &gt;30%, eixo em planície aluvial mediante requisito construtivo (Moema, Água Branca, Chácara Santo Antônio, Paraíso).</td></tr>
+          <tr><td><b>Art. 8º da 18.177 (o MAPA de julho)</b></td><td style="color:#c0392b"><b>Anulado</b></td><td>~15 áreas alteradas por emenda, ~220 mil m² de zonas de casas (0,5% das ZERs) convertidos: <b>Cidade Jardim/Jockey (ZER→ZEM sem limite de altura, 178 mil m²)</b>, Vila Nova Conceição, rua Caetés (Perdizes), quadra Madre Cabrini (Vila Mariana), ZEUP no Brás e Brooklin, Alto de Pinheiros, Butantã, Vila Sônia.</td></tr>
+          <tr><td>Modulação de efeitos</td><td><b>Protege</b></td><td>Alvarás <b>e protocolos</b> feitos desde jul/2024 ficam preservados. O risco vivo é terreno <b>escriturado e ainda não protocolado</b> em perímetro de julho.</td></tr>
+        </tbody>
+      </table>
+      <p class="efeito">A lei anulada era radical <b>em onde</b> (torres sem limite de altura dentro de bairros-jardim — 19 torres de 28–37 andares protocoladas só na Cidade Jardim), não em extensão. A cidade "verticalizável" de hoje é, em ~95%, a do mapa de janeiro — que segue valendo. E o buraco deve ser longo: 2026–28 é calendário eleitoral contínuo; a correção tende a esperar a <b>revisão do PDE em 2029</b>.</p>
+
+      <h3 class="subtit">A Cyrela na janela da lei anulada — compras de terreno por trimestre</h3>
+      <p class="desc">VGV potencial <b>escriturado</b> por trimestre (prosa dos releases; escritura ≠ contrato — o registro vem meses depois da assinatura). Não é desembolso: a companhia não divulga o preço pago por terreno.</p>
+      <table>
+        <thead><tr><th>Tri</th><th>Terrenos (cidade de SP)</th><th>VGV potencial</th><th>Landbank SP (fim do tri)</th></tr></thead>
+        <tbody>
+          <tr><td>1T24</td><td>2 (2 SP)</td><td>R$ 0,35 bi</td><td>R$ 3,9 bi</td></tr>
+          <tr><td>2T24</td><td>9 (5 SP)</td><td>R$ 2,4 bi</td><td>R$ 4,1 bi</td></tr>
+          <tr><td><b>3T24</b> — lei em vigor</td><td>14 (8 SP)</td><td><b>R$ 5,6 bi</b></td><td>R$ 5,8 bi</td></tr>
+          <tr><td><b>4T24</b></td><td>15 (12 SP)</td><td><b>R$ 7,2 bi</b></td><td>R$ 10,3 bi</td></tr>
+          <tr><td>1T25</td><td>6 (todos SP)</td><td>R$ 1,9 bi</td><td>R$ 9,9 bi</td></tr>
+          <tr><td>2T25</td><td>9 (todos SP)</td><td>R$ 4,0 bi</td><td>R$ 11,7 bi</td></tr>
+          <tr><td>3T25</td><td>7 (todos SP)</td><td>R$ 1,7 bi</td><td>R$ 10,6 bi</td></tr>
+          <tr><td>4T25</td><td>13 (12 SP)</td><td>R$ 5,3 bi</td><td><b>R$ 12,2 bi</b></td></tr>
+          <tr><td>1T26 — liminar congela alvarás (fev)</td><td>3 (2 SP)</td><td><b>R$ 0,7 bi</b></td><td>R$ 11,0 bi</td></tr>
+          <tr><td>2T26 — pivô para o RJ</td><td>10 (<b>4 SP, 6 RJ</b>)</td><td>R$ 2,3 bi</td><td>R$ 9,8 bi</td></tr>
+        </tbody>
+      </table>
+      <p class="efeito">O landbank SP <b>triplicou</b> (3,9 → 12,2 bi) na vigência da lei anulada — 60 terrenos escriturados na capital em oito trimestres. Mas a cronologia de 2026 sugere gestão ativa do risco: as compras desabam para R$ 0,7 bi exatamente no trimestre da liminar que congelou alvarás na cidade (fev/26, derrubada no STF em abril, ameaça estimada pela Abrainc em R$ 90 bi de VGV), e no 2T26 a alocação migra para o Rio (6 dos 10 terrenos).</p>
+
+      <h3 class="subtit">Quanto custou? O que dá para triangular</h3>
+      <p class="desc">A companhia divulga VGV potencial e a forma de aquisição do landbank (<b>46% permuta / 54% caixa</b> no 2T26) — nunca o preço. O desembolso aparece indiretamente no balanço:</p>
+      <div class="chips2">
+        <span class="chip2">estoque de terrenos a custo: <b>R$ 1,95 bi (2T24) → pico de R$ 4,14 bi (3T25)</b> → 3,22 bi (2T26)</span>
+        <span class="chip2">terrenos a pagar: compra migrou para <b>a prazo</b> — obrigação subiu ~R$ 0,9 bi no ciclo</span>
+        <span class="chip2">permuta caiu de <b>55% para ~41%</b> do valor do terreno em 2025 (mais caixa/prazo, menos troca)</span>
+      </div>
+      <p class="efeito">Ordem de grandeza: terreno custa ~10–15% do VGV no MAP paulistano — os R$ 28,7 bi de VGV escriturados desde 3T24 (SP majoritário) implicam ~R$ 2,5–3,5 bi de custo de terra, coerente com o crescimento do estoque a custo (+2,2 bi até o pico) somado ao que já saiu para obra e ao pago em permuta.</p>
+
+      <h3 class="subtit">Leitura para a tese</h3>
+      <p>1 · <b>A máquina Vivaz não depende da lei anulada.</b> Os lançamentos colados em estação (Estação Lapa, Pirituba, Sacomã, Tamanduateí ×3, Giovanni Gronchi, Connection Paulista/Klabin/Mooca) são a tese de eixo do mapa de janeiro — que ficou de pé. A margem bruta MCMV subindo de ~27% para 36–37% (nota de segmentos, série no modelo) é o retrato dessa engenharia: terreno junto a transporte, CA 4, outorga favorecida.</p>
+      <p>2 · <b>A exposição residual é no alto padrão.</b> Vista Venezia (4T24, R$ 1,79 bi) e Vista Milano (1T25, R$ 1,47 bi) ficam na região Jockey/Marginal Pinheiros, epicentro da polêmica — mas lançadas, logo protocoladas e protegidas pela modulação. O que não se enxerga por fonte pública: terreno escriturado em perímetro de julho ainda sem protocolo.</p>
+      <p>3 · <b>O efeito líquido pode ser pró-Cyrela:</b> com os próprios protocolos protegidos e menos potencial construtivo novo para competidores até ~2029, a barreira de entrada sobe num MAP paulistano que já opera com 12,9 meses de estoque.</p>
+      <p class="efeito">Pautas para o call do 3T26: quanto do landbank SP de R$ 9,8 bi está protocolado; existe terreno em perímetro exclusivo do mapa de julho; a discussão da Marginal tocou a viabilidade dos Vista.</p>
+      <p class="desc" style="font-size:12px">Fontes: acórdão TJ-SP (ADI, Órgão Especial, 26/08/2026) · Lei 18.177/2024 e Lei 18.081/2024 (legislacao.prefeitura.sp.gov.br) · Folha/Abecip (levantamento dos seis distritos) · Migalhas · LabCidade/FAU-USP · CNN Brasil (Abrainc, R$ 90 bi) · releases Cyrela 1T24–2T26 (seção Banco de Terrenos e anexos de lançamentos) · ITR 2T26.</p>
+    </div>
+  </section>
+
   <section class="tab" id="tab-opestoque">
     <div class="card">
       <span class="tag">Planilha de dados operacionais do RI · estoque a valor de mercado %CBR ÷ vendas %CBR (com permuta) · trimestral</span>
