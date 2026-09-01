@@ -159,7 +159,7 @@
 <div class="wrap">
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
-    <span class="chip">v4.43 · 30/08/2026 · dados até 2T26</span>
+    <span class="chip">v4.44 · 01/09/2026 · dados até 2T26</span>
   </header>
 
   <nav class="tabs" id="tabs">
@@ -179,7 +179,7 @@
       <button data-tab="receita">Receita</button>
       <button data-tab="juros">Juros capitalizados</button>
       <button data-tab="spes">SPEs e JVs</button>
-      <button data-tab="ret">Afetação + RET</button>
+      <button data-tab="ret">Regime tributário</button>
       <button data-tab="distrato">Distrato</button>
       <button data-tab="permuta">Permuta e AVP</button>
     </div>
@@ -457,6 +457,57 @@
       <p>Para o empreendimento afetado, a lei oferece o <b>RET — Regime Especial de Tributação</b>: IRPJ, CSLL, PIS e Cofins são substituídos por um pagamento único de <b>4% da receita mensal recebida</b> (com alíquota reduzida a 1% para projetos de interesse social/MCMV dentro dos limites do programa). A apuração é por SPE, definitiva, sem relação com a margem do projeto.</p>
       <p>Efeitos em cadeia: a alíquota efetiva do setor é baixa e relativamente insensível ao lucro; projetos de margem alta são ainda mais beneficiados (o tributo não sobe com a margem); e a comparação de lucro líquido entre segmentos ou companhias precisa considerar o mix de regimes (RET 4%, RET 1%, lucro presumido nas SPEs menores).</p>
       <p class="efeito">Não modele IR/CS de incorporadora com alíquota cheia de 34% — o imposto do setor é, na prática, uma fração da receita, não do lucro.</p>
+      <h3 class="subtit">A conta real: alíquota efetiva de IR/CSLL sobre o lucro antes dos impostos</h3>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s1)"></i> alíquota efetiva consolidada</span>
+        <span><i class="sw" style="background:var(--muted);opacity:.55"></i> alíquota nominal (34%)</span>
+      </div>
+      <figure id="figTribEf"><svg viewBox="0 0 900 340"><g class="eixos"></g><g class="dyn"></g></svg><div class="tt"></div></figure>
+      <p class="efeito">A tese em um gráfico: a Cyrela <b>nunca chegou perto dos 34%</b>. A média do período é de ~11%, com mínima de <b>5,8% em 2025</b>. O pico de 20,1% em 2020 não é operacional — é o ano das marcações dos IPOs de Cury, Plano&amp;Plano e Lavvi, ganhos que não gozam do RET. Modelar essa companhia com alíquota cheia produz erro de dezenas de pontos percentuais no lucro.</p>
+
+      <h3 class="subtit">Onde o lucro é tributado — e por que a holding quase não paga</h3>
+      <p class="desc">A eficiência não vem de planejamento agressivo; vem da <b>arquitetura societária</b>. O lucro nasce nas SPEs, é tributado lá a 4% da receita (RET) e sobe para a controladora como <b>equivalência patrimonial — que não é tributável</b>, porque o imposto já foi pago embaixo.</p>
+      <table>
+        <thead><tr><th>Controladora (LTM até 2T26)</th><th>R$ mi</th></tr></thead>
+        <tbody>
+          <tr><td>Lucro líquido</td><td>2.039,8</td></tr>
+          <tr><td>&nbsp;&nbsp;dos quais equivalência patrimonial</td><td>1.816,7 <span style="color:var(--muted)">(89%)</span></td></tr>
+          <tr><td>&nbsp;&nbsp;receita própria</td><td>13,2</td></tr>
+          <tr><td>Dívida na holding</td><td>4.646,5 <span style="color:var(--muted)">(52% do grupo)</span></td></tr>
+          <tr><td><b>IR/CSLL corrente</b></td><td><b>0,0</b></td></tr>
+        </tbody>
+      </table>
+      <p class="efeito">A holding é uma casca com dívida: R$ 4,65 bi de endividamento (52% do grupo) e R$ 13,2 mi de receita própria em doze meses. Retirando a equivalência não tributável do lucro antes dos impostos, sobra <b>base fiscal negativa</b> — ela gera prejuízo fiscal recorrente, que a companhia <b>não ativa no balanço</b> (R$ 26,4 mi de "créditos fiscais não constituídos" só no 6M26). O paradoxo: a Cyrela é eficiente demais para conseguir usar prejuízo — nunca acumula lucro tributável na holding contra o qual compensá-lo.</p>
+
+      <h3 class="subtit">Quando o ativo sai do estoque, a régua muda</h3>
+      <p class="desc">Em 31/12/2025 a Cyrela reclassificou <b>R$ 431,0 mi</b> do estoque para o imobilizado — o edifício <b>Cyrela Corporate by Pininfarina</b>, por "alteração na destinação do imóvel" (nota 8 da DFP 2025). Isso não é detalhe contábil: troca o regime de tributação da venda futura.</p>
+      <table>
+        <thead><tr><th>Venda de R$ 600 mi, custo contábil R$ 450 mi</th><th>Conta</th><th>Imposto</th></tr></thead>
+        <tbody>
+          <tr><td>Como <b>estoque</b> (receita operacional, lucro presumido)</td><td>7,04% × preço</td><td>R$ 42,2 mi</td></tr>
+          <tr><td>Como <b>imobilizado</b> (ganho de capital + ITBI)</td><td>34% × ganho + 3% × preço</td><td><b>R$ 69,0 mi</b></td></tr>
+        </tbody>
+      </table>
+      <p class="efeito">Três achados que só aparecem na leitura da norma: <b>(1)</b> o RET é regime <b>da incorporação, não da incorporadora</b> — exige memorial registrado e patrimônio de afetação (Lei 10.931/2004, arts. 1º, 2º e 4º), então um edifício corporativo nunca lançado <b>jamais esteve</b> sob os 4%; <b>(2)</b> ganho de capital <b>fura o lucro presumido</b> — entra integralmente na base, sem presunção (Lei 9.430/96, art. 25, II), a 34%; <b>(3)</b> a norma anti-reclassificação da Receita é <b>unidirecional</b> (IN RFB 1.700/2017, art. 215) — mira quem vai do imobilizado para o estoque, e a Cyrela andou no sentido oposto, que aumenta a própria exposição. O contra-argumento a favor da companhia vem da doutrina do próprio Fisco: o critério consagrado é a <b>destinação na origem</b> — "é a decisão gerencial no momento da aquisição do imóvel que orienta a tributação no momento de sua venda" (Parecer Normativo CST 108/1978, transcrito no Acórdão CSRF 9101-007.449, de 11/09/2025). Como o prédio foi construído para venda, há tese para tributá-lo como receita operacional.</p>
+
+      <h3 class="subtit">O precedente: EZ Towers (EZTEC, 2017)</h3>
+      <p class="desc">O caso mais comparável do setor teve o desenho contábil <b>oposto</b>.</p>
+      <table>
+        <thead><tr><th></th><th>EZTEC · EZ Towers (2017)</th><th>Cyrela · Pininfarina (2025)</th></tr></thead>
+        <tbody>
+          <tr><td>Classificação</td><td>Estoque, do início ao fim</td><td><b>Reclassificado p/ imobilizado</b></td></tr>
+          <tr><td>Natureza da venda</td><td>Receita operacional</td><td>Ganho de capital</td></tr>
+          <tr><td>Imobilizado no balanço</td><td>R$ 3,4 mi</td><td>R$ 639,8 mi</td></tr>
+          <tr><td>Alíquota efetiva no ano</td><td><b>5,9%</b></td><td>—</td></tr>
+          <tr><td>Comprador</td><td>FII (Brookfield), 100% dinheiro</td><td>FII (TRX), 50% dinheiro + 50% cotas</td></tr>
+          <tr><td>Desfecho</td><td>Concluída em 6 dias</td><td><b>Distratada em 31/08/2026</b></td></tr>
+        </tbody>
+      </table>
+      <p class="efeito">A EZTEC vendeu a Torre B por <b>R$ 650,4 mi</b> mantendo-a como estoque: os recursos entraram na <b>receita</b> (margem bruta agregada de 52,8% no projeto) e o grupo pagou <b>R$ 22,7 mi de IR/CSLL no ano inteiro</b> — 5,9% do lucro antes dos impostos. Se aquele valor tivesse sido tratado como ganho de capital, o imposto sozinho passaria de R$ 117 mi. O imobilizado da EZTEC naquele ano era de R$ 3,4 mi: a torre <b>nunca saiu do estoque</b>.</p>
+
+      <h3 class="subtit">Vender para um FII tem duas armadilhas</h3>
+      <p class="efeito"><b>Receber cotas não difere imposto.</b> Entregar imóvel a um fundo e receber cotas é alienação onerosa — o ganho vence no trimestre da transferência, sobre o preço inteiro (dinheiro + cotas). A regra de transferência a valor contábil (Lei 9.249/95, art. 23) é exclusiva de <b>pessoa física</b> integralizando capital social, e FII não é pessoa jurídica nem tem capital social (Lei 8.668/93, art. 6º). O ITBI incide mesmo na integralização (STJ, AREsp 1.492.971/SP). <b>E há o limite dos 25%:</b> pelo art. 2º da Lei 9.779/99, se um cotista com mais de 25% das cotas for incorporador, construtor ou sócio do empreendimento em que o fundo aplica, <b>o fundo inteiro é equiparado a pessoa jurídica</b> e perde o regime. No negócio com a TRX a Cyrela ficaria com ~18% do TRXF11 (PL de R$ 6 bi) — abaixo do gatilho; mas o MoU previa <b>dois FIIs geridos pela Cy.Capital</b>, com a Cyrela simultaneamente incorporadora dos ativos e cotista relevante. É exatamente o tipo de questão que aparece numa due diligence de 105 dias.</p>
+
     </div>
   </section>
 
@@ -3140,6 +3191,29 @@
       tt.style.left = x + "px"; tt.style.top = y + "px";
     });
     hit.addEventListener("mouseleave", function () { tt.style.opacity = 0; hover.setAttribute("opacity", 0); });
+  })();
+
+  // ================= REGIME TRIBUTARIO: aliquota efetiva =================
+  (function () {
+    var L = ["2019", "2020", "2021", "2022", "2023", "2024", "2025", "6M26"], V = [13.9, 20.1, 8.0, 12.5, 12.4, 8.8, 5.8, 10.8];
+    var fig = document.getElementById("figTribEf");
+    if (!fig) return;
+    var g = fig.querySelector(".eixos"), gd = fig.querySelector(".dyn"), tt = fig.querySelector(".tt");
+    var N = L.length, W = 812 / N, YMAX = 36;
+    function Y(v) { return 290 - v * (250 / YMAX); }
+    [0, 10, 20, 30].forEach(function (v) {
+      el("line", { x1: 60, y1: Y(v), x2: 872, y2: Y(v), stroke: v === 0 ? "var(--baseline)" : "var(--grid)", "stroke-width": 1 }, g);
+      el("text", { x: 52, y: Y(v) + 4.5, fill: "var(--muted)", "font-size": 13, "text-anchor": "end" }, g, v + "%");
+    });
+    el("line", { x1: 60, y1: Y(34), x2: 872, y2: Y(34), stroke: "var(--muted)", "stroke-width": 1.4, "stroke-dasharray": "6 4", opacity: 0.6 }, g);
+    el("text", { x: 866, y: Y(34) - 7, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "end", "font-weight": 600 }, g, "al\u00edquota nominal 34%");
+    L.forEach(function (lab, i) {
+      var x = 60 + i * W, v = V[i];
+      el("rect", { x: x + W * 0.22, y: Y(v), width: W * 0.56, height: 290 - Y(v), fill: "var(--s1)", rx: 4 }, gd);
+      el("text", { x: x + W / 2, y: Y(v) - 8, fill: "var(--ink-1)", "font-size": 13, "text-anchor": "middle", "font-weight": 600 }, gd, v.toFixed(1).replace(".", ",") + "%");
+      el("text", { x: x + W / 2, y: 312, fill: "var(--muted)", "font-size": 12.5, "text-anchor": "middle" }, g, lab);
+    });
+    el("text", { x: 60, y: 24, fill: "var(--muted)", "font-size": 12 }, g, "IR/CSLL \u00f7 lucro antes dos impostos \u00b7 consolidado");
   })();
 
   // ================= OPERACIONAL: meses de estoque por segmento =================
