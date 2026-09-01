@@ -90,6 +90,9 @@
   .fwcard dl { margin: 0; padding: 6px 18px 12px; }
   .fwcard dt { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-top: 11px; }
   .fwcard dd { margin: 3px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--ink-1); }
+  .fwcard.map dd b, .fwcard.map p b { color: var(--s1); }
+  .fwcard.mcmv dd b, .fwcard.mcmv p b { color: var(--s2); }
+  .sl-callout p b { color: var(--s3); }
   @media (max-width: 760px) { .fwgrid { grid-template-columns: 1fr; } }
   .fw-cs { font-size: 11.5px; fill: var(--muted); letter-spacing: .06em; }
   .chips2 { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
@@ -245,7 +248,7 @@
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
     <button class="chip modoBtn" id="modoBtn" onclick="setDeck(!document.body.classList.contains('deck-on'))">análise completa</button>
-    <span class="chip">v5.22 · 01/09/2026 · dados até 2T26</span>
+    <span class="chip">v5.23 · 01/09/2026 · dados até 2T26</span>
   </header>
 
 <div class="deck" id="deck">
