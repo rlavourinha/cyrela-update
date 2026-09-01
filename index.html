@@ -71,6 +71,12 @@
   .fw-c2 { font-family: "Fraunces", Georgia, serif; font-size: 24px; font-weight: 550; fill: var(--ink-1); }
   .fw-h { font-size: 12px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
   .sl-nota { font-size: 11.5px; line-height: 1.5; color: var(--muted); margin: 8px 2px 0; }
+  .ticker-hero { font-family: "Fraunces", Georgia, serif; font-size: clamp(64px, 11vw, 120px); font-weight: 620;
+    color: var(--s1); letter-spacing: -0.015em; line-height: .95; margin: 6px 0 10px; }
+  .ticker-hero small { display: block; font-family: inherit; font-size: clamp(15px, 2vw, 19px); font-weight: 500;
+    color: var(--ink-2); letter-spacing: .01em; margin-top: 10px; }
+  .byline { margin-top: 30px; padding-top: 14px; border-top: 1px solid var(--ring); font-size: 13px; color: var(--muted); }
+  .byline b { color: var(--ink-1); font-weight: 650; }
   .sl-callout { background: var(--surface-1); border: 1px solid var(--ring); border-left: 3px solid var(--s3);
     border-radius: 10px; padding: 12px 18px 13px; margin: 14px 2px 0; }
   .sl-callout .ct-tag { display: block; font-size: 10.5px; font-weight: 750; letter-spacing: .09em;
@@ -239,15 +245,15 @@
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
     <button class="chip modoBtn" id="modoBtn" onclick="setDeck(!document.body.classList.contains('deck-on'))">análise completa</button>
-    <span class="chip">v5.8 · 01/09/2026 · dados até 2T26</span>
+    <span class="chip">v5.9 · 01/09/2026 · dados até 2T26</span>
   </header>
 
 <div class="deck" id="deck">
 
   <section class="slide" id="sl0">
     <div class="sl-in">
-      <p class="kick">CYRE3 · atualização de tese · setembro 2026</p>
-      <h2 class="head-xl">Vender o que ainda<br>não existe.</h2>
+      <p class="kick">atualização de tese · setembro 2026</p>
+      <div class="ticker-hero">CYRE3<small>Cyrela Brazil Realty · Vender o que ainda não existe.</small></div>
       <div class="chips2" style="margin-top:34px">
         <span class="chip2"><b>1</b> · o negócio</span>
         <span class="chip2"><b>2</b> · médio e alto padrão</span>
@@ -255,6 +261,7 @@
         <span class="chip2"><b>4</b> · o funding</span>
         <span class="chip2"><b>5</b> · a companhia</span>
       </div>
+      <p class="byline">Material produzido por <b>Rafael Lavourinha</b>.</p>
     </div>
   </section>
 
