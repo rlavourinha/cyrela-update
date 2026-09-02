@@ -255,7 +255,7 @@
   <header class="top">
     <h1>Cyrela (CYRE3) — Update</h1>
     <button class="chip modoBtn" id="modoBtn" onclick="setDeck(!document.body.classList.contains('deck-on'))">análise completa</button>
-    <span class="chip">v5.57 · 01/09/2026 · dados até 2T26</span>
+    <span class="chip">v5.58 · 01/09/2026 · dados até 2T26</span>
   </header>
 
 <div class="deck" id="deck">
@@ -508,6 +508,91 @@
       </div>
       <div class="sl-callout"><span class="ct-tag">a assimetria que define a tese</span>
       <p>A roda MAP toma juro de mercado <b>três vezes</b> — na obra, na dívida e no cliente. A roda MCMV bebe de um fundo parafiscal nas três pontas — <b>enquanto o FGTS tiver caixa</b>. A parte 4 mostra as duas fontes por dentro.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="sl-in">
+      <p class="kick">parte 1 · o negócio</p>
+      <h2 class="head-xl">SBPE — usos e fontes<br>do funding do MAP.</h2>
+      <div class="fwgrid">
+        <div class="fwcard map">
+          <header>Fontes</header>
+          <dl>
+            <dt>Depósitos de poupança</dt><dd>Saldo de <b>R$ 1,03 tri</b> (jul/26) — mas <b>1/3 menor em termos reais que em 2015</b>: captação líquida negativa em quase todos os anos da década.</dd>
+            <dt>O custo do depósito</dt><dd><b>TR + 6,17% a.a.</b> com Selic acima de 8,5% — remuneração tabelada, muito abaixo do CDI: é daí que nasce o subsídio do SFH.</dd>
+            <dt>Quem decide ficar</dt><dd>O poupador — e a 15% de Selic, ele sai: <b>cada real que migra para CDB/LCI encarece o funding do sistema</b>.</dd>
+          </dl>
+        </div>
+        <div class="fwcard map">
+          <header>Usos — a régua do BCB</header>
+          <dl>
+            <dt>65% · direcionamento</dt><dd>Obrigatório em crédito imobiliário, <b>a maior parte em operações SFH</b> — plano empresário e repasse (Res. 4.676).</dd>
+            <dt>20% · compulsório</dt><dd>Recolhido ao Banco Central.</dd>
+            <dt>15% · livre</dt><dd>O banco aplica onde quiser.</dd>
+            <dt>Hoje</dt><dd><b>99% do exigível aplicado</b> — a régua encostou: não há folga para crescer sem funding novo.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="sl-callout"><span class="ct-tag">a transição</span>
+      <p>O BCB já anunciou (out/25) a <b>transição do direcionamento</b>: liberação gradual do compulsório e da régua em troca de funding de mercado. O SFH de amanhã se financia a LCI e CRI — <b>a era do subsídio implícito da TR está com data para acabar</b>.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="sl-in">
+      <p class="kick">parte 1 · o negócio</p>
+      <h2 class="head-xl">A conta do banco:<br>emprestar SFH × SFI.</h2>
+      <div class="fwgrid">
+        <div class="fwcard map">
+          <header>Operação SFH · funding cativo</header>
+          <dl>
+            <dt>Capta</dt><dd>Poupança a <b>TR + 6,17% ≈ 8,6% a.a.</b> — o depositante entrega funding 6 p.p. abaixo do CDI.</dd>
+            <dt>Empresta</dt><dd>No teto: <b>12% + TR ≈ 14,0%</b> (é a taxa média observada).</dd>
+            <dt>Margem bruta</dt><dd><b>~5,4 p.p.</b> — menos PDD, originação e capital: sobra margem confortável…</dd>
+            <dt>…mas contra o CDI</dt><dd>Emprestar a 14% num país de Selic 15% <b>perde ~1 p.p. do custo de oportunidade</b>. O banco só empresta porque o funding é cativo e a régua obriga.</dd>
+          </dl>
+        </div>
+        <div class="fwcard mcmv">
+          <header>Operação SFI · funding de mercado</header>
+          <dl>
+            <dt>Capta</dt><dd><b>LCI a ~90% do CDI ≈ 13,5%</b> (a isenção de IR do investidor barateia a captação — único subsídio que resta).</dd>
+            <dt>Empresta</dt><dd>Taxa livre: <b>14,5%+</b> (média atual) a CDI+2 nos plano-empresário de luxo.</dd>
+            <dt>Margem bruta</dt><dd><b>~1 a 2,5 p.p.</b> — fina, precificada no osso, sensível a cada movimento do CDI.</dd>
+            <dt>A consequência</dt><dd>Sem folga de funding barato, o crédito novo nasce caro — <b>o racionamento do MAP é matemática bancária</b>, não má vontade.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="sl-callout"><span class="ct-tag">a conta que fecha a parte 1</span>
+      <p>O spread do SFH existe porque o poupador aceita TR+6,17%. Cada saque troca funding de 8,6% por funding de 13,5% — <b>a margem do banco no SFH derrete um saque por vez</b>, e o teto de 12%+TR não deixa repassar. Resultado: cota menor, entrada maior, fila mais lenta — exatamente o que o comprador do MAP encontra na agência.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="sl-in">
+      <p class="kick">parte 1 · o negócio</p>
+      <h2 class="head-xl">FGTS e CEF — usos e fontes<br>do funding do MCMV.</h2>
+      <div class="fwgrid">
+        <div class="fwcard mcmv">
+          <header>Fontes</header>
+          <dl>
+            <dt>8% da folha CLT</dt><dd>Depósito <b>compulsório</b> de todo empregador — arrecadação que não depende de convencer ninguém.</dd>
+            <dt>O custo do dinheiro</dt><dd>Cotista remunerado a <b>TR + 3% + distribuição de resultados</b> — abaixo até da poupança. É o funding mais barato do sistema.</dd>
+            <dt>A sangria nova</dt><dd><b>Saque-aniversário e saques extraordinários: −R$ 15 bi em 2026</b>; caixa projetado do fundo revisado para ~R$ 165 bi.</dd>
+          </dl>
+        </div>
+        <div class="fwcard mcmv">
+          <header>Usos — orçamento 2026 (CCFGTS)</header>
+          <dl>
+            <dt>R$ 160,5 bi no ano</dt><dd>Orçamento <b>recorde</b> — mais que o dobro de 2022 (R$ 66 bi).</dd>
+            <dt>R$ 144,5 bi · habitação</dt><dd>90% do total: financiamento e produção MCMV, imóveis até R$ 500 mil.</dd>
+            <dt>R$ 12,5 bi · subsídios</dt><dd>Descontos de entrada para as faixas 1–2 (até R$ 55/65 mil por família).</dd>
+            <dt>CEF, operador único</dt><dd>Enquadra, mede, desembolsa e cobra — <b>todo o circuito passa por um banco público</b>.</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="sl-callout"><span class="ct-tag">a tensão</span>
+      <p>Orçamento recorde na saída, sangria crescente na entrada: <b>o mesmo fundo que banca o maior MCMV da história está sendo drenado por saques</b> — e cada nova hipótese de saque aprovada no Congresso disputa o caixa com a habitação. A fartura de hoje é decisão de conselho; a de amanhã depende da folha salarial e da política.</p></div>
     </div>
   </section>
 
