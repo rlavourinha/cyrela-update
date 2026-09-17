@@ -19,3 +19,7 @@ Dashboard autocontido (HTML + SVG inline, sem dependências externas) do update 
 - **Uma aba por norma**: PoC (CPC 47), REF (Deliberações CVM 561/624), juros capitalizados (CPC 20), SPEs e JVs (CPC 36/19), patrimônio de afetação + RET (Lei 10.931/04), lei do distrato (Lei 13.786/18) e permuta/AVP/perda esperada (OCPC 01, CPC 12, CPC 48).
 
 Seções futuras do roteiro (Operacional, Resultados, Soma das partes, Valuation) serão adicionadas em novas versões.
+
+## Versão enxuta
+
+`enxuta.html` (v1.0, 17/09/2026): apresentação de 45-60 min, 33 slides, gerada por `build_enxuta.py` a partir de `index.html` (CSS, navegação e slides reaproveitados), dos JSONs e do dump do modelo. Os dois decks têm link cruzado no cabeçalho. Publicada em https://rlavourinha.github.io/cyrela-update/enxuta.html
