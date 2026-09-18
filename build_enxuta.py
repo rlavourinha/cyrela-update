@@ -409,26 +409,31 @@ def _nd(q):
     return sum(b.get(k) or 0 for k in ("emp_cp", "deb_cp", "cri_cp", "emp_lp", "deb_lp", "cri_lp")) - sum(b.get(k) or 0 for k in ("caixa", "aplic_cp_vjr", "aplic_cp_vjora", "aplic_cp_ca", "aplic_lp_vjr", "aplic_lp_vjora", "aplic_lp_ca"))
 nd_bi = [_nd(q) / 1000 if _nd(q) is not None else None for q in qs_f]; nd_pl = [100 * _nd(q) / mrow(199)[q] if _nd(q) is not None and mrow(199).get(q) else None for q in qs_f]
 pay12 = [100 * _sum4(DIV_Q, q, False) / (_sum4(mrow(73), q)) if _sum4(mrow(73), q) and _sum4(mrow(73), q) > 0 else None for q in qs_f]
-cA = Chart(60, 420, 46, 136, -1, 3, len(qs_f)); cA.grid([-1, 0, 1, 2, 3]); cA.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
+# layout (18/09/26): painéis de 75px; A/C terminam em x=400 e B/D começam em 560 para os rótulos de fim de linha
+# ("dív. líq. ÷ PL 10%", ~95 un.) não invadirem o eixo do painel vizinho; B/D terminam em 850 para "payout 12m 49%" caber em 980
+cA = Chart(60, 400, 48, 123, -1, 3, len(qs_f)); cA.grid([-1, 0, 1, 2, 3]); cA.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
 cA.line(gc12, S2, lab="caixa 12m", labval=lambda v: fmt(v, 2), w=2.4); cA.line(ll12, S1, lab="lucro LTM", labval=lambda v: fmt(v, 2), w=2.8)
 cA.g.append('<text x="60" y="18" class="gtit">Lucro líquido LTM e geração de caixa 12m (R$ bi)</text><text x="60" y="34" class="gsub">DRE (CYREMod) e releases (geração de caixa, linha operacional)</text>')
-cB = Chart(540, 870, 46, 136, -1, 3, len(qs_f)); cB.grid([-1, 0, 1, 2, 3]); cB.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
+cB = Chart(560, 850, 48, 123, -1, 3, len(qs_f)); cB.grid([-1, 0, 1, 2, 3]); cB.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
 cB.line(nd_bi, S1, lab="dív. líquida", labval=lambda v: fmt(v, 2), w=2.8)
-cB.g.append('<text x="540" y="18" class="gtit">Dívida líquida (R$ bi)</text><text x="540" y="34" class="gsub">balanço CVM: empréstimos, debêntures e CRI (inclui CashMe) − caixa e aplicações</text>')
-cC = Chart(60, 420, 198, 286, -20, 80, len(qs_f)); cC.grid([-20, 0, 20, 40, 60, 80], lambda t: f"{t:g}%"); cC.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
+cB.g.append('<text x="560" y="18" class="gtit">Dívida líquida (R$ bi)</text><text x="560" y="34" class="gsub">balanço CVM: empréstimos, debêntures e CRI (inclui CashMe) − caixa e aplicações</text>')
+cC = Chart(60, 400, 188, 263, -20, 80, len(qs_f)); cC.grid([-20, 0, 20, 40, 60, 80], lambda t: f"{t:g}%"); cC.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
 cC.line(nd_pl, S1, lab="dív. líq. ÷ PL", labval=lambda v: fmt(v, 0) + "%", w=2.8)
-cC.g.append('<text x="60" y="172" class="gtit">Alavancagem: dívida líquida ÷ PL dos controladores</text><text x="60" y="188" class="gsub">negativo = caixa líquido</text>')
-cD = Chart(540, 870, 198, 286, 0, 100, len(qs_f)); cD.grid([0, 25, 50, 75, 100], lambda t: f"{t:g}%"); cD.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
-cD.line(pay12, S3, lab="payout 12m", labval=lambda v: fmt(v, 0) + "%", w=2.8)
-cD.g.append('<text x="540" y="172" class="gtit">Payout 12m: proventos declarados ÷ lucro LTM</text><text x="540" y="188" class="gsub">B3 (proventos por ação, data ex) × ações ex-tesouraria; sem recompra; anos de lucro ≤ 0 omitidos</text>')
-body = svg(980, 306, cA.flush(15) + cB.flush(15) + cC.flush(15) + cD.flush(15))
+cC.g.append('<text x="60" y="160" class="gtit">Alavancagem: dívida líquida ÷ PL dos controladores</text><text x="60" y="176" class="gsub">negativo = caixa líquido</text>')
+# payout: eixo 0-200% (2017-21 tem 106-200%) e a linha recortada ao painel — o pico de 1T19 (lucro LTM ≈ 0) sai pelo topo em vez de atravessar o painel B e os títulos
+cD = Chart(560, 850, 188, 263, 0, 200, len(qs_f)); cD.grid([0, 50, 100, 150, 200], lambda t: f"{t:g}%"); cD.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
+_nD = len(cD.g); cD.line(pay12, S3, lab="payout 12m", labval=lambda v: fmt(v, 0) + "%", w=2.8)
+cD.g[_nD:] = ['<clipPath id="clip-payout"><rect x="556" y="185" width="300" height="82"/></clipPath><g clip-path="url(#clip-payout)">' + "".join(cD.g[_nD:]) + '</g>']
+cD.g.append('<text x="560" y="160" class="gtit">Payout 12m: proventos declarados ÷ lucro LTM</text><text x="560" y="176" class="gsub">proventos B3 (data ex) × ações ex-tesouraria; sem recompra; lucro ≤ 0 omitido</text>')
+body = svg(980, 284, cA.flush(15) + cB.flush(15) + cC.flush(15) + cD.flush(15))
 _gcL = gc12[-1]; _llL = ll12[-1]; _ndL = nd_bi[-1]; _plL = nd_pl[-1]; _payL = pay12[-1]
 _ipk = max(range(len(nd_pl)), key=lambda i: nd_pl[i] if nd_pl[i] is not None else -1e9)
 body += ('<div class="cards3 tight" style="margin-top:8px">'
          f'<div class="c3"><span class="c3n">R$ {fmt(_llL, 2)} bi · R$ {fmt(_gcL, 2)} bi</span><b>Lucro LTM e caixa gerado em 12 meses</b>: o caixa é {fmt(100 * _gcL / _llL, 0)}% do lucro. A diferença é estoque em obra e recebível crescendo (slide anterior). Em 2016-19 foi o contrário: lucro perto de zero e caixa positivo, capital de giro devolvido.</div>'
          f'<div class="c3"><span class="c3n">R$ {fmt(_ndL, 2)} bi · {fmt(_plL, 0)}% do PL</span><b>Dívida líquida e alavancagem</b>, contra {fmt(nd_pl[_ipk], 0)}% no pico ({qs_f[_ipk]}). O balanço está leve porque o terreno virou prazo e permuta: os R$ 3,2 bi de terrenos a pagar ficam fora dessa conta e dobrariam a alavancagem.</div>'
          f'<div class="c3"><span class="c3n">{fmt(_payL, 0)}%</span><b>Payout dos últimos 12 meses</b> (proventos declarados ÷ lucro LTM), sem contar recompra. Com caixa gerado de R$ {fmt(_gcL, 2)} bi e proventos de R$ {fmt(_sum4(DIV_Q, qs_f[-1], False) / 1000, 2)} bi no período, o dividendo saiu de dívida ou de venda de ativo, não de geração operacional.</div></div>')
-body += output('Lucro de R$ ' + fmt(_llL, 1) + ' bi, caixa de R$ ' + fmt(_gcL, 1) + ' bi, dívida líquida em ' + fmt(_plL, 0) + '% do PL e payout de ' + fmt(_payL, 0) + '%: o dividendo está acima do caixa que a operação gera.', 'A folga vem do balanço, não do fluxo; e o balanço já carrega R$ 3,2 bi de terreno a pagar fora da dívida.')
+body += output('Lucro de R$ ' + fmt(_llL, 1) + ' bi, caixa de R$ ' + fmt(_gcL, 1) + ' bi, dívida líquida em ' + fmt(_plL, 0) + '% do PL e payout de ' + fmt(_payL, 0) + '%: o dividendo está acima do caixa que a operação gera.', 'A folga vem do balanço, não do fluxo; e o balanço já carrega R$ 3,2 bi de terreno a pagar fora da dívida.'
+              ).replace('<div class="sl-output">', '<div class="sl-output" style="row-gap:6px">', 1).replace('<span class="out-msg">', '<span class="out-msg" style="flex:1 1 700px">', 1)   # mensagem longa: ao lado da tag em 2 linhas (não em linha própria) e menos respiro entre as linhas da caixa
 slides.append(sl(P4, "Lucro, caixa, dívida e payout: a foto de 12 meses.", body, nota="Fontes: CYREMod (lucro líquido reportado trimestral; PL dos controladores); releases (Geração/Consumo de Caixa: 2011-19 pela prosa, 2020-2T26 pela tabela, linha operacional; _ger_caixa_hist.json); balanço CVM (dívida bruta e caixa); B3 (proventos por ação e datas ex), ações ex-tesouraria da CVM/DFs. Payout = proventos com data ex nos 4 trimestres ÷ lucro dos 4 trimestres."))
 
 # --- o preço: P/B em vinte anos e a ação contra o CDI (slide 53 do deck completo)
@@ -512,12 +517,13 @@ body += output('O terreno saiu do caixa (prazo e permuta); o capital de giro foi
 slides.append(sl(P4, "Terreno a prazo, obra e recebível: onde o PL está aplicado.", body, nota="Fontes: CYREMod (linhas 199, 205-207, 220-221, 223: PL dos controladores, imóveis em construção, prontos e terrenos a custo, terrenos a pagar, adiantamentos por permuta física), das DFs/ITR; balanço CVM (clientes circulante e não circulante); aba 'Launches - Equiv.' (lançamentos consolidados, 12 meses); planilha do RI (landbank em permuta). Permuta física antes de 4T22 = 80% dos adiantamentos de clientes (premissa do modelo)."))
 
 # --- a ação e o juro de 10 anos (slide 54 do deck completo), com o callout virando cartões
-_s54 = take(54, "parte 6 · o preço", callout='', repl=[('>juro volta a subir,<', '>juro sobe,<')],   # rótulo de fase encostava em "pandemia" (1px)
+_s54 = take(54, "parte 6 · o preço", callout='', repl=[('>juro volta a subir,<', '>juro sobe,<'),   # rótulo de fase encostava em "pandemia" (1px)
+        ('<div class="viz"><svg viewBox="0 0 900 292">', '<div class="viz" style="max-width:930px;margin:0 auto"><svg viewBox="0 0 900 292">')],   # svg 900×292 esticado a 1020px dava 331px de altura; a 930px cabe com os cartões e a pílula (≤ 740px)
     append=('<div class="cards3 tight" style="margin-top:8px;grid-template-columns:1fr 1fr">'
     '<div class="c3"><span class="c3n">−0,6 · −10% por +100 bp</span><b>A ação segue o juro de 10 anos</b>: correlação de −0,6 nas variações mensais desde 2016 e ~−10% a cada +100 bp, o dobro do Ibovespa (−10,4% contra −5,1% desde 2010; −13,9% contra −6,4% desde 2016, regressões mensais). Nos ciclos de 2015-23 as duas curvas viraram juntas.</div>'
     '<div class="c3"><span class="c3n">2024-26</span><b>A exceção</b>: o juro de 10 anos voltou ao nível de 2015-16 e a ação, em vez de voltar ao vale, subiu, com lucro recorde, distribuições e rerating de P/B. Se o juro cede para 11-12% (−250 a −350 bp), a sensibilidade histórica dá +25-35%; se não cede, o preço está caro pela régua dos outros ciclos.</div></div>')
-    + output('A ação cai ~10% a cada +100 bp no juro de 10 anos, o dobro do Ibovespa; 2024-26 é a exceção.', 'Juro a 11-12% (−250 a −350 bp): a régua histórica dá +25-35%; sem queda, o preço está caro.')[:-6]
-    + '<span class="pill-teoria" style="background:#c5003e;flex:1 1 100%;white-space:normal;line-height:1.3">o papel tende a outperformar se o macro Brasil ajudar: Ke menor, mas também o operacional do SBPE melhorando e a perspectiva de retomada de vendas e lançamentos</span></div>')
+    + output('A ação cai ~10% a cada +100 bp no juro de 10 anos, o dobro do Ibovespa; 2024-26 é a exceção.', 'Juro a 11-12% (−250 a −350 bp): a régua histórica dá +25-35%; sem queda, o preço está caro.')[:-6].replace('<div class="sl-output">', '<div class="sl-output" style="row-gap:8px">', 1)
+    + '<span class="pill-teoria" style="background:#c5003e;flex:1 1 100%;white-space:normal;line-height:1.3;margin-left:0">o papel tende a outperformar se o macro Brasil ajudar: Ke menor, mas também o operacional do SBPE melhorando e a perspectiva de retomada de vendas e lançamentos</span></div>')
 slides.append(_s54)
 
 # ================================================================ PARTE 5 · atualização operacional
