@@ -345,10 +345,11 @@ lby = [OP["landbank"]["vgv100_total"][q] / 1e3 / _o12(LR["vgv_total"], q) if _o1
 c5 = Chart(60, 420, 198, 286, 0, 60, len(ql)); c5.grid([0, 20, 40, 60]); c5.xlabels(ql, 8, 3, lambda l: "20" + l[2:])
 c5.line(lb, S1, lab="100%", labval=lambda v: fmt(v, 1), w=2.6); c5.line(lbc, S1, lab="%Cyrela", labval=lambda v: fmt(v, 1), dash="4 3", opacity=.75)
 c5.g.append('<text x="60" y="172" class="gtit">Banco de terrenos (VGV potencial, R$ bi)</text><text x="60" y="188" class="gsub">planilha do RI; ' + fmt(OP["landbank"]["n_terrenos"][ql[-1]], 0) + ' terrenos, ' + fmt(100 * OP["landbank"]["pct_permuta"][ql[-1]], 0) + '% em permuta no 2T26</text>')
-prt = [100 * OP["pronto"]["vgv100_total"][q] / OP["estoque"]["vgv100_total"][q] for q in qe]
-c6 = Chart(540, 870, 198, 286, 0, 40, len(qe)); c6.grid([0, 10, 20, 30, 40], lambda t: f"{t:g}%"); c6.xlabels(qe, 4, 3, lambda l: "20" + l[2:])
+qp = [q for q in OP["tris"] if OP["estoque"]["vgv100_total"].get(q) and OP["pronto"]["vgv100_total"].get(q) is not None]
+prt = [100 * OP["pronto"]["vgv100_total"][q] / OP["estoque"]["vgv100_total"][q] for q in qp]
+c6 = Chart(540, 870, 198, 286, 0, 50, len(qp)); c6.grid([0, 10, 20, 30, 40, 50], lambda t: f"{t:g}%"); c6.xlabels(qp, 8, 1, lambda l: "20" + l[2:])
 c6.line(prt, S1, lab="pronto", labval=lambda v: fmt(v, 0) + "%", w=2.6)
-c6.g.append('<text x="540" y="172" class="gtit">Estoque pronto como % do estoque</text><text x="540" y="188" class="gsub">VGV 100%, planilha do RI (pro forma); pico de ' + fmt(max(prt), 0) + '% em ' + qe[prt.index(max(prt))] + '</text>')
+c6.g.append('<text x="540" y="172" class="gtit">Estoque pronto como % do estoque</text><text x="540" y="188" class="gsub">VGV 100%, planilha do RI (série desde 4T12); pico de ' + fmt(max(prt), 0) + '% em ' + qp[prt.index(max(prt))] + '</text>')
 body = svg(980, 306, c3.flush(15) + c4.flush(15) + c5.flush(15) + c6.flush(15))
 _e = qe[-1]; _m = qm[-1]; _l = ql[-1]
 body += ('<div class="cards3" style="margin-top:8px">'
@@ -357,6 +358,36 @@ body += ('<div class="cards3" style="margin-top:8px">'
          f'<div class="c3"><span class="c3n">landbank</span><b>R$ {fmt(lb[-1], 1)} bi</b> = <b>{fmt(lby[-1], 1)} ano</b> de lançamentos, contra R$ 53,9 bi em 2015 e 3-4 anos na década passada. A companhia compra terreno para o ciclo, não para o estoque.</div></div>')
 body += output('Estoque no recorde e landbank de um ano: a Cyrela carrega produto, não terreno.', 'O landbank curto é escolha (terreno a prazo e permuta, comprado quando o projeto fecha); o estoque longo é consequência da VSO caindo no alto padrão.')
 slides.append(sl(PO, "Operacional: estoque, meses de venda e banco de terrenos.", body, nota="Fontes: planilha de dados operacionais do RI (Estoque, Estoque Pronto, Terrenos, Vendas; VGV 100% e %CBR; pro forma ex-Cury e P&amp;P de 2019 em diante), planilha de lançamentos do RI; meses de venda pelo RI = estoque ÷ vendas do trimestre × 3."))
+# --- ROE ajustado pelo estoque pronto: se o pronto passa de 15% do estoque, o excesso (a custo) sai do PL; lucro não muda
+DPJ = J("_dupont.json")["dados"]
+def _qk(q): return "20" + q[2:] + "-" + {"1": "03", "2": "06", "3": "09", "4": "12"}[q[0]]
+def _exc(q):
+    es_, pr_ = OP["estoque"]["vgv100_total"].get(q), OP["pronto"]["vgv100_total"].get(q); c_ = mrow(206).get(q)
+    if not es_ or pr_ is None or c_ is None: return None
+    s_ = pr_ / es_; return c_ * (s_ - 0.15) / s_ if s_ > 0.15 else 0.0
+qs_pr = []; roe_r = []; roe_a = []; exc_b = []; exc_pl = []
+for q in QS:
+    if ord_(q) < (13, 4): continue
+    d = DPJ.get(_qk(q)); i = QS.index(q); e, e4 = _exc(q), _exc(QS[i - 4])
+    if not d or e is None or e4 is None: continue
+    pl_adj = d["pl_med"] - (e + e4) / 2
+    qs_pr.append(q); roe_r.append(d["roe"]); roe_a.append(100 * d["ll_ltm"] / pl_adj); exc_b.append(e / 1000); exc_pl.append(100 * e / mrow(199)[q])
+c = Chart(60, 470, 46, 178, -5, 40, len(qs_pr)); c.grid([-5, 0, 10, 20, 30, 40], lambda t: f"{t:g}%"); c.xlabels(qs_pr, 4, 1, lambda l: "20" + l[2:])
+c.line(roe_a, S3, lab="PL ex-pronto", labval=lambda v: fmt(v, 1) + "%", w=2.8); c.line(roe_r, S1, lab="reportado", labval=lambda v: fmt(v, 1) + "%", w=2.4)
+c.g.append('<text x="60" y="18" class="gtit">ROE reportado × ROE com o PL sem o estoque pronto excedente</text><text x="60" y="34" class="gsub">LTM; excedente = pronto a custo × (share − 15%) ÷ share, quando o pronto passa de 15% do estoque; lucro inalterado</text>')
+c2 = Chart(590, 900, 46, 178, 0, 25, len(qs_pr)); c2.grid([0, 5, 10, 15, 20, 25], lambda t: f"{t:g}%"); c2.xlabels(qs_pr, 4, 1, lambda l: "20" + l[2:])
+c2.line(exc_pl, S2, lab="% do PL", labval=lambda v: fmt(v, 0) + "%", w=2.6)
+c2.g.append('<text x="590" y="18" class="gtit">Excedente de pronto a custo, % do PL</text><text x="590" y="34" class="gsub">pico de R$ ' + fmt(max(exc_b), 1) + ' bi em ' + qs_pr[exc_b.index(max(exc_b))] + '</text>')
+body = svg(980, 200, c.flush(15) + c2.flush(15))
+_ipk = exc_b.index(max(exc_b)); _dmax = max(a - r for a, r in zip(roe_a, roe_r)); _iq = [a - r for a, r in zip(roe_a, roe_r)].index(_dmax)
+_dx = [(a - r, q) for a, r, q in zip(roe_a, roe_r, qs_pr) if not q.endswith('T20')]; _dmax2, _q2 = max(_dx)
+body += ('<div class="cards3" style="margin-top:8px">'
+         f'<div class="c3"><span class="c3n">a conta</span><b>Se o estoque pronto fosse sempre ~15% do estoque</b>, o que passa disso não deveria estar no book: sai do PL o pronto a custo na proporção do excesso (share de 30% = metade do pronto), o lucro fica como está, e o ROE é recalculado sobre o PL menor.</div>'
+         f'<div class="c3"><span class="c3n">R$ {fmt(max(exc_b), 1)} bi · +{fmt(_dmax, 1)} p.p.</span><b>No pico (' + qs_pr[_ipk] + f'), o excedente valia R$ {fmt(max(exc_b), 1)} bi, {fmt(exc_pl[_ipk], 0)}% do PL</b>, e o ajuste move o ROE em no máximo {fmt(_dmax2, 1)} p.p. ({_q2}); os +{fmt(_dmax, 1)} p.p. do {qs_pr[_iq]} são sobre um ROE inflado pelos IPOs da Cury e da Lavvi. Pronto a custo é pequeno perto do PL: o problema de 2016-19 foi lucro, não book.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(roe_a[-1], 1)}% = {fmt(roe_r[-1], 1)}%</span><b>Hoje o ajuste é zero</b>: pronto em {fmt(100 * OP["pronto"]["vgv100_total"]["2T26"] / OP["estoque"]["vgv100_total"]["2T26"], 0)}% do estoque, abaixo da régua de 15%. O ROE de {fmt(roe_r[-1], 1)}% não carrega estoque encalhado; carrega estoque em obra (35% do PL) e recebível (58%).</div></div>')
+body += output('Tirar do book o pronto acima de 15% quase não mexe no ROE: +' + fmt(_dmax2, 1) + ' p.p. no pior ano normal; hoje, zero.', 'O estoque pronto é pequeno em relação ao PL; o que pesa no balanço da Cyrela é obra e recebível, não unidade encalhada.')
+slides.append(sl(P4, "ROE ajustado pelo estoque pronto: o excesso pesa pouco no book.", body, nota="Fontes: _dupont.json (lucro atribuível LTM e PL médio dos controladores, planilha de DFs do RI); CYREMod linha 206 (imóveis prontos a custo, notas de estoque dos ITR); planilha operacional do RI (VGV do estoque total e pronto, 100%, desde 4T12). Régua de 15% = premissa da apresentação; excedente médio de dois fechamentos, como o PL."))
+
 # --- o preço: P/B em vinte anos e a ação contra o CDI (slide 53 do deck completo)
 COT = J("_cotacao_cyre3.json"); PLC = J("_pl_controladora.json")   # PL controladora, R$ mil, por mês de fechamento de trimestre
 # ações ex-tesouraria no fim de cada ano (mil): DF 2007 (2005-07), DF 2008, DFP 2010 (2009-10), DFP 2012 (2011-12), DFP 2014 (2013-14); de 2015 em diante, CYREMod linha 99 (ON + PN especiais)
@@ -753,6 +784,8 @@ for k, s in enumerate(final):
         s2 = re.sub(r'<div class="viz" style="margin-top:8px"><table class="tl".*?</table><p class="sl-nota"[^>]*>.*?</p></div>', lambda m: TBL37, s, count=1, flags=re.S)
         assert s2 != s, "tabela do 37 não encontrada"; final[k] = s2
 # slide novo: a ação e o juro de 10 anos, logo após o P/B
+_dpr = next(s for s in slides if "ROE ajustado pelo estoque pronto" in _h2(s))
+final.insert(next(i for i, s in enumerate(final) if "a DuPont diz de onde veio" in _h2(s)) + 1, _dpr)
 _dj = next(s for s in slides if "um título de juros" in _h2(s))
 final.insert(next(i for i, s in enumerate(final) if "O preço: P/B em vinte anos" in _h2(s)) + 1, _dj)
 # pílulas de to-do em slides que vêm prontos da base (18/09/26)
