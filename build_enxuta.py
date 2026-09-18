@@ -321,6 +321,42 @@ def s12(k, q):
 OP = J("_operacional_ri.json"); VS = J("_vso_seg.json"); MVC = J("_meses_venda_cyrela.json")
 oT = [sum((LR["vgv_total"].get(q) or 0) for q in LTMQ) / 1e6]; oA = [sum((LR["vgv_alto"].get(q) or 0) for q in LTMQ) / 1e6]
 vA = VS["100"]["alto"]; eT = [OP["estoque"]["vgv100_total"]["2T26"] / 1e3]; mv = [MVC["2T26"]]
+# --- estoque e landbank (bloco regenerado em 18/09/26; o painel de anos de lançamento virou % de estoque pronto)
+def _o12(d, q, div=1e6):
+    i = qs_l.index(q); ks = qs_l[i - 3:i + 1]
+    return sum((d.get(x) or 0) for x in ks) / div if i >= 3 else None
+qe = [q for q in OP["tris"] if ord_(q) >= (19, 1)]
+eA = [OP["estoque"]["vgv100_seg"]["alto"][q] / 1e3 for q in qe]; eM = [OP["estoque"]["vgv100_seg"]["medio"][q] / 1e3 for q in qe]; eC = [(OP["estoque"]["vgv100_seg"]["mcmv23"][q] + (OP["estoque"]["vgv100_seg"]["prime"][q] or 0)) / 1e3 for q in qe]
+eT = [OP["estoque"]["vgv100_total"][q] / 1e3 for q in qe]; ePr = [OP["pronto"]["vgv100_total"][q] / 1e3 for q in qe]
+c3 = Chart(60, 420, 46, 168, 0, 20, len(qe)); c3.grid([0, 5, 10, 15, 20]); c3.xlabels(qe, 4, 3, lambda l: "20" + l[2:])
+c3.line(eT, "var(--ink-2)", lab="total", labval=lambda v: fmt(v, 1), dash="3 3"); c3.line(eA, S1, lab="alto", labval=lambda v: fmt(v, 1), w=2.4); c3.line(eM, S2, lab="médio", labval=lambda v: fmt(v, 1)); c3.line(eC, S3, lab="MCMV", labval=lambda v: fmt(v, 1), w=2.4); c3.line(ePr, MU, lab="pronto", labval=lambda v: fmt(v, 1), dash="4 3")
+c3.g.append('<text x="60" y="18" class="gtit">Estoque a valor de mercado, por segmento (VGV 100%, R$ bi)</text><text x="60" y="34" class="gsub">planilha do RI, pro forma ex-Cury e P&amp;P; pronto = unidades concluídas</text>')
+qm = sorted(MVC, key=ord_); mv = [MVC[q] for q in qm]
+def _v12(q):
+    i = OP["tris"].index(q); ks = OP["tris"][i - 3:i + 1]
+    return sum(OP["vendas"]["vgv100_total"][x] for x in ks) if i >= 3 else None
+mv2 = [12 * OP["estoque"]["vgv100_total"][q] / _v12(q) if q in OP["estoque"]["vgv100_total"] and _v12(q) else None for q in qm]
+c4 = Chart(540, 880, 46, 168, 0, 40, len(qm)); c4.grid([0, 10, 20, 30, 40]); c4.xlabels(qm, 8, 2, lambda l: "20" + l[2:])
+c4.line(mv2, MU, lab="estoque ÷ vendas 12m", labval=lambda v: fmt(v, 0), dash="4 3"); c4.line(mv, S1, lab="meses de venda (RI)", labval=lambda v: fmt(v, 1), w=2.6)
+c4.g.append('<text x="540" y="18" class="gtit">Meses para vender o estoque</text><text x="540" y="34" class="gsub">RI (estoque ÷ vendas do trimestre × 3) e estoque ÷ vendas de 12 meses (100%)</text>')
+ql = [q for q in OP["tris"] if q in LR["vgv_total"] and qs_l.index(q) >= 3]
+lb = [OP["landbank"]["vgv100_total"][q] / 1e3 for q in ql]; lbc = [OP["landbank"]["vgvcbr_total"][q] / 1e3 for q in ql]
+lby = [OP["landbank"]["vgv100_total"][q] / 1e3 / _o12(LR["vgv_total"], q) if _o12(LR["vgv_total"], q) else None for q in ql]
+c5 = Chart(60, 420, 218, 330, 0, 60, len(ql)); c5.grid([0, 20, 40, 60]); c5.xlabels(ql, 8, 3, lambda l: "20" + l[2:])
+c5.line(lb, S1, lab="100%", labval=lambda v: fmt(v, 1), w=2.6); c5.line(lbc, S1, lab="%Cyrela", labval=lambda v: fmt(v, 1), dash="4 3", opacity=.75)
+c5.g.append('<text x="60" y="190" class="gtit">Banco de terrenos (VGV potencial, R$ bi)</text><text x="60" y="206" class="gsub">planilha do RI; ' + fmt(OP["landbank"]["n_terrenos"][ql[-1]], 0) + ' terrenos, ' + fmt(100 * OP["landbank"]["pct_permuta"][ql[-1]], 0) + '% em permuta no 2T26</text>')
+prt = [100 * OP["pronto"]["vgv100_total"][q] / OP["estoque"]["vgv100_total"][q] for q in qe]
+c6 = Chart(540, 880, 218, 330, 0, 40, len(qe)); c6.grid([0, 10, 20, 30, 40], lambda t: f"{t:g}%"); c6.xlabels(qe, 4, 3, lambda l: "20" + l[2:])
+c6.line(prt, S1, lab="pronto", labval=lambda v: fmt(v, 0) + "%", w=2.6)
+c6.g.append('<text x="540" y="190" class="gtit">Estoque pronto como % do estoque</text><text x="540" y="206" class="gsub">VGV 100%, planilha do RI (pro forma); pico de ' + fmt(max(prt), 0) + '% em ' + qe[prt.index(max(prt))] + '</text>')
+body = svg(980, 350, c3.flush() + c4.flush() + c5.flush() + c6.flush())
+_e = qe[-1]; _m = qm[-1]; _l = ql[-1]
+body += ('<div class="cards3" style="margin-top:8px">'
+         f'<div class="c3"><span class="c3n">estoque</span><b>R$ {fmt(eT[-1], 1)} bi a 100%</b> (R$ {fmt(OP["estoque"]["vgvcbr_total"][_e] / 1e3, 1)} bi %Cyrela), o maior da série pro forma: {fmt(100 * eA[-1] / eT[-1], 0)}% alto padrão. Pronto: R$ {fmt(ePr[-1], 1)} bi ({fmt(100 * ePr[-1] / eT[-1], 0)}% do total, {fmt(OP["pronto"]["un_total"][_e], 0)} unidades).</div>'
+         f'<div class="c3"><span class="c3n">meses de venda</span><b>{fmt(mv[-1], 1)} meses</b> pelo RI ({fmt(mv2[-1], 0)} pelas vendas de 12 meses), de ~10 em 2024. Mais estoque com VSO caindo: é o número a vigiar no médio e alto padrão.</div>'
+         f'<div class="c3"><span class="c3n">landbank</span><b>R$ {fmt(lb[-1], 1)} bi</b> = <b>{fmt(lby[-1], 1)} ano</b> de lançamentos, contra R$ 53,9 bi em 2015 e 3-4 anos na década passada. A companhia compra terreno para o ciclo, não para o estoque.</div></div>')
+body += output('Estoque no recorde e landbank de um ano: a Cyrela carrega produto, não terreno.', 'O landbank curto é escolha (terreno a prazo e permuta, comprado quando o projeto fecha); o estoque longo é consequência da VSO caindo no alto padrão.')
+slides.append(sl(PO, "Operacional: estoque, meses de venda e banco de terrenos.", body, nota="Fontes: planilha de dados operacionais do RI (Estoque, Estoque Pronto, Terrenos, Vendas; VGV 100% e %CBR; pro forma ex-Cury e P&amp;P de 2019 em diante), planilha de lançamentos do RI; meses de venda pelo RI = estoque ÷ vendas do trimestre × 3."))
 # --- o preço: P/B em vinte anos e a ação contra o CDI (slide 53 do deck completo)
 COT = J("_cotacao_cyre3.json"); PLC = J("_pl_controladora.json")   # PL controladora, R$ mil, por mês de fechamento de trimestre
 # ações ex-tesouraria no fim de cada ano (mil): DF 2007 (2005-07), DF 2008, DFP 2010 (2009-10), DFP 2012 (2011-12), DFP 2014 (2013-14); de 2015 em diante, CYREMod linha 99 (ON + PN especiais)
