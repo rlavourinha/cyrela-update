@@ -795,6 +795,17 @@ def _add_todo(title_sub, txt):
             final[k] = re.sub(r'(<p class="kick"[^>]*>)(.*?)</p>', lambda m: m.group(1) + m.group(2) + ' <span class="pill-teoria" style="background:#c5003e">' + txt + '</span></p>', s, count=1, flags=re.S); return
     raise KeyError(title_sub)
 _add_todo("Menos canteiros, mais unidades por canteiro", "to-do · conversar com o RI sobre as perspectivas de lançamento")
+# slide do DuPont (vem pronto da base): sem o cartão "leitura contrária"; os dois gráficos empilhados e maiores (pedido de 18/09/26)
+for k, s in enumerate(final):
+    if "a DuPont diz de onde veio" in _h2(s):
+        s2 = re.sub(r'<div class="c3"><span class="c3n">leitura contrária</span>.*?</div>', '', s, count=1, flags=re.S)
+        s2 = re.sub(r'<div class="cards3" style="margin-top:6px;grid-template-columns:1fr 1fr">', '<div class="cards3" style="margin-top:6px;grid-template-columns:1fr">', s2, count=1)
+        _vz = re.findall(r'<div class="viz"[^>]*>\s*<svg.*?</svg>\s*</div>', s2, re.S)
+        if len(_vz) >= 2:
+            _grid = re.search(r'<div class="fwgrid"[^>]*>\s*' + re.escape(_vz[0]) + r'\s*' + re.escape(_vz[1]) + r'\s*</div>', s2, re.S)
+            if _grid:
+                s2 = s2[:_grid.start()] + ''.join('<div class="viz" style="max-width:720px;margin:2px auto 0">' + re.search(r'<svg.*?</svg>', v, re.S).group(0) + '</div>' for v in _vz[:2]) + s2[_grid.end():]
+        assert s2 != s, "dupont"; final[k] = s2; break
 def _append_card(title_sub, c3n, html):
     for k, s in enumerate(final):
         if title_sub in _h2(s):
