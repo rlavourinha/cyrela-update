@@ -388,6 +388,49 @@ body += ('<div class="cards3" style="margin-top:8px">'
 body += output('Pronto acima de 15% fora do book: o ROE muda +' + fmt(_dmax2, 1) + ' p.p. no pior ano normal; hoje, zero.', 'O estoque pronto é pequeno em relação ao PL; o que pesa no balanço da Cyrela é obra e recebível, não unidade encalhada.')
 slides.append(sl(P4, "ROE ajustado pelo estoque pronto: o excesso pesa pouco no book.", body, nota="Fontes: _dupont.json (lucro atribuível LTM e PL médio dos controladores, planilha de DFs do RI); CYREMod linha 206 (imóveis prontos a custo, notas de estoque dos ITR); planilha operacional do RI (VGV do estoque total e pronto, 100%, desde 4T12). Régua de 15% = premissa da apresentação; excedente médio de dois fechamentos, como o PL."))
 
+# --- lucro LTM × geração de caixa 12m × dívida líquida × alavancagem × payout 12m (pedido de 18/09/26)
+GC = J("_ger_caixa_hist.json")["tri"]; BCV = J("_balanco_cvm.json"); DIVS = J("_cotacao_cyre3.json")["divs"]; ACV = J("_cvm_acoes.json")
+_SHY = {2011: 410668, 2012: 412106, 2013: 407260, 2014: 395417, 2015: 379000, 2016: 384400, 2017: 384400, 2018: 384400, 2019: 384400}   # ações ex-tesouraria (mil): DFs 2011-14, CYREMod 2015-19
+def _shares_mi(d):   # milhões de ações na data ex
+    y = int(d[:4]); q = f"{(int(d[5:7]) - 1) // 3 + 1}T{d[2:4]}"
+    return ACV.get(q) or (_SHY.get(y, 384400) / 1000)
+def _qof(d): return f"{(int(d[5:7]) - 1) // 3 + 1}T{d[2:4]}"
+DIV_Q = {}
+for d, v, _k in DIVS: DIV_Q[_qof(d)] = DIV_Q.get(_qof(d), 0) + v * _shares_mi(d)   # R$ mi por trimestre (data ex)
+def _sum4(dct, q, need_all=True):
+    i = QS.index(q); ks = QS[i - 3:i + 1]
+    if need_all and any(dct.get(x) is None for x in ks): return None
+    return sum(dct.get(x) or 0 for x in ks)
+qs_f = [q for q in QS if (12, 4) <= ord_(q) <= ord_("2T26")]
+ll12 = [_sum4(mrow(73), q) / 1000 for q in qs_f]; gc12 = [(_sum4(GC, q) / 1000) if _sum4(GC, q) is not None else None for q in qs_f]
+def _nd(q):
+    b = BCV.get(q)
+    if not b or b.get("emp_cp") is None: return None
+    return sum(b.get(k) or 0 for k in ("emp_cp", "deb_cp", "cri_cp", "emp_lp", "deb_lp", "cri_lp")) - sum(b.get(k) or 0 for k in ("caixa", "aplic_cp_vjr", "aplic_cp_vjora", "aplic_cp_ca", "aplic_lp_vjr", "aplic_lp_vjora", "aplic_lp_ca"))
+nd_bi = [_nd(q) / 1000 if _nd(q) is not None else None for q in qs_f]; nd_pl = [100 * _nd(q) / mrow(199)[q] if _nd(q) is not None and mrow(199).get(q) else None for q in qs_f]
+pay12 = [100 * _sum4(DIV_Q, q, False) / (_sum4(mrow(73), q)) if _sum4(mrow(73), q) and _sum4(mrow(73), q) > 0 else None for q in qs_f]
+cA = Chart(60, 420, 46, 136, -1, 3, len(qs_f)); cA.grid([-1, 0, 1, 2, 3]); cA.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
+cA.line(gc12, S2, lab="caixa 12m", labval=lambda v: fmt(v, 2), w=2.4); cA.line(ll12, S1, lab="lucro LTM", labval=lambda v: fmt(v, 2), w=2.8)
+cA.g.append('<text x="60" y="18" class="gtit">Lucro líquido LTM e geração de caixa 12m (R$ bi)</text><text x="60" y="34" class="gsub">DRE (CYREMod) e releases (geração de caixa, linha operacional)</text>')
+cB = Chart(540, 870, 46, 136, -1, 3, len(qs_f)); cB.grid([-1, 0, 1, 2, 3]); cB.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
+cB.line(nd_bi, S1, lab="dív. líquida", labval=lambda v: fmt(v, 2), w=2.8)
+cB.g.append('<text x="540" y="18" class="gtit">Dívida líquida (R$ bi)</text><text x="540" y="34" class="gsub">balanço CVM: empréstimos, debêntures e CRI (inclui CashMe) − caixa e aplicações</text>')
+cC = Chart(60, 420, 198, 286, -20, 80, len(qs_f)); cC.grid([-20, 0, 20, 40, 60, 80], lambda t: f"{t:g}%"); cC.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
+cC.line(nd_pl, S1, lab="dív. líq. ÷ PL", labval=lambda v: fmt(v, 0) + "%", w=2.8)
+cC.g.append('<text x="60" y="172" class="gtit">Alavancagem: dívida líquida ÷ PL dos controladores</text><text x="60" y="188" class="gsub">negativo = caixa líquido</text>')
+cD = Chart(540, 870, 198, 286, 0, 100, len(qs_f)); cD.grid([0, 25, 50, 75, 100], lambda t: f"{t:g}%"); cD.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
+cD.line(pay12, S3, lab="payout 12m", labval=lambda v: fmt(v, 0) + "%", w=2.8)
+cD.g.append('<text x="540" y="172" class="gtit">Payout 12m: proventos declarados ÷ lucro LTM</text><text x="540" y="188" class="gsub">B3 (proventos por ação, data ex) × ações ex-tesouraria; sem recompra; anos de lucro ≤ 0 omitidos</text>')
+body = svg(980, 306, cA.flush(15) + cB.flush(15) + cC.flush(15) + cD.flush(15))
+_gcL = gc12[-1]; _llL = ll12[-1]; _ndL = nd_bi[-1]; _plL = nd_pl[-1]; _payL = pay12[-1]
+_ipk = max(range(len(nd_pl)), key=lambda i: nd_pl[i] if nd_pl[i] is not None else -1e9)
+body += ('<div class="cards3 tight" style="margin-top:8px">'
+         f'<div class="c3"><span class="c3n">R$ {fmt(_llL, 2)} bi · R$ {fmt(_gcL, 2)} bi</span><b>Lucro LTM e caixa gerado em 12 meses</b>: o caixa é {fmt(100 * _gcL / _llL, 0)}% do lucro. A diferença é estoque em obra e recebível crescendo (slide anterior). Em 2016-19 foi o contrário: lucro perto de zero e caixa positivo, capital de giro devolvido.</div>'
+         f'<div class="c3"><span class="c3n">R$ {fmt(_ndL, 2)} bi · {fmt(_plL, 0)}% do PL</span><b>Dívida líquida e alavancagem</b>, contra {fmt(nd_pl[_ipk], 0)}% no pico ({qs_f[_ipk]}). O balanço está leve porque o terreno virou prazo e permuta: os R$ 3,2 bi de terrenos a pagar ficam fora dessa conta e dobrariam a alavancagem.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(_payL, 0)}%</span><b>Payout dos últimos 12 meses</b> (proventos declarados ÷ lucro LTM), sem contar recompra. Com caixa gerado de R$ {fmt(_gcL, 2)} bi e proventos de R$ {fmt(_sum4(DIV_Q, qs_f[-1], False) / 1000, 2)} bi no período, o dividendo saiu de dívida ou de venda de ativo, não de geração operacional.</div></div>')
+body += output('Lucro de R$ ' + fmt(_llL, 1) + ' bi, caixa de R$ ' + fmt(_gcL, 1) + ' bi, dívida líquida em ' + fmt(_plL, 0) + '% do PL e payout de ' + fmt(_payL, 0) + '%: o dividendo está acima do caixa que a operação gera.', 'A folga vem do balanço, não do fluxo; e o balanço já carrega R$ 3,2 bi de terreno a pagar fora da dívida.')
+slides.append(sl(P4, "Lucro, caixa, dívida e payout: a foto de 12 meses.", body, nota="Fontes: CYREMod (lucro líquido reportado trimestral; PL dos controladores); releases (Geração/Consumo de Caixa: 2011-19 pela prosa, 2020-2T26 pela tabela, linha operacional; _ger_caixa_hist.json); balanço CVM (dívida bruta e caixa); B3 (proventos por ação e datas ex), ações ex-tesouraria da CVM/DFs. Payout = proventos com data ex nos 4 trimestres ÷ lucro dos 4 trimestres."))
+
 # --- o preço: P/B em vinte anos e a ação contra o CDI (slide 53 do deck completo)
 COT = J("_cotacao_cyre3.json"); PLC = J("_pl_controladora.json")   # PL controladora, R$ mil, por mês de fechamento de trimestre
 # ações ex-tesouraria no fim de cada ano (mil): DF 2007 (2005-07), DF 2008, DFP 2010 (2009-10), DFP 2012 (2011-12), DFP 2014 (2013-14); de 2015 em diante, CYREMod linha 99 (ON + PN especiais)
@@ -473,7 +516,8 @@ _s54 = take(54, "parte 6 · o preço", callout='', repl=[('>juro volta a subir,<
     append=('<div class="cards3 tight" style="margin-top:8px;grid-template-columns:1fr 1fr">'
     '<div class="c3"><span class="c3n">−0,6 · −10% por +100 bp</span><b>A ação segue o juro de 10 anos</b>: correlação de −0,6 nas variações mensais desde 2016 e ~−10% a cada +100 bp, o dobro do Ibovespa (−10,4% contra −5,1% desde 2010; −13,9% contra −6,4% desde 2016, regressões mensais). Nos ciclos de 2015-23 as duas curvas viraram juntas.</div>'
     '<div class="c3"><span class="c3n">2024-26</span><b>A exceção</b>: o juro de 10 anos voltou ao nível de 2015-16 e a ação, em vez de voltar ao vale, subiu, com lucro recorde, distribuições e rerating de P/B. Se o juro cede para 11-12% (−250 a −350 bp), a sensibilidade histórica dá +25-35%; se não cede, o preço está caro pela régua dos outros ciclos.</div></div>')
-    + output('A ação cai ~10% a cada +100 bp no juro de 10 anos, o dobro do Ibovespa; 2024-26 é a exceção.', 'Juro a 11-12% (−250 a −350 bp): a régua histórica dá +25-35%; sem queda, o preço está caro.'))
+    + output('A ação cai ~10% a cada +100 bp no juro de 10 anos, o dobro do Ibovespa; 2024-26 é a exceção.', 'Juro a 11-12% (−250 a −350 bp): a régua histórica dá +25-35%; sem queda, o preço está caro.')[:-6]
+    + '<span class="pill-teoria" style="background:#c5003e;flex:1 1 100%;white-space:normal;line-height:1.3">o papel tende a outperformar se o macro Brasil ajudar: Ke menor, mas também o operacional do SBPE melhorando e a perspectiva de retomada de vendas e lançamentos</span></div>')
 slides.append(_s54)
 
 # ================================================================ PARTE 5 · atualização operacional
@@ -801,7 +845,7 @@ def _h2(s):
 _gen = {_h2(s): s for s in slides if _h2(s)}
 _static_titles = set()
 final = []
-SKIP = ('Vinte anos, três ciclos',)   # removidos a pedido (18/09/26)
+SKIP = ('Vinte anos, três ciclos', 'Receita e margem: o topo da série', 'O que falta para os 100%')   # removidos a pedido (18/09/26)
 for sec in _HS:
     h = _h2(sec)
     if any(s in h for s in SKIP): continue
@@ -815,7 +859,9 @@ for k, s in enumerate(final):
         assert s2 != s, "tabela do 37 não encontrada"; final[k] = s2
 # slide novo: a ação e o juro de 10 anos, logo após o P/B
 _dpr = next(s for s in slides if "ROE ajustado pelo estoque pronto" in _h2(s))
-final.insert(next(i for i, s in enumerate(final) if "a DuPont diz de onde veio" in _h2(s)) + 1, _dpr)
+_dgc = next(s for s in slides if "Lucro, caixa, dívida e payout" in _h2(s))
+final.insert(next(i for i, s in enumerate(final) if "Terreno a prazo, obra e recebível" in _h2(s)) + 1, _dgc)
+# (18/09/26) slide 'ROE ajustado pelo estoque pronto' retirado do deck a pedido; _dpr continua gerado, não inserido
 _dj = next(s for s in slides if "um título de juros" in _h2(s))
 final.insert(next(i for i, s in enumerate(final) if "O preço: P/B em vinte anos" in _h2(s)) + 1, _dj)
 # pílulas de to-do em slides que vêm prontos da base (18/09/26)
