@@ -719,6 +719,13 @@ for k, s in enumerate(final):
 # slide novo: a ação e o juro de 10 anos, logo após o P/B
 _dj = next(s for s in slides if "um título de juros" in _h2(s))
 final.insert(next(i for i, s in enumerate(final) if "O preço: P/B em vinte anos" in _h2(s)) + 1, _dj)
+# pílulas de to-do em slides que vêm prontos da base (18/09/26)
+def _add_todo(title_sub, txt):
+    for k, s in enumerate(final):
+        if title_sub in _h2(s):
+            final[k] = re.sub(r'(<p class="kick"[^>]*>)(.*?)</p>', lambda m: m.group(1) + m.group(2) + ' <span class="pill-teoria" style="background:#c5003e">' + txt + '</span></p>', s, count=1, flags=re.S); return
+    raise KeyError(title_sub)
+_add_todo("Menos canteiros, mais unidades por canteiro", "to-do · conversar com o RI sobre as perspectivas de lançamento")
 slides = final
 
 EXTRA_CSS = """
