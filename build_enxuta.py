@@ -442,7 +442,7 @@ qs_c = sorted(LC, key=ord_)
 qs_t = [q for q in QS if mrow(223).get(q) is not None and mrow(220).get(q) is not None and ord_(q) >= (11, 1)]
 t_cst = [mrow(223)[q] / 1000 for q in qs_t]; t_pag = [mrow(220)[q] / 1000 for q in qs_t]; t_perm = [mrow(221).get(q) / 1000 if mrow(221).get(q) else None for q in qs_t]
 # dois painéis num viewBox de 980: o esquerdo termina em 420 (rótulo de fim de linha até ~495, antes do tick "200%" do direito); o direito termina em 866 para o rótulo mais largo ("obra + pronto 35%", ~105) fechar antes de 980
-ct = Chart(60, 420, 46, 178, 0, 4, len(qs_t)); ct.grid([0, 1, 2, 3, 4]); ct.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])
+ct = Chart(60, 520, 46, 178, 0, 4, len(qs_t)); ct.grid([0, 1, 2, 3, 4]); ct.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])
 ct.line(t_cst, S1, lab="a custo", labval=lambda v: fmt(v, 1), w=2.8); ct.line(t_pag, S2, lab="a pagar", labval=lambda v: fmt(v, 1), w=2.4); ct.line(t_perm, S3, lab="permuta", labval=lambda v: fmt(v, 1), dash="4 3")
 ct.g.append('<text x="60" y="18" class="gtit">Terreno (R$ bi)</text><text x="60" y="34" class="gsub">a custo; a pagar; adiantamento por permuta</text>')
 # estoque a custo sem terrenos = imóveis em construção + prontos (CYREMod 205-206); contas a receber = clientes CP + LP (balanço CVM); lançamentos consolidados 12m (aba Launches - Equiv.)
@@ -452,17 +452,19 @@ e_ex = [(mrow(205)[q] + mrow(206)[q]) / 1000 if mrow(205).get(q) is not None and
 cr_t = [(BCV[q]["cr_cp_clientes"] + BCV[q]["cr_lp_clientes"]) / 1000 if q in BCV and BCV[q].get("cr_cp_clientes") is not None else None for q in qs_t]
 l12 = [_lc12(q) / 1000 if _lc12(q) else None for q in qs_t]; plq = [mrow(199)[q] / 1000 for q in qs_t]
 def _pct(num, den): return [100 * n / d if n is not None and d else None for n, d in zip(num, den)]
-cp = Chart(560, 866, 46, 178, 0, 200, len(qs_t)); cp.grid([0, 50, 100, 150, 200], lambda t: f"{t:g}%"); cp.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])   # 0-200%: lançamentos 12m chegam a 181% do PL em 2015-16 (a 160% a linha atravessava o título)
+cp = Chart(60, 520, 46, 178, 0, 200, len(qs_t)); cp.grid([0, 50, 100, 150, 200], lambda t: f"{t:g}%"); cp.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])   # 0-200%: lançamentos 12m chegam a 181% do PL em 2015-16 (a 160% a linha atravessava o título)
 cp.line(_pct(l12, plq), "var(--ink-2)", lab="lanç. 12m", labval=lambda v: fmt(v, 0) + "%", dash="3 3"); cp.line(_pct(cr_t, plq), S2, lab="CR", labval=lambda v: fmt(v, 0) + "%", w=2.4); cp.line(_pct(e_ex, plq), S3, lab="obra + pronto", labval=lambda v: fmt(v, 0) + "%", w=2.6); cp.line(_pct(t_cst, plq), S1, lab="terreno", labval=lambda v: fmt(v, 0) + "%", w=2.4)
-cp.g.append('<text x="560" y="18" class="gtit">Como % do PL dos controladores</text><text x="560" y="34" class="gsub">lanç. 12m; CR (contas a receber); obra + pronto (estoque a custo sem terreno); terreno</text>')   # subtítulo curto: precisa caber em 560-975 (~415 unidades) sem alargar o viewBox
-body = svg(980, 200, ct.flush(15) + cp.flush(15))
+cp.g.append('<text x="60" y="18" class="gtit">Como % do PL dos controladores</text><text x="60" y="34" class="gsub">lanç. 12m; CR (contas a receber); obra + pronto (estoque a custo sem terreno); terreno</text>')   # subtítulo curto: precisa caber em 560-975 (~415 unidades) sem alargar o viewBox
+SVG_T = svg(600, 200, ct.flush(15)); SVG_P = svg(600, 200, cp.flush(15))
 _i15 = qs_t.index("4T15"); _lb_perm = OP["landbank"]["pct_permuta"]["2T26"]
 _pE = _pct(e_ex, plq); _pC = _pct(cr_t, plq); _pT = _pct(t_cst, plq); _lE = _pct(e_ex, l12); _lC = _pct(cr_t, l12); _lT = _pct(t_cst, l12)
 # cartões em 4 linhas (18/09): texto enxuto com todos os números; variante .tight (12px) só neste slide
-body += ('<div class="cards3 tight" style="margin-top:8px">'
+body = ('<div class="fwgrid" style="grid-template-columns:1.55fr 1fr;align-items:center">' + SVG_T + '<div class="cards3 tight" style="grid-template-columns:1fr">'
          f'<div class="c3"><span class="c3n">R$ {fmt(t_cst[-1], 1)} bi · R$ {fmt(t_pag[-1] + t_perm[-1], 1)} bi</span><b>Terreno parado contra obrigações de terreno</b> (R$ {fmt(t_pag[-1], 1)} bi a pagar, R$ {fmt(t_perm[-1], 1)} bi de permuta): o a pagar e a permuta cobrem também terreno que já virou obra, <b>os terrenistas financiam a companhia</b>. Em 2015 o terreno era {fmt(_pT[_i15], 0)}% do PL com {fmt(100 * (1 - t_pag[_i15] / t_cst[_i15]), 0)}% pago; hoje {fmt(_pT[-1], 0)}% e {fmt(100 * (1 - t_pag[-1] / t_cst[-1]), 0)}%. {fmt(100 * _lb_perm, 0)}% do landbank é permuta.</div>'
+         '</div></div><div class="fwgrid" style="grid-template-columns:1.55fr 1fr;align-items:center;margin-top:6px">' + SVG_P + '<div class="cards3 tight" style="grid-template-columns:1fr;gap:6px">'
          f'<div class="c3"><span class="c3n">{fmt(_pE[-1], 0)}% do PL</span><b>Estoque a custo sem terreno</b>: obra R$ {fmt(mrow(205)["2T26"] / 1000, 1)} bi + pronto R$ {fmt(mrow(206)["2T26"] / 1000, 1)} bi = R$ {fmt(e_ex[-1], 1)} bi, contra {fmt(_pE[_i15], 0)}% do PL em 2015. O capital de giro saiu do terreno e foi para a obra: é o estoque de 15 meses no balanço.</div>'
-         f'<div class="c3"><span class="c3n">{fmt(_pC[-1], 0)}% do PL</span><b>Contas a receber</b> de R$ {fmt(cr_t[-1], 1)} bi, contra {fmt(_pC[_i15], 0)}% em 2015; lançamentos consolidados de 12 meses valem {fmt(_pct(l12, plq)[-1], 0)}% do PL. Recebível cresce com a venda na planta e com o performado que o banco não repassa; obra, pronto e recebível somam {fmt(_pE[-1] + _pC[-1], 0)}% do PL.</div></div>')
+         f'<div class="c3"><span class="c3n">{fmt(_pC[-1], 0)}% do PL</span><b>Contas a receber</b> de R$ {fmt(cr_t[-1], 1)} bi, contra {fmt(_pC[_i15], 0)}% em 2015; lançamentos consolidados de 12 meses valem {fmt(_pct(l12, plq)[-1], 0)}% do PL. Recebível cresce com a venda na planta e com o performado que o banco não repassa; obra, pronto e recebível somam {fmt(_pE[-1] + _pC[-1], 0)}% do PL.</div>'
+         '</div></div>')
 body += output('O terreno saiu do caixa (prazo e permuta); o capital de giro foi para a obra e o recebível.', 'Terreno a pagar não entra na dívida líquida; obra, pronto e recebível somam ' + fmt(_pE[-1] + _pC[-1], 0) + '% do PL.')
 slides.append(sl(P4, "Terreno a prazo, obra e recebível: onde o PL está aplicado.", body, nota="Fontes: CYREMod (linhas 199, 205-207, 220-221, 223: PL dos controladores, imóveis em construção, prontos e terrenos a custo, terrenos a pagar, adiantamentos por permuta física), das DFs/ITR; balanço CVM (clientes circulante e não circulante); aba 'Launches - Equiv.' (lançamentos consolidados, 12 meses); planilha do RI (landbank em permuta). Permuta física antes de 4T22 = 80% dos adiantamentos de clientes (premissa do modelo)."))
 
@@ -537,7 +539,22 @@ body += ('<div class="fwgrid" style="margin-top:10px"><div class="fwcard map"><h
          '<dt>leitura</dt><dd>O risco migrou de execução para <b>concentração</b> (SP capital, MCMV, CEF).</dd></dl></div></div>')
 body += output('Menos complexidade operacional, mais concentração.')
 slides.append(sl(P5, "Menos praças, menos canteiros, projetos maiores: a complexidade caiu.", body, nota="Fontes: lista de empreendimentos do RI (praças = locais distintos com lançamento no ano; nº de projetos); planilha operacional do RI (canteiros por segmento e por gestão de obra)."))
-slides.append(take(8, P5, teoria=True))
+# --- caixa do MAP × MCMV (teoria) + retorno por segmento e o take-away de mix (pedido de 18/09/26)
+RSG = J("_roe_seg_serie.json"); _rs_last = {k: v[sorted(v, key=ord_)[-1]] for k, v in RSG.items()}
+_mix10 = 0.10 * (_rs_last["mcmv"] - _rs_last["cyrela"])
+_s8 = take(8, P5, teoria=True)
+_vz8b = re.findall(r'<div class="viz"[^>]*><svg viewBox="0 0 900 252">.*?</svg></div>', _s8, re.S)
+_s8 = _s8.replace(_vz8b[0], '<div class="fwgrid" style="margin-top:2px">' + re.sub(r' style="[^"]*"', '', _vz8b[0], count=1), 1).replace(_vz8b[1], re.sub(r' style="[^"]*"', '', _vz8b[1], count=1) + '</div>', 1)
+_viz41 = re.search(r'<div class="viz"[^>]*><svg viewBox="0 0 900 277">.*?</svg></div>', SECS[40], re.S).group(0)
+_s8 = _s8.replace('</section>', ('<div class="fwgrid" style="grid-template-columns:1.5fr 1fr;margin-top:8px;align-items:start">' + re.sub(r' style="[^"]*"', '', _viz41, count=1)
+    + f'<div class="c3"><span class="c3n">{fmt(_rs_last["mcmv"], 0)}% · {fmt(_rs_last["living"], 0)}% · {fmt(_rs_last["cyrela"], 0)}%</span><b>Retorno operacional sobre o capital, LTM</b> (MCMV, Living, alto padrão: lucro operacional ÷ PL médio do segmento, nota do ITR; antes de juros e IR, não é ROE). Alto padrão fez a travessia do ciclo: 20% em 2014, 3,6% em 2018, 23% hoje. MCMV de 17% para 40% em cinco trimestres, com base de capital pequena. <b>Cada 10 p.p. de mix</b> que migra do alto padrão para a Vivaz, a retorno constante, valem <b>+{fmt(_mix10, 1)} p.p.</b> no retorno consolidado.</div></div>')
+    + ('<div class="viz" style="margin-top:6px"><table class="tl" style="width:100%;font-size:10.5px;line-height:1.1;border:2px solid var(--s2);border-collapse:collapse;text-align:center"><thead>'
+       '<tr style="background:var(--s2);color:#fff"><th rowspan="2" style="text-align:left;padding:3px 8px;vertical-align:middle">retorno consolidado = w × Vivaz + (1 − w) × médio e alto padrão</th><th colspan="4" style="padding:2px 8px;border-left:1px solid rgba(255,255,255,.5)">Vivaz a 40% (hoje)</th><th colspan="4" style="padding:2px 8px;border-left:1px solid rgba(255,255,255,.5)">Vivaz a 30% (margem cai a 30%)</th></tr>'
+       '<tr style="background:var(--s2);color:#fff">' + ''.join(f'<th style="padding:2px 6px{";border-left:1px solid rgba(255,255,255,.5)" if k == 0 else ""}">MAP {lab}</th>' for _ in (0, 1) for k, lab in enumerate(("23% (hoje)", "15% (2015-16)", "8% (2019)", "3,6% (fundo 2018)"))) + '</tr></thead><tbody>'
+       + ''.join('<tr' + (' style="background:rgba(70,110,170,.12);font-weight:600"' if w == 0.2 else '') + f'><td style="text-align:left;padding:3px 8px">Vivaz com {fmt(100 * w, 0)}% do capital{" (≈ hoje)" if w == 0.2 else ""}</td>' + ''.join(f'<td style="padding:3px 6px{";border-left:1px solid var(--s2)" if k == 0 else ""}">{fmt(w * rv + (1 - w) * rm, 1)}%</td>' for rv in (40, 30) for k, rm in enumerate((23, 15, 8, 3.6))) + '</tr>' for w in (0.2, 0.33, 0.5))
+       + '</tbody></table><p class="sl-nota" style="margin:2px 2px 0;color:var(--s2)">Cenários: retorno operacional (antes de juros e IR), pesos = parcela do capital alocado à Vivaz; MAP nos níveis que o próprio ciclo já mostrou. Com a Vivaz em um terço do capital e o MAP no fundo de 2018, o consolidado ainda fica em 15,6% (12,3% se a Vivaz cair a 30%): o mix segura, mas não repõe um ciclo ruim.</p></div>')
+    + output('O ROE continua subindo se a Vivaz crescer mais que o médio e alto padrão: mix, não ciclo, a 40% contra 23% de retorno.', 'A Vivaz é 18% da receita e 26% do lançado em consolidação; chegar a um terço com o alto padrão parado vale ~2,5 p.p. — se a margem da Vivaz sobreviver ao INCC e à Caixa.') + '</section>')
+slides.append(_s8)
 
 # --- receita × lançamentos consol 12m × vendas 12m
 VC = RI["vendas_seg_cbr"]["Total"]
