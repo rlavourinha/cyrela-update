@@ -374,7 +374,7 @@ EC = J("_estoque_custo.json"); BCV = J("_balanco_cvm.json")
 qs_c = sorted(LC, key=ord_)
 qs_t = [q for q in QS if mrow(223).get(q) is not None and mrow(220).get(q) is not None and ord_(q) >= (11, 1)]
 t_cst = [mrow(223)[q] / 1000 for q in qs_t]; t_pag = [mrow(220)[q] / 1000 for q in qs_t]; t_perm = [mrow(221).get(q) / 1000 if mrow(221).get(q) else None for q in qs_t]
-# três painéis num viewBox de 1000: cada painel termina ~125-160 unidades antes do eixo do seguinte, para caber o rótulo de fim de linha (até "obra + pronto 35%", ~105) mais o tick do eixo ("160%", ~32)
+# dois painéis num viewBox de 980: o esquerdo termina em 420 (rótulo de fim de linha até ~495, antes do tick "200%" do direito); o direito termina em 866 para o rótulo mais largo ("obra + pronto 35%", ~105) fechar antes de 980
 ct = Chart(60, 420, 46, 178, 0, 4, len(qs_t)); ct.grid([0, 1, 2, 3, 4]); ct.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])
 ct.line(t_cst, S1, lab="a custo", labval=lambda v: fmt(v, 1), w=2.8); ct.line(t_pag, S2, lab="a pagar", labval=lambda v: fmt(v, 1), w=2.4); ct.line(t_perm, S3, lab="permuta", labval=lambda v: fmt(v, 1), dash="4 3")
 ct.g.append('<text x="60" y="18" class="gtit">Terreno (R$ bi)</text><text x="60" y="34" class="gsub">a custo; a pagar; adiantamento por permuta</text>')
@@ -385,9 +385,9 @@ e_ex = [(mrow(205)[q] + mrow(206)[q]) / 1000 if mrow(205).get(q) is not None and
 cr_t = [(BCV[q]["cr_cp_clientes"] + BCV[q]["cr_lp_clientes"]) / 1000 if q in BCV and BCV[q].get("cr_cp_clientes") is not None else None for q in qs_t]
 l12 = [_lc12(q) / 1000 if _lc12(q) else None for q in qs_t]; plq = [mrow(199)[q] / 1000 for q in qs_t]
 def _pct(num, den): return [100 * n / d if n is not None and d else None for n, d in zip(num, den)]
-cp = Chart(560, 880, 46, 178, 0, 200, len(qs_t)); cp.grid([0, 50, 100, 150, 200], lambda t: f"{t:g}%"); cp.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])   # 0-200%: lançamentos 12m chegam a 181% do PL em 2015-16 (a 160% a linha atravessava o título)
+cp = Chart(560, 866, 46, 178, 0, 200, len(qs_t)); cp.grid([0, 50, 100, 150, 200], lambda t: f"{t:g}%"); cp.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])   # 0-200%: lançamentos 12m chegam a 181% do PL em 2015-16 (a 160% a linha atravessava o título)
 cp.line(_pct(l12, plq), "var(--ink-2)", lab="lanç. 12m", labval=lambda v: fmt(v, 0) + "%", dash="3 3"); cp.line(_pct(cr_t, plq), S2, lab="CR", labval=lambda v: fmt(v, 0) + "%", w=2.4); cp.line(_pct(e_ex, plq), S3, lab="obra + pronto", labval=lambda v: fmt(v, 0) + "%", w=2.6); cp.line(_pct(t_cst, plq), S1, lab="terreno", labval=lambda v: fmt(v, 0) + "%", w=2.4)
-cp.g.append('<text x="560" y="18" class="gtit">Como % do PL dos controladores</text><text x="560" y="34" class="gsub">lançamentos consolidados 12m; contas a receber; estoque a custo sem terreno (obra + pronto); terreno</text>')
+cp.g.append('<text x="560" y="18" class="gtit">Como % do PL dos controladores</text><text x="560" y="34" class="gsub">lanç. 12m; CR (contas a receber); obra + pronto (estoque a custo sem terreno); terreno</text>')   # subtítulo curto: precisa caber em 560-975 (~415 unidades) sem alargar o viewBox
 body = svg(980, 200, ct.flush(15) + cp.flush(15))
 _i15 = qs_t.index("4T15"); _lb_perm = OP["landbank"]["pct_permuta"]["2T26"]
 _pE = _pct(e_ex, plq); _pC = _pct(cr_t, plq); _pT = _pct(t_cst, plq); _lE = _pct(e_ex, l12); _lC = _pct(cr_t, l12); _lT = _pct(t_cst, l12)
@@ -400,10 +400,11 @@ body += output('O terreno saiu do caixa (prazo e permuta); o capital de giro foi
 slides.append(sl(P4, "Terreno a prazo, obra e recebível: onde o PL está aplicado.", body, nota="Fontes: CYREMod (linhas 199, 205-207, 220-221, 223: PL dos controladores, imóveis em construção, prontos e terrenos a custo, terrenos a pagar, adiantamentos por permuta física), das DFs/ITR; balanço CVM (clientes circulante e não circulante); aba 'Launches - Equiv.' (lançamentos consolidados, 12 meses); planilha do RI (landbank em permuta). Permuta física antes de 4T22 = 80% dos adiantamentos de clientes (premissa do modelo)."))
 
 # --- a ação e o juro de 10 anos (slide 54 do deck completo), com o callout virando cartões
-_s54 = take(54, "parte 6 · o preço", callout='', append=('<div class="cards3" style="margin-top:8px;grid-template-columns:1fr 1fr">'
-    '<div class="c3"><span class="c3n">−0,6 · −10% por +100 bp</span><b>A ação segue o juro de 10 anos</b>: correlação de −0,6 nas variações mensais desde 2016 e queda de ~10% a cada +100 bp, o dobro do Ibovespa (−10,4% contra −5,1% por +100 bp desde 2010; −13,9% contra −6,4% desde 2016, regressões mensais nos dados do projeto). Nos ciclos de 2015-23 as duas curvas viraram juntas.</div>'
-    '<div class="c3"><span class="c3n">2024-26</span><b>A exceção</b>: o juro de 10 anos voltou ao nível de 2015-16 e a ação, em vez de voltar ao vale, subiu, sustentada por lucro recorde, distribuições e o rerating de P/B. Ou o mercado antecipa o juro caindo, ou a ação está pela primeira vez sem o colchão do juro: se ele cede para 11-12% (−250 a −350 bp), a sensibilidade histórica dá +25-35%; se não cede, o preço está caro pela régua dos outros ciclos.</div></div>')
-    + output('A ação é um título de juro longo: −10% a cada +100 bp, o dobro do Ibovespa; 2024-26 é a primeira vez que ela sobe com o juro alto.', 'Se o juro de 10 anos cede 250-350 bp, a régua histórica dá +25-35%; se não cede, o preço está caro.'))
+_s54 = take(54, "parte 6 · o preço", callout='', repl=[('>juro volta a subir,<', '>juro sobe,<')],   # rótulo de fase encostava em "pandemia" (1px)
+    append=('<div class="cards3 tight" style="margin-top:8px;grid-template-columns:1fr 1fr">'
+    '<div class="c3"><span class="c3n">−0,6 · −10% por +100 bp</span><b>A ação segue o juro de 10 anos</b>: correlação de −0,6 nas variações mensais desde 2016 e ~−10% a cada +100 bp, o dobro do Ibovespa (−10,4% contra −5,1% desde 2010; −13,9% contra −6,4% desde 2016, regressões mensais). Nos ciclos de 2015-23 as duas curvas viraram juntas.</div>'
+    '<div class="c3"><span class="c3n">2024-26</span><b>A exceção</b>: o juro de 10 anos voltou ao nível de 2015-16 e a ação, em vez de voltar ao vale, subiu, com lucro recorde, distribuições e rerating de P/B. Se o juro cede para 11-12% (−250 a −350 bp), a sensibilidade histórica dá +25-35%; se não cede, o preço está caro pela régua dos outros ciclos.</div></div>')
+    + output('A ação cai ~10% a cada +100 bp no juro de 10 anos, o dobro do Ibovespa; 2024-26 é a exceção.', 'Juro a 11-12% (−250 a −350 bp): a régua histórica dá +25-35%; sem queda, o preço está caro.'))
 slides.append(_s54)
 
 # ================================================================ PARTE 5 · atualização operacional
