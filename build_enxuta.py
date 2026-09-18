@@ -412,8 +412,9 @@ pay12 = [100 * _sum4(DIV_Q, q, False) / (_sum4(mrow(73), q)) if _sum4(mrow(73), 
 # layout (18/09/26): painéis de 75px; A/C terminam em x=400 e B/D começam em 560 para os rótulos de fim de linha
 # ("dív. líq. ÷ PL 10%", ~95 un.) não invadirem o eixo do painel vizinho; B/D terminam em 850 para "payout 12m 49%" caber em 980
 cA = Chart(60, 400, 48, 123, -1, 3, len(qs_f)); cA.grid([-1, 0, 1, 2, 3]); cA.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
-cA.line(gc12, S2, lab="caixa 12m", labval=lambda v: fmt(v, 2), w=2.4); cA.line(ll12, S1, lab="lucro LTM", labval=lambda v: fmt(v, 2), w=2.8)
-cA.g.append('<text x="60" y="18" class="gtit">Lucro líquido LTM e geração de caixa 12m (R$ bi)</text><text x="60" y="34" class="gsub">DRE (CYREMod) e releases (geração de caixa, linha operacional)</text>')
+dv12 = [_sum4(DIV_Q, q, False) / 1000 for q in qs_f]   # proventos com data ex nos 4 trimestres (R$ bi)
+cA.line(dv12, S3, lab="proventos 12m", labval=lambda v: fmt(v, 2), w=2.2, dash="4 3"); cA.line(gc12, S2, lab="caixa 12m", labval=lambda v: fmt(v, 2), w=2.4); cA.line(ll12, S1, lab="lucro LTM", labval=lambda v: fmt(v, 2), w=2.8)
+cA.g.append('<text x="60" y="18" class="gtit">Lucro LTM, caixa 12m e proventos 12m (R$ bi)</text><text x="60" y="34" class="gsub">DRE (CYREMod); releases (geração de caixa, linha operacional); B3 (proventos por data ex)</text>')
 cB = Chart(560, 850, 48, 123, -1, 3, len(qs_f)); cB.grid([-1, 0, 1, 2, 3]); cB.xlabels(qs_f, 8, 0, lambda l: "20" + l[2:])
 cB.line(nd_bi, S1, lab="dív. líquida", labval=lambda v: fmt(v, 2), w=2.8)
 cB.g.append('<text x="560" y="18" class="gtit">Dívida líquida (R$ bi)</text><text x="560" y="34" class="gsub">balanço CVM: empréstimos, debêntures e CRI (inclui CashMe) − caixa e aplicações</text>')
