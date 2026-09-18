@@ -372,20 +372,20 @@ for q in QS:
     if not d or e is None or e4 is None: continue
     pl_adj = d["pl_med"] - (e + e4) / 2
     qs_pr.append(q); roe_r.append(d["roe"]); roe_a.append(100 * d["ll_ltm"] / pl_adj); exc_b.append(e / 1000); exc_pl.append(100 * e / mrow(199)[q])
-c = Chart(60, 470, 46, 178, -5, 40, len(qs_pr)); c.grid([-5, 0, 10, 20, 30, 40], lambda t: f"{t:g}%"); c.xlabels(qs_pr, 4, 1, lambda l: "20" + l[2:])
+c = Chart(60, 440, 46, 178, -5, 40, len(qs_pr)); c.grid([-5, 0, 10, 20, 30, 40], lambda t: f"{t:g}%"); c.xlabels(qs_pr, 8, 1, lambda l: "20" + l[2:])
 c.line(roe_a, S3, lab="PL ex-pronto", labval=lambda v: fmt(v, 1) + "%", w=2.8); c.line(roe_r, S1, lab="reportado", labval=lambda v: fmt(v, 1) + "%", w=2.4)
-c.g.append('<text x="60" y="18" class="gtit">ROE reportado × ROE com o PL sem o estoque pronto excedente</text><text x="60" y="34" class="gsub">LTM; excedente = pronto a custo × (share − 15%) ÷ share, quando o pronto passa de 15% do estoque; lucro inalterado</text>')
-c2 = Chart(590, 900, 46, 178, 0, 25, len(qs_pr)); c2.grid([0, 5, 10, 15, 20, 25], lambda t: f"{t:g}%"); c2.xlabels(qs_pr, 4, 1, lambda l: "20" + l[2:])
+c.g.append('<text x="60" y="18" class="gtit">ROE reportado × ROE com o PL sem o pronto excedente</text><text x="60" y="34" class="gsub">LTM; excedente = pronto a custo × (share − 15%) ÷ share, quando o pronto passa de 15%; lucro inalterado</text>')
+c2 = Chart(600, 900, 46, 178, 0, 25, len(qs_pr)); c2.grid([0, 5, 10, 15, 20, 25], lambda t: f"{t:g}%"); c2.xlabels(qs_pr, 8, 1, lambda l: "20" + l[2:])
 c2.line(exc_pl, S2, lab="% do PL", labval=lambda v: fmt(v, 0) + "%", w=2.6)
-c2.g.append('<text x="590" y="18" class="gtit">Excedente de pronto a custo, % do PL</text><text x="590" y="34" class="gsub">pico de R$ ' + fmt(max(exc_b), 1) + ' bi em ' + qs_pr[exc_b.index(max(exc_b))] + '</text>')
+c2.g.append('<text x="600" y="18" class="gtit">Excedente de pronto a custo, % do PL</text><text x="600" y="34" class="gsub">pico de R$ ' + fmt(max(exc_b), 1) + ' bi em ' + qs_pr[exc_b.index(max(exc_b))] + '</text>')
 body = svg(980, 200, c.flush(15) + c2.flush(15))
 _ipk = exc_b.index(max(exc_b)); _dmax = max(a - r for a, r in zip(roe_a, roe_r)); _iq = [a - r for a, r in zip(roe_a, roe_r)].index(_dmax)
 _dx = [(a - r, q) for a, r, q in zip(roe_a, roe_r, qs_pr) if not ((20, 3) <= ord_(q) <= (21, 2))]; _dmax2, _q2 = max(_dx)   # janelas LTM com os IPOs de Cury e Lavvi (3T20-2T21) fora
 body += ('<div class="cards3" style="margin-top:8px">'
          f'<div class="c3"><span class="c3n">a conta</span><b>Se o estoque pronto fosse sempre ~15% do estoque</b>, o que passa disso não deveria estar no book: sai do PL o pronto a custo na proporção do excesso (share de 30% = metade do pronto), o lucro fica como está, e o ROE é recalculado sobre o PL menor.</div>'
-         f'<div class="c3"><span class="c3n">R$ {fmt(max(exc_b), 1)} bi · +{fmt(_dmax2, 1)} p.p.</span><b>No pico (' + qs_pr[_ipk] + f'), o excedente valia R$ {fmt(max(exc_b), 1)} bi, {fmt(exc_pl[_ipk], 0)}% do PL</b>, e o ajuste move o ROE em no máximo {fmt(_dmax2, 1)} p.p. ({_q2}); os +{fmt(_dmax, 1)} p.p. do {qs_pr[_iq]} são sobre um ROE inflado pelos IPOs da Cury e da Lavvi (janelas 3T20-2T21 fora). Pronto a custo é pequeno perto do PL: o problema de 2016-19 foi lucro, não book.</div>'
+         f'<div class="c3"><span class="c3n">R$ {fmt(max(exc_b), 1)} bi · +{fmt(_dmax2, 1)} p.p.</span><b>No pico (' + qs_pr[_ipk] + f'), o excedente valia R$ {fmt(max(exc_b), 1)} bi, {fmt(exc_pl[_ipk], 0)}% do PL</b>; o ajuste move o ROE em no máximo {fmt(_dmax2, 1)} p.p. ({_q2}). Os +{fmt(_dmax, 1)} p.p. do {qs_pr[_iq]} vêm de um ROE inflado pelos IPOs da Cury e da Lavvi (janelas 3T20-2T21 fora). O problema de 2016-19 foi lucro, não book.</div>'
          f'<div class="c3"><span class="c3n">{fmt(roe_a[-1], 1)}% = {fmt(roe_r[-1], 1)}%</span><b>Hoje o ajuste é zero</b>: pronto em {fmt(100 * OP["pronto"]["vgv100_total"]["2T26"] / OP["estoque"]["vgv100_total"]["2T26"], 0)}% do estoque, abaixo da régua de 15%. O ROE de {fmt(roe_r[-1], 1)}% não carrega estoque encalhado; carrega estoque em obra (35% do PL) e recebível (58%).</div></div>')
-body += output('Tirar do book o pronto acima de 15% quase não mexe no ROE: +' + fmt(_dmax2, 1) + ' p.p. no pior ano normal; hoje, zero.', 'O estoque pronto é pequeno em relação ao PL; o que pesa no balanço da Cyrela é obra e recebível, não unidade encalhada.')
+body += output('Pronto acima de 15% fora do book: o ROE muda +' + fmt(_dmax2, 1) + ' p.p. no pior ano normal; hoje, zero.', 'O estoque pronto é pequeno em relação ao PL; o que pesa no balanço da Cyrela é obra e recebível, não unidade encalhada.')
 slides.append(sl(P4, "ROE ajustado pelo estoque pronto: o excesso pesa pouco no book.", body, nota="Fontes: _dupont.json (lucro atribuível LTM e PL médio dos controladores, planilha de DFs do RI); CYREMod linha 206 (imóveis prontos a custo, notas de estoque dos ITR); planilha operacional do RI (VGV do estoque total e pronto, 100%, desde 4T12). Régua de 15% = premissa da apresentação; excedente médio de dois fechamentos, como o PL."))
 
 # --- o preço: P/B em vinte anos e a ação contra o CDI (slide 53 do deck completo)
@@ -800,11 +800,18 @@ for k, s in enumerate(final):
     if "a DuPont diz de onde veio" in _h2(s):
         s2 = re.sub(r'<div class="c3"><span class="c3n">leitura contrária</span>.*?</div>', '', s, count=1, flags=re.S)
         s2 = re.sub(r'<div class="cards3" style="margin-top:6px;grid-template-columns:1fr 1fr">', '<div class="cards3" style="margin-top:6px;grid-template-columns:1fr">', s2, count=1)
+        # cartão "sem as participações" em duas linhas: título corrido (run-in) e menos padding; tabela e nota azul mais justas (18/09/26)
+        s2 = re.sub(r'<div class="c3"><span class="c3n">sem as participações</span>', '<div class="c3" style="padding:8px 14px"><span class="c3n" style="display:inline;font-size:15px;margin:0 6px 0 0">sem as participações ·</span>', s2, count=1)
+        s2 = re.sub(r'(<table class="tl".*?</table>)', lambda m: m.group(1).replace('padding:3px 8px', 'padding:2px 8px').replace('padding:3px 6px', 'padding:2px 6px'), s2, count=1, flags=re.S)
+        s2 = s2.replace('<p class="sl-nota" style="margin:3px 2px 0;color:var(--s2)">', '<p class="sl-nota" style="margin:2px 2px 0;color:var(--s2)">', 1)
+        s2 = s2.replace('<div class="cards3" style="margin-top:6px;grid-template-columns:1fr">', '<div class="cards3" style="margin-top:4px;grid-template-columns:1fr">', 1)
+        s2 = s2.replace('<div class="viz" style="margin-top:8px"><table class="tl"', '<div class="viz" style="margin-top:5px"><table class="tl"', 1)
+        s2 = s2.replace('<div class="sl-output"><span class="out-tag">o que fica</span><span class="out-msg">ROE de 17%', '<div class="sl-output" style="margin-top:6px"><span class="out-tag">o que fica</span><span class="out-msg">ROE de 17%', 1)
         _vz = re.findall(r'<div class="viz"[^>]*>\s*<svg.*?</svg>\s*</div>', s2, re.S)
         if len(_vz) >= 2:
             _grid = re.search(r'<div class="fwgrid"[^>]*>\s*' + re.escape(_vz[0]) + r'\s*' + re.escape(_vz[1]) + r'\s*</div>', s2, re.S)
             if _grid:
-                s2 = s2[:_grid.start()] + ''.join('<div class="viz" style="max-width:720px;margin:2px auto 0">' + re.search(r'<svg.*?</svg>', v, re.S).group(0) + '</div>' for v in _vz[:2]) + s2[_grid.end():]
+                s2 = s2[:_grid.start()] + ''.join('<div class="viz" style="max-width:660px;margin:2px auto 0">' + re.search(r'<svg.*?</svg>', v, re.S).group(0) + '</div>' for v in _vz[:2]) + s2[_grid.end():]
         assert s2 != s, "dupont"; final[k] = s2; break
 def _append_card(title_sub, c3n, html):
     for k, s in enumerate(final):
