@@ -726,6 +726,13 @@ def _add_todo(title_sub, txt):
             final[k] = re.sub(r'(<p class="kick"[^>]*>)(.*?)</p>', lambda m: m.group(1) + m.group(2) + ' <span class="pill-teoria" style="background:#c5003e">' + txt + '</span></p>', s, count=1, flags=re.S); return
     raise KeyError(title_sub)
 _add_todo("Menos canteiros, mais unidades por canteiro", "to-do · conversar com o RI sobre as perspectivas de lançamento")
+def _append_card(title_sub, c3n, html):
+    for k, s in enumerate(final):
+        if title_sub in _h2(s):
+            s2 = re.sub(r'(<div class="c3"><span class="c3n">' + re.escape(c3n) + r'</span>.*?)(</div>)', lambda m: m.group(1) + html + m.group(2), s, count=1, flags=re.S)
+            assert s2 != s, (title_sub, c3n); final[k] = s2; return
+    raise KeyError(title_sub)
+_append_card("Perspectivas do MCMV", "Caixa", ' <span style="color:#c5003e;font-weight:600">E a Caixa está em greve desde 10/09: impactos ainda incertos no repasse, no fluxo financeiro e na medição de obras.</span>')
 slides = final
 
 EXTRA_CSS = """
