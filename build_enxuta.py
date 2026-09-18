@@ -1,0 +1,803 @@
+# -*- coding: utf-8 -*-
+"""Gera enxuta.html — a versão enxuta (45-60 min) da apresentação de Cyrela.
+Reaproveita CSS, navegação e alguns slides de index.html (recorte por índice de slide,
+com kicker trocado) e gera os slides novos a partir dos JSONs e do dump do modelo
+(_modelo_dump.tsv, gerado via COM a partir do CYREMod). Roteiro do usuário (17/09/2026):
+1 companhia · 2 acionistas/conselho/diretoria · 3 overview operacional · 4 momento do ciclo ·
+5 atualização operacional (≈80% do conteúdo final)."""
+import io, json, os, re, math
+here = os.path.dirname(os.path.abspath(__file__))
+J = lambda f: json.load(io.open(os.path.join(here, f), encoding="utf-8"))
+VERSAO = "v1.1 · 17/09/2026"
+
+# ---------------------------------------------------------------- deck atual
+H = io.open(os.path.join(here, "index.html"), encoding="utf-8").read()
+CSS = H[H.index("<style>"):H.index("</style>") + 8]
+JS = H[H.index("// ================= APRESENTACAO (v5)"):H.rindex("</script>")]
+deck = H[H.index('<div class="deck"'):H.index('<section class="tab on"')]
+SECS = re.split(r'(?=<section class="slide")', deck)[1:]
+
+def take(i, kick, teoria=False, strip_viz=False, title=None, callout=None, append=None, repl=None):
+    """recorta o slide i (1-based, numeração do deck atual) e troca o kicker (e, se pedido, título, callout e um bloco no fim)."""
+    s = SECS[i - 1]
+    for a_, b_ in (repl or []): s = s.replace(a_, b_)
+    if append:
+        j = s.rfind("</section>"); k = s.rfind("</div>", 0, j)
+        s = s[:k] + append + s[k:]
+    if strip_viz: s = re.sub(r'<div class="viz">.*?</svg></div>', '', s, flags=re.S)
+    if title: s = re.sub(r'<h2 class="head-xl">.*?</h2>', '<h2 class="head-xl">' + title + '</h2>', s, count=1, flags=re.S)
+    if callout is not None: s = re.sub(r'<div class="sl-callout">.*?</div>', callout, s, count=(0 if callout == '' else 1), flags=re.S)  # '' remove todos
+    s = re.sub(r'<p class="kick"[^>]*>.*?</p>', '<p class="kick">' + kick + '</p>', s, count=1, flags=re.S)
+    s = re.sub(r'<div class="slidenum">.*?</div>', '', s)
+    if teoria:
+        s = s.replace('<section class="slide">', '<section class="slide teoria">', 1)
+        s = s.replace('<p class="kick">' + kick + '</p>', '<p class="kick">' + kick + ' ' + PILL + '</p>', 1)
+    return s.strip() + "\n"
+
+PILL = '<span class="pill-teoria">teoria</span>'
+
+# ---------------------------------------------------------------- dados
+def load_model():
+    lines = io.open(os.path.join(here, "_modelo_dump.tsv"), encoding="utf-8").read().split("\n")
+    hdr = lines[0].split("\t")[2].split(",")
+    rows = {}
+    for l in lines[1:]:
+        p = l.split("\t")
+        if len(p) >= 3:
+            v = [None if x == "null" else float(x) for x in p[2].split(",")]
+            rows[int(p[0])] = (p[1], dict(zip(hdr, v)))
+    return hdr, rows
+HDR, M = load_model()
+QS = [h for h in HDR if len(h) == 4 and h[1] == "T"]      # 1T06..2T26 (inclui 3T26 vazio)
+QS = [q for q in QS if M[21][1].get(q) is not None]         # até 2T26
+YRS = [h for h in HDR if len(h) == 4 and h.isdigit()]
+def mrow(r): return M[r][1]
+def q12(row, q):  # soma 12m terminando em q
+    i = QS.index(q)
+    if i < 3: return None
+    v = [row.get(x) for x in QS[i - 3:i + 1]]
+    return None if any(x is None for x in v) else sum(v)
+def ord_(q): return (int(q[2:]), int(q[0]))
+
+LTMQ = ["3T25", "4T25", "1T26", "2T26"]
+def ltm(d): return sum(d.get(q, 0) or 0 for q in LTMQ)
+LR = J("_lancamentos_ri.json"); LC = J("_lancamentos_consol.json"); RI = J("_ri_regioes_vendas.json")
+PR = J("_pracas_lanc.json"); CBR = J("_cbr_lanc.json"); EQ = J("_equiv_investidas_v5.json")["trimestre"]
+CM = J("_cashme_entidade.json"); GEO = J("_geoimovel.json"); DIST = J("_prov_distrato_mov.json")["trimestre"]
+INAD = J("_inad_imob.json"); INCC = J("_incc_series.json")["incc_di"]; GOV = J("_governanca_cvm.json")
+SKR = J("_skr_rows.json") if os.path.exists(os.path.join(here, "_skr_rows.json")) else {}
+INV = J("_invest_book.json")
+
+def fmt(v, d=1):
+    if v is None: return "—"
+    s = f"{v:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return s
+def pct(v, d=1): return "—" if v is None else fmt(v * 100, d) + "%"
+
+# ---------------------------------------------------------------- gráficos
+class Chart:
+    def __init__(s, x0, x1, y0, y1, vmin, vmax, n):
+        s.x0, s.x1, s.y0, s.y1, s.vmin, s.vmax, s.n = x0, x1, y0, y1, vmin, vmax, n
+        s.g = []; s.pend = []
+    def y(s, v): return s.y1 - (s.y1 - s.y0) * (v - s.vmin) / (s.vmax - s.vmin)
+    def x(s, i): return s.x0 + (s.x1 - s.x0) * (i + 0.5) / s.n
+    def grid(s, ticks, f=lambda t: f"{t:g}"):
+        for t in ticks:
+            y = s.y(t)
+            s.g.append(f'<line x1="{s.x0}" y1="{y:.1f}" x2="{s.x1}" y2="{y:.1f}" stroke="var(--grid)" opacity=".55"/>'
+                       f'<text x="{s.x0-6}" y="{y+4:.1f}" class="axq" text-anchor="end" opacity=".85">{f(t)}</text>')
+        yb = s.y(0) if s.vmin <= 0 <= s.vmax else s.y1
+        s.g.append(f'<line x1="{s.x0}" y1="{yb:.1f}" x2="{s.x1}" y2="{yb:.1f}" stroke="var(--baseline)"/>')
+    def xlabels(s, labels, every=4, off=0, fmtl=lambda l: l):
+        for i, l in enumerate(labels):
+            if (i - off) % every == 0:
+                s.g.append(f'<text x="{s.x(i):.1f}" y="{s.y1+15}" class="axq" text-anchor="middle" opacity=".75">{fmtl(l)}</text>')
+    def line(s, vals, color, w=2.2, dash="", lab=None, labval=True, opacity=1, last_opac=None):
+        pts = [(s.x(i), s.y(v)) for i, v in enumerate(vals) if v is not None]
+        if not pts: return
+        if last_opac is not None and len(pts) >= 2:
+            # ultimo ponto (LTM) em tom mais claro: segmento final tracejado e marcador translucido
+            (xa, ya), (xb, yb_) = pts[-2], pts[-1]
+            s.g.append(f'<line x1="{xa:.1f}" y1="{ya:.1f}" x2="{xb:.1f}" y2="{yb_:.1f}" stroke="{color}" stroke-width="{w}" stroke-dasharray="3 3" opacity="{last_opac}"/><circle cx="{xb:.1f}" cy="{yb_:.1f}" r="3.4" fill="{color}" opacity="{last_opac}"/>')
+            if lab:
+                last = [v for v in vals if v is not None][-1]
+                s.pend.append((yb_, xb + 7, color, lab + (" " + labval(last) if callable(labval) else "")))
+            vals = vals[:-1]; pts = pts[:-1]; lab = None
+        # segmentos contínuos (quebra em None)
+        segs, cur = [], []
+        for i, v in enumerate(vals):
+            if v is None:
+                if cur: segs.append(cur); cur = []
+            else: cur.append((s.x(i), s.y(v)))
+        if cur: segs.append(cur)
+        for sg in segs:
+            if len(sg) == 1:
+                s.g.append(f'<circle cx="{sg[0][0]:.1f}" cy="{sg[0][1]:.1f}" r="2.5" fill="{color}"/>')
+            else:
+                s.g.append(f'<polyline points="{" ".join(f"{x:.1f},{y:.1f}" for x, y in sg)}" fill="none" stroke="{color}" stroke-width="{w}" stroke-dasharray="{dash}" opacity="{opacity}"/>')
+        x, y = pts[-1]
+        s.g.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.2" fill="{color}"/>')
+        if lab:
+            last = [v for v in vals if v is not None][-1]
+            s.pend.append((y, x + 7, color, lab + (" " + labval(last) if callable(labval) else "")))
+    def bars(s, vals, color, w=0.62, labels=None, rx=2, fill=True, base=None, opac=None):
+        slot = (s.x1 - s.x0) / s.n; bw = slot * w
+        yb = s.y(0) if s.vmin <= 0 <= s.vmax else s.y1
+        for i, v in enumerate(vals):
+            if v is None: continue
+            x = s.x(i) - bw / 2; y = s.y(v)
+            top, h = (min(y, yb), abs(yb - y))
+            f = color if fill else "none"; st = "none" if fill else color
+            op = opac[i] if opac and i < len(opac) else 1
+            s.g.append(f'<rect x="{x:.1f}" y="{top:.1f}" width="{bw:.1f}" height="{max(h,0.5):.1f}" rx="{rx}" fill="{f}" stroke="{st}" stroke-width="1.4" opacity="{op}"/>')
+            if labels and labels[i]:
+                yy = y - 4 if v >= 0 else y + 12
+                s.g.append(f'<text x="{s.x(i):.1f}" y="{yy:.1f}" class="fw-s2" fill="var(--ink-2)" text-anchor="middle">{labels[i]}</text>')
+    def vline(s, i, text=None, color="var(--muted)"):
+        x = s.x(i)
+        s.g.append(f'<line x1="{x:.1f}" y1="{s.y0}" x2="{x:.1f}" y2="{s.y1}" stroke="{color}" stroke-dasharray="3 3" opacity=".7"/>')
+        if text: s.g.append(f'<text x="{x+4:.1f}" y="{s.y0+10}" class="fw-s2" fill="{color}">{text}</text>')
+    def flush(s, gap=12, leader=False):
+        P = sorted(s.pend)
+        ys = [p[0] for p in P]
+        for k in range(1, len(ys)):
+            if ys[k] - ys[k - 1] < gap: ys[k] = ys[k - 1] + gap
+        out = []
+        for (y0, x, c, t), y in zip(P, ys):
+            if leader and abs(y - y0) > 3:   # rótulo empurrado pelo gap: traço fino do ponto até o rótulo
+                out.append(f'<line x1="{x-4:.1f}" y1="{y0:.1f}" x2="{x-1:.1f}" y2="{y:.1f}" stroke="{c}" stroke-width="1" opacity=".6"/>')
+            out.append(f'<text x="{x:.1f}" y="{y+4:.1f}" class="fw-t2" fill="{c}">{t}</text>')
+        s.pend = []
+        return "\n".join(s.g + out)
+
+def svg(W, Hh, body, title=None, sub=None, x=60):
+    t = f'<text x="{x}" y="18" class="gtit">{title}</text>' if title else ""
+    su = f'<text x="{x}" y="34" class="gsub">{sub}</text>' if sub else ""
+    return f'<div class="viz"><svg viewBox="0 0 {W} {Hh}">{t}{su}{body}</svg></div>'
+
+def nice_max(v, steps=(1, 2, 2.5, 5, 10)):
+    if v <= 0: return 1
+    e = 10 ** math.floor(math.log10(v))
+    for st in steps:
+        if v <= st * e: return st * e
+    return 10 * e
+def ticks(vmax, n=4):
+    step = vmax / n
+    return [round(step * i, 6) for i in range(0, n + 1)]
+
+def sl(kick, title, body, cls="", nota=None):
+    n = f'<p class="sl-nota">{nota}</p>' if nota else ""
+    return f'<section class="slide{(" " + cls) if cls else ""}"><div class="sl-in"><p class="kick">{kick}</p><h2 class="head-xl">{title}</h2>{body}{n}</div></section>\n'
+
+def callout(tag, text, color=None):
+    st = f' style="border-left-color:{color}"' if color else ""
+    st2 = f' style="color:{color}"' if color else ""
+    return f'<div class="sl-callout"{st}><span class="ct-tag"{st2}>{tag}</span><p>{text}</p></div>'
+
+def output(msg, sub=None):
+    """caixa verde de fechamento: a mensagem que o slide deve deixar."""
+    s = f'<span class="out-sub">{sub}</span>' if sub else ""
+    return f'<div class="sl-output"><span class="out-tag">o que fica</span><span class="out-msg">{msg}</span>{s}</div>'
+S1, S2, S3, MU = "var(--s1)", "var(--s2)", "var(--s3)", "var(--muted)"
+slides = []
+
+# ================================================================ capa e roteiro
+slides.append('''<section class="slide" id="sl0"><div class="sl-in">
+  <p class="kick">apresentação · 18 de setembro de 2026</p>
+  <div class="ticker-hero">CYRE3</div>
+  <div class="chips2" style="margin-top:30px">
+    <span class="chip2"><b>1</b> · dono, conselho e diretoria</span><span class="chip2"><b>2</b> · a companhia</span>
+    <span class="chip2"><b>3</b> · a operação hoje</span><span class="chip2"><b>4</b> · onde estamos no ciclo</span><span class="chip2"><b>5</b> · atualização operacional</span>
+  </div>
+  <p class="byline">Apresentação de <b>Rafael Lavourinha</b> · 18/09/2026.</p>
+</div></section>
+''')
+# (o slide de roteiro foi removido a pedido do usuário: o conteúdo dele está espalhado pelos slides)
+
+# ================================================================ PARTE 1 · a companhia
+P1 = "parte 2 · a companhia"
+# --- história (linha do tempo)
+marcos = [(1962, "Elie Horn funda|a Cyrela", S1), (1981, "Cria a construtora|e a Seller (vendas)", MU),
+          (2005, "IPO no Novo Mercado|22 de setembro", S1, "end"), (2006, "Incorpora a RJZ|e entra no Rio", MU), (2007, "Cria a Living,|marca de médio padrão", S2, "start"),
+          (2010, "Auge da expansão:|9 regiões, 109 projetos", S3), (2014, "Elie deixa o executivo;|filhos viram co-CEOs", S1),
+          (2016, "Subscreve 13,6%|da Tecnisa", MU), (2018, "Cria a Vivaz|e a CashMe", S2),
+          (2020, "IPOs de Lavvi,|P&amp;P e Cury", S1), (2021, "Cria a Cy.Capital: escritórios,|galpões e crédito", S2), (2025, "VGV recorde, PN especiais,|dividendo extra de R$ 1 bi", S3),
+          (2026, "MoU com a TRX, encerrado em ago;|sai dos conselhos das JVs", S1)]
+W, Hh = 980, 250
+g = [f'<line x1="60" y1="120" x2="930" y2="120" stroke="var(--baseline)" stroke-width="2"/>']
+def tx(ano):  # eixo comprimido antes de 2005
+    return 60 + (300 - 60) * (ano - 1962) / (2005 - 1962) if ano <= 2005 else 300 + (930 - 300) * (ano - 2005) / (2026 - 2005)
+for k, m_ in enumerate(marcos):
+    ano, txt, c = m_[:3]; anc_ = m_[3] if len(m_) > 3 else None
+    x = tx(ano)
+    up = k % 2 == 0
+    lvl = (k // 2) % 3
+    y = 120 - (26 + 24 * lvl) if up else 120 + (26 + 24 * lvl)
+    g.append(f'<line x1="{x:.1f}" y1="120" x2="{x:.1f}" y2="{y + (6 if up else -6):.1f}" stroke="{c}" opacity=".6"/><circle cx="{x:.1f}" cy="120" r="5" fill="{c}"/>')
+    anchor = anc_ or ("middle" if 120 < x < 860 else ("start" if x <= 120 else "end"))
+    g.append(f'<text x="{x:.1f}" y="{y + (0 if up else 12):.1f}" class="fw-t2" fill="{c}" text-anchor="{anchor}">{ano}</text>')
+    l1, l2 = (txt.split("|") + [""])[:2]
+    # ano junto ao eixo; texto na ordem de leitura (1ª linha sempre acima da 2ª)
+    if up:
+        y1 = y - 24 if l2 else y - 13
+        g.append(f'<text x="{x:.1f}" y="{y1:.1f}" class="fw-s2" fill="var(--ink-2)" text-anchor="{anchor}">{l1}</text>')
+        if l2: g.append(f'<text x="{x:.1f}" y="{y - 13:.1f}" class="fw-s2" fill="var(--ink-2)" text-anchor="{anchor}">{l2}</text>')
+    else:
+        g.append(f'<text x="{x:.1f}" y="{y + 24:.1f}" class="fw-s2" fill="var(--ink-2)" text-anchor="{anchor}">{l1}</text>')
+        if l2: g.append(f'<text x="{x:.1f}" y="{y + 35:.1f}" class="fw-s2" fill="var(--ink-2)" text-anchor="{anchor}">{l2}</text>')
+body = svg(W, Hh, "\n".join(g))
+body += ('<div class="tiles" style="margin-top:14px"><div class="tile"><span class="n">64</span><span class="l">anos · fundador ainda preside o conselho</span></div>'
+         '<div class="tile"><span class="n">28,6%</span><span class="l">bloco Elie Horn · sem acordo de acionistas</span></div>'
+         '<div class="tile"><span class="n">2</span><span class="l">co-CEOs, filhos do fundador (desde 2014)</span></div>'
+         '<div class="tile"><span class="n">21</span><span class="l">anos listada · 1.369 projetos lançados desde 2005</span></div></div>')
+body += output('Incorporadora pura há 64 anos: já atravessou três ciclos inteiros.')
+slides.append(sl("a companhia · 1962-2026", "Incorporação.", body,
+  nota="Fontes: FR 2026 item 1.1 (histórico), 6.1 e 7.5; site do RI (ri.cyrela.com.br, Sobre a Cyrela: Living 2007, CashMe 2018, Cy.Capital 2021); planilha de lançamentos do RI (lista de empreendimentos 2005-2T26); atas e fatos relevantes de 2025-26. Tecnisa: FR 1.1 (R$ 74,5 mi em 2016 + R$ 20,4 mi em 2017)."))
+
+# --- linhas de negócio + geografias
+LREG = RI["lanc_regiao_100"]; anos = [str(a) for a in range(2005, 2026)] + ["LTM"]
+def reg(k): return [(ltm(LREG[k]) if a == "LTM" else LREG[k].get(a, 0)) / 1e6 for a in anos]
+sp = reg("São Paulo"); rj = reg("Rio de Janeiro"); spi = reg("São Paulo - Interior"); sul = reg("Sul")
+outras = [sum((ltm(LREG[k]) if a == "LTM" else LREG[k].get(a, 0)) for k in ["Minas Gerais", "Espírito Santo", "Norte", "Centro Oeste", "Nordeste"]) / 1e6 for a in anos]
+c = Chart(60, 870, 46, 178, 0, 14, len(anos)); c.grid([0, 3.5, 7, 10.5, 14], lambda t: f"{t:g}"); c.xlabels(anos, 2)
+c.line(sp, S1, lab="SP capital", labval=lambda v: fmt(v, 1), last_opac=.45); c.line(rj, S2, lab="Rio", labval=lambda v: fmt(v, 1), last_opac=.45)
+c.line(spi, S3, lab="SP interior", labval=lambda v: fmt(v, 1), last_opac=.45); c.line(sul, MU, lab="Sul", labval=lambda v: fmt(v, 1), dash="4 3", last_opac=.45)
+c.line(outras, "var(--ink-2)", lab="outras", labval=lambda v: fmt(v, 1), dash="2 3", last_opac=.45)
+body = svg(980, 200, c.flush() + '<text x="60" y="18" class="gtit">Lançamentos por região (VGV 100%, R$ bi por ano)</text><text x="60" y="34" class="gsub">planilha operacional do RI; "outras" = MG, ES, Norte, Nordeste e Centro-Oeste · LTM = 3T25-2T26, em tom claro</text>')
+sp25 = LREG["São Paulo"]["2025"] / LREG["Total"]["2025"]; rj25 = LREG["Rio de Janeiro"]["2025"] / LREG["Total"]["2025"]
+body += ('<div class="fwgrid" style="margin-top:10px"><div class="fwcard map"><header>três marcas, uma máquina</header><dl>'
+         '<dt>Cyrela · alto padrão</dt><dd>Receita 2025 <b>R$ 5,25 bi</b> (56%), margem 31,5%; ticket de R$ 1,65 mi por unidade lançada.</dd>'
+         '<dt>Living · médio</dt><dd>R$ 2,73 bi (29%), margem 31,4%.</dd>'
+         '<dt>Vivaz · MCMV</dt><dd>R$ 1,38 bi (15%), margem 34,5%, a maior das três; 68% das unidades lançadas hoje.</dd>'
+         '<dt>Demais</dt><dd>Loteamento e serviços (Seller), CashMe (crédito com garantia), Cy.Capital (gestora de 2021: escritórios, galpões e financiamento imobiliário) e participações: Cury, Lavvi, Plano&amp;Plano, SKR, Cyma.</dd></dl></div>'
+         f'<div class="fwcard mcmv"><header>geografia: voltou para casa</header><dl><dt>2010</dt><dd>9 regiões com lançamento, de Norte a Sul — a expansão nacional do superciclo.</dd>'
+         f'<dt>2025</dt><dd>5 praças: <b>SP capital = {pct(sp25,0)}</b> do VGV lançado, Rio {pct(rj25,0)}, Sul e Centro-Oeste residuais. Landbank: SP capital 56%, Rio 34% (2T26).</dd>'
+         '<dt>leitura</dt><dd>Uma incorporadora paulistana com uma perna carioca; a "regional Sul sem liquidez" (call) é resto do passado.</dd></dl></div></div>')
+body += output('Uma incorporadora paulistana com uma perna carioca.')
+slides.append(sl(P1, "Três marcas, duas cidades.", body, nota="Fontes: FR 2026 item 1.3 (DRE por marca, 2025); planilha operacional do RI (lançamentos por região e por segmento, VGV 100% com permuta); lista de empreendimentos (praças = locais distintos com lançamento no ano); CYREMod (landbank por praça)."))
+
+# --- momentos marcantes: lançamentos e lucro por ano
+anos2 = [str(a) for a in range(2005, 2026)] + ["LTM"]
+lanc = [PR[a]["vgv"] / 1000 for a in anos2[:-1]] + [ltm(LR["vgv_total"]) / 1e6]
+lucro = [mrow(73).get(a) / 1000 if mrow(73).get(a) is not None else None for a in anos2[1:-1]]  # 2006..2025 reportado, R$ bi
+lucro = [None] + lucro + [ltm(mrow(73)) / 1000]
+OP2 = [1] * (len(anos2) - 1) + [.45]
+c = Chart(60, 330, 46, 178, 0, 20, len(anos2)); c.grid([0, 5, 10, 15, 20]); c.xlabels(anos2, 4)
+c.bars(lanc, S1, labels=[fmt(v, 1) if a in ("2010", "2016", "2025", "LTM") else "" for v, a in zip(lanc, anos2)], opac=OP2)
+c.g.append('<text x="60" y="18" class="gtit">Lançamentos (R$ bi/ano)</text><text x="60" y="34" class="gsub">VGV 100%; LTM = 3T25-2T26, em tom claro</text>')
+# participação de cada segmento no VGV lançado (planilha do RI, 100%)
+def seg_ano(keys, a):
+    return sum(LR[k].get(q, 0) for k in keys for q in LR["vgv_total"] if q.endswith(a[2:]))
+shA, shM, shC = [], [], []
+for a in anos2:
+    if a == "LTM":
+        tot = ltm(LR["vgv_total"]); shA.append(ltm(LR["vgv_alto"]) / tot); shM.append(ltm(LR["vgv_medio"]) / tot); shC.append(sum(ltm(LR[k]) for k in ("vgv_mcmv23", "vgv_mcmv1", "vgv_prime")) / tot); continue
+    tot = seg_ano(["vgv_total"], a)
+    if tot <= 0: shA.append(None); shM.append(None); shC.append(None); continue
+    shA.append(seg_ano(["vgv_alto"], a) / tot); shM.append(seg_ano(["vgv_medio"], a) / tot); shC.append(seg_ano(["vgv_mcmv23", "vgv_mcmv1", "vgv_prime"], a) / tot)
+cs = Chart(420, 660, 46, 178, 0, 1, len(anos2)); cs.grid([0, 0.25, 0.5, 0.75, 1], lambda t: f"{t*100:g}%"); cs.xlabels(anos2, 4)
+cs.line(shA, S1, lab="alto", labval=lambda v: pct(v, 0), last_opac=.45); cs.line(shM, S2, lab="médio", labval=lambda v: pct(v, 0), last_opac=.45); cs.line(shC, S3, lab="MCMV", labval=lambda v: pct(v, 0), w=2.8, last_opac=.45)
+cs.g.append('<text x="420" y="18" class="gtit">% do VGV por segmento</text><text x="420" y="34" class="gsub">MCMV inclui Vivaz Prime e MCMV 1</text>')
+c2 = Chart(760, 960, 46, 178, -0.3, 2.1, len(anos2)); c2.grid([0, 0.7, 1.4, 2.1], lambda t: f"{t:g}"); c2.xlabels(anos2, 4)
+c2.bars(lucro, S2, labels=[fmt(v, 1) if a in ("2010", "2017", "2025", "LTM") and v is not None else "" for v, a in zip(lucro, anos2)], opac=OP2)
+c2.g.append('<text x="760" y="18" class="gtit">Lucro líquido (R$ bi)</text><text x="760" y="34" class="gsub">2020 inclui R$ 1,2 bi dos IPOs; LTM claro</text>')
+body = svg(980, 200, c.flush() + cs.flush() + c2.flush())
+body += ('<div class="cards3" style="margin-top:12px"><div class="c3"><span class="c3n">2007-2011</span><b>Superciclo e expansão nacional.</b> Lançamentos de R$ 5-8 bi/ano em nove regiões, lucro de R$ 729 mi em 2009. A conta veio depois: estouro de orçamento, distratos e saída das praças fora do eixo.</div>'
+         '<div class="c3"><span class="c3n">2012-2018</span><b>Sete anos de desalavancagem.</b> PL parado em R$ 5-6 bi, receita de R$ 6,1 bi para R$ 2,7 bi (2017), dois anos de prejuízo. A companhia encolheu para SP e Rio e trocou volume por margem.</div>'
+         '<div class="c3"><span class="c3n">2019-2026</span><b>Novo ciclo, agora com Vivaz e sócios listados.</b> VGV de R$ 18,6 bi em 2025 (recorde), lucro R$ 2,0 bi, ROE reportado ~20%. Em 2026 o dono está monetizando: PN especiais, dividendo extra e a tentativa de vender torre e galpões (MoU com a TRX, encerrado em ago/26).</div></div>')
+body += output('O ciclo manda: volume e lucro vão embora, o balanço e a família ficam.')
+slides.append(sl(P1, "Vinte anos, três ciclos.", body, nota="Fontes: lista de empreendimentos do RI (VGV 100% com permuta, por ano de lançamento); CYREMod linha 'Reported Net Income' (planilha de DFs do RI / ITR-DFP)."))
+
+# --- vantagens competitivas (tese do usuário, 17/09/26: a vantagem é o acesso ao terreno; marca, engenharia e velocidade não são)
+body = ('<p style="margin:2px 2px 8px;font-size:13.5px;line-height:1.4"><b>Por que o mercado é fragmentado:</b> terreno se compra por permuta, projeto se terceiriza, obra se contrata e o crédito é do banco. A barreira de entrada é <b>reputação e balanço, não escala</b> — milhares de players médios lançam no mesmo bairro.</p>'
+        '<div class="fwgrid" style="margin-top:6px"><div class="fwcard map"><header>a vantagem: todo terreno passa pela mesa da Cyrela</header><dl>'
+        '<dt>Escala que vira fluxo de terrenos</dt><dd>Com <b>~10% do mercado</b> de SP capital (10,9% das unidades em 2025; 13,5% do VGV na base Geoimóvel), a Cyrela é a primeira ligação de quem tem terreno para vender ou permutar. Ver tudo antes dos outros é a vantagem: escolhe o melhor, paga o preço certo, recusa o resto.</dd>'
+        '<dt>Permuta e compra a prazo</dt><dd><b>46% do landbank em permuta</b> (2T26): o terrenista aceita ser sócio de quem entrega há 60 anos. Pelo mesmo motivo, a <b>compra a prazo</b> é mais factível para ela: o dono do terreno confia que vai receber (terrenos a pagar de R$ 3,2 bi, pagos ao longo do ciclo, com pouco caixa na largada).</dd>'
+        '<dt>Balanço que financia o cliente</dt><dd>Rating brAAA, CRI a ~96% do CDI e caixa: quando o banco não repassa, a companhia <b>financia o comprador diretamente</b> (recebível performado de R$ 1,6 bi a 12% + inflação) e segura a venda que o concorrente sem balanço perde.</dd>'
+        '</dl></div>'
+        '<div class="fwcard mcmv"><header>o que não é vantagem</header><dl>'
+        '<dt>Marca</dt><dd>Imóvel não é compra recorrente: o cliente compra o <b>sonho</b> (bairro, planta, preço), não a construtora. Não há fidelidade a monetizar; o "prêmio de marca" do sell-side é, no máximo, posicionamento de preço e produto. O que tamanho e histórico dão é acesso a <b>parcerias com grandes marcas</b> (Pininfarina, Porsche, Dolce&amp;Gabbana) — produto, não fidelidade.</dd>'
+        '<dt>Engenharia própria</dt><dd>Pela classificação do RI, <b>73% dos canteiros estão em JV e 14% com terceiros</b>; só 13% na CBR. A Cyrela é incorporadora, não construtora. Não é a execução que se destaca — é a escolha do que executar.</dd>'
+        '<dt>Vender rápido no alto padrão</dt><dd>88% vendido em 6-12 meses (slide seguinte) <b>não precisa ser bom</b>: quem vende tudo na largada pode ter deixado preço na mesa. Velocidade é caixa; margem é valor.</dd></dl></div></div>')
+body += output('A vantagem é ver todo terreno primeiro — marca e engenharia não são.', 'Balanço e histórico ajudam duas vezes: garantem o repasse (financiando o cliente quando o banco não aprova) e permitem comprar o terreno a prazo, porque o terrenista confia que vai receber.')
+slides.append(sl(P1, "A vantagem competitiva é o acesso ao terreno — não a marca, nem a obra.", body, nota="Fontes: Secovi-SP e Geoimóvel (share em SP capital), deck institucional 4T25 (permuta), FR 2026 2.1 (dívida e ratings), CYREMod (terrenos a pagar, recebível performado, equivalência), planilha operacional do RI (gestão de obra)."))
+slides.append(take(40, P1, title="Velocidade de venda contra o mercado —<br>base Geoimóvel, SP capital.",
+  callout='',
+  append=output('A Cyrela não opera o ciclo; opera o presente.', 'Não há um fair share perseguido: a companhia vai sentindo o mercado e, conforme vende bem, aumenta o pipeline de projetos. É bom no sentido de não congelar na loucura que é o Brasil — e é o que dá mais problema quando o ciclo vira, porque o pipeline montado no topo chega à obra e à entrega na descida.')))
+
+TBL37 = ('<div class="viz" style="margin-top:8px"><table class="tl" style="width:100%;font-size:10.5px;line-height:1.1;border:2px solid var(--s2);border-collapse:collapse;text-align:center"><thead>'
+       '<tr style="background:var(--s2);color:#fff"><th rowspan="2" style="text-align:left;padding:3px 8px;vertical-align:middle">P/B implícito = (ROE − g) ÷ (Ke − g)</th><th colspan="4" style="padding:2px 8px;border-left:1px solid rgba(255,255,255,.5)">g = 0%</th><th colspan="4" style="padding:2px 8px;border-left:1px solid rgba(255,255,255,.5)">g = 4%</th></tr>'
+       '<tr style="background:var(--s2);color:#fff">' + ''.join(f'<th style="padding:2px 6px{";border-left:1px solid rgba(255,255,255,.5)" if k == 14 else ""}">Ke {k}%</th>' for g_ in (0, 4) for k in (14, 15, 17, 19)) + '</tr></thead><tbody>'
+       + ''.join('<tr' + (' style="background:rgba(70,110,170,.12);font-weight:600"' if lab.startswith("ajustado,") else '') + f'><td style="text-align:left;padding:3px 8px">{lab}</td>' + ''.join(f'<td style="padding:3px 6px{";border-left:1px solid var(--s2)" if k == 14 else ""}">{fmt((roe - g_) / (k - g_), 2)}x</td>' for g_ in (0, 4) for k in (14, 15, 17, 19)) + '</tr>' for lab, roe in (("reportado, 19,5%", 19.5), ("ajustado, 16,7% (hoje: 1,0x book)", 16.7), ("ajustado ex-Cury, 15,4% (hoje: 0,89x)", 15.4)))
+       + '</tbody></table><p class="sl-nota" style="margin:3px 2px 0;color:var(--s2)">Ke de ~17% é a premissa da apresentação: com ela o ROE ajustado de hoje vale 0,98x book, ou seja, o preço está justo; ex-Cury (0,89x) o mercado já desconta a máquina própria.</p></div>')
+P3 = "parte 3 · a operação hoje"
+PD = P3 + " · demanda"
+P4 = "parte 4 · onde estamos no ciclo"
+PO = "parte 4 · operacional"
+qs_l = sorted(LR["vgv_total"], key=ord_)
+def s12(k, q):
+    i = qs_l.index(q); return sum((LR[k].get(x) or 0) for x in qs_l[i - 3:i + 1]) if i >= 3 else None
+# --- variáveis recuperadas (18/09/26): os blocos operacionais que as definiam vêm agora de _enxuta_base.html
+OP = J("_operacional_ri.json"); VS = J("_vso_seg.json"); MVC = J("_meses_venda_cyrela.json")
+oT = [sum((LR["vgv_total"].get(q) or 0) for q in LTMQ) / 1e6]; oA = [sum((LR["vgv_alto"].get(q) or 0) for q in LTMQ) / 1e6]
+vA = VS["100"]["alto"]; eT = [OP["estoque"]["vgv100_total"]["2T26"] / 1e3]; mv = [MVC["2T26"]]
+# --- o preço: P/B em vinte anos e a ação contra o CDI (slide 53 do deck completo)
+COT = J("_cotacao_cyre3.json"); PLC = J("_pl_controladora.json")   # PL controladora, R$ mil, por mês de fechamento de trimestre
+# ações ex-tesouraria no fim de cada ano (mil): DF 2007 (2005-07), DF 2008, DFP 2010 (2009-10), DFP 2012 (2011-12), DFP 2014 (2013-14); de 2015 em diante, CYREMod linha 99 (ON + PN especiais)
+SH_Y = {2005: 148712, 2006: 354465, 2007: 355647, 2008: 355724, 2009: 422387, 2010: 422998, 2011: 410668, 2012: 412106, 2013: 407260, 2014: 395417}
+def _split_f(m):   # ações de hoje por ação da época (desdobramento 2:1 em dez/06; bonificação de 0,19 PN em jan/26)
+    f = 1.0
+    for ex, k in COT["splits"]:
+        if m < ex[:7]: f *= k
+    return f
+def _sh(m):
+    y = int(m[:4]); q = f"{(int(m[5:7]) - 1) // 3 + 1}T{m[2:4]}"
+    v = mrow(99).get(q)
+    if v: return v * 1000
+    yy = y if m.endswith("-12") else y - 1   # ações do fim do ano anterior até o 4T (o fim de 2006 já é pós-desdobramento)
+    return SH_Y.get(yy) or SH_Y[max([k for k in SH_Y if k < yy] or [min(SH_Y)])]
+_pxm = {x["m"]: x["px"] for x in COT["mensal"]}
+ms_pb = [m for m in sorted(PLC) if m in _pxm]
+pb = [_pxm[m] * _sh(m) * _split_f(m) / PLC[m] for m in ms_pb]
+_PBMAX = 5   # eixo 0-5x: cabe o prêmio de 2007-09 (3,4-4,5x); 2006 (>6x) sai pelo topo, recortado pelo clipPath
+cpb = Chart(60, 590, 46, 178, 0, _PBMAX, len(ms_pb)); cpb.grid([0, 1, 2, 3, 4, 5], lambda t: f"{t:g}" + "x"); cpb.xlabels(ms_pb, 12, 1, lambda l: l[:4])   # off=1: "2005" em dez/05, sem encostar no "0x"
+_med = sorted(pb)[len(pb) // 2]; _med10 = sorted(v for m, v in zip(ms_pb, pb) if m >= "2010-01")[len([1 for m in ms_pb if m >= "2010-01"]) // 2]
+cpb.g.append(f'<line x1="60" y1="{cpb.y(_med10):.1f}" x2="590" y2="{cpb.y(_med10):.1f}" stroke="{MU}" stroke-dasharray="4 3" opacity=".8"/><text x="394" y="{cpb.y(_med10) - 5:.1f}" class="fw-s2" fill="{MU}" text-anchor="end">mediana 2010-26: {fmt(_med10, 2)}x</text>')   # sobre o trecho 2014-18 (linha toda abaixo de 1,03x); à esquerda a linha de 2008-10 cruzava o texto, à direita 2021-26 oscila em torno da mediana
+cpb.line(pb, S1, lab="P/B", labval=lambda v: fmt(v, 2) + "x", w=2.8)
+_imax = pb.index(max(pb)); _imin = pb.index(min(pb))
+if pb[_imax] > _PBMAX:   # pico fora da escala: rótulo no alto da área do gráfico, à direita do ponto onde a linha volta a entrar
+    _pk = f'<text x="{cpb.x(_imax) + 22:.1f}" y="{cpb.y0 + 8:.1f}" class="fw-s2" fill="var(--ink-2)">pico: {fmt(pb[_imax], 1)}x · {ms_pb[_imax][:7]} (fora da escala)</text>'
+else:
+    _pk = f'<text x="{cpb.x(_imax) + 6:.1f}" y="{cpb.y(pb[_imax]) + 4:.1f}" class="fw-s2" fill="var(--ink-2)">{fmt(pb[_imax], 1)}x · {ms_pb[_imax][:7]}</text>'
+cpb.g.append(_pk + f'<text x="{cpb.x(_imin):.1f}" y="{cpb.y(pb[_imin]) + 13:.1f}" class="fw-s2" fill="var(--ink-2)" text-anchor="middle">{fmt(pb[_imin], 2)}x · {ms_pb[_imin][:7]}</text>')
+cpb.g.append('<text x="60" y="18" class="gtit">P/B da Cyrela em vinte anos</text><text x="60" y="34" class="gsub">preço de fechamento do trimestre × ações ex-tesouraria (ON + PN especiais desde 2026) ÷ PL dos controladores; B3, DFs</text>')
+_pbsvg = '<clipPath id="pbclip"><rect x="60" y="38" width="530" height="144"/></clipPath>' + re.sub(r'<polyline ', '<polyline clip-path="url(#pbclip)" ', cpb.flush(15))
+_viz53 = re.search(r'<div class="viz"[^>]*><svg viewBox="0 0 900 259">.*?</svg></div>', SECS[52], re.S).group(0)
+# gráfico reaproveitado: os rótulos de fim de linha ficavam sobre a cauda das linhas (anchor end em x=826, linhas até 830);
+# passam para a direita das linhas, encurtados, e o viewBox alarga 30 unidades; os quatro traços-guia (830 -> 763) saem
+_viz53 = re.sub(r'<line x1="830\.0" y1="[\d.]+" x2="763" y2="[\d.]+" stroke="[^"]+" stroke-width="1" opacity="[^"]+"/>', '', _viz53)
+for _a, _b in (("CDI · 8,0×", "CDI · 8,0×"), ("CYRE3 total · 7,5×", "CYRE3 · 7,5×"), ("Ibovespa · 5,9×", "Ibov. · 5,9×"), ("só preço · 3,3×", "só preço · 3,3×")):
+    _viz53 = re.sub(r'<text x="826(?:\.0)?" y="([\d.]+)" class="fw-t2" fill="([^"]+)" text-anchor="end">' + re.escape(_a) + '</text>',
+                    lambda m, _b=_b: f'<text x="836" y="{m.group(1)}" class="fw-t2" fill="{m.group(2)}">{_b}</text>', _viz53)
+_viz53 = _viz53.replace('<svg viewBox="0 0 900 259">', '<svg viewBox="0 0 930 259">', 1)
+body = '<div class="fwgrid" style="grid-template-columns:1fr 1.1fr;align-items:start">' + svg(660, 200, _pbsvg) + re.sub(r' style="[^"]*"', '', _viz53, count=1) + '</div>'
+ST = COT["stats"]
+body += ('<div class="cards3" style="margin-top:8px">'
+         f'<div class="c3"><span class="c3n">{fmt(pb[-1], 2)}x</span><b>P/B no fim de junho</b> (1,0x a R$ 25,68, 17/09), contra {fmt(pb[0], 1)}x na oferta de 2005, {fmt(min(pb), 2)}x no fundo ({ms_pb[_imin][:7]}) e mediana de {fmt(_med10, 2)}x desde 2010. Com Ke de ~17% (premissa da apresentação) e g de 4%, ROE ajustado de 16,7% vale 0,98x book: o preço está justo, e ex-Cury (0,89x, ROE 15,4%) o mercado já desconta a máquina própria.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(ST["total_x"], 1)}x · {fmt(ST["cdi_x"], 1)}x</span><b>Ação contra CDI em 21 anos</b>: retorno total de {fmt(ST["total_x"], 1)}x ({fmt(ST["total_cagr"], 1)}% a.a.) contra {fmt(ST["cdi_x"], 1)}x do CDI ({fmt(ST["cdi_cagr"], 1)}% a.a.) e {fmt(ST["ibov_x"], 1)}x do Ibovespa; só preço {fmt(ST["so_preco_x"], 1)}x ({fmt(ST["so_preco_cagr"], 1)}% a.a.). Empate com o CDI, com queda de {fmt(abs(ST["max_dd"]), 0)}% no meio (2007-08).</div>'
+         '<div class="c3"><span class="c3n">2016-26</span><b>O retorno veio do rerating e do book, meio a meio</b>: P/B 2,08x (+7,1% a.a.), book por ação 1,95x (+6,4% a.a.), distribuições 1,69x (+5,0% a.a.). De 2005 a 2026 o P/B caiu 0,38x (−4,5% a.a.) e o book por ação subiu 8,8x: a ação só pagou o CDI porque o múltiplo da oferta era 2,6x.</div></div>')
+body += output('A ação empatou com o CDI em 21 anos; a 1,0x book, o que sobe daqui é o book, não o múltiplo.', 'O rerating de 2016-26 (0,48x → 1,0x) já aconteceu; repetir o retorno exige ROE acima do Ke, que o mercado não precifica.')
+slides.append(sl("parte 6 · o preço", "O preço: P/B em vinte anos, e a ação contra o CDI.", body, nota="Fontes: B3 (COTAHIST, preços ajustados por desdobramento de 2006 e bonificação de PN de 2026; proventos reinvestidos), BCB SGS 12 (CDI), IPEADATA (Ibovespa); PL dos controladores (planilha do RI / DFs); ações ex-tesouraria: DFs 2007-2014 (fim de ano; mantidas no ano) e CYREMod de 2015 em diante (trimestral). Decomposição 2016-26 = slide do deck completo."))
+
+# --- terreno e capital de giro: terreno a custo × a pagar × permuta; estoque ex-terrenos e contas a receber sobre o PL e sobre os lançamentos 12m
+EC = J("_estoque_custo.json"); BCV = J("_balanco_cvm.json")
+qs_c = sorted(LC, key=ord_)
+qs_t = [q for q in QS if mrow(223).get(q) is not None and mrow(220).get(q) is not None and ord_(q) >= (11, 1)]
+t_cst = [mrow(223)[q] / 1000 for q in qs_t]; t_pag = [mrow(220)[q] / 1000 for q in qs_t]; t_perm = [mrow(221).get(q) / 1000 if mrow(221).get(q) else None for q in qs_t]
+# três painéis num viewBox de 1000: cada painel termina ~125-160 unidades antes do eixo do seguinte, para caber o rótulo de fim de linha (até "obra + pronto 35%", ~105) mais o tick do eixo ("160%", ~32)
+ct = Chart(60, 420, 46, 178, 0, 4, len(qs_t)); ct.grid([0, 1, 2, 3, 4]); ct.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])
+ct.line(t_cst, S1, lab="a custo", labval=lambda v: fmt(v, 1), w=2.8); ct.line(t_pag, S2, lab="a pagar", labval=lambda v: fmt(v, 1), w=2.4); ct.line(t_perm, S3, lab="permuta", labval=lambda v: fmt(v, 1), dash="4 3")
+ct.g.append('<text x="60" y="18" class="gtit">Terreno (R$ bi)</text><text x="60" y="34" class="gsub">a custo; a pagar; adiantamento por permuta</text>')
+# estoque a custo sem terrenos = imóveis em construção + prontos (CYREMod 205-206); contas a receber = clientes CP + LP (balanço CVM); lançamentos consolidados 12m (aba Launches - Equiv.)
+def _lc12(q):
+    i = qs_c.index(q); return sum(LC[x]["vgv_c"]["A"] + LC[x]["vgv_c"]["M"] + LC[x]["vgv_c"]["C"] for x in qs_c[i - 3:i + 1]) if i >= 3 and q in qs_c else None
+e_ex = [(mrow(205)[q] + mrow(206)[q]) / 1000 if mrow(205).get(q) is not None and mrow(206).get(q) is not None else None for q in qs_t]
+cr_t = [(BCV[q]["cr_cp_clientes"] + BCV[q]["cr_lp_clientes"]) / 1000 if q in BCV and BCV[q].get("cr_cp_clientes") is not None else None for q in qs_t]
+l12 = [_lc12(q) / 1000 if _lc12(q) else None for q in qs_t]; plq = [mrow(199)[q] / 1000 for q in qs_t]
+def _pct(num, den): return [100 * n / d if n is not None and d else None for n, d in zip(num, den)]
+cp = Chart(560, 880, 46, 178, 0, 200, len(qs_t)); cp.grid([0, 50, 100, 150, 200], lambda t: f"{t:g}%"); cp.xlabels(qs_t, 8, 3, lambda l: "20" + l[2:])   # 0-200%: lançamentos 12m chegam a 181% do PL em 2015-16 (a 160% a linha atravessava o título)
+cp.line(_pct(l12, plq), "var(--ink-2)", lab="lanç. 12m", labval=lambda v: fmt(v, 0) + "%", dash="3 3"); cp.line(_pct(cr_t, plq), S2, lab="CR", labval=lambda v: fmt(v, 0) + "%", w=2.4); cp.line(_pct(e_ex, plq), S3, lab="obra + pronto", labval=lambda v: fmt(v, 0) + "%", w=2.6); cp.line(_pct(t_cst, plq), S1, lab="terreno", labval=lambda v: fmt(v, 0) + "%", w=2.4)
+cp.g.append('<text x="560" y="18" class="gtit">Como % do PL dos controladores</text><text x="560" y="34" class="gsub">lançamentos consolidados 12m; contas a receber; estoque a custo sem terreno (obra + pronto); terreno</text>')
+body = svg(980, 200, ct.flush(15) + cp.flush(15))
+_i15 = qs_t.index("4T15"); _lb_perm = OP["landbank"]["pct_permuta"]["2T26"]
+_pE = _pct(e_ex, plq); _pC = _pct(cr_t, plq); _pT = _pct(t_cst, plq); _lE = _pct(e_ex, l12); _lC = _pct(cr_t, l12); _lT = _pct(t_cst, l12)
+# cartões em 4 linhas (18/09): texto enxuto com todos os números; variante .tight (12px) só neste slide
+body += ('<div class="cards3 tight" style="margin-top:8px">'
+         f'<div class="c3"><span class="c3n">R$ {fmt(t_cst[-1], 1)} bi · R$ {fmt(t_pag[-1] + t_perm[-1], 1)} bi</span><b>Terreno parado contra obrigações de terreno</b> (R$ {fmt(t_pag[-1], 1)} bi a pagar, R$ {fmt(t_perm[-1], 1)} bi de permuta): o a pagar e a permuta cobrem também terreno que já virou obra, <b>os terrenistas financiam a companhia</b>. Em 2015 o terreno era {fmt(_pT[_i15], 0)}% do PL com {fmt(100 * (1 - t_pag[_i15] / t_cst[_i15]), 0)}% pago; hoje {fmt(_pT[-1], 0)}% e {fmt(100 * (1 - t_pag[-1] / t_cst[-1]), 0)}%. {fmt(100 * _lb_perm, 0)}% do landbank é permuta.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(_pE[-1], 0)}% do PL</span><b>Estoque a custo sem terreno</b>: obra R$ {fmt(mrow(205)["2T26"] / 1000, 1)} bi + pronto R$ {fmt(mrow(206)["2T26"] / 1000, 1)} bi = R$ {fmt(e_ex[-1], 1)} bi, contra {fmt(_pE[_i15], 0)}% do PL em 2015. O capital de giro saiu do terreno e foi para a obra: é o estoque de 15 meses no balanço.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(_pC[-1], 0)}% do PL</span><b>Contas a receber</b> de R$ {fmt(cr_t[-1], 1)} bi, contra {fmt(_pC[_i15], 0)}% em 2015; lançamentos consolidados de 12 meses valem {fmt(_pct(l12, plq)[-1], 0)}% do PL. Recebível cresce com a venda na planta e com o performado que o banco não repassa; obra, pronto e recebível somam {fmt(_pE[-1] + _pC[-1], 0)}% do PL.</div></div>')
+body += output('O terreno saiu do caixa (prazo e permuta); o capital de giro foi para a obra e o recebível.', 'Terreno a pagar não entra na dívida líquida; obra, pronto e recebível somam ' + fmt(_pE[-1] + _pC[-1], 0) + '% do PL.')
+slides.append(sl(P4, "Terreno a prazo, obra e recebível: onde o PL está aplicado.", body, nota="Fontes: CYREMod (linhas 199, 205-207, 220-221, 223: PL dos controladores, imóveis em construção, prontos e terrenos a custo, terrenos a pagar, adiantamentos por permuta física), das DFs/ITR; balanço CVM (clientes circulante e não circulante); aba 'Launches - Equiv.' (lançamentos consolidados, 12 meses); planilha do RI (landbank em permuta). Permuta física antes de 4T22 = 80% dos adiantamentos de clientes (premissa do modelo)."))
+
+# --- a ação e o juro de 10 anos (slide 54 do deck completo), com o callout virando cartões
+_s54 = take(54, "parte 6 · o preço", callout='', append=('<div class="cards3" style="margin-top:8px;grid-template-columns:1fr 1fr">'
+    '<div class="c3"><span class="c3n">−0,6 · −10% por +100 bp</span><b>A ação segue o juro de 10 anos</b>: correlação de −0,6 nas variações mensais desde 2016 e queda de ~10% a cada +100 bp, o dobro do Ibovespa (−10,4% contra −5,1% por +100 bp desde 2010; −13,9% contra −6,4% desde 2016, regressões mensais nos dados do projeto). Nos ciclos de 2015-23 as duas curvas viraram juntas.</div>'
+    '<div class="c3"><span class="c3n">2024-26</span><b>A exceção</b>: o juro de 10 anos voltou ao nível de 2015-16 e a ação, em vez de voltar ao vale, subiu, sustentada por lucro recorde, distribuições e o rerating de P/B. Ou o mercado antecipa o juro caindo, ou a ação está pela primeira vez sem o colchão do juro: se ele cede para 11-12% (−250 a −350 bp), a sensibilidade histórica dá +25-35%; se não cede, o preço está caro pela régua dos outros ciclos.</div></div>')
+    + output('A ação é um título de juro longo: −10% a cada +100 bp, o dobro do Ibovespa; 2024-26 é a primeira vez que ela sobe com o juro alto.', 'Se o juro de 10 anos cede 250-350 bp, a régua histórica dá +25-35%; se não cede, o preço está caro.'))
+slides.append(_s54)
+
+# ================================================================ PARTE 5 · atualização operacional
+P5 = "parte 5 · atualização operacional"
+qs_c = sorted(LC, key=ord_)
+def c12(seg, q, key="vgv_c"):
+    i = qs_c.index(q); return sum(LC[x][key][seg] for x in qs_c[i - 3:i + 1]) / 1000 if i >= 3 else None
+qs_c4 = qs_c[3:]
+tA = [c12("A", q) for q in qs_c4]; tM = [c12("M", q) for q in qs_c4]; tC = [c12("C", q) for q in qs_c4]; tT = [a + m + cc for a, m, cc in zip(tA, tM, tC)]
+# receita por segmento = lucro bruto do segmento ÷ margem bruta do segmento (nota de segmentos, CYREMod 35-42), 12 meses
+def _rev(rgp, rmg): return {q: (mrow(rgp).get(q) / mrow(rmg).get(q)) for q in QS if mrow(rgp).get(q) is not None and mrow(rmg).get(q)}
+REV = {"alto": _rev(35, 36), "medio": _rev(37, 38), "mcmv": _rev(39, 40), "outros": _rev(41, 42)}
+qs_r = [q for q in QS if ord_(q) >= (20, 4) and q in REV["alto"]]
+def _r12(k, q):
+    i = QS.index(q); v = [REV[k].get(x) for x in QS[i - 3:i + 1]]
+    return sum(v) / 1000 if all(x is not None for x in v) else None
+rvA = [_r12("alto", q) for q in qs_r]; rvM = [_r12("medio", q) for q in qs_r]; rvC = [_r12("mcmv", q) for q in qs_r]; rvO = [_r12("outros", q) for q in qs_r]
+rvT = [sum(x for x in v if x) for v in zip(rvA, rvM, rvC, rvO)]
+c = Chart(60, 330, 46, 178, 0, 12, len(qs_r)); c.grid([0, 3, 6, 9, 12]); c.xlabels(qs_r, 4, 0, lambda l: "20" + l[2:])
+c.line(rvT, "var(--ink-2)", lab="total", labval=lambda v: fmt(v, 1), dash="3 3"); c.line(rvA, S1, lab="alto", labval=lambda v: fmt(v, 1), w=2.6); c.line(rvM, S2, lab="médio", labval=lambda v: fmt(v, 1)); c.line(rvC, S3, lab="MCMV", labval=lambda v: fmt(v, 1), w=2.6); c.line(rvO, MU, lab="outros", labval=lambda v: fmt(v, 1), dash="3 3")
+c.g.append('<text x="60" y="18" class="gtit">Receita por segmento, 12m (R$ bi)</text><text x="60" y="34" class="gsub">nota de segmentos dos ITR (lucro bruto ÷ margem)</text>')
+c2 = Chart(440, 640, 46, 178, 0, 16, len(qs_c4)); c2.grid([0, 4, 8, 12, 16]); c2.xlabels(qs_c4, 16, 1, lambda l: "20" + l[2:])
+c2.line(tT, "var(--ink-2)", lab="total", labval=lambda v: fmt(v, 1), dash="3 3"); c2.line(tA, S1, lab="alto", labval=lambda v: fmt(v, 1)); c2.line(tM, S2, lab="médio", labval=lambda v: fmt(v, 1)); c2.line(tC, S3, lab="MCMV", labval=lambda v: fmt(v, 1), w=2.8)
+c2.g.append('<text x="440" y="18" class="gtit">Lançamentos consolidados, 12m</text><text x="440" y="34" class="gsub">VGV dos projetos consolidados, R$ bi; vira receita</text>')
+def _v12t(d, q):
+    i = qs_l.index(q); ks = qs_l[i - 3:i + 1]
+    return sum((d.get(x) or 0) for x in ks) / 1e6 if i >= 3 else None
+qs_v = [q for q in qs_l if ord_(q) >= (7, 1)]
+lv_l = [_v12t(LR["vgv_total"], q) for q in qs_v]; lv_v = [_v12t(RI["vendas_seg_100"]["Total"], q) for q in qs_v]
+c3 = Chart(740, 880, 46, 178, 0, 20, len(qs_v)); c3.grid([0, 5, 10, 15, 20]); c3.xlabels(qs_v, 32, 3, lambda l: "20" + l[2:])
+c3.line(lv_l, S1, lab="lanç.", labval=lambda v: fmt(v, 1), w=2.6); c3.line(lv_v, S2, lab="vendas", labval=lambda v: fmt(v, 1), w=2.4)
+c3.g.append('<text x="740" y="18" class="gtit">Lançado × vendido, 12m</text><text x="740" y="34" class="gsub">VGV 100%, R$ bi (RI)</text>')
+body = svg(980, 200, c.flush(15) + c2.flush(15) + c3.flush(15))  # 15: bbox do rótulo (12px) tem 14,4 unidades; 14 deixava as caixas encostadas
+i26 = qs_c4.index("2T26"); iP = qs_c4.index("4T10"); iL = qs_c4.index("4T16")
+body += ('<div class="cards3" style="margin-top:12px;grid-template-columns:1fr 1fr">'
+         f'<div class="c3"><span class="c3n">R$ {fmt(rvT[-1],1)} bi</span><b>Receita LTM por segmento</b>: alto padrão R$ {fmt(rvA[-1],1)} bi ({fmt(100*rvA[-1]/rvT[-1],0)}%), médio R$ {fmt(rvM[-1],1)} bi, MCMV R$ {fmt(rvC[-1],1)} bi ({fmt(100*rvC[-1]/rvT[-1],0)}%). A Vivaz é {fmt(100*rvC[-1]/rvT[-1],0)}% da receita, mas {fmt(100*tC[i26]/tT[i26],0)}% do lançado em consolidação: o mix ainda vai migrar por dois anos.</div>'
+         f'<div class="c3"><span class="c3n">R$ {fmt(tT[i26],1)} bi</span><b>Lançados em consolidação, 12 meses</b>: {fmt(tT[i26]/tT[iP],1)}× o pico do superciclo (4T10: R$ {fmt(tT[iP],1)} bi) e {fmt(tT[i26]/tT[iL],1)}× o fundo de 2016. Alto padrão R$ {fmt(tA[i26],1)} bi (pico: R$ {fmt(max(tA),1)} bi), médio R$ {fmt(tM[i26],1)} bi, MCMV R$ {fmt(tC[i26],1)} bi. O lançado de 2027-28 já existe; vira receita só depois de vendido e construído.</div></div>')
+body += output('O que pode virar receita em 2027-28 já foi lançado, e cada vez mais dentro do perímetro consolidado.', 'Receita segue o lançado consolidado dois anos depois; a Vivaz vai de ' + fmt(100*rvC[-1]/rvT[-1],0) + '% da receita para perto dos ' + fmt(100*tC[i26]/tT[i26],0) + '% que tem no lançado.')
+slides.append(sl(P5, "Receita por segmento, e o que vai virar receita.", body, nota="Fontes: CYREMod linhas 35-42 (nota de segmentos dos ITR/DFP, 1T20-2T26; receita = lucro bruto ÷ margem do segmento); aba 'Launches - Equiv.' (consolidação a partir da lista de empreendimentos do RI, _lancamentos_consol.json); planilha operacional do RI (VGV 100% e %CBR de lançamentos e vendas); 12 meses móveis."))
+
+# --- praças e canteiros
+anos_p = [str(a) for a in range(2005, 2026)] + ["LTM"]
+import openpyxl as _ox
+_ws = _ox.load_workbook(os.path.join(here, "fontes", "planilha_lancamentos.xlsx"), read_only=True).worksheets[0]
+_nltm = sum(1 for r_ in _ws.iter_rows(min_row=4, max_row=_ws.max_row, min_col=5, max_col=7, values_only=True) if r_[0] in LTMQ and r_[2])
+nproj = [PR[a]["n"] for a in anos_p[:-1]] + [_nltm]; OPP = [1] * (len(anos_p) - 1) + [.45]
+qs_k = [q for q in sorted(LR["cant_total"], key=ord_) if LR["cant_total"].get(q)]
+cant_t = [LR["cant_total"][q] for q in qs_k]; upc = [s12("un_total", q) / LR["cant_total"][q] if q in qs_l and s12("un_total", q) else None for q in qs_k]
+c = Chart(60, 420, 46, 178, 0, 120, len(anos_p)); c.grid([0, 40, 80, 120]); c.xlabels(anos_p, 3)
+c.bars(nproj, S2, labels=[str(v) if a in ("2010", "2016", "2025", "LTM") else "" for v, a in zip(nproj, anos_p)], opac=OPP)
+c.g.append('<text x="60" y="18" class="gtit">Projetos lançados por ano</text><text x="60" y="34" class="gsub">LTM = 3T25-2T26, em tom claro</text>')
+c2 = Chart(520, 860, 46, 178, 0, 250, len(qs_k)); c2.grid([0, 50, 100, 150, 200, 250]); c2.xlabels(qs_k, 8, 0)
+c2.line(cant_t, S1, lab="canteiros", labval=lambda v: fmt(v, 0)); c2.line(upc, S3, lab="un/canteiro", labval=lambda v: fmt(v, 0))
+c2.g.append('<text x="520" y="18" class="gtit">Canteiros e unidades lançadas (12m) por canteiro</text><text x="520" y="34" class="gsub">planilha operacional do RI (Canteiros)</text>')
+body = svg(980, 200, c.flush() + c2.flush())
+body += ('<div class="fwgrid" style="margin-top:10px"><div class="fwcard map"><header>praças: hoje × crise</header><dl>'
+         f'<dt>2010 · auge</dt><dd>{PR["2010"]["n_locais"]} regiões, {PR["2010"]["n"]} projetos, R$ {fmt(PR["2010"]["vgv"]/1000,1)} bi — equipe, terreno e sócio em cada praça.</dd>'
+         f'<dt>2016 · fundo</dt><dd>{PR["2016"]["n_locais"]} praças, {PR["2016"]["n"]} projetos, R$ {fmt(PR["2016"]["vgv"]/1000,1)} bi.</dd>'
+         f'<dt>2025 · recorde</dt><dd>{PR["2025"]["n_locais"]} praças, {PR["2025"]["n"]} projetos, R$ {fmt(PR["2025"]["vgv"]/1000,1)} bi — <b>2,4× o VGV de 2010 com metade das praças</b>. O crescimento é de tíquete e de tamanho de projeto, não de geografia.</dd></dl></div>'
+         '<div class="fwcard mcmv"><header>complexidade operacional: caiu, e foi para o sócio</header><dl>'
+         f'<dt>canteiros</dt><dd>{int(cant_t[0])} ({qs_k[0]}) → {int(cant_t[-1])} ({qs_k[-1]}): menos obras simultâneas com {fmt(upc[-1],0)} unidades por canteiro (eram {fmt([u for u in upc if u][0],0)}). Torres grandes de Vivaz no lugar de muitos prédios médios.</dd>'
+         '<dt>quem toca a obra</dt><dd>73% dos canteiros em JV e 14% com terceiros (classificação do RI; a série muda de critério no 4T20, quando a linha CBR cai de 45 para 1). Incorporadora, não construtora — bom para o capital, ruim para a vantagem de execução.</dd>'
+         '<dt>leitura</dt><dd>O risco migrou de execução para <b>concentração</b> (SP capital, MCMV, CEF).</dd></dl></div></div>')
+body += output('Menos complexidade operacional, mais concentração.')
+slides.append(sl(P5, "Menos praças, menos canteiros, projetos maiores: a complexidade caiu.", body, nota="Fontes: lista de empreendimentos do RI (praças = locais distintos com lançamento no ano; nº de projetos); planilha operacional do RI (canteiros por segmento e por gestão de obra)."))
+slides.append(take(8, P5, teoria=True))
+
+# --- receita × lançamentos consol 12m × vendas 12m
+VC = RI["vendas_seg_cbr"]["Total"]
+qs_r = [q for q in QS if ord_(q) >= (7, 1)]
+rec12 = [q12(mrow(21), q) / 1000 if q12(mrow(21), q) else None for q in qs_r]
+lan12 = [c12("A", q) + c12("M", q) + c12("C", q) if q in qs_c4 else None for q in qs_r]
+def v12(q):
+    i = qs_r.index(q); ks = qs_r[i - 3:i + 1]
+    return sum(VC.get(k, 0) for k in ks) / 1e6 if i >= 3 and all(k in VC for k in ks) else None
+ven12 = [v12(q) for q in qs_r]
+c = Chart(60, 830, 46, 178, 0, 16, len(qs_r)); c.grid([0, 4, 8, 12, 16]); c.xlabels(qs_r, 8, 3)
+c.line(lan12, S1, lab="lançamentos", labval=lambda v: fmt(v, 1)); c.line(ven12, S3, lab="vendas %CBR", labval=lambda v: fmt(v, 1)); c.line(rec12, S2, lab="receita", labval=lambda v: fmt(v, 1), w=2.8)
+c.g.append('<text x="60" y="18" class="gtit">Receita líquida × lançamentos em consolidação × vendas, 12 meses (R$ bi)</text><text x="60" y="34" class="gsub">receita consolidada (DFs); lançamentos = base consolidação; vendas = VGV %CBR (não há série de vendas em consolidação)</text>')
+body = svg(980, 200, c.flush())
+i = qs_r.index("2T26")
+body += ('<div class="cards3" style="margin-top:12px">'
+         f'<div class="c3"><span class="c3n">{fmt(lan12[i]/rec12[i],2)}×</span><b>Lançamentos ÷ receita (12m).</b> Cada real lançado em consolidação vira receita ao longo de ~3 anos pela curva de obra. Com {fmt(lan12[i],1)} bi lançados e {fmt(rec12[i],1)} bi de receita, o funil está cheio: <b>há crescimento contratado</b> para 2027-28 mesmo sem lançamento novo.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(ven12[i]/rec12[i],2)}×</span><b>Vendas ÷ receita.</b> Vendas de R$ {fmt(ven12[i],1)} bi (%CBR) contra receita de R$ {fmt(rec12[i],1)} bi: o que foi vendido e ainda não virou receita (REF de R$ 12,2 bi no 2T26) sustenta a usinagem por dois anos.</div>'
+         '<div class="c3"><span class="c3n">2010-14</span><b>O precedente.</b> No superciclo as três curvas também se descolaram — lançamento à frente, receita atrás — e a receita continuou subindo até 2011-14 enquanto o lançamento já caía. A conta fechou em margem, não em volume.</div></div>')
+body += output('Crescimento contratado; a conta vai fechar em margem, não em volume.')
+slides.append(sl(P5, "Receita segue lançamento com dois anos de atraso — e o lançamento já aconteceu.", body, nota="Fontes: CYREMod (receita líquida, DFs do RI); _lancamentos_consol (aba do usuário); planilha operacional do RI (vendas VGV %CBR). Bases diferentes por indisponibilidade: leia a forma das curvas, não a razão exata."))
+
+# --- teoria: anatomia da receita
+RO = J("_receita_origem.json")
+body = ('<div class="viz" style="margin-top:6px"><svg viewBox="0 0 980 152">'
+        '<rect x="20" y="10" width="270" height="112" rx="14" fill="var(--surface-1)" stroke="var(--s2)" stroke-width="1.5"/><text x="155" y="33" class="fw-t" text-anchor="middle" fill="var(--s2)">1 · venda de estoque</text><text x="155" y="54" class="fw-s" text-anchor="middle">unidade em obra vendida hoje</text><text x="155" y="71" class="fw-s" text-anchor="middle">receita = preço × PoC já incorrido</text><text x="155" y="88" class="fw-s" text-anchor="middle">(obra a 60% → 60% no ato)</text><text x="155" y="109" class="fw-t2" text-anchor="middle">41% das vendas (2023-26)</text>'
+        '<rect x="355" y="10" width="270" height="112" rx="14" fill="var(--surface-1)" stroke="var(--s1)" stroke-width="1.5"/><text x="490" y="33" class="fw-t" text-anchor="middle" fill="var(--s1)">2 · lançamento</text><text x="490" y="54" class="fw-s" text-anchor="middle">venda na largada × PoC do terreno</text><text x="490" y="71" class="fw-s" text-anchor="middle">reconhecimento inicial ~36% MAP</text><text x="490" y="88" class="fw-s" text-anchor="middle">e ~23% MCMV (gestão, 1T26)</text><text x="490" y="109" class="fw-t2" text-anchor="middle">52% das vendas · pouca receita</text>'
+        '<rect x="690" y="10" width="270" height="112" rx="14" fill="var(--surface-1)" stroke="var(--s3)" stroke-width="1.5"/><text x="825" y="33" class="fw-t" text-anchor="middle" fill="var(--s3)">3 · usinagem</text><text x="825" y="54" class="fw-s" text-anchor="middle">obra avançando sobre o já vendido</text><text x="825" y="71" class="fw-s" text-anchor="middle">R$ 5 bi em 2025 (~53% da receita)</text><text x="825" y="88" class="fw-s" text-anchor="middle">guidance R$ 5,5-6 bi em 2026</text><text x="825" y="109" class="fw-t2" text-anchor="middle">o motor do crescimento contratado</text>'
+        '<text x="322" y="71" class="fw-c" text-anchor="middle">+</text><text x="657" y="71" class="fw-c" text-anchor="middle">+</text>'
+        '<text x="490" y="144" class="fw-s2" text-anchor="middle">receita do trimestre = Σ (vendido acumulado × Δ PoC) — o CFO decompõe nos mesmos três fatores (call 4T25)</text></svg></div>')
+body += ('<div class="fwgrid compact" style="margin-top:6px"><div class="fwcard mcmv"><header>por que importa</header><dl>'
+         '<dt>Lançar não é faturar</dt><dd>Lançamento 100% vendido gera só o PoC do terreno (10-20%); o resto vem em 12-36 meses, com a obra. A receita de 2026-27 é a venda de 2025, não o lançamento.</dd>'
+         '<dt>Estoque em obra é o que vira receita rápido</dt><dd>Obra a 60% reconhece 60% no ato: curto prazo, mas depende de VSO e desconto.</dd>'
+         '<dt>Usinagem é inércia</dt><dd>R$ 12,2 bi de REF a 36% de margem: só pede obra do já vendido e INCC comportado, não mercado.</dd></dl></div>'
+         '<div class="fwcard map"><header>o que confunde o mercado</header><dl>'
+         '<dt>4T25</dt><dd>R$ 3,2 bi por <b>reconhecimento inicial represado</b>: a renúncia em ata ao direito de desistir liberou de uma vez projetos de trimestres anteriores; timing, não crescimento.</dd>'
+         '<dt>Juros do performado</dt><dd>Entram como receita (parte 2): um quarto fator que não é incorporação.</dd>'
+         '<dt>Perímetro</dt><dd>Projeto que sai da equivalência entra inteiro na receita consolidada.</dd></dl></div></div>')
+# estimativa: receita LTM por origem (venda de lançamento, de estoque em obra, de pronto e usinagem) — premissas explícitas
+_VQ = ["3T25", "4T25", "1T26", "2T26"]
+import openpyxl as _ox
+_wsV = _ox.load_workbook(os.path.join(here, "fontes", "planilha_dados_operacionais.xlsx"), read_only=True, data_only=True)["Vendas"]
+_rowsV = list(_wsV.iter_rows(values_only=True)); _colV = {h: i for i, h in enumerate(_rowsV[3]) if isinstance(h, str)}
+def _ltmV(r): return sum((_rowsV[r - 1][_colV[q]] or 0) for q in _VQ) / 1e6
+vL, vE, vP = _ltmV(102), _ltmV(141), _ltmV(128)   # vendas de lançamento, de estoque em construção, de estoque pronto (VGV 100%, R$ bi)
+US = J("_usinagem.json"); _u26 = US["2T26"]
+POC_E26 = _u26["estoque_custo_construcao"] / (_u26["estoque_custo_construcao"] + _u26["a_incorrer_estoque"])   # custo incorrido ÷ (incorrido + a incorrer), 2T26
+REC_LTM = ltm(mrow(21)) / 1000; SH_C = 0.90; POC = {"lanc": 0.15, "obra": POC_E26, "pronto": 1.0}
+eL, eE, eP = SH_C * vL * POC["lanc"], SH_C * vE * POC["obra"], SH_C * vP * POC["pronto"]; eU = REC_LTM - eL - eE - eP
+_rows = [("venda de lançamentos", vL, "15%, premissa (terreno e fundação)", eL), ("venda de estoque em obra", vE, fmt(100 * POC_E26, 0) + "% = incorrido R$ " + fmt(_u26["estoque_custo_construcao"] / 1e3, 1) + " bi ÷ (incorrido + a incorrer R$ " + fmt(_u26["a_incorrer_estoque"] / 1e3, 1) + " bi)", eE), ("venda de estoque pronto", vP, "100% (obra concluída)", eP), ("usinagem (obra do já vendido)", None, "resíduo", eU)]
+body += ('<div class="viz" style="margin-top:6px"><table class="tl compact" style="width:100%"><thead><tr><th>estimativa · receita LTM 3T25-2T26 por origem</th><th>vendas LTM (VGV 100%)</th><th>PoC na venda</th><th>receita estimada</th><th>% da receita</th></tr></thead><tbody>'
+         + ''.join(f'<tr><td>{a}</td><td>{("R$ " + fmt(b, 1) + " bi") if b else "—"}</td><td>{c_}</td><td>R$ {fmt(d, 1)} bi</td><td>{fmt(100 * d / REC_LTM, 0)}%</td></tr>' for a, b, c_, d in _rows)
+         + f'<tr class="total"><td>receita líquida LTM (DRE)</td><td>R$ {fmt(vL + vE + vP, 1)} bi</td><td>perímetro consolidado ≈ {fmt(100 * SH_C, 0)}% das vendas</td><td>R$ {fmt(REC_LTM, 1)} bi</td><td>100%</td></tr></tbody></table>'
+         '<p class="sl-nota" style="margin:2px 2px 0;line-height:1.35">Checagem pela REF: a receita a apropriar foi de R$ 9,8 bi (2T25) a R$ 12,2 bi (2T26) com ~R$ ' + fmt(eU, 1) + ' bi usinados: entrou mais venda do que saiu obra. Premissas: ~90% das vendas no perímetro consolidado (85% do lançado, pelas prévias); PoC do estoque em obra = foto do balanço de jun/26 (ITR, nota de estoques; release, custo a incorrer); ±10 p.p. nesse PoC = ±R$ ' + fmt(SH_C * vE * 0.1, 1) + ' bi na usinagem. O LTM soma trimestres: venda de unidade lançada em trimestre anterior conta como estoque, então a parcela reconhecida na venda é teto e a usinagem, piso.</p></div>')
+body += output('Lançar não é faturar: a receita vem da obra do que já foi vendido.')
+slides.append(sl(P5 + " " + PILL, "De onde vem a receita: estoque, lançamento e usinagem.", body, cls="teoria", nota="Fontes: releases (ponte de estoque, 1T23-2T26, %CBR a valor de mercado), call 4T25 e 1T26 (reconhecimento inicial, usinagem), FR 1.4."))
+# --- histórico: peso da usinagem na receita 12m e avanço de PoC implícito (por que é difícil acertar a receita)
+def _qV(r, q): return (_rowsV[r - 1][_colV[q]] or 0) / 1e6 if q in _colV else None
+_uq = [q for q in QS if ord_(q) >= (21, 1) and ord_(q) <= ord_("2T26")]
+def _pocE(q):
+    d = US.get(q, {})
+    if d.get("poc_estoque_construcao") and ord_(q) > (21, 1): return d["poc_estoque_construcao"]
+    i = _uq.index(q); prev = [US[x]["poc_estoque_construcao"] for x in _uq[:i] if US.get(x, {}).get("poc_estoque_construcao") and ord_(x) > (21, 1)]
+    nxt = [US[x]["poc_estoque_construcao"] for x in _uq[i + 1:] if US.get(x, {}).get("poc_estoque_construcao")]
+    return (prev[-1] + nxt[0]) / 2 if prev and nxt else (nxt[0] if nxt else None)
+_usq = {}
+for q in _uq:
+    L, E, P = _qV(102, q), _qV(141, q), _qV(128, q); rev = mrow(21).get(q)
+    if None in (L, E, P, rev) or _pocE(q) is None: continue
+    rs = SH_C * (L * POC["lanc"] + E * _pocE(q) + P); _usq[q] = (rev / 1000, rs, rev / 1000 - rs)
+qs_u = [q for q in _uq if q in _usq]
+def _sumw(k, q):
+    i = qs_u.index(q); return sum(_usq[x][k] for x in qs_u[i - 3:i + 1]) if i >= 3 else None
+qs_u4 = qs_u[3:]
+uRev = [_sumw(0, q) for q in qs_u4]; uSale = [_sumw(1, q) for q in qs_u4]; uUs = [_sumw(2, q) for q in qs_u4]
+uShare = [100 * u / r for u, r in zip(uUs, uRev)]; sShare = [100 - s for s in uShare]
+def _sh12m(q):
+    d = US.get(q, {}); c1, c2_ = d.get("custo_incorrer_12m"), d.get("custo_incorrer_alem_12m")
+    if c1 and c2_: return c1 / (c1 + c2_)
+    i = QS.index(q); prev = [x for x in QS[:i] if US.get(x, {}).get("custo_incorrer_12m")]; nxt = [x for x in QS[i + 1:] if US.get(x, {}).get("custo_incorrer_12m")]
+    if prev and nxt:
+        f = lambda x: US[x]["custo_incorrer_12m"] / (US[x]["custo_incorrer_12m"] + US[x]["custo_incorrer_alem_12m"])
+        return (f(prev[-1]) + f(nxt[0])) / 2
+    return None
+def _lag4(q): i = QS.index(q); return QS[i - 4]
+uPrev = [100 * _sh12m(_lag4(q)) if _sh12m(_lag4(q)) else None for q in qs_u4]
+uReal = [100 * u / (US[_lag4(q)]["ref_itr"] / 1e3) if US.get(_lag4(q), {}).get("ref_itr") else None for u, q in zip(uUs, qs_u4)]
+uCron = [100 * _sh12m(q) if _sh12m(q) else None for q in qs_u4]
+uPocB = [100 * US[q]["poc_base_vendida"] if US.get(q, {}).get("poc_base_vendida") else None for q in qs_u4]
+uPoc = [100 * _pocE(q) for q in qs_u4]
+c = Chart(60, 440, 46, 178, 0, 100, len(qs_u4)); c.grid([0, 25, 50, 75, 100], lambda t: f"{t:g}%"); c.xlabels(qs_u4, 4, 1, lambda l: "20" + l[2:])   # rótulo no 1T de cada ano (off=1: o 1º rótulo não encosta no "0%")
+c.line(uShare, S1, lab="usinagem", labval=lambda v: fmt(v, 0) + "%", w=2.8); c.line(sShare, S2, lab="na venda", labval=lambda v: fmt(v, 0) + "%", w=2.2)
+c.g.append('<text x="60" y="18" class="gtit">De onde veio a receita, 12m (% da receita líquida)</text><text x="60" y="34" class="gsub">usinagem = receita − "na venda" (lançamento 15%, estoque ao PoC do trimestre, pronto 100%)</text>')
+c2 = Chart(560, 840, 46, 178, 0, 100, len(qs_u4)); c2.grid([0, 25, 50, 75, 100], lambda t: f"{t:g}%"); c2.xlabels(qs_u4, 4, 1, lambda l: "20" + l[2:])   # x1=840: rótulos de fim de linha cabem no viewBox de 980
+c2.line(uPocB, MU, lab="PoC base vendida", labval=lambda v: fmt(v, 0) + "%", dash="4 3"); c2.line(uCron, S3, lab="cronograma 12m", labval=lambda v: fmt(v, 0) + "%", w=2.6); c2.line(uReal, S1, lab="realizado", labval=lambda v: fmt(v, 0) + "%", w=2.6)
+c2.g.append('<text x="560" y="18" class="gtit">Quanto da REF vira receita em um ano</text><text x="560" y="34" class="gsub">cronograma: custo a incorrer em 12m ÷ total; realizado: usinagem ÷ REF 1 ano antes</text>')
+body = svg(980, 200, c.flush(15) + c2.flush(15))
+_b26 = US["2T26"]["rec_total_vendas"] / 1e3; _pp = _b26 * 0.01
+body += ('<div class="cards3" style="margin-top:10px">'
+         f'<div class="c3"><span class="c3n">{fmt(uShare[-1], 0)}%</span><b>da receita LTM é usinagem</b>: obra do que já estava vendido. O peso foi de {fmt(min(uShare), 0)}% a {fmt(max(uShare), 0)}% desde {"20" + qs_u4[0][2:]}: quando a venda acelera, a parcela "na venda" sobe e a usinagem só aparece dois anos depois.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(uCron[-1], 0)}%</span><b>da REF cai em 12 meses</b>, pelo cronograma do ITR; era {fmt(max(x for x in uCron if x), 0)}% no {qs_u4[uCron.index(max(x for x in uCron if x))]}. Base vendida mais nova (PoC médio de {fmt(max(x for x in uPocB if x), 0)}% para {fmt(uPocB[-1], 0)}%): lançamento vendido entra com PoC baixo. LTM: usinagem = {fmt(uReal[-1], 0)}% da REF de um ano antes.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(uPoc[-1], 0)}%</span><b>PoC do estoque em construção</b>, de {fmt(max(uPoc), 0)}% em {qs_u4[uPoc.index(max(uPoc))]}: o estoque ficou mais novo (safra 2025), então cada venda de estoque reconhece menos receita no ato e empurra mais para a usinagem.</div></div>')
+body += ('<p style="margin:8px 2px 0;padding:6px 10px;border-left:3px solid #c5003e;color:#c5003e;font-size:12.5px;line-height:1.35"><b>O mercado viu isso na Cury:</b> na semana de 14/09/26 a ação caiu ~6% num dia, após a companhia dizer que as chuvas recordes em SP (temporais desde 11/09) atrasam a obra, ou seja, a usinagem. A Cyrela, com a mesma exposição a SP e canteiros debaixo da mesma chuva, não caiu nada: ou a obra da Cyrela não molha, ou o mercado ainda não fez a conta.</p>')
+body += output(fmt(uShare[-1], 0) + '% da receita é obra do já vendido: acertar a receita é acertar o ritmo de obra, não a venda.', 'A REF de R$ 12,2 bi diz quanto; o cronograma, que menos da metade cai em um ano; 1 p.p. de PoC na base vendida vale R$ ' + fmt(_pp, 1) + ' bi.')
+slides.append(sl(P5, "Usinagem: o que a receita deve à obra, e por que ela é difícil de acertar.", body, nota="Fontes: DRE (CYREMod, receita líquida trimestral); planilha do RI (vendas de lançamento, de estoque em construção e de estoque pronto, VGV 100%); ITR (nota de estoques: imóveis a comercializar em construção; nota de obras em andamento: receita total de vendas e apropriada); releases (custo orçado a incorrer das unidades em estoque), em _usinagem.json. Estimativa com as premissas do slide anterior, mas com o PoC do estoque de cada trimestre (o slide anterior usa o de jun/26); PoC interpolado em 3T21 e 4T22."))
+# --- consenso de receita (Bloomberg, telas de 18/09/26) contra a mecânica da receita
+CONS = {"2026": 10.050, "2027": 11.606, "2028": 12.207, "2029": 13.442}   # R$ bi, consenso Bloomberg (8/8/7/2 estimativas), fontes/consenso_bloomberg_set26.md
+anos_cs = [a for a in YRS if mrow(21).get(a)]; rev_h = [mrow(21)[a] / 1000 for a in anos_cs]
+lab_cs = anos_cs + list(CONS); vals_h = rev_h + [None] * len(CONS); vals_c = [None] * (len(anos_cs) - 1) + [rev_h[-1]] + list(CONS.values())
+_vcbr = RI["vendas_seg_cbr"]["Total"]
+def _vyear(a):
+    qs = [q for q in _vcbr if len(q) == 4 and q[2:] == a[2:]]
+    return sum((_vcbr[q] or 0) for q in qs) / 1e6 if len(qs) == 4 else ((_vcbr.get(a) or 0) / 1e6 if _vcbr.get(a) else None)
+vals_v = [_vyear(a) for a in anos_cs] + [None] * len(CONS)
+c = Chart(60, 470, 46, 178, 0, 16, len(lab_cs)); c.grid([0, 4, 8, 12, 16]); c.xlabels(lab_cs, 3, 1, lambda l: l[2:] if len(l) == 4 else l)
+c.line(vals_v, S2, w=2.2); c.line(vals_h, S1, w=2.6); c.line(vals_c, S1, lab="consenso", labval=lambda v: fmt(v, 1), dash="5 3", opacity=.6, w=2.6)
+# rótulos manuais no último ponto (2025): "reportada" acima e à esquerda; "vendas %Cyrela" abaixo e à direita.
+# O rótulo padrão (flush: à direita, na altura do ponto) cruzaria o tracejado do consenso, que sai desse ponto para cima.
+_xl, _yv = c.x(len(anos_cs) - 1), c.y([v for v in vals_v if v is not None][-1])
+c.g.append(f'<text x="{_xl - 5:.1f}" y="{c.y(rev_h[-1]) - 8:.1f}" class="fw-t2" fill="{S1}" text-anchor="end">reportada</text>'
+           f'<text x="{_xl + 7:.1f}" y="{_yv + 15:.1f}" class="fw-t2" fill="{S2}">vendas %Cyrela {fmt([v for v in vals_v if v is not None][-1], 1)}</text>')
+c.g.append(f'<text x="60" y="18" class="gtit">Receita líquida anual (R$ bi): reportada e consenso</text><text x="60" y="34" class="gsub">receita: DFs {anos_cs[0]}-{anos_cs[-1][2:]}; consenso: Bloomberg 18/09/26; vendas %Cyrela: RI, pro forma ex-Cury/P&amp;P 2019</text>')
+_h1 = (mrow(21).get("1T26", 0) + mrow(21).get("2T26", 0)) / 1000; _h2 = CONS["2026"] - _h1; _ltm = ltm(mrow(21)) / 1000
+_ref = US["2T26"]["ref_itr"] / 1e3; _cr = US["2T26"]["custo_incorrer_12m"] / (US["2T26"]["custo_incorrer_12m"] + US["2T26"]["custo_incorrer_alem_12m"])
+_usin12 = _ref * _cr; _need = CONS["2027"] - _usin12
+# barras em 600-820 (mesma escala 0-16 do painel 1); a linha do contratado é rotulada à direita, fora das barras
+c2 = Chart(600, 820, 46, 178, 0, 16, 4); c2.grid([0, 4, 8, 12, 16]); c2.xlabels(["LTM 2T26", "2026E", "2027E", "2028E"], 1, 0)
+_bars = [_ltm, CONS["2026"], CONS["2027"], CONS["2028"]]
+c2.bars(_bars, S1, w=0.5, labels=[fmt(v, 1) for v in _bars], opac=[1, .55, .55, .55])
+_yl = c2.y(_usin12)
+c2.g.append(f'<line x1="600" y1="{_yl:.1f}" x2="820" y2="{_yl:.1f}" stroke="{S3}" stroke-dasharray="4 3" stroke-width="1.6"/>'
+            f'<text x="826" y="{_yl - 2:.1f}" class="fw-t2" fill="{S3}">R$ {fmt(_usin12, 1)} bi contratados</text><text x="826" y="{_yl + 11:.1f}" class="fw-s2" fill="{S3}">REF × cronograma 12m</text>')
+c2.g.append('<text x="600" y="18" class="gtit">O que o consenso exige</text><text x="600" y="34" class="gsub">receita anual × o que a REF de R$ ' + fmt(_ref, 1) + ' bi entrega em 12m (cronograma: ' + fmt(100 * _cr, 0) + '%)</text>')
+body = svg(980, 200, c.flush(15) + c2.flush(15))
+body += ('<div class="cards3" style="margin-top:10px">'
+         f'<div class="c3"><span class="c3n">+{fmt(100 * (CONS["2026"] / rev_h[-1] - 1), 0)}% · +{fmt(100 * (CONS["2027"] / CONS["2026"] - 1), 0)}%</span><b>Consenso: R$ {fmt(CONS["2026"], 1)} bi em 2026 e R$ {fmt(CONS["2027"], 1)} bi em 2027</b> (8 estimativas; R$ {fmt(CONS["2028"], 1)} bi em 2028 com 7, R$ {fmt(CONS["2029"], 1)} bi em 2029 com 2). O 1S26 fez R$ {fmt(_h1, 1)} bi: 2026 pede R$ {fmt(_h2, 1)} bi no 2S26, contra R$ {fmt(_ltm - _h1, 1)} bi no 2S25.</div>'
+         f'<div class="c3"><span class="c3n">R$ {fmt(_usin12, 1)} bi</span><b>já contratados para os próximos 12 meses</b>: REF de R$ {fmt(_ref, 1)} bi × {fmt(100 * _cr, 0)}% do cronograma. O resto do consenso de 2027 (R$ {fmt(_need, 1)} bi) vem de venda nova reconhecida no ato e da obra dessas vendas: é aí que mora o erro, nos dois sentidos.</div>'
+         '<div class="c3"><span class="c3n">sem premissa</span><b>Nenhuma casa publica a premissa de lançamento e VSO por trás da receita</b>: a Bloomberg não traz; Itaú e BTG só têm o trimestre reportado. A receita de 2027-28 depende de vender o que está lançado; o consenso trata isso como dado.</div></div>')
+body += ('<p style="margin:8px 2px 0;padding:6px 10px;border-left:3px solid #c5003e;color:#c5003e;font-size:12.5px;line-height:1.35"><b>Leitura contrária ao consenso:</b> a companhia lançou (R$ ' + fmt(oT[-1], 1) + ' bi em 12 meses), não vendeu no ritmo (VSO do alto padrão em ' + fmt(vA[-1], 0) + '%, o menor desde 2019), <b>recuou o lançamento</b> (alto padrão de R$ 10,3 bi em 2025 para R$ ' + fmt(oA[-1], 1) + ' bi no LTM) e está com o <b>maior estoque da série</b> (R$ ' + fmt(eT[-1], 1) + ' bi, ' + fmt(mv[-1], 1) + ' meses de venda). Muito difícil acreditar em aceleração de vendas com o lançamento apontando para baixo.</p>')
+body += output('O consenso pede dois dígitos em 2027 com menos da metade da REF caindo em um ano.','Metade da receita de 2027 ainda não foi vendida; sem premissa de lançamento e VSO, o consenso extrapola.')
+slides.append(sl(P5 + ' <span class="pill-teoria" style="background:#c5003e">to-do · pedir às casas a premissa de lançamento, VSO e obra</span>', "Consenso de receita: o que ele exige, e o que já está contratado.", body, nota="Fontes: consenso Bloomberg (Standard, BRL, 18/09/2026; fontes/consenso_bloomberg_set26.md); DFs/ITR (receita líquida, CYREMod linha 21); ITR 2T26 (nota de obras em andamento: REF e cronograma do custo a incorrer); notas Itaú BBA (13/08/26) e BTG (13/08/26)."))
+# --- margens: reportada (DRE, ex-juros), da REF (a apropriar) e do estoque (VGV líquido de impostos − custo total)
+EC = J("_estoque_custo.json")
+TAXR = 124 / (_h1 * 1000 + 124)   # deduções da receita bruta ÷ receita bruta, 1S26 (release 2T26): ~2,5%
+qs_mg = [q for q in QS if ord_(q) >= (20, 1) and ord_(q) <= ord_("2T26")]
+mg_rep = [100 * mrow(32).get(q) if mrow(32).get(q) else None for q in qs_mg]
+def _mref(q):
+    d = US.get(q, {})
+    if d.get("margem_ref"): return d["margem_ref"]
+    c1, c2_, r = d.get("custo_incorrer_12m"), d.get("custo_incorrer_alem_12m"), d.get("ref_itr")
+    return 100 * (1 - (c1 + c2_) / r) if c1 and c2_ and r else None
+mg_ref = [_mref(q) for q in qs_mg]
+def _mest(q):
+    d = US.get(q, {}); ec = EC.get(q, {}); vg = OP["estoque"]["vgvcbr_total"].get(q)
+    if not (d.get("a_incorrer_estoque") and ec.get("construcao") and vg): return None
+    custo = ec["construcao"] + ec.get("concluidos", 0) + d["a_incorrer_estoque"]
+    return 100 * (1 - custo / (vg * (1 - TAXR)))
+mg_est = [_mest(q) if ord_(q) >= (25, 4) else None for q in qs_mg]
+MG0, MG1 = 30, 62   # escala: as três séries ficam em 32-40%; a antiga vai a 60,2% (3T25). Fora da escala fica só o 8,0% de 1T21 da série antiga (não comparável), omitido.
+mg_est_old = [_mest(q) if ord_(q) < (25, 4) else None for q in qs_mg]
+mg_est_old = [v if v is not None and MG0 <= v <= MG1 else None for v in mg_est_old]
+c = Chart(60, 820, 46, 178, MG0, MG1, len(qs_mg)); c.grid([30, 40, 50, 60], lambda t: f"{t:g}%"); c.xlabels(qs_mg, 4, 0, lambda l: "20" + l[2:])   # x1=820: rótulos de fim de linha (≤ ~95 un.) cabem no viewBox de 980
+c.line(mg_est_old, S3, dash="2 3", opacity=.35, w=1.6)
+c.line(mg_rep, S1, lab="reportada", labval=lambda v: fmt(v, 1) + "%", w=2.8); c.line(mg_ref, S2, lab="REF", labval=lambda v: fmt(v, 1) + "%", w=2.4); c.line(mg_est, S3, lab="estoque", labval=lambda v: fmt(v, 1) + "%", w=2.6)
+c.g.append('<text x="60" y="18" class="gtit">Margem bruta: reportada, da REF e do estoque (%)</text><text x="60" y="34" class="gsub">reportada ex-juros (DRE); REF = a apropriar (release/ITR); estoque = 1 − custo ÷ VGV líquido de impostos; pontilhado claro = série antes do 4T25, não comparável</text>')
+_e26 = US["2T26"]; _ec26 = EC["2T26"]; _vg26 = OP["estoque"]["vgvcbr_total"]["2T26"]
+_custo26 = _ec26["construcao"] + _ec26["concluidos"] + _e26["a_incorrer_estoque"]
+body = svg(980, 200, c.flush(15, leader=True))   # valores próximos (40,1 / 37,3 / 36,2): rótulos espaçados com traço até o ponto
+body += ('<div class="cards3" style="margin-top:10px">'
+         f'<div class="c3"><span class="c3n">{fmt(mg_rep[-1], 1)}%</span><b>Margem reportada no 2T26</b>: média ponderada da usinagem (obra do já vendido, à margem contratada na REF), da venda de estoque (margem do estoque) e do lançamento novo, que reconhece pouco no ato mas entra na REF com a margem orçada.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(mg_ref[-1], 1)}%</span><b>Margem da REF</b>: o já contratado sobre R$ {fmt(_e26["ref_itr"] / 1e3, 1)} bi. Estável em 35-36% desde 2023 e, como a usinagem é {fmt(uShare[-1], 0)}% da receita, é a âncora da margem dos próximos dois anos. A margem dos lançamentos novos não é divulgada: só aparece quando entra na REF.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(mg_est[-1], 1)}%</span><b>Margem do estoque</b>: VGV %Cyrela de R$ {fmt(_vg26 / 1e3, 1)} bi, menos {fmt(100 * TAXR, 1)}% de impostos, contra custo total de R$ {fmt(_custo26 / 1e3, 1)} bi (incorrido em obra {fmt(_ec26["construcao"] / 1e3, 1)}, concluído {fmt(_ec26["concluidos"] / 1e3, 1)}, a incorrer {fmt(_e26["a_incorrer_estoque"] / 1e3, 1)}). Acima da REF: o estoque é, em média, produto mais novo, vendido a preço de hoje.</div></div>')
+body += output('Reportada = REF (36%) ponderada com estoque (~40%); o lançamento novo move a média.', f'Perímetros diferentes (VGV %Cyrela contra custo consolidado) e impostos de ~{fmt(100 * TAXR, 1)}% estimados; a série do estoque só é comparável a partir do 4T25.')
+slides.append(sl(P5 + ' <span class="pill-teoria" style="background:#c5003e">to-do · quebra do custo a incorrer do estoque (4T25) e perspectiva de margem bruta com o RI: lançamentos novos podem ter margem melhor</span>', "Margem: reportada, da REF e do estoque.", body, nota="Fontes: DRE (CYREMod linha 32, margem bruta ex-juros capitalizados); releases (margem a apropriar; custo orçado a incorrer das unidades em estoque; deduções da receita bruta 1S26) e ITR (nota de obras em andamento; nota de estoques: imóveis a comercializar em construção e concluídos); planilha do RI (VGV do estoque %Cyrela). Margem do estoque = 1 − (custo incorrido + a incorrer) ÷ (VGV × (1 − impostos))."))
+
+# --- receita e margem bruta ex-juros, total (anual) + por segmento (receita 12m)
+anos_r = [a for a in YRS if mrow(21).get(a)]
+rec = [mrow(21).get(a) / 1000 for a in anos_r]; mbx = [mrow(32).get(a) for a in anos_r]; mbr = [mrow(34).get(a) for a in anos_r]
+anos_r2 = anos_r + ["LTM"]; rec.append(ltm(mrow(21)) / 1000)
+lb26 = ltm(mrow(30)); j26 = ltm(mrow(29)); r26 = ltm(mrow(21)); OPR = [1] * len(anos_r) + [.45]
+mbx.append(lb26 / r26); mbr.append((lb26 - j26) / r26)
+c = Chart(60, 470, 46, 178, 0, 10, len(anos_r2)); c.grid([0, 2.5, 5, 7.5, 10]); c.xlabels(anos_r2, 3)
+c.bars(rec, S2, labels=[fmt(v, 1) if a in ("2011", "2017", "2025", "LTM") else "" for v, a in zip(rec, anos_r2)], opac=OPR)
+c.g.append('<text x="60" y="18" class="gtit">Receita líquida (R$ bi por ano)</text><text x="60" y="34" class="gsub">LTM = 3T25-2T26, em tom claro</text>')
+c2 = Chart(560, 860, 46, 178, 0.2, 0.46, len(anos_r2)); c2.grid([0.2, 0.26, 0.32, 0.38, 0.44], lambda t: f"{t*100:g}%"); c2.xlabels(anos_r2, 3)
+c2.line(mbx, S1, lab="ex-juros", labval=lambda v: pct(v, 1), w=2.8, last_opac=.45); c2.line(mbr, MU, lab="reportada", labval=lambda v: pct(v, 1), dash="4 3", last_opac=.45)
+c2.g.append('<text x="560" y="18" class="gtit">Margem bruta: ex-juros × reportada</text><text x="560" y="34" class="gsub">juros do SFH no custo: 1,5-3 p.p.; série ex-juros desde 2006 (CYREMod)</text>')
+body = svg(980, 200, c.flush() + c2.flush())
+med = sorted(x for x in mbx[:-1])[len(mbx[:-1]) // 2]
+body += ('<div class="cards3" style="margin-top:12px">'
+         f'<div class="c3"><span class="c3n">{pct(mbx[-1],1)}</span><b>Margem ex-juros LTM (3T25-2T26)</b>. Alta, mas não inédita: a série anual esteve acima em {sum(1 for v in mbx[:-1] if v > mbx[-1])} dos {len(mbx)-1} anos (2006-09 e 2015-16 passaram de 38%). A mediana de vinte anos é <b>{pct(med,1)}</b>: o mercado capitaliza a parte alta da série, não o meio.</div>'
+         f'<div class="c3"><span class="c3n">{fmt(j26,0)}</span><b>Juros capitalizados no custo, LTM (R$ mi)</b>, contra 133 em 2024: a Selic a 15% e o SFH mais caro comprimem a margem reportada em ~3 p.p. — sem piora operacional. Comparar sempre ex-juros.</div>'
+         '<div class="c3"><span class="c3n">pares</span><b>Pendente: comparar contra Lavvi, EZTEC, Even, MDNE e os puros de MCMV</b> na mesma base (ex-juros, %CBR). Está no TO-DO da versão completa (item 4); sem isso o "topo da década" é auto-referente.</div></div>')
+body += output('O mercado capitaliza a parte alta de uma série de vinte anos — que já esteve mais alta.')
+slides.append(sl(P5, "Receita e margem: o topo da série — mas a régua tem vinte anos.", body, nota="Fontes: CYREMod (receita líquida, lucro bruto e juros apropriados ao custo, das DFs/ITR-DFP e releases; 2006-2T26). Margem ex-juros = lucro bruto antes dos juros capitalizados ÷ receita."))
+
+# --- por segmento: receita 12m e margem (nota de segmentos)
+qs_s2 = [q for q in QS if ord_(q) >= (20, 4)]
+def r12(row): return [q12(row, q) / 1000 if q12(row, q) else None for q in qs_s2]
+rA, rM, rC, rO = r12(mrow(35)), r12(mrow(37)), r12(mrow(39)), r12(mrow(41))
+c = Chart(60, 500, 46, 178, 0, 2, len(qs_s2)); c.grid([0, 0.5, 1, 1.5, 2], lambda t: f"{t:g}".replace(".", ",")); c.xlabels(qs_s2, 4, 0)
+c.line(rA, S1, lab="alto padrão", labval=lambda v: fmt(v, 1)); c.line(rM, S2, lab="médio", labval=lambda v: fmt(v, 1)); c.line(rC, S3, lab="MCMV", labval=lambda v: fmt(v, 1), w=2.8); c.line(rO, MU, lab="demais", labval=lambda v: fmt(v, 1), dash="3 3")
+c.g.append('<text x="60" y="18" class="gtit">Lucro bruto por segmento, 12 meses (R$ bi)</text><text x="60" y="34" class="gsub">nota de segmentos dos ITR (base com juros capitalizados)</text>')
+shC = [cc / (a + m + cc + (o or 0)) if all(x is not None for x in (a, m, cc)) else None for a, m, cc, o in zip(rA, rM, rC, rO)]
+c2 = Chart(600, 880, 46, 178, 0, 0.4, len(qs_s2)); c2.grid([0, 0.1, 0.2, 0.3, 0.4], lambda t: f"{t*100:g}%"); c2.xlabels(qs_s2, 4, 0)
+c2.line(shC, S3, lab="MCMV", labval=lambda v: pct(v, 0), w=2.8)
+c2.g.append('<text x="600" y="18" class="gtit">MCMV no lucro bruto (12m)</text><text x="600" y="34" class="gsub">' + pct([x for x in shC if x][0], 0) + ' → ' + pct([x for x in shC if x][-1], 0) + ' em cinco anos</text>')
+body = svg(980, 200, c.flush() + c2.flush())
+body += output('A Vivaz faz um quinto do lucro bruto com 15% da receita.', 'Alto padrão estável em R$ 1,6-1,7 bi com margem caindo de 34% para 31%. A Vivaz a 37% é meio de tabela do MCMV (Cury 39-40%, MRV 30-31%).')
+slides.append(sl(P5, "Por segmento: a Vivaz já é um quinto do lucro bruto.", body, nota="Fontes: CYREMod linhas 35-42 (nota de informações por segmento dos ITR/DFP, 1T20-2T26); pares: releases 1S26 (analise_fr_e_decks.md §8.1)."))
+
+# ================================================================ fechamento
+slides.append(sl("próximos passos", "O que falta para os 100%.",
+  '<div class="fwgrid" style="margin-top:6px"><div class="fwcard map"><header>conteúdo a adicionar (o usuário definirá)</header><dl>'
+  '<dt>~20% restante</dt><dd>Blocos que o roteiro ainda não fixou. Candidatos naturais: balanço e caixa (dívida, terrenos a pagar, geração recorrente), o preço da ação e a sensibilidade ao juro longo, a tese em uma página.</dd>'
+  '<dt>conta de valor do MCMV</dt><dd>Indicada na parte 4: quanto vale a Vivaz dentro da Cyrela e por que a ação não reage proporcionalmente.</dd>'
+  '<dt>pares</dt><dd>Margem ex-juros, ROE, alavancagem e P/B de Lavvi, EZTEC, Even, MDNE e puros de MCMV na mesma base (item 4 do TO-DO).</dd></dl></div>'
+  '<div class="fwcard mcmv"><header>dados pendentes</header><dl>'
+  '<dt>RJ de construtoras</dt><dd>Sem fonte primária com abertura setorial; pedir série ao Serasa/TMA ou usar TJ-SP por CNAE.</dd>'
+  '<dt>vendas em consolidação</dt><dd>Não existe série; o gráfico de receita × lançamentos × vendas usa %CBR para vendas.</dd>'
+  '<dt>RI</dt><dd>Perguntas 27 (juros do performado na receita) e 35 (SK Realty) seguem sem resposta; critério de consolidação por projeto.</dd>'
+  '<dt>anexo</dt><dd>A <a href="index.html" style="color:var(--s1)">versão completa</a> (54 slides + abas de contabilidade, mercado e gestão) permanece publicada como referência.</dd></dl></div></div>'))
+
+# ================================================================ monta o arquivo
+# ---- montagem (18/09/26, recuperação): a ordem e os slides cujo gerador se perdeu vêm de _enxuta_base.html (última versão
+# publicada); os blocos gerados acima substituem a seção publicada de mesmo título. Slides novos entram por título.
+_HB = io.open(os.path.join(here, "_enxuta_base.html"), encoding="utf-8").read()
+_HS = re.findall(r'<section class="slide[^"]*"[^>]*>.*?</section>', _HB, re.S)
+def _h2(s):
+    m = re.search(r'<h2[^>]*>(.*?)</h2>', s, re.S); return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', m.group(1))).strip() if m else ''
+_gen = {_h2(s): s for s in slides if _h2(s)}
+_static_titles = set()
+final = []
+for sec in _HS:
+    h = _h2(sec)
+    if h in _gen: final.append(_gen[h])
+    else: final.append(sec); _static_titles.add(h)
+GEN_SET = set(id(s) for s in _gen.values())
+# slide 37 (publicado): troca a tabela de sensibilidade pela versão com g = 0% e g = 4%
+for k, s in enumerate(final):
+    if "a DuPont diz de onde veio" in _h2(s):
+        s2 = re.sub(r'<div class="viz" style="margin-top:8px"><table class="tl".*?</table><p class="sl-nota"[^>]*>.*?</p></div>', lambda m: TBL37, s, count=1, flags=re.S)
+        assert s2 != s, "tabela do 37 não encontrada"; final[k] = s2
+# slide novo: a ação e o juro de 10 anos, logo após o P/B
+_dj = next(s for s in slides if "um título de juros" in _h2(s))
+final.insert(next(i for i, s in enumerate(final) if "O preço: P/B em vinte anos" in _h2(s)) + 1, _dj)
+slides = final
+
+EXTRA_CSS = """
+<style>
+  .slide.teoria { background: rgba(46,125,50,.06); box-shadow: inset 0 0 0 3px rgba(46,125,50,.55); }
+  .pill-teoria { display:inline-block; background:#2e7d32; color:#fff; padding:2px 10px; border-radius:999px; font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; vertical-align:middle; margin-left:6px; }
+  .slide.teoria .kick { color:#2e7d32; }
+  .slide.destaque { background: rgba(160,125,28,.07); box-shadow: inset 0 0 0 4px #a07d1c; }
+  .slide.destaque .kick { color:#a07d1c; }
+  a.chip { text-decoration:none; }
+  /* versão enxuta: cards um pouco mais densos para caber em 768px */
+  .deck .head-xl { font-size: clamp(28px, 3.7vw, 46px); }
+  .deck .fwcard dd { font-size:12.4px; line-height:1.34; }
+  .deck .fwcard dt { margin-top:7px; }
+  .deck .fwcard dl { padding: 4px 16px 10px; }
+  .deck .fwcard header { padding: 7px 16px 6px; }
+  .deck .sl-nota { font-size:11px; margin-top:5px; }
+  .deck .c3 { padding: 13px 15px; font-size:12.4px; line-height:1.38; }
+  .deck .c3n { font-size:23px; margin-bottom:5px; }
+  .deck .cards3, .deck .fwgrid { gap: 12px; }
+  .deck .head-xl { margin-bottom: 8px; }
+  .deck .sl-callout p { font-size:13px; line-height:1.45; }
+  .deck table.tl th, .deck table.tl td { text-align:left; }
+  .deck table.tl tr.total td { font-weight:650; color:var(--ink-1); border-top:1.5px solid var(--baseline); }
+  /* variantes densas (slide de teoria da receita): tabela a 10px/1.0 e cartões com menos respiro, sem tirar linha */
+  .deck table.tl.compact { margin-top:0; }
+  .deck table.tl.compact th, .deck table.tl.compact td { font-size:10px; line-height:1.0; padding:2px 8px; }
+  .deck .fwgrid.compact .fwcard header { padding:5px 16px 4px; }
+  .deck .fwgrid.compact .fwcard dl { padding:2px 16px 7px; }
+  .deck .fwgrid.compact .fwcard dt { margin-top:5px; }
+  .deck .fwgrid.compact .fwcard dd { line-height:1.3; }
+  .deck .cards3.tight .c3 { font-size:12px; line-height:1.32; padding:11px 13px; }   /* slide do terreno/capital de giro: três cartões densos em 4 linhas */
+  .deck .cards3.tight .c3n { margin-bottom:4px; }
+  .sl-output { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin:9px 2px 0; padding:8px 16px;
+    background:rgba(46,125,50,.08); border:1px solid rgba(46,125,50,.45); border-left:5px solid #2e7d32; border-radius:12px; }
+  .sl-output .out-tag { font-size:10.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:#2e7d32; padding:3px 10px; border-radius:999px; }
+  .sl-output .out-msg { font-family:"Fraunces", Georgia, serif; font-size:20px; font-weight:650; color:#1b5e20; letter-spacing:-.005em; }
+  .sl-output .out-sub { font-size:13px; color:var(--ink-2); flex:1 1 260px; }
+</style>"""
+out = ['<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Cyrela (CYRE3) — Versão enxuta</title>\n',
+       H[H.index('<link rel="preconnect"'):H.index("<style>")], CSS, EXTRA_CSS, "\n</head>\n<body>\n<div class=\"wrap\">\n  <header class=\"top\">\n    <h1>Cyrela (CYRE3) — Versão enxuta</h1>\n",
+       f'    <span class="chip">{VERSAO} · dados até 2T26 · {len(slides)} slides</span>\n    <a class="chip" href="index.html">análise completa (54 slides) →</a>\n  </header>\n\n<div class="deck" id="deck">\n\n']
+_lp = os.path.join(here, "_layout_enxuta.json"); _LO = json.load(io.open(_lp, encoding="utf-8")) if os.path.exists(_lp) else {}
+def _widen(m):
+    svg = m.group(0); tit = re.search(r'class="gtit">([^<]*)</text>', svg); key = (tit.group(1).strip() if tit else ""); extra = _LO.get(key, 0)
+    if not extra: return svg
+    vb = re.search(r'viewBox="(-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)"', svg)
+    if not vb: return svg
+    x0, y0, w, h_ = vb.groups(); return svg.replace(vb.group(0), f'viewBox="{x0} {y0} {float(w) + extra + 6:g} {h_}"', 1)
+out += ["  " + (re.sub(r'<svg viewBox="[^"]+">.*?</svg>', _widen, s, flags=re.S) if id(s) in GEN_SET else s) + "\n" for s in slides]
+ALIGN_JS = """
+  // slides mais altos que a janela: alinhar pelo topo (o título aparece; o resto rola dentro do slide)
+  (function () {
+    function ajusta() {
+      var deck = document.getElementById('deck'); if (!deck) return;
+      deck.querySelectorAll('.slide').forEach(function (s) {
+        var inn = s.querySelector('.sl-in'); if (!inn) return;
+        s.style.alignItems = (inn.scrollHeight + 44 > deck.clientHeight) ? 'flex-start' : 'center';
+      });
+    }
+    window.addEventListener('load', ajusta); window.addEventListener('resize', ajusta); setTimeout(ajusta, 900);
+  })();
+"""
+out.append('</div>\n<div class="dots" id="dots"></div>\n<script>\n' + JS + ALIGN_JS + '</script>\n</body>\n</html>\n')
+html = "".join(out)
+# layout: alarga o viewBox dos svgs cujo texto saiu do quadro (medido por layout_enxuta.py em _layout_enxuta.json) — só nos slides gerados
+_lp = os.path.join(here, "_layout_enxuta.json")
+if os.path.exists(_lp) and False:
+    _LO = json.load(io.open(_lp, encoding="utf-8"))
+    def _widen(m):
+        svg = m.group(0); tit = re.search(r'class="gtit">([^<]*)</text>', svg)
+        key = (tit.group(1).strip() if tit else "")
+        extra = _LO.get(key, 0)
+        if not extra: return svg
+        vb = re.search(r'viewBox="(-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)"', svg)
+        if not vb: return svg
+        x0, y0, w, h_ = vb.groups()
+        return svg.replace(vb.group(0), f'viewBox="{x0} {y0} {float(w) + extra + 6:g} {h_}"', 1)
+    # regra do usuário (17/09/26): nenhum callout amarelo — o que sobrou dos slides reaproveitados vira caixa verde
+def _to_green(m):
+    tag = re.sub(r"<[^>]+>", "", m.group(1)).strip(); txt = m.group(2).strip()
+    return f'<div class="sl-output"><span class="out-tag">{tag}</span><span class="out-sub">{txt}</span></div>'
+html = re.sub(r'<div class="sl-callout"[^>]*>\s*<span class="ct-tag"[^>]*>(.*?)</span>\s*<p>(.*?)</p>\s*</div>', _to_green, html, flags=re.S)
+io.open(os.path.join(here, "enxuta.html"), "w", encoding="utf-8").write(html)
+print("enxuta.html:", len(html) // 1000, "k;", len(slides), "slides")
