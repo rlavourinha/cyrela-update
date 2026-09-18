@@ -704,8 +704,10 @@ def _h2(s):
 _gen = {_h2(s): s for s in slides if _h2(s)}
 _static_titles = set()
 final = []
+SKIP = ('Vinte anos, três ciclos',)   # removidos a pedido (18/09/26)
 for sec in _HS:
     h = _h2(sec)
+    if any(s in h for s in SKIP): continue
     if h in _gen: final.append(_gen[h])
     else: final.append(sec); _static_titles.add(h)
 GEN_SET = set(id(s) for s in _gen.values())
