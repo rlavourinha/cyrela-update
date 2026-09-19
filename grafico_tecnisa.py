@@ -51,36 +51,44 @@ EV = [  # (mês, rótulo curto, texto)
  ("2026-09", "12", "set/26 · novo grupamento 10:1 proposto (fato relevante 28/08/26, AGE 21/09)"),
 ]
 
-W, H = 1060, 400
-X0, X1, Y0, Y1 = 62, 900, 100, 345
-LMIN, LMAX = math.log10(0.5), math.log10(3000)
+W, H = 1060, 585
+X0, X1 = 62, 900
+PA = (100, 300)     # painel A: valor de mercado (linear, R$ mi)
+PB = (372, 522)     # painel B: posição da Cyrela (linear, R$ mi)
 def x(i): return X0 + (X1 - X0) * i / (len(MS) - 1)
-def y(v): return Y1 - (Y1 - Y0) * (math.log10(v) - LMIN) / (LMAX - LMIN)
+def ya(v): return PA[1] - (PA[1] - PA[0]) * v / 1500
+def yb(v): return PB[1] - (PB[1] - PB[0]) * v / 150
 def fmt(v, d=0): return f"{v:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
 g = []
-for t in (1, 10, 100, 1000):
-    g.append(f'<line x1="{X0}" y1="{y(t):.1f}" x2="{X1}" y2="{y(t):.1f}" stroke="#ddd8cf"/><text x="{X0-8}" y="{y(t)+4:.1f}" text-anchor="end" class="ax">{fmt(t)}</text>')
+for t_ in (0, 500, 1000, 1500):
+    g.append(f'<line x1="{X0}" y1="{ya(t_):.1f}" x2="{X1}" y2="{ya(t_):.1f}" stroke="#ddd8cf"/><text x="{X0-8}" y="{ya(t_)+4:.1f}" text-anchor="end" class="ax">{fmt(t_)}</text>')
+for t_ in (0, 50, 100, 150):
+    g.append(f'<line x1="{X0}" y1="{yb(t_):.1f}" x2="{X1}" y2="{yb(t_):.1f}" stroke="#ddd8cf"/><text x="{X0-8}" y="{yb(t_)+4:.1f}" text-anchor="end" class="ax">{fmt(t_)}</text>')
 for i, m in enumerate(MS):
-    if m.endswith("-01"): g.append(f'<text x="{x(i):.1f}" y="{Y1+18}" text-anchor="middle" class="ax">{m[:4]}</text>')
-g.append(f'<line x1="{X0}" y1="{Y1}" x2="{X1}" y2="{Y1}" stroke="#bfb8ab"/>')
-# eventos
+    if m.endswith("-01"):
+        g.append(f'<text x="{x(i):.1f}" y="{PA[1]+16}" text-anchor="middle" class="ax">{m[:4]}</text><text x="{x(i):.1f}" y="{PB[1]+16}" text-anchor="middle" class="ax">{m[:4]}</text>')
+g.append(f'<line x1="{X0}" y1="{PA[1]}" x2="{X1}" y2="{PA[1]}" stroke="#bfb8ab"/><line x1="{X0}" y1="{PB[1]}" x2="{X1}" y2="{PB[1]}" stroke="#bfb8ab"/>')
+# eventos: linha tracejada atravessa os dois painéis; badge em duas alturas para não encavalar
 for k, (m, lab, _) in enumerate(EV):
-    i = MS.index(m); xx = x(i); cy = Y0 - 22 - (20 if k % 2 else 0)   # badges em duas alturas para não encavalar
-    g.append(f'<line x1="{xx:.1f}" y1="{cy+9}" x2="{xx:.1f}" y2="{Y1}" stroke="#8a8378" stroke-dasharray="2 4" opacity=".7"/>')
+    i = MS.index(m); xx = x(i); cy = PA[0] - 22 - (20 if k % 2 else 0)
+    g.append(f'<line x1="{xx:.1f}" y1="{cy+9}" x2="{xx:.1f}" y2="{PB[1]}" stroke="#8a8378" stroke-dasharray="2 4" opacity=".7"/>')
     g.append(f'<circle cx="{xx:.1f}" cy="{cy}" r="9" fill="#2b2a26"/><text x="{xx:.1f}" y="{cy+3.5}" text-anchor="middle" class="bd">{lab}</text>')
-def poly(d, col, w, dash=""):
-    pts = " ".join(f"{x(MS.index(m)):.1f},{y(v):.1f}" for m, v in sorted(d.items()))
-    return f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{w}" stroke-linejoin="round" stroke-linecap="round"{" stroke-dasharray=" + chr(34) + dash + chr(34) if dash else ""}/>'
-g.append(poly(mcap, "#2f5fa8", 2.4)); g.append(poly(pos, "#b3123f", 2.2))
-# rótulos de fim de linha
-lm = MS[-1]; g.append(f'<circle cx="{x(len(MS)-1):.1f}" cy="{y(mcap[lm]):.1f}" r="3.5" fill="#2f5fa8"/><text x="{X1+7}" y="{y(mcap[lm])+4:.1f}" class="lb" fill="#2f5fa8">valor de mercado</text><text x="{X1+7}" y="{y(mcap[lm])+18:.1f}" class="lb" fill="#2f5fa8">R$ {fmt(mcap[lm])} mi (set/26)</text>')
-pm = max(pos); g.append(f'<circle cx="{x(MS.index(pm)):.1f}" cy="{y(pos[pm]):.1f}" r="3.5" fill="#b3123f"/><text x="{x(MS.index(pm))+8:.1f}" y="{y(pos[pm])+4:.1f}" class="lb" fill="#b3123f">posição da Cyrela</text><text x="{x(MS.index(pm))+8:.1f}" y="{y(pos[pm])+18:.1f}" class="lb" fill="#b3123f">R$ {fmt(pos[pm], 1)} mi (dez/25) → R$ 4 mil (jun/26)</text>')
-# rótulos de pontos-chave
-for m, txt, dy in (("2016-10", f"R$ {fmt(mcap['2016-10'])} mi", -10), ("2019-12", f"pico R$ {fmt(mcap['2019-12'])} mi", -10), ("2017-06", f"R$ {fmt(pos['2017-06'])} mi", -10), ("2020-03", f"R$ {fmt(pos['2020-03'], 1)} mi", 14)):
-    d = mcap if "mcap" in txt or txt.startswith("pico") or m == "2016-10" else pos
-    g.append(f'<text x="{x(MS.index(m)):.1f}" y="{y(d[m])+dy:.1f}" text-anchor="middle" class="lb" fill="{"#2f5fa8" if d is mcap else "#b3123f"}">{txt}</text>')
-g.append(f'<text x="{X0}" y="22" class="tit">Tecnisa: valor de mercado e o que a posição da Cyrela valia (R$ mi, escala log)</text>')
-g.append(f'<text x="{X0}" y="38" class="sub">fechamento mensal TCSA3 (B3) × ações em circulação; posição da Cyrela pelas notas dos ITR (ações detidas × cotação)</text>')
+def poly(d, yf, col, w):
+    pts = " ".join(f"{x(MS.index(m)):.1f},{yf(v):.1f}" for m, v in sorted(d.items()))
+    return f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{w}" stroke-linejoin="round" stroke-linecap="round"/>'
+g.append(poly(mcap, ya, "#2f5fa8", 2.4)); g.append(poly(pos, yb, "#b3123f", 2.2))
+# rótulos de fim de linha e pontos-chave
+lm = MS[-1]; g.append(f'<circle cx="{x(len(MS)-1):.1f}" cy="{ya(mcap[lm]):.1f}" r="3.5" fill="#2f5fa8"/><text x="{X1+7}" y="{ya(mcap[lm])+4:.1f}" class="lb" fill="#2f5fa8">R$ {fmt(mcap[lm])} mi (set/26)</text>')
+pm = max(pos); g.append(f'<circle cx="{x(MS.index(pm)):.1f}" cy="{yb(pos[pm]):.1f}" r="3.5" fill="#b3123f"/><text x="{X1+7}" y="{yb(pos[pm])+4:.1f}" class="lb" fill="#b3123f">R$ {fmt(pos[pm], 1)} mi (dez/25)</text><text x="{X1+7}" y="{yb(pos[pm])+18:.1f}" class="lb" fill="#b3123f">R$ 4 mil em jun/26</text>')
+g.append(f'<text x="{x(MS.index("2019-12")):.1f}" y="{ya(mcap["2019-12"])-9:.1f}" text-anchor="middle" class="lb" fill="#2f5fa8">pico R$ {fmt(mcap["2019-12"])} mi (dez/19)</text>')
+g.append(f'<text x="{x(MS.index("2016-10"))-8:.1f}" y="{ya(mcap["2016-10"])+16:.1f}" text-anchor="end" class="lb" fill="#2f5fa8">R$ {fmt(mcap["2016-10"])} mi</text>')
+pk = max(pos, key=pos.get); g.append(f'<text x="{x(MS.index(pk)):.1f}" y="{yb(pos[pk])-9:.1f}" text-anchor="middle" class="lb" fill="#b3123f">pico R$ {fmt(pos[pk])} mi ({pk[5:]}/{pk[2:4]})</text>')
+g.append(f'<text x="{x(MS.index("2018-12"))+6:.1f}" y="{yb(pos["2018-12"])-8:.1f}" class="lb" fill="#b3123f">R$ {fmt(pos["2018-12"])} mi</text>')
+g.append(f'<text x="{x(MS.index("2020-03"))+6:.1f}" y="{yb(pos["2020-03"])+14:.1f}" class="lb" fill="#b3123f">R$ {fmt(pos["2020-03"], 1)} mi</text>')
+g.append(f'<text x="{X0}" y="22" class="tit">Tecnisa: valor de mercado (R$ mi)</text>')
+g.append(f'<text x="{X0}" y="38" class="sub">fechamento mensal TCSA3 (B3) × ações em circulação; eventos numerados na lista abaixo</text>')
+g.append(f'<text x="{X0}" y="{PB[0]-22}" class="tit">O que a posição da Cyrela valia (R$ mi)</text>')
+g.append(f'<text x="{X0}" y="{PB[0]-8}" class="sub">ações detidas segundo as notas dos ITR/DFP da Cyrela × cotação do mês; para em dez/25 (R$ 0,8 mi)</text>')
 svg = f'<svg viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg">' + "".join(g) + "</svg>"
 
 # tabela: entradas e saídas da Cyrela
