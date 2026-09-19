@@ -124,4 +124,31 @@ td.n{{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}} td.o{
 <p class="fn">Fontes: B3 COTAHIST (fechamento do último pregão de cada mês, sem ajuste; o grupamento aparece como salto em jun/20); Tecnisa: FR 2026 item 1.1 (capitalizações de 13/10/16, 24/05/17 e 17/07/19; grupamento de 05/05/20), fato relevante de 28/08/26 (73.619.230 ações), DFP 2021 nota 10 (5ª emissão de debêntures: R$ 70 mi, 140% do CDI, garantia real, 15/07/17-15/07/21, liquidada no prazo), fatos relevantes do Jardim das Perdizes (23/02, 25/02, 30/04 e 01/06/26); Cyrela: FR 2026 item 1.1, releases 3T16-2T20, notas de investimentos ao valor justo dos ITR/DFP 2018-2T26 (ações detidas e cotação), notas de aplicações financeiras 2017-21 (CRI sênior da Tecnisa a 140% do CDI: R$ 20,5 mi em 2017, R$ 22,3 mi em 2018). Ações em circulação antes de out/16 derivadas (273,5 mi − 100 mi). Posição da Cyrela entre datas de nota: degrau na data do evento conhecido.</p>
 </div></body></html>"""
 io.open(os.path.join(here, "tecnisa_mcap.html"), "w", encoding="utf-8").write(html)
+# --- versão compacta para o slide do deck enxuto (viewBox 1060×400, dois painéis mais baixos, mesmos dados e eventos)
+PA = (78, 208); PB = (262, 372)
+def ya(v): return PA[1] - (PA[1] - PA[0]) * v / 1500
+def yb(v): return PB[1] - (PB[1] - PB[0]) * v / 150
+g = []
+for t_ in (0, 500, 1000, 1500): g.append(f'<line x1="{X0}" y1="{ya(t_):.1f}" x2="{X1}" y2="{ya(t_):.1f}" stroke="var(--grid)"/><text x="{X0-8}" y="{ya(t_)+4:.1f}" text-anchor="end" class="axq">{fmt(t_)}</text>')
+for t_ in (0, 50, 100, 150): g.append(f'<line x1="{X0}" y1="{yb(t_):.1f}" x2="{X1}" y2="{yb(t_):.1f}" stroke="var(--grid)"/><text x="{X0-8}" y="{yb(t_)+4:.1f}" text-anchor="end" class="axq">{fmt(t_)}</text>')
+for i, m in enumerate(MS):
+    if m.endswith("-01"): g.append(f'<text x="{x(i):.1f}" y="{PA[1]+15}" text-anchor="middle" class="axq">{m[:4]}</text><text x="{x(i):.1f}" y="{PB[1]+15}" text-anchor="middle" class="axq">{m[:4]}</text>')
+g.append(f'<line x1="{X0}" y1="{PA[1]}" x2="{X1}" y2="{PA[1]}" stroke="var(--muted)" opacity=".5"/><line x1="{X0}" y1="{PB[1]}" x2="{X1}" y2="{PB[1]}" stroke="var(--muted)" opacity=".5"/>')
+for k, (m, lab, _) in enumerate(EV):
+    i = MS.index(m); xx = x(i); cy = PA[0] - 18 - (18 if k % 2 else 0)
+    g.append(f'<line x1="{xx:.1f}" y1="{cy+8}" x2="{xx:.1f}" y2="{PB[1]}" stroke="var(--muted)" stroke-dasharray="2 4" opacity=".7"/>')
+    g.append(f'<circle cx="{xx:.1f}" cy="{cy}" r="8" fill="var(--ink)"/><text x="{xx:.1f}" y="{cy+3.2}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#fff">{lab}</text>')
+g.append(poly(mcap, ya, "var(--s2)", 2.4)); g.append(poly(pos, yb, "var(--s1)", 2.2))
+g.append(f'<circle cx="{x(len(MS)-1):.1f}" cy="{ya(mcap[lm]):.1f}" r="3.5" fill="var(--s2)"/><text x="{X1+7}" y="{ya(mcap[lm])+4:.1f}" class="lbl" fill="var(--s2)">R$ {fmt(mcap[lm])} mi (set/26)</text>')
+g.append(f'<circle cx="{x(MS.index(pm)):.1f}" cy="{yb(pos[pm]):.1f}" r="3.5" fill="var(--s1)"/><text x="{X1+7}" y="{yb(pos[pm])+4:.1f}" class="lbl" fill="var(--s1)">R$ {fmt(pos[pm], 1)} mi (dez/25)</text><text x="{X1+7}" y="{yb(pos[pm])+17:.1f}" class="lbl" fill="var(--s1)">R$ 4 mil em jun/26</text>')
+g.append(f'<text x="{x(MS.index("2019-12")):.1f}" y="{ya(mcap["2019-12"])-8:.1f}" text-anchor="middle" class="lbl" fill="var(--s2)">pico R$ {fmt(mcap["2019-12"])} mi (dez/19)</text>')
+g.append(f'<text x="{x(MS.index("2016-10"))-8:.1f}" y="{ya(mcap["2016-10"])+15:.1f}" text-anchor="end" class="lbl" fill="var(--s2)">R$ {fmt(mcap["2016-10"])} mi</text>')
+g.append(f'<text x="{x(MS.index(pk)):.1f}" y="{yb(pos[pk])-8:.1f}" text-anchor="middle" class="lbl" fill="var(--s1)">pico R$ {fmt(pos[pk])} mi ({pk[5:]}/{pk[2:4]})</text>')
+g.append(f'<text x="{x(MS.index("2018-12"))+6:.1f}" y="{yb(pos["2018-12"])-7:.1f}" class="lbl" fill="var(--s1)">R$ {fmt(pos["2018-12"])} mi</text>')
+g.append(f'<text x="{x(MS.index("2020-03"))+6:.1f}" y="{yb(pos["2020-03"])+13:.1f}" class="lbl" fill="var(--s1)">R$ {fmt(pos["2020-03"], 1)} mi</text>')
+g.append(f'<text x="{X0}" y="18" class="gtit">Tecnisa: valor de mercado (R$ mi)</text><text x="{X0}" y="33" class="gsub">fechamento mensal TCSA3 (B3) × ações em circulação; eventos numerados abaixo</text>')
+g.append(f'<text x="{X0}" y="{PB[0]-20}" class="gtit">O que a posição da Cyrela valia (R$ mi)</text><text x="{X0}" y="{PB[0]-6}" class="gsub">ações detidas nas notas dos ITR/DFP × cotação do mês; para em dez/25 (R$ 0,8 mi)</text>')
+svg_c = f'<svg viewBox="0 0 {W} 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block"><style>.lbl{{font-size:11px;font-weight:600}}</style>' + "".join(g) + "</svg>"
+json.dump({"svg": svg_c, "ev": [t for _, _, t in EV], "rows": ROWS, "mcap_fim": round(mcap[lm]), "pos_pico": round(pos[pk]), "pico_m": pk},
+          io.open(os.path.join(here, "_tecnisa_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("ok", {k: round(v) for k, v in mcap.items() if k in ("2015-01", "2016-10", "2019-12", "2020-06", "2025-12", "2026-09")}, {k: round(v, 1) for k, v in pos.items() if k in ("2016-10", "2017-06", "2018-12", "2019-12", "2020-03", "2020-06", "2025-12")})

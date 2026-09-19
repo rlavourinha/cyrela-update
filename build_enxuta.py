@@ -912,6 +912,13 @@ def _append_card(title_sub, c3n, html):
             assert s2 != s, (title_sub, c3n); final[k] = s2; return
     raise KeyError(title_sub)
 _append_card("Perspectivas do MCMV", "Caixa", ' <span style="color:#c5003e;font-weight:600">E a Caixa está em greve desde 10/09: impactos ainda incertos no repasse, no fluxo financeiro e na medição de obras.</span>')
+# --- anexo · follow-up: Tecnisa, último slide (19/09/26); dados e svg de grafico_tecnisa.py (_tecnisa_frag.json)
+TF = J("_tecnisa_frag.json")
+_tb = '<div class="viz" style="margin-top:2px">' + TF["svg"] + '</div><ol class="ev3">' + "".join(f"<li>{e}</li>" for e in TF["ev"]) + "</ol>"
+_tb += output("R$ 94,9 mi de equity em 2016-17, ~R$ 77 mi de volta até 2026: perda de R$ 15-20 mi, sem dividendo; o CRI de ~R$ 20 mi a 140% do CDI foi pago em jul/21.", "Follow-up: depois do follow-on de 2019 a Cyrela virou espectadora (3,3%) e zerou no 1S26; o Jardim das Perdizes, que ela desistiu de comprar no 3T25, foi para o BTG por R$ 260,9 mi em jun/26.")
+_ts = sl("anexo · follow-up · Tecnisa", "Tecnisa: R$ 95 mi de equity, R$ 20 mi de dívida, e o que sobrou.", _tb, cls="anexo", nota="Fontes: B3 COTAHIST (fechamento do último pregão do mês, sem ajuste; o grupamento de 05/05/20 aparece como salto em jun/20); Tecnisa: FR 2026 item 1.1 (capitalizações de 13/10/16, 24/05/17 e 17/07/19), fato relevante de 28/08/26 (73.619.230 ações; novo grupamento 10:1), DFP 2021 nota 10 (5ª emissão de debêntures: R$ 70 mi, 140% do CDI, garantia real, 15/07/17-15/07/21, liquidada no prazo), fatos relevantes do Jardim das Perdizes (23/02, 25/02, 30/04 e 01/06/26); Cyrela: FR 2026 item 1.1, releases 3T16-2T20, notas de investimentos ao valor justo dos ITR/DFP 2018-2T26 (ações detidas e cotação), notas de aplicações financeiras 2017-21 (CRI sênior da Tecnisa a 140% do CDI). Preço das vendas de 2017 não divulgado (cotações de set-dez/17). Ações em circulação antes de out/16 derivadas (273,5 mi − 100 mi).")
+_ts = _ts.replace('<div class="sl-in">', '<div class="wm-anexo" aria-hidden="true">ANEXO · FOLLOW-UP</div><div class="sl-in">', 1)
+final.append(_ts)
 slides = final
 
 EXTRA_CSS = """
@@ -945,6 +952,11 @@ EXTRA_CSS = """
   .deck .fwgrid.compact .fwcard dd { line-height:1.3; }
   .deck .cards3.tight .c3 { font-size:12px; line-height:1.32; padding:11px 13px; }   /* slide do terreno/capital de giro: três cartões densos em 4 linhas */
   .deck .cards3.tight .c3n { margin-bottom:4px; }
+  .deck .slide.anexo { overflow:hidden; background:linear-gradient(180deg, rgba(197,0,62,.035), transparent 38%); }   /* anexo · follow-up: marca d'água em todo o slide */
+  .deck .slide.anexo .wm-anexo { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%) rotate(-16deg); text-align:center; font-family:"Fraunces", Georgia, serif; font-weight:800; font-size:150px; letter-spacing:.08em; color:rgba(197,0,62,.065); white-space:nowrap; pointer-events:none; z-index:0; }
+  .deck .slide.anexo .sl-in { position:relative; z-index:1; }
+  .deck .ev3 { columns:3; column-gap:16px; font-size:10.8px; line-height:1.28; margin:6px 0 0; padding-left:16px; color:var(--ink-2); }
+  .deck .ev3 li { break-inside:avoid; margin-bottom:2px; }
   .deck .cards3.tight2r .c3 { font-size:11.6px; line-height:1.3; padding:9px 12px; }   /* 2ª linha do slide do terreno: dois cartões dentro da altura do gráfico */
   .deck .cards3.tight2r .c3n { font-size:19px; margin-bottom:2px; }
   /* slide de teoria do caixa MAP × MCMV: premissas em texto corrido (uma linha por cartão) e cartão do retorno ao lado do gráfico */
@@ -967,7 +979,10 @@ def _widen(m):
     vb = re.search(r'viewBox="(-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)"', svg)
     if not vb: return svg
     x0, y0, w, h_ = vb.groups(); return svg.replace(vb.group(0), f'viewBox="{x0} {y0} {float(w) + extra + 6:g} {h_}"', 1)
-out += ["  " + (re.sub(r'<svg viewBox="[^"]+">.*?</svg>', _widen, s, flags=re.S) if id(s) in GEN_SET else s) + "\n" for s in slides]
+def _so(s):   # 19/09/26: um slide vindo de index.html trazia markup do <nav> das abas antes do <section>, e um </div> ali fechava o .deck cedo (os últimos slides caíam fora do deck)
+    i = s.find('<section class="slide'); j = s.rfind('</section>')
+    return s[i:j + len('</section>')] + "\n" if i >= 0 and j >= 0 else s
+out += ["  " + _so(re.sub(r'<svg viewBox="[^"]+">.*?</svg>', _widen, s, flags=re.S) if id(s) in GEN_SET else s) + "\n" for s in slides]
 ALIGN_JS = """
   // slides mais altos que a janela: alinhar pelo topo (o título aparece; o resto rola dentro do slide)
   (function () {
