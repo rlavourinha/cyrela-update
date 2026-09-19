@@ -879,6 +879,14 @@ def _add_todo(title_sub, txt):
             final[k] = re.sub(r'(<p class="kick"[^>]*>)(.*?)</p>', lambda m: m.group(1) + m.group(2) + ' <span class="pill-teoria" style="background:#c5003e">' + txt + '</span></p>', s, count=1, flags=re.S); return
     raise KeyError(title_sub)
 _add_todo("Menos canteiros, mais unidades por canteiro", "to-do · conversar com o RI sobre as perspectivas de lançamento")
+# slides 19 (SBPE) e 22 (perspectivas), que vêm prontos da base: "da TR para o CDI" descrevia o custo marginal de funding, não o indexador da poupança (19/09/26)
+_REPL_TXT = [
+ ("Muda o preço do funding, da TR para o CDI, um fator de cada vez.", "Não muda o indexador da poupança, que segue em TR: muda o peso dela no funding. O crédito novo nasce lastreado em LCI, a CDI, um fator de cada vez."),
+ ("Do lado do funding, o novo modelo troca TR por CDI ao longo de dez anos e não cria captação: o SBPE segue sistema fechado.", "Do lado do funding, a poupança segue em TR, mas perde peso: o crédito novo é lastreado em LCI a CDI ao longo de dez anos, sem captação nova. O SBPE segue sistema fechado."),
+]
+for _o, _n in _REPL_TXT:
+    _k = [k for k, s in enumerate(final) if _o in s]; assert len(_k) == 1, _o[:40]
+    final[_k[0]] = final[_k[0]].replace(_o, _n)
 # slide do DuPont (vem pronto da base): sem o cartão "leitura contrária"; os dois gráficos empilhados e maiores (pedido de 18/09/26)
 for k, s in enumerate(final):
     if "a DuPont diz de onde veio" in _h2(s):
