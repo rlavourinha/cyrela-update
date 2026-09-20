@@ -64,7 +64,7 @@ rad = lambda u: RMAX * math.sqrt(u / UMAX)
 # rótulos de regiões (posição = centroide médio dos distritos da região), só no 1º mapa
 regc = collections.defaultdict(list)
 for d, v in DIST.items(): regc[v["reg"]].append(v["c"])
-LAB = {norm(x): x for x in ("Lapa", "Jaguaré", "Santo Amaro", "Barra Funda", "Penha", "Freguesia do Ó", "Jaraguá", "Cambuci", "Mooca", "Ermelino Matarazzo", "Jardim São Luís", "Morumbi", "Vila Prudente", "Sacomã", "Butantã", "Socorro", "Mandaqui", "Ipiranga", "Campo Grande", "Rio Pequeno", "São Lucas", "Jabaquara")}
+LAB = {norm(x): x for x in ("Lapa", "Jaguaré", "Santo Amaro", "Barra Funda", "Penha", "Freguesia do Ó", "Jaraguá", "Cambuci", "Mooca", "Ermelino Matarazzo", "Morumbi", "Sacomã", "Butantã", "Mandaqui", "Rio Pequeno", "São Lucas", "Jabaquara")}
 tot = {}
 for k, (p, a, b) in enumerate(PER):
     ox = k * (MW + GAP); g.append(f'<g transform="translate({ox},0)"><g clip-path="url(#mapclip)"><use href="#regioes"/><use href="#malha"/></g></g>')
@@ -74,7 +74,7 @@ for k, (p, a, b) in enumerate(PER):
     if k == 0:
         for reg, cs in regc.items():
             cx = sum(c[0] for c in cs) / len(cs); cy = sum(c[1] for c in cs) / len(cs); x, y = prj(cx, cy, ox)
-            if TOP < y < TOP + MH: g.append(f'<text x="{x:.1f}" y="{y:.1f}" class="axq" text-anchor="middle" opacity=".7" style="font-size:11px;letter-spacing:.08em">{reg.upper()}</text>')
+            if TOP < y < TOP + MH: g.append(f'<text x="{x:.1f}" y="{y:.1f}" class="axq" text-anchor="middle" opacity=".35" style="font-size:9.5px;letter-spacing:.08em">{reg.upper()}</text>')
     labs = []
     for c, col, dx in (("Vivaz", S1, 1), ("Cury", S3, -1)):
         for d, u in sorted(un[c][p].items(), key=lambda kv: -kv[1]):
@@ -84,7 +84,7 @@ for k, (p, a, b) in enumerate(PER):
     seen = set()
     for x, y, r, n, col in labs:
         if n in seen: continue
-        seen.add(n); g.append(f'<text x="{x + r + 3:.1f}" y="{y + 3.5:.1f}" class="axq" style="font-size:9px" fill="{I2}" paint-order="stroke" stroke="var(--page)" stroke-width="3" stroke-linejoin="round">{n}</text>')
+        seen.add(n); g.append(f'<text x="{x + r + 4:.1f}" y="{y + 3.5:.1f}" class="axq" style="font-size:9px" fill="{I2}" paint-order="stroke" stroke="var(--page)" stroke-width="3.5" stroke-linejoin="round">{n}</text>')
 # legenda
 ly = TOP + MH + 14; g.append(f'<circle cx="8" cy="{ly - 4}" r="5" fill="{S3}" fill-opacity=".55" stroke="{S3}"/><text x="17" y="{ly}" class="axq">Cury</text><circle cx="58" cy="{ly - 4}" r="5" fill="{S1}" fill-opacity=".55" stroke="{S1}"/><text x="67" y="{ly}" class="axq">Vivaz</text><text x="110" y="{ly}" class="axq" opacity=".8">área da bolha ∝ unidades lançadas no distrito no período; fundo = regiões da Prefeitura (Centro, Oeste, Sul, Leste, Norte)</text>')
 W = 3 * MW + 2 * GAP; Hh = ly + 6
