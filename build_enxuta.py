@@ -993,6 +993,11 @@ _ts = sl("anexo · follow-up · Tecnisa", "Tecnisa: R$ 95 mi de equity, ~R$ 75 m
 _ts = _ts.replace('<div class="sl-in">', '<div class="wm-anexo" aria-hidden="true">ANEXO · FOLLOW-UP</div><div class="sl-in">', 1)
 _ts = _ts.replace('<h2 class="head-xl">Tecnisa:', '<h2 class="head-xl" style="font-size:36px;margin-bottom:4px">Tecnisa:', 1)   # título em uma linha (a 46px quebrava em duas: +50px; a 38px " sobrou." ainda caía na 2ª linha, ~1045px > 1020)
 final.append(_ts)
+# tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
+_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity")
+for _k, _s in enumerate(final):
+    if any(n in _h2(_s) for n in _NOVOS):
+        final[_k] = _s.replace('<p class="kick">', '<p class="kick"><span class="tag-novo" title="slide novo">★ Slide Novo</span>', 1)
 slides = final
 
 EXTRA_CSS = """
@@ -1032,6 +1037,7 @@ EXTRA_CSS = """
   .deck .slide.anexo .sl-in { position:relative; z-index:1; }
   .deck .ev3 { columns:4; column-gap:14px; font-size:10px; line-height:1.22; margin:4px 0 0; padding-left:15px; color:var(--ink-2); }   /* 19/09/26: 3 col/10,8px → 4 col/10,3px (slide 45 a 953px); textos mais longos → 10px/1,22 (slide a 774px) */
   .deck .ev3 li { break-inside:avoid; margin-bottom:2px; }
+  .deck .kick .tag-novo { float:right; background:#ffd54f; color:#2b2a26; padding:3px 10px; border-radius:6px; font-size:10.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin-left:12px; box-shadow:0 1px 2px rgba(0,0,0,.12); }
   .deck .cards3.tight2r .c3 { font-size:11.6px; line-height:1.3; padding:9px 12px; }   /* 2ª linha do slide do terreno: dois cartões dentro da altura do gráfico */
   .deck .cards3.tight2r .c3n { font-size:19px; margin-bottom:2px; }
   /* slide de teoria do caixa MAP × MCMV: premissas em texto corrido (uma linha por cartão) e cartão do retorno ao lado do gráfico */
