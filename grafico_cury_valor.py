@@ -38,51 +38,65 @@ def sltm(k, f): return sum(sflow(k, f, q) for q in sq[-4:])
 V = {"ret_op": R["mcmv"][su], "mg_op": 100 * sltm("mcmv", "lop") / sltm("mcmv", "rec"), "giro": sltm("mcmv", "rec") / S[su]["mcmv"]["ativo"], "at_pl": S[su]["mcmv"]["ativo"] / S[su]["mcmv"]["pl"], "pl": S[su]["mcmv"]["pl"] / 1000, "rec": sltm("mcmv", "rec") / 1000}
 fator_ll = cu["roe"] / cu["ret_op"]                      # quanto do retorno operacional vira ROE líquido na Cury (juros, IR e minoritários)
 V["roe_est"] = V["ret_op"] * fator_ll
+# ---- vendas ÷ receita, LTM (Cury: vendas líquidas parte Cury e receita do RI; Vivaz: vendas 100% do segmento MCMV, planilha operacional, e receita do segmento na nota do ITR)
+CH = json.load(io.open(os.path.join(here, "_cury_hist.json"), encoding="utf-8")); OP = json.load(io.open(os.path.join(here, "_operacional_ri.json"), encoding="utf-8"))
+_vc = {q: v for q, v in CH["VENDAS E DISTRATOS · Vendas Líquidas parte Cury"].items() if "T" in q}; _lc = {q: v for q, v in CH["LANÇAMENTOS · VGV (em R$ mil) - Parte Cury"].items() if "T" in q}
+def _ltm(d, q, n=4):
+    ks = sorted(d, key=ordq); i = ks.index(q); return sum((d[x] or 0) for x in ks[i - n + 1:i + 1]) if i >= n - 1 else None
+RC = {q: _ltm(_vc, q) / 1e3 / (ltm("rec", q) / 1e3) for q in QC if _ltm(_vc, q) and q in D}          # Cury: vendas ÷ receita
+LC = {q: _ltm(_lc, q) / 1e3 / (ltm("rec", q) / 1e3) for q in QC if _ltm(_lc, q) and q in D}          # Cury: lançamentos ÷ receita
+_vv = {q: sum((OP["vendas"]["vgv100_seg"][k].get(q) or 0) for k in ("mcmv23", "mcmv1")) for q in OP["tris"]}
+_rv = {q: sflow("mcmv", "rec", q) for q in sq}
+RV = {q: _ltm(_vv, q) / _ltm(_rv, q) for q in sq if ordq(q) >= (20, 4) and _ltm(_rv, q)}               # Vivaz: vendas 100% ÷ receita do segmento
 # ---- valor
 mc_cury = MKT["CURY3"] * MKT["acoes_cury"] / 1e9; pl_ctrl = D[u]["pl_ctrl"] / 1e6; pl_tot = D[u]["pl_total"] / 1e6
 pb_cury = mc_cury / pl_ctrl; gord = lambda roe: (roe - MKT["g"]) / (MKT["ke"] - MKT["g"])
 pb_cury_g = gord(cu["roe"]); pb_viv = gord(V["roe_est"]); val_viv = pb_viv * V["pl"]
 mc_cyre = MKT["CYRE3"] * MKT["acoes_cyre"] / 1e9; stake = MKT["cyrela_em_cury"] / 100 * mc_cury
-# ---- svg: painel 1 retornos (Cury ROE, Cury op, Vivaz op); painel 2 estrutura da Cury (% do PL)
-g = []; X0, X1, Y0, Y1 = 46, 420, 46, 200; n = len(QC); x = lambda i: X0 + (X1 - X0) * i / (n - 1); y = lambda v: Y1 - (Y1 - Y0) * v / 100
-g.append(f'<text x="{X0}" y="17" class="gtit">Retorno LTM: Cury × Vivaz, %</text><text x="{X0}" y="32" class="gsub">Cury: ROE (lucro ÷ PL) e retorno operacional (antes de juros e IR); Vivaz: operacional, ITR</text>')
-for t in (0, 25, 50, 75, 100): g.append(f'<line x1="{X0}" y1="{y(t):.1f}" x2="{X1}" y2="{y(t):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-6}" y="{y(t)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{t}%</text>')
-for i, q in enumerate(QC):
-    if q.startswith("4T"): g.append(f'<text x="{x(i):.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".75">20{q[2:]}</text>')
-g.append(f'<line x1="{X0}" y1="{Y1}" x2="{X1}" y2="{Y1}" stroke="var(--baseline)"/>')
-ser = [([C[q]["ret_op"] for q in QC], GR, 2.4, "5 3", "Cury operacional"), ([C[q]["roe"] for q in QC], GR, 2.6, "", "Cury ROE"), ([R["mcmv"].get(q) for q in QC], S1, 2.6, "", "Vivaz operacional")]
-ends = []
-for vals, col, w, dash, lab in ser:
-    pts = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, v in enumerate(vals) if v is not None)
-    g.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{w}"{f" stroke-dasharray=\"{dash}\"" if dash else ""} stroke-linejoin="round"/>'); ends.append([y(vals[-1]), col, f"{lab} {fmt(vals[-1])}%"])
-ends.sort(key=lambda e: e[0])
-for k in range(1, len(ends)):
-    if ends[k][0] - ends[k - 1][0] < 13: ends[k][0] = ends[k - 1][0] + 13
-for yy, col, lab in ends: g.append(f'<text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab}</text>')
-X0, X1 = 600, 960; x = lambda i: X0 + (X1 - X0) * i / (n - 1); y2 = lambda v: Y1 - (Y1 - Y0) * (v + 60) / 220
-g.append(f'<text x="{X0}" y="17" class="gtit">Alavancagem da Cury: quem financia o ativo, % do PL</text><text x="{X0}" y="32" class="gsub">terreno a prazo (credores por imóveis), adiantamento de clientes e dívida líquida (negativo = caixa)</text>')
-for t in (-50, 0, 50, 100, 150): g.append(f'<line x1="{X0}" y1="{y2(t):.1f}" x2="{X1}" y2="{y2(t):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-6}" y="{y2(t)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{t}%</text>')
-for i, q in enumerate(QC):
-    if q.startswith("4T"): g.append(f'<text x="{x(i):.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".75">20{q[2:]}</text>')
-g.append(f'<line x1="{X0}" y1="{y2(0):.1f}" x2="{X1}" y2="{y2(0):.1f}" stroke="var(--baseline)"/>')
-ser2 = [([C[q]["cred_pl"] for q in QC], S3, 2.6, "", "terreno a prazo"), ([C[q]["adiant_pl"] for q in QC], S2, 2.2, "", "adiant. de clientes"), ([C[q]["dl_pl"] for q in QC], S1, 2.4, "", "dívida líquida")]
-ends = []
-for vals, col, w, dash, lab in ser2:
-    pts = " ".join(f"{x(i):.1f},{y2(v):.1f}" for i, v in enumerate(vals)); g.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{w}" stroke-linejoin="round"/>'); ends.append([y2(vals[-1]), col, f"{lab} {fmt(vals[-1])}%"])
-ends.sort(key=lambda e: e[0])
-for k in range(1, len(ends)):
-    if ends[k][0] - ends[k - 1][0] < 13: ends[k][0] = ends[k - 1][0] + 13
-for yy, col, lab in ends: g.append(f'<text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab}</text>')
+def v2(g1, n, roe, pl0, g2=None):   # dois estágios: cresce g1 por n anos reinvestindo (payout = 1 − g1/ROE), depois perpetuidade a g2 com o mesmo ROE
+    ke = MKT["ke"] / 100; g2 = MKT["g"] / 100 if g2 is None else g2; pl = pl0; pv = 0.0
+    for k in range(1, n + 1):
+        ll = roe * pl; pv += ll * (1 - g1 / roe) / (1 + ke) ** k; pl *= 1 + g1
+    return pv + pl * (roe - g2) / (ke - g2) / (1 + ke) ** n
+G1, N1 = 0.25, 5
+val_viv_top = v2(G1, N1, V["roe_est"] / 100, V["pl"]); pb_viv_top = val_viv_top / V["pl"]
+# ---- svg: painel 1 retornos; painel 2 estrutura da Cury (% do PL); painel 3 vendas ÷ receita LTM
+g = []; Y0, Y1 = 46, 200
+def painel(X0, X1, title, sub, ymin, ymax, ticks, tickf, series, xs):
+    n = len(xs); x = lambda i: X0 + (X1 - X0) * i / (n - 1); y = lambda v: Y1 - (Y1 - Y0) * (v - ymin) / (ymax - ymin)
+    g.append(f'<text x="{X0}" y="17" class="gtit">{title}</text><text x="{X0}" y="32" class="gsub">{sub}</text>')
+    for tv in ticks: g.append(f'<line x1="{X0}" y1="{y(tv):.1f}" x2="{X1}" y2="{y(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-6}" y="{y(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{tickf(tv)}</text>')
+    for i, q in enumerate(xs):
+        if q.startswith("4T"): g.append(f'<text x="{x(i):.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".75">20{q[2:]}</text>')
+    g.append(f'<line x1="{X0}" y1="{y(0) if ymin <= 0 <= ymax else Y1:.1f}" x2="{X1}" y2="{y(0) if ymin <= 0 <= ymax else Y1:.1f}" stroke="var(--baseline)"/>')
+    ends = []
+    for vals, col, w, dash, lab, labf in series:
+        pts = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, v in enumerate(vals) if v is not None)
+        g.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{w}"{f" stroke-dasharray=\"{dash}\"" if dash else ""} stroke-linejoin="round"/>')
+        last = [v for v in vals if v is not None][-1]; ends.append([y(last), col, f"{lab} {labf(last)}"])
+    ends.sort(key=lambda e: e[0])
+    for k in range(1, len(ends)):
+        if ends[k][0] - ends[k - 1][0] < 13: ends[k][0] = ends[k - 1][0] + 13
+    for yy, col, lab in ends: g.append(f'<text x="{X1+5:.1f}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab}</text>')
+pct = lambda v: f"{fmt(v)}%"
+painel(46, 290, "Retorno LTM: Cury × Vivaz, %", "Cury: ROE e retorno operacional; Vivaz: operacional (ITR)", 0, 100, (0, 25, 50, 75, 100), pct,
+       [([C[q]["ret_op"] for q in QC], GR, 2.4, "5 3", "Cury op.", pct), ([C[q]["roe"] for q in QC], GR, 2.6, "", "Cury ROE", pct), ([R["mcmv"].get(q) for q in QC], S1, 2.6, "", "Vivaz op.", pct)], QC)
+painel(430, 660, "Alavancagem da Cury, % do PL", "terreno a prazo, adiantamentos e dívida líquida (negativo = caixa)", -60, 160, (-50, 0, 50, 100, 150), pct,
+       [([C[q]["cred_pl"] for q in QC], S3, 2.6, "", "terreno a prazo", pct), ([C[q]["adiant_pl"] for q in QC], S2, 2.2, "", "adiant. clientes", pct), ([C[q]["dl_pl"] for q in QC], S1, 2.4, "", "dívida líq.", pct)], QC)
+QX = [q for q in QC if q in RV or q in RC]; xf = lambda v: f"{fmt(v, 1)}x"
+painel(790, 1010, "Vendas ÷ receita, LTM", "vendido e ainda não reconhecido; Vivaz: 100% ÷ segmento", 0, 4, (0, 1, 2, 3, 4), xf,
+       [([RC.get(q) for q in QX], GR, 2.6, "", "Cury", xf), ([RV.get(q) for q in QX], S1, 2.6, "", "Vivaz", xf)], QX)
 svg = '<svg viewBox="0 0 1100 226" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabelas: DuPont e valor
 rows = [("margem operacional (lucro operacional ÷ receita, LTM)", f"{fmt(cu['mg_op'])}%", f"{fmt(V['mg_op'])}%"), ("giro (receita LTM ÷ ativo)", f"{fmt(cu['giro'], 2)}x", f"{fmt(V['giro'], 2)}x"), ("ativo ÷ PL", f"{fmt(cu['at_pl'], 1)}x", f"{fmt(V['at_pl'], 1)}x"),
         ("retorno operacional s/ capital, LTM", f"{fmt(cu['ret_op'])}%", f"{fmt(V['ret_op'])}%"), ("dívida líquida ÷ PL", f"{fmt(cu['dl_pl'])}% (caixa)", "n.d. (segmento)"), ("terreno a prazo + adiantamentos ÷ PL", f"{fmt(cu['cred_pl'] + cu['adiant_pl'])}%", "n.d. (segmento)")]
 t1 = '<table class="tl compact" style="width:100%;margin-top:0"><thead><tr><th style="text-align:left">DuPont, 2T26</th><th style="text-align:right;color:#2e7d32">Cury</th><th style="text-align:right;color:var(--s1)">Vivaz</th></tr></thead><tbody>' + "".join(f'<tr{" class=\"total\"" if "retorno" in a else ""}><td>{a}</td><td style="text-align:right">{b}</td><td style="text-align:right">{c}</td></tr>' for a, b, c in rows) + "</tbody></table>"
-rows2 = [("preço e ações", f"R$ {fmt(MKT['CURY3'], 2)} × {fmt(MKT['acoes_cury'] / 1e6)} mi", "—"), ("valor de mercado", f"R$ {fmt(mc_cury, 1)} bi", f"R$ {fmt(val_viv, 1)} bi (implícito)"), ("PL (controladora)", f"R$ {fmt(pl_ctrl, 2)} bi", f"R$ {fmt(V['pl'], 2)} bi (segmento)"),
-         ("ROE", f"{fmt(cu['roe'])}%", f"~{fmt(V['roe_est'])}% (op. {fmt(V['ret_op'])}% × {fmt(fator_ll, 2)})"), ("P/B de mercado", f"{fmt(pb_cury, 1)}x", "—"), (f"P/B por Gordon, Ke {fmt(MKT['ke'])}% e g {fmt(MKT['g'])}%", f"{fmt(pb_cury_g, 1)}x", f"{fmt(pb_viv, 1)}x"),
-         ("Cyrela: valor de mercado", f"R$ {fmt(mc_cyre, 1)} bi (CYRE3 R$ {fmt(MKT['CYRE3'], 2)})", f"Vivaz = {fmt(100 * val_viv / mc_cyre)}% do valor com {fmt(100 * V['pl'] / (S[su]['cyrela']['pl'] + S[su]['living']['pl'] + S[su]['mcmv']['pl'] + S[su]['demais']['pl']) * 1000)}% do PL dos segmentos"), ("15,08% da Cury na mão da Cyrela", f"R$ {fmt(stake, 2)} bi", "—")]
+rows2 = [("preço e ações", f"R$ {fmt(MKT['CURY3'], 2)} × {fmt(MKT['acoes_cury'] / 1e6)} mi", "—"), ("valor de mercado", f"R$ {fmt(mc_cury, 1)} bi", f"R$ {fmt(val_viv, 1)} a {fmt(val_viv_top, 1)} bi (implícito)"), ("PL (controladora)", f"R$ {fmt(pl_ctrl, 2)} bi", f"R$ {fmt(V['pl'], 2)} bi (segmento)"),
+         ("ROE", f"{fmt(cu['roe'])}%", f"~{fmt(V['roe_est'])}% (op. {fmt(V['ret_op'])}% × {fmt(fator_ll, 2)})"), ("vendas ÷ receita, LTM", f"{fmt(RC[QC[-1]], 1)}x (em regime)", f"{fmt(RV[sq[-1]], 1)}x (crescimento contratado)"), ("P/B de mercado", f"{fmt(pb_cury, 1)}x", "—"),
+         (f"piso: Gordon, Ke {fmt(MKT['ke'])}% e g {fmt(MKT['g'])}%", f"{fmt(pb_cury_g, 1)}x", f"{fmt(pb_viv, 1)}x · R$ {fmt(val_viv, 1)} bi"), (f"teto: {fmt(100 * G1)}% a.a. por {N1} anos, depois {fmt(MKT['g'])}%", "—", f"{fmt(pb_viv_top, 1)}x · R$ {fmt(val_viv_top, 1)} bi"),
+         ("Cyrela: valor de mercado", f"R$ {fmt(mc_cyre, 1)} bi", f"Vivaz = {fmt(100 * val_viv / mc_cyre)} a {fmt(100 * val_viv_top / mc_cyre)}% do valor, 8% do PL"), ("15,08% da Cury na mão da Cyrela", f"R$ {fmt(stake, 2)} bi", "—")]
 t2 = '<table class="tl compact" style="width:100%;margin-top:0"><thead><tr><th style="text-align:left">valor</th><th style="text-align:right;color:#2e7d32">Cury</th><th style="text-align:right;color:var(--s1)">Vivaz</th></tr></thead><tbody>' + "".join(f'<tr{" class=\"total\"" if "Gordon" in a or "valor de mercado" == a else ""}><td>{a}</td><td style="text-align:right">{b}</td><td style="text-align:right">{c}</td></tr>' for a, b, c in rows2) + "</tbody></table>"
 num = {"mc_cury": mc_cury, "pb_cury": pb_cury, "pb_cury_g": pb_cury_g, "roe_cury": cu["roe"], "ret_cury": cu["ret_op"], "dl_pl": cu["dl_pl"], "cred_pl": cu["cred_pl"], "adiant_pl": cu["adiant_pl"], "at_pl": cu["at_pl"], "at_pl_v": V["at_pl"], "mg_c": cu["mg_op"], "mg_v": V["mg_op"], "giro_c": cu["giro"], "giro_v": V["giro"],
-       "roe_viv": V["roe_est"], "pb_viv": pb_viv, "val_viv": val_viv, "mc_cyre": mc_cyre, "stake": stake, "pl_viv": V["pl"], "fator_ll": fator_ll, "mkt": MKT, "u": u}
+       "roe_viv": V["roe_est"], "pb_viv": pb_viv, "val_viv": val_viv, "pb_viv_top": pb_viv_top, "val_viv_top": val_viv_top, "g1": G1, "n1": N1, "vr_cury": RC[QC[-1]], "vr_viv": RV[sq[-1]], "mc_cyre": mc_cyre, "stake": stake, "pl_viv": V["pl"], "fator_ll": fator_ll, "mkt": MKT, "u": u}
 json.dump({"svg": svg, "t1": t1, "t2": t2, "num": num}, io.open(os.path.join(here, "_cury_valor_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("ok", {k: (round(v, 2) if isinstance(v, float) else v) for k, v in num.items() if k != "mkt"})
