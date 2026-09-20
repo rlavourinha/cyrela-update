@@ -293,6 +293,36 @@
     }
    }
   },
+  "202212": {
+   "total_lci_bi": 238428.3,
+   "total_poup_bi": 1017495.2,
+   "emissores": {
+    "Caixa": {
+     "lci_bi": 73933.3,
+     "poup_bi": 360729.5
+    },
+    "Bradesco": {
+     "lci_bi": 51258.5,
+     "poup_bi": 134624.5
+    },
+    "Itaú": {
+     "lci_bi": 28116.8,
+     "poup_bi": 179771.8
+    },
+    "Santander": {
+     "lci_bi": 34139.2,
+     "poup_bi": 60204.5
+    },
+    "Banco do Brasil": {
+     "lci_bi": 12197.4,
+     "poup_bi": 213435.8
+    },
+    "Inter": {
+     "lci_bi": 5793.8,
+     "poup_bi": 1307.1
+    }
+   }
+  },
   "202312": {
    "total_lci_bi": 361617.4,
    "total_poup_bi": 1000617.7,
