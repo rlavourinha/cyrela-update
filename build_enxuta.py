@@ -872,6 +872,73 @@ final.insert(next(i for i, s in enumerate(final) if "Terreno a prazo, obra e rec
 # (18/09/26) slide 'ROE ajustado pelo estoque pronto' retirado do deck a pedido; _dpr continua gerado, não inserido
 _dj = next(s for s in slides if "um título de juros" in _h2(s))
 final.insert(next(i for i, s in enumerate(final) if "O preço: P/B em vinte anos" in _h2(s)) + 1, _dj)
+# --- slide 'MCMV por dentro' (vem pronto da base): gráfico de share regenerado com a Cury desde 2017 e Cury ÷ SP+RJ (19/09/26)
+_LR = J("_lancamentos_ri.json"); _MM = J("_mcmv_mensal.json"); _MU = J("_mcmv_uf_mensal.json"); _CH = J("_cury_hist.json")
+_cu = next(v for k, v in _CH.items() if k.endswith("Número de unidades") and "LANÇ" in k.upper())
+_YS = [str(y) for y in range(2009, 2026)]
+def _ann(d, key=None):
+    a = {}
+    for k, v in d.items(): a[k[:4]] = a.get(k[:4], 0) + (v[key] if key else v)
+    return a
+_fin = _ann(_MM["mensal"], "un"); _ogu = _ann(_MM["ogu_mensal"]); _spr = _ann(_MU["sp_rj"])
+_cy = {}; _cy1 = {}
+for q in _LR["un_mcmv23"]:
+    y = "20" + q[2:]; _cy[y] = _cy.get(y, 0) + (_LR["un_mcmv23"].get(q) or 0); _cy1[y] = _cy1.get(y, 0) + (_LR["un_mcmv1"].get(q) or 0)
+_L4 = ("3T25", "4T25", "1T26", "2T26"); _lw = lambda k: "2025-07" <= k <= "2026-06"
+_ltm = {"fin": sum(v["un"] for k, v in _MM["mensal"].items() if _lw(k)), "ogu": sum(v for k, v in _MM["ogu_mensal"].items() if _lw(k)), "spr": sum(v for k, v in _MU["sp_rj"].items() if _lw(k)),
+        "cy": sum(_LR["un_mcmv23"].get(q) or 0 for q in _L4), "cu": sum(_cu.get(q, 0) for q in _L4)}
+_sh_cy = {y: 100 * _cy[y] / _fin[y] for y in _YS}; _sh_cy1 = {y: 100 * (_cy[y] + _cy1[y]) / (_fin[y] + _ogu.get(y, 0)) for y in _YS if _cy1.get(y)}
+_sh_cu = {y: 100 * _cu[y] / _fin[y] for y in _YS if _cu.get(y)}; _sh_cs = {y: 100 * _cu[y] / _spr[y] for y in _YS if _cu.get(y)}
+_ltm["sh_cy"] = 100 * _ltm["cy"] / _ltm["fin"]; _ltm["sh_cu"] = 100 * _ltm["cu"] / _ltm["fin"]; _ltm["sh_cs"] = 100 * _ltm["cu"] / _ltm["spr"]
+# geometria da base: barras x = 62,7 + 22,75·i (FGTS) e +8,7 (OGU), base y=137, 800 mil → y=53; share x = 564,2 + 18,33·i, LTM em 875,8; eixo 0-12%
+_g = []
+def _yb(v): return 137 - 84 * v / 800000
+def _ys(v): return 137 - 84 * v / 12
+for tval in (0, 200, 400, 600, 800):
+    _g.append(f'<line x1="60" y1="{_yb(tval*1000):.1f}" x2="470" y2="{_yb(tval*1000):.1f}" stroke="var(--grid)" opacity=".55"/><text x="54" y="{_yb(tval*1000)+4:.1f}" class="axq" text-anchor="end" opacity=".85">{tval}</text>')
+_g.append('<line x1="60" y1="137" x2="470" y2="137" stroke="var(--baseline)"/>')
+for i, y in enumerate(_YS):
+    x0 = 62.7 + 22.75 * i
+    _g.append(f'<rect x="{x0:.1f}" y="{_yb(_fin[y]):.1f}" width="7.7" height="{137-_yb(_fin[y]):.1f}" rx="1.5" fill="var(--s3)"/>')
+    if _ogu.get(y): _g.append(f'<rect x="{x0+8.7:.1f}" y="{_yb(_ogu[y]):.1f}" width="7.7" height="{137-_yb(_ogu[y]):.1f}" rx="1.5" fill="var(--muted)"/>')
+    if i % 2 == 0: _g.append(f'<text x="{x0+8.7:.1f}" y="152" class="axq" text-anchor="middle" opacity=".75">{y[2:]}</text>')
+_xl = 62.7 + 22.75 * 17
+_g.append(f'<rect x="{_xl:.1f}" y="{_yb(_ltm["fin"]):.1f}" width="7.7" height="{137-_yb(_ltm["fin"]):.1f}" rx="1.5" fill="var(--s3)" opacity=".45"/><text x="{_xl+9:.1f}" y="152" class="axq" text-anchor="middle" opacity=".75">LTM</text>')
+for y, dx in (("2009", 0), ("2013", 0), ("2021", 0), ("2025", 0)):
+    i = _YS.index(y); _g.append(f'<text x="{62.7+22.75*i+3.9:.1f}" y="{_yb(_fin[y])-4:.1f}" class="fw-s2" fill="var(--ink-2)" text-anchor="middle">{round(_fin[y]/1000)}</text>')
+_g.append(f'<text x="{_xl+3.9:.1f}" y="{_yb(_ltm["fin"])-4:.1f}" class="fw-s2" fill="var(--ink-2)" text-anchor="middle">{round(_ltm["fin"]/1000)}</text>')
+_i13 = _YS.index("2013"); _g.append(f'<text x="{62.7+22.75*_i13+18:.1f}" y="{_yb(_ogu["2013"])+3:.1f}" class="fw-s2" fill="var(--muted)">{round(_ogu["2013"]/1000)}</text>')
+_g.append('<text x="60" y="15" class="gtit">Unidades contratadas no MCMV por ano (mil)</text><text x="60" y="31" class="gsub">MCid; escuro = financiadas FGTS/FS (Faixas 1-4); claro = Faixa 1 OGU/FAR</text><text x="60" y="44" class="gsub">LTM = jul/25-jun/26, tom claro; FGTS financiou R$ 14 → 116 bi (2009-25)</text>')
+# painel da direita
+for tval in (0, 3, 6, 9, 12):
+    _g.append(f'<line x1="555" y1="{_ys(tval):.1f}" x2="875" y2="{_ys(tval):.1f}" stroke="var(--grid)" opacity=".55"/><text x="549" y="{_ys(tval)+4:.1f}" class="axq" text-anchor="end" opacity=".85">{tval}%</text>')
+_g.append('<line x1="555" y1="137" x2="875" y2="137" stroke="var(--baseline)"/>')
+def _xs(y): return 564.2 + 18.33 * _YS.index(y)
+for i, y in enumerate(_YS):
+    if i % 2 == 0: _g.append(f'<text x="{_xs(y):.1f}" y="152" class="axq" text-anchor="middle" opacity=".75">{y[2:]}</text>')
+_x14 = _xs("2014"); _g.append(f'<line x1="{_x14:.1f}" y1="52" x2="{_x14:.1f}" y2="137" stroke="var(--muted)" stroke-dasharray="3 3" opacity=".6"/><text x="{_x14+4:.1f}" y="58" class="fw-s2" fill="var(--muted)">fim da Faixa 1 (Cury/FAR)</text>')
+def _pl(d, col, w, dash="", op=1):
+    pts = " ".join(f"{_xs(y):.1f},{_ys(d[y]):.1f}" for y in _YS if y in d)
+    return f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{w}"{f" stroke-dasharray=\"{dash}\"" if dash else ""} opacity="{op}" stroke-linejoin="round"/>'
+def _tail(d, lv, col, w):   # trecho tracejado até o LTM (x=875,8)
+    return f'<line x1="{_xs("2025"):.1f}" y1="{_ys(d["2025"]):.1f}" x2="875.8" y2="{_ys(lv):.1f}" stroke="{col}" stroke-width="{w}" stroke-dasharray="3 3" opacity=".45"/><circle cx="875.8" cy="{_ys(lv):.1f}" r="3.2" fill="{col}" opacity=".45"/>'
+_g.append(_pl(_sh_cy1, "var(--s3)", 2.2, "4 3", .7))
+_g.append(_pl(_sh_cy, "var(--s3)", 2.8) + _tail(_sh_cy, _ltm["sh_cy"], "var(--s3)", 2.8))
+_g.append(_pl(_sh_cu, "var(--s1)", 2.4) + _tail(_sh_cu, _ltm["sh_cu"], "var(--s1)", 2.4))
+_g.append(_pl(_sh_cs, "var(--s1)", 2.2, "5 3") + _tail(_sh_cs, _ltm["sh_cs"], "var(--s1)", 2.2))
+_g.append(f'<text x="882.8" y="{_ys(_ltm["sh_cs"])+4:.1f}" class="fw-t2" fill="var(--s1)">SP+RJ {fmt(_ltm["sh_cs"], 1)}%</text>')
+_g.append(f'<text x="882.8" y="{_ys(_ltm["sh_cu"])-1:.1f}" class="fw-t2" fill="var(--s1)">Cury {fmt(_ltm["sh_cu"], 1)}%</text>')
+_g.append(f'<text x="882.8" y="{_ys(_ltm["sh_cy"])+12:.1f}" class="fw-t2" fill="var(--s3)">Cyrela {fmt(_ltm["sh_cy"], 1)}%</text>')
+_g.append(f'<text x="{_xs("2017")-2:.1f}" y="{_ys(_sh_cs["2017"])-6:.1f}" class="fw-s2" fill="var(--s1)" text-anchor="end">{fmt(_sh_cs["2017"], 1)}%</text>')
+_g.append('<text x="555" y="15" class="gtit">Share no MCMV: lançadas ÷ financiadas FGTS</text><text x="555" y="31" class="gsub">Cyrela = un. MCMV 2 e 3 (100%, ex-Cury/P&amp;P); dourado tracejado = incl. Faixa 1</text><text x="555" y="44" class="gsub">Cury = RI (2017-25, LTM); vermelho tracejado = Cury ÷ financiadas em SP+RJ</text>')
+_SVG23 = '<svg viewBox="0 0 980 158">' + "".join(_g) + '</svg>'
+for _k, _s in enumerate(final):
+    if "MCMV por dentro" in _h2(_s):
+        _s2 = re.sub(r'<svg viewBox="0 0 980 158">.*?</svg>', lambda m: _SVG23, _s, count=1, flags=re.S)
+        _s2 = _s2.replace("Cury, só em SP e RJ: 3,9%", f"Cury, só em SP e RJ: {fmt(_sh_cu['2025'], 1)}% do programa nacional em 2025, mas {fmt(_sh_cs['2025'], 1)}% do MCMV financiado em SP e RJ ({fmt(_sh_cs['2017'], 1)}% em 2017): triplicou a fatia no próprio mercado em oito anos", 1)
+        _s2 = _s2.replace(" (3,4-3,9% desde 2021) num programa nacional", "", 1)
+        _s2 = _s2.replace("prévias operacionais da Cury (unidades lançadas)", "planilha de fundamentos do RI da Cury (unidades lançadas, 2017-2T26); base MCid por UF (_mcmv_uf_mensal.json: financiadas em SP e RJ)", 1)
+        final[_k] = _s2; break
 # pílulas de to-do em slides que vêm prontos da base (18/09/26)
 def _add_todo(title_sub, txt):
     for k, s in enumerate(final):
@@ -915,9 +982,12 @@ _append_card("Perspectivas do MCMV", "Caixa", ' <span style="color:#c5003e;font-
 # --- anexo · follow-up: Tecnisa, último slide (19/09/26); dados e svg de grafico_tecnisa.py (_tecnisa_frag.json)
 TF = J("_tecnisa_frag.json")
 _tb = '<div class="viz" style="margin-top:2px">' + TF["svg"] + '</div><ol class="ev3">' + "".join(f"<li>{e}</li>" for e in TF["ev"]) + "</ol>"
-_tb += output("R$ 94,9 mi de equity em 2016-17, ~R$ 77 mi de volta até 2026: perda de R$ 15-20 mi, sem dividendo; o CRI de ~R$ 20 mi a 140% do CDI foi pago em jul/21.", "Follow-up: depois do follow-on de 2019 a Cyrela virou espectadora (3,3%) e zerou no 1S26; o Jardim das Perdizes, que ela desistiu de comprar no 3T25, foi para o BTG por R$ 260,9 mi em jun/26.")
-_ts = sl("anexo · follow-up · Tecnisa", "Tecnisa: R$ 95 mi de equity, R$ 20 mi de dívida, e o que sobrou.", _tb, cls="anexo", nota="Fontes: B3 COTAHIST (fechamento do último pregão do mês, sem ajuste; o grupamento de 05/05/20 aparece como salto em jun/20); Tecnisa: FR 2026 item 1.1 (capitalizações de 13/10/16, 24/05/17 e 17/07/19), fato relevante de 28/08/26 (73.619.230 ações; novo grupamento 10:1), DFP 2021 nota 10 (5ª emissão de debêntures: R$ 70 mi, 140% do CDI, garantia real, 15/07/17-15/07/21, liquidada no prazo), fatos relevantes do Jardim das Perdizes (23/02, 25/02, 30/04 e 01/06/26); Cyrela: FR 2026 item 1.1, releases 3T16-2T20, notas de investimentos ao valor justo dos ITR/DFP 2018-2T26 (ações detidas e cotação), notas de aplicações financeiras 2017-21 (CRI sênior da Tecnisa a 140% do CDI). Preço das vendas de 2017 não divulgado (cotações de set-dez/17). Ações em circulação antes de out/16 derivadas (273,5 mi − 100 mi).")
+_tb += (output("R$ 94,9 mi de equity em 2016-17, ~R$ 75 mi de volta até 2026: perda nominal de R$ 16-21 mi (mais de R$ 70 mi a CDI), sem dividendo; o CRI da Tecnisa nas notas era de R$ 5,2 mi e zerou em 2021.", "Follow-up: depois do follow-on de 2019 a Cyrela virou espectadora (3,3%) e ficou com 5.155 ações no 1T26; os terrenos do Jardim das Perdizes, que ela desistiu de comprar no 3T25, seguiram na Tecnisa, que vendeu 26,09% da sociedade ao BTG por R$ 260,9 mi em jun/26.")
+        .replace('<div class="sl-output">', '<div class="sl-output" style="align-items:flex-start;margin-top:6px;row-gap:3px;padding:7px 16px">', 1).replace('<span class="out-tag">', '<span class="out-tag" style="margin-top:3px">', 1)
+        .replace('<span class="out-msg">', '<span class="out-msg" style="flex:1 1 700px;line-height:1.2">', 1).replace('<span class="out-sub">', '<span class="out-sub" style="flex:1 1 100%;line-height:1.35">', 1))   # mensagem ao lado da tag (2 linhas), follow-up numa linha inteira embaixo: sem isso a caixa abre em 3 linhas de flex (~145px)
+_ts = sl("anexo · follow-up · Tecnisa", "Tecnisa: R$ 95 mi de equity, ~R$ 75 mi de volta, e o que sobrou.", _tb, cls="anexo", nota="Fontes: B3 COTAHIST (fechamento do último pregão do mês, sem ajuste; o grupamento de 05/05/20 aparece como salto em jun/20); Tecnisa: FR 2026 item 1.1 (capitalizações de 13/10/16, 24/05/17 e 17/07/19), fato relevante de 28/08/26 (73.619.230 ações; novo grupamento 10:1), DFP 2021 nota 10 (5ª emissão de debêntures: R$ 70 mi, 140% do CDI, garantia real, 15/07/17-15/07/21, liquidada no prazo), fatos relevantes do Jardim das Perdizes (23/02, 25/02, 30/04 e 01/06/26); Cyrela: FR 2026 item 1.1, releases 3T16-2T20, notas de investimentos ao valor justo dos ITR/DFP 2018-2T26 (ações detidas e cotação), notas de títulos e valores mobiliários das DFP 2018-21 (CRI sênior da Tecnisa a 140% do CDI: R$ 5,2 mi, R$ 2,2 mi, R$ 0,9 mi, zero); ITR 3T17 e DFP 2017 (participação de 9,47% e 7,91%). Preço das vendas de 2017 não divulgado (fechamentos mensais jul-dez/17); perda a CDI capitalizada com SGS 12. Ações em circulação antes de out/16 derivadas (273,5 mi − 100 mi).")
 _ts = _ts.replace('<div class="sl-in">', '<div class="wm-anexo" aria-hidden="true">ANEXO · FOLLOW-UP</div><div class="sl-in">', 1)
+_ts = _ts.replace('<h2 class="head-xl">Tecnisa:', '<h2 class="head-xl" style="font-size:36px;margin-bottom:4px">Tecnisa:', 1)   # título em uma linha (a 46px quebrava em duas: +50px; a 38px " sobrou." ainda caía na 2ª linha, ~1045px > 1020)
 final.append(_ts)
 slides = final
 
@@ -953,9 +1023,9 @@ EXTRA_CSS = """
   .deck .cards3.tight .c3 { font-size:12px; line-height:1.32; padding:11px 13px; }   /* slide do terreno/capital de giro: três cartões densos em 4 linhas */
   .deck .cards3.tight .c3n { margin-bottom:4px; }
   .deck .slide.anexo { overflow:hidden; background:linear-gradient(180deg, rgba(197,0,62,.035), transparent 38%); }   /* anexo · follow-up: marca d'água em todo o slide */
-  .deck .slide.anexo .wm-anexo { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%) rotate(-16deg); text-align:center; font-family:"Fraunces", Georgia, serif; font-weight:800; font-size:150px; letter-spacing:.08em; color:rgba(197,0,62,.065); white-space:nowrap; pointer-events:none; z-index:0; }
+  .deck .slide.anexo .wm-anexo { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%) rotate(-24deg); text-align:center; font-family:"Fraunces", Georgia, serif; font-weight:800; font-size:100px; letter-spacing:.06em; color:rgba(197,0,62,.055); white-space:nowrap; pointer-events:none; z-index:0; }   /* 19/09/26: 150px/-16° cortava em "ANEXO · FOLLOW"; a 100px/-24° o texto inteiro atravessa o slide (~1150px na diagonal de ~1240×740) */
   .deck .slide.anexo .sl-in { position:relative; z-index:1; }
-  .deck .ev3 { columns:3; column-gap:16px; font-size:10.8px; line-height:1.28; margin:6px 0 0; padding-left:16px; color:var(--ink-2); }
+  .deck .ev3 { columns:4; column-gap:14px; font-size:10.3px; line-height:1.25; margin:4px 0 0; padding-left:15px; color:var(--ink-2); }   /* 19/09/26: 3 col/10,8px → 4 col/10,3px (slide 45 a 953px) */
   .deck .ev3 li { break-inside:avoid; margin-bottom:2px; }
   .deck .cards3.tight2r .c3 { font-size:11.6px; line-height:1.3; padding:9px 12px; }   /* 2ª linha do slide do terreno: dois cartões dentro da altura do gráfico */
   .deck .cards3.tight2r .c3n { font-size:19px; margin-bottom:2px; }
