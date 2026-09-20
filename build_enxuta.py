@@ -1014,8 +1014,17 @@ _sc = _mslide("mcmv", "MCMV: o mercado segue no recorde, com funding próprio.",
     "O MCMV não desacelera em SP e RJ: FGTS e orçamento do programa, não a Selic, decidem o volume.", "É o segmento que segura o lançado da Cyrela em 2026, com a margem exposta ao INCC e à Caixa.", h2px=37)
 _io = next(i for i, s in enumerate(final) if "Operacional: lançamentos e velocidade de venda" in _h2(s))
 final.insert(_io + 1, _sm); final.insert(_io + 2, _sc)
+# --- bancos: LCI por emissor e o funding da Caixa (19/09/26), depois do slide do SBPE; svg de grafico_bancos_slide.py
+BF = J("_bancos_frag.json"); _bn = BF["num"]
+_sb = sl("parte 3 · a operação hoje · demanda", "A LCI é a Caixa: metade do estoque, e a virada foi no 2S22.",
+    '<div class="viz" style="margin-top:2px">' + BF["svg"] + '</div>'
+    + output(f'A Caixa foi de R$ {fmt(_bn["caixa_jun22"])} bi para R$ {fmt(_bn["caixa_lci"])} bi de LCI desde jun/22, {fmt(100 * (_bn["caixa_lci"] - _bn["caixa_jun22"]) / (_bn["tot_lci"] - _bn["tot_jun22"]))}% do crescimento do sistema, com lastro na carteira que o FGTS e a poupança já financiam.', 'Nenhuma norma mudou o lastro em 2022-23; mudou o incentivo: Selic a 13,75%, poupança saindo, MCMV relançado.'),
+    nota="Fontes: BCB, IF.data (API Olinda), conglomerados prudenciais: relatório Passivo (Letras de Crédito Imobiliário, Depósitos de Poupança, Obrigações por Empréstimos e Repasses) e carteira de crédito por modalidade (Habitação PF; Habitacional PJ), jun/dez de 2015 a jun/26; carteira habitacional até dez/24 pelos conglomerados financeiros. Os repasses da Caixa batem com a carteira FGTS do BCB (R$ 652 bi contra R$ 629 bi em jun/26).")
+_isb = next(i for i, s in enumerate(final) if "SBPE: a poupança só sai" in _h2(s))
+final.insert(_isb + 1, _sb)
+final[_isb] = re.sub(r'\s*<span class="pill-teoria"[^>]*>to-do · entender para onde corre o estoque de LCI[^<]*</span>', '', final[_isb], count=1)   # o to-do virou slide
 # tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
-_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde")
+_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "A LCI é a Caixa")
 for _k, _s in enumerate(final):
     if any(n in _h2(_s) for n in _NOVOS):
         final[_k] = _s.replace('<p class="kick">', '<p class="kick"><span class="tag-novo" title="slide novo">★ Slide Novo</span>', 1)
