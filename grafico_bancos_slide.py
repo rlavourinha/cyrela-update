@@ -9,7 +9,7 @@ F = json.load(io.open(os.path.join(here, "_funding_emissor_trimestral.json"), en
 H = json.load(io.open(os.path.join(here, "_funding_emissor_hab_trimestral.json"), encoding="utf-8"))["serie"]
 MQ = sorted(m for m in F if m in H and H[m]["Sistema"]["hab_pf"] > 0)
 BK = ["Caixa", "Bradesco", "Itaú", "Santander", "Banco do Brasil", "Sistema"]
-COL = {"Caixa": "var(--s1)", "Bradesco": "var(--s2)", "Itaú": "var(--s3)", "Santander": "var(--ink)", "Banco do Brasil": "var(--muted)", "Outros": "var(--ink-2)"}
+COL = {"Caixa": "var(--s1)", "Bradesco": "var(--s2)", "Itaú": "var(--s3)", "Santander": "#2b2a26", "Banco do Brasil": "var(--muted)", "Outros": "var(--ink-2)"}
 def fmt(v, d=0): return f"{v:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
 def xlab(m): return "20" + m[2:4] if m.endswith("-12") and int(m[:4]) % 2 == 1 else ""
 def panel(ox, oy, w, h, title, sub, xs, series, ymax, lab_d=0, ygrid=4, sub2=None):
@@ -46,7 +46,7 @@ PW, PH = 353, 220   # 20/09/26: 205 → 220 (o slide ganhou ~43px com a caixa ve
 YM = {"Caixa": 1000, "Bradesco": 250, "Itaú": 250, "Santander": 125, "Banco do Brasil": 250, "Sistema": 1500}
 gA = []
 for n, b in enumerate(BK):
-    ser = [([H[m][b]["hab_pf"] / 1000 for m in MQ], "var(--ink)", 2.2, "", "hab. PF"), ([H[m][b]["hab_pj"] / 1000 for m in MQ], "var(--s3)", 1.8, "", "PJ"),
+    ser = [([H[m][b]["hab_pf"] / 1000 for m in MQ], "#2b2a26", 2.2, "", "hab. PF"), ([H[m][b]["hab_pj"] / 1000 for m in MQ], "var(--s3)", 2.4, "5 3", "hab. PJ"),
            ([F[m][b]["poup"] / 1000 for m in MQ], "var(--s2)", 2.0, "", "poup."), ([F[m][b]["lci"] / 1000 for m in MQ], "var(--s1)", 2.6, "", "LCI")]
     if b == "Caixa": ser.append(([F[m][b]["repasses"] / 1000 for m in MQ], "#2e7d32", 2.0, "", "FGTS"))
     sub = "R$ bi; poupança inclui rural" if b == "Banco do Brasil" else ("R$ bi; FGTS = obrigações por repasses" if b == "Caixa" else "R$ bi")
