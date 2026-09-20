@@ -1033,8 +1033,22 @@ _sb2 = sl("parte 3 · a operação hoje · demanda", "Share no crédito habitaci
 _isb = next(i for i, s in enumerate(final) if "SBPE: a poupança só sai" in _h2(s))
 final.insert(_isb + 1, _sb); final.insert(_isb + 2, _sb2)
 final[_isb] = re.sub(r'\s*<span class="pill-teoria"[^>]*>to-do · entender para onde corre o estoque de LCI[^<]*</span>', '', final[_isb], count=1)   # o to-do virou slide
+# --- estouro de obra: orçamento +10%, 0% × 100% vendido, com e sem INCC; MAP e MCMV (20/09/26); svgs de grafico_estouro.py
+EF = J("_estouro_frag.json")
+def _eslide(seg, title, msg, sub):
+    body = '<div class="viz" style="margin-top:2px">' + EF[seg]["svg"] + '</div>' + output(msg, sub)
+    return sl("parte 5 · atualização operacional · margem", title, body, nota="Modelo por R$ 100 de VGV, revisão de orçamento no meio da obra (50% do custo de construção incorrido); custo total = terreno + obra; PoC = custo incorrido ÷ custo total orçado (CPC 47, método do custo incorrido); receita reconhecida = PoC × VGV vendido; lucro bruto estornado = receita estornada × margem original. Premissas do deck (slide do caixa por segmento): MAP terreno 18% do VGV e margem ~33%, cliente paga 30% na obra e 70% nas chaves, saldo devedor corrigido pelo INCC até a entrega (15% pago na revisão); MCMV terreno 10% e margem ~32%, preço travado na assinatura com a Caixa, obra paga por medição. INCC tratado como índice perfeito da inflação de custo (+10%). Não considera juros capitalizados, distratos nem venda do estoque a preço novo antes da revisão.")
+_m, _c = EF["map"]["num"], EF["mcmv"]["num"]
+_es1 = _eslide("map", "Estouro de obra no médio e alto padrão: o INCC devolve a margem, mas só no que já está vendido.",
+    f'Orçamento de obra +10%: margem de {fmt(_m["m_base"], 0)}% para {fmt(_m["m_fixo"], 1)}% se o preço não anda; com o INCC no saldo devedor, {fmt(_m["m_incc"], 1)}%. Estorno de R$ {fmt(_m["rev"], 1)} de receita por R$ 100 de VGV vendido.',
+    "Erro de orçamento (quantidade) não é INCC: aí a margem cai de verdade. Estoque não vendido remarca e recompõe a margem, se o mercado acompanhar.")
+_es2 = _eslide("mcmv", "Estouro de obra no MCMV: preço travado, o INCC não chega ao comprador.",
+    f'Orçamento de obra +10%: margem de {fmt(_c["m_base"], 0)}% para {fmt(_c["m_fixo"], 1)}% em qualquer cenário vendido; estorno de R$ {fmt(_c["rev"], 1)} de receita por R$ 100 de VGV. Só o estoque não vendido pode ser remarcado, e o teto do programa limita.',
+    "A proteção do MCMV não é o contrato, é a velocidade: obra curta, venda rápida e o desconto do FGTS que absorve parte do reajuste do teto.")
+_im = next(i for i, s in enumerate(final) if "quem tem o INCC a favor" in _h2(s))
+final.insert(_im + 1, _es1); final.insert(_im + 2, _es2)
 # tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
-_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS")
+_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro de obra no médio e alto padrão", "Estouro de obra no MCMV")
 for _k, _s in enumerate(final):
     if any(n in _h2(_s) for n in _NOVOS):
         final[_k] = _s.replace('<p class="kick">', '<p class="kick"><span class="tag-novo" title="slide novo">★ Slide Novo</span>', 1)
