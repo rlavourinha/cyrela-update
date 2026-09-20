@@ -1036,19 +1036,41 @@ final[_isb] = re.sub(r'\s*<span class="pill-teoria"[^>]*>to-do · entender para 
 # --- estouro de obra: orçamento +10%, 0% × 100% vendido, com e sem INCC; MAP e MCMV (20/09/26); svgs de grafico_estouro.py
 EF = J("_estouro_frag.json")
 def _eslide(seg, title, msg, sub):
-    body = '<div class="viz" style="margin-top:2px">' + EF[seg]["svg"] + '</div>' + output(msg, sub)
-    return sl("parte 5 · atualização operacional · margem", title, body, nota="Modelo por R$ 100 de VGV, revisão de orçamento no meio da obra (50% do custo de construção incorrido); custo total = terreno + obra; PoC = custo incorrido ÷ custo total orçado (CPC 47, método do custo incorrido); receita reconhecida = PoC × VGV vendido; lucro bruto estornado = receita estornada × margem original. Premissas do deck (slide do caixa por segmento): MAP terreno 18% do VGV e margem ~33%, cliente paga 30% na obra e 70% nas chaves, saldo devedor corrigido pelo INCC até a entrega (15% pago na revisão); MCMV terreno 10% e margem ~32%, preço travado na assinatura com a Caixa, obra paga por medição. INCC tratado como índice perfeito da inflação de custo (+10%). Não considera juros capitalizados, distratos nem venda do estoque a preço novo antes da revisão.")
+    body = '<div class="viz" style="margin-top:2px">' + EF[seg]["svg"] + '</div>' + _obox(msg, sub)   # 20/09/26: agente de formatação: mensagem numa linha (19px), follow-up embaixo
+    return sl("parte 5 · atualização operacional · margem", title, body, nota="Modelo por R$ 100 de VGV, revisão de orçamento no meio da obra (50% do custo de construção incorrido), PoC pelo custo incorrido (CPC 47); premissas do slide do caixa por segmento (MAP: terreno 18%, margem 33%, 15% do preço pago na revisão, saldo devedor a INCC; MCMV: terreno 10%, margem 32%, preço travado com a Caixa). INCC = índice perfeito da inflação de custo; sem juros capitalizados nem distratos.")   # 20/09/26: nota encurtada de 4 para 2 linhas (agente de formatação)
 _m, _c = EF["map"]["num"], EF["mcmv"]["num"]
-_es1 = _eslide("map", "Estouro de obra no médio e alto padrão: o INCC devolve a margem, mas só no que já está vendido.",
-    f'Orçamento de obra +10%: margem de {fmt(_m["m_base"], 0)}% para {fmt(_m["m_fixo"], 1)}% se o preço não anda; com o INCC no saldo devedor, {fmt(_m["m_incc"], 1)}%. Estorno de R$ {fmt(_m["rev"], 1)} de receita por R$ 100 de VGV vendido.',
-    "Erro de orçamento (quantidade) não é INCC: aí a margem cai de verdade. Estoque não vendido remarca e recompõe a margem, se o mercado acompanhar.")
-_es2 = _eslide("mcmv", "Estouro de obra no MCMV: preço travado, o INCC não chega ao comprador.",
-    f'Orçamento de obra +10%: margem de {fmt(_c["m_base"], 0)}% para {fmt(_c["m_fixo"], 1)}% em qualquer cenário vendido; estorno de R$ {fmt(_c["rev"], 1)} de receita por R$ 100 de VGV. Só o estoque não vendido pode ser remarcado, e o teto do programa limita.',
-    "A proteção do MCMV não é o contrato, é a velocidade: obra curta, venda rápida e o desconto do FGTS que absorve parte do reajuste do teto.")
+_es1 = _eslide("map", "Estouro no MAP: o INCC devolve a margem só do já vendido.",   # 20/09/26: agente de formatação: h2 em 2 linhas → ≤ 60 chars a 38px
+    f'Obra +10%: margem de {fmt(_m["m_base"], 0)}% para {fmt(_m["m_fixo"], 1)}% se o preço não anda; {fmt(_m["m_incc"], 1)}% com o INCC no saldo devedor.',
+    f'Estorno de R$ {fmt(_m["rev"], 1)} de receita por R$ 100 de VGV vendido; erro de quantidade não é INCC, aí a margem cai de verdade.')
+_es2 = _eslide("mcmv", "Estouro no MCMV: o preço é travado, o INCC não passa.",
+    f'Obra +10%: margem de {fmt(_c["m_base"], 0)}% para {fmt(_c["m_fixo"], 1)}% em qualquer cenário vendido; o preço travado não devolve.',
+    f'Estorno de R$ {fmt(_c["rev"], 1)} de receita por R$ 100 de VGV. Só o estoque não vendido remarca, e o teto limita: a proteção do MCMV é a velocidade, não o contrato.')
+for _s_ in ("_es1", "_es2"): globals()[_s_] = globals()[_s_].replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
 _im = next(i for i, s in enumerate(final) if "quem tem o INCC a favor" in _h2(s))
 final.insert(_im + 1, _es1); final.insert(_im + 2, _es2)
+# --- Cury × Vivaz: velocidade de venda (Geoimóvel), VSO 12m e ticket (20/09/26); svg de grafico_cury_vivaz.py
+CV = J("_cury_vivaz_frag.json"); _cv = CV["num"]
+_scv = sl("parte 5 · atualização operacional · MCMV", "Cury × Vivaz: a Cury vende mais rápido, com ticket maior.",
+    '<div class="viz" style="margin-top:2px">' + CV["svg"] + '</div>'
+    + _obox(f'A Cury vende {fmt(_cv["cury_0_6"])}% em seis meses; a Vivaz, {fmt(_cv["vivaz_0_6"])}%. VSO de 12 meses: {fmt(_cv["vso_cury"])}% contra {fmt(_cv["vso_vivaz"])}%.',
+            f'O ticket não explica: a Cury lança a R$ {fmt(_cv["ticket_cury"])} mil e a Vivaz a R$ {fmt(_cv["ticket_vivaz"])} mil. A diferença está na praça e no giro, não no preço.'),
+    nota=f"Fontes: Geoimóvel, mai/26 (cidade de São Paulo, % de unidades vendidas por idade do lançamento; Cury {_cv['n_cury']} empreendimentos, Vivaz {_cv['n_vivaz']}; mercado econômico = até R$ 500 mil); Cury, planilha Fundamentos do RI (VSO líquida UDM, preço médio lançado); Cyrela, planilha operacional do RI (Vivaz = MCMV Faixas 1-3; VSO bruta = vendas 12m ÷ estoque inicial + lançamentos 12m; ticket = VGV ÷ unidades lançadas).")   # 20/09/26: nota encurtada (agente de formatação).replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
+_ic = next(i for i, s in enumerate(final) if "MCMV: o mercado segue no recorde" in _h2(s))
+final.insert(_ic + 1, _scv)
+# --- slide 'Os parâmetros do MCMV' (vem pronto da base): quatro gráficos regenerados com a série alongada para antes de 2009 (grafico_param_mcmv.py)
+_PM = J("_param_mcmv_frag.json")
+for _k, _s in enumerate(final):
+    if "Os parâmetros do MCMV" in _h2(_s):
+        _svgs = re.findall(r'<svg viewBox="0 0 900 \d+">.*?</svg>', _s, re.S)
+        assert len(_svgs) == 4, len(_svgs)
+        for _old, _new in zip(_svgs, _PM["svgs"]): _s = _s.replace(_old, _new, 1)
+        _s = _s.replace("Fontes:", "Fontes: Res. CCFGTS 289/1998, 460/2004 e alterações (parâmetros do FGTS antes do MCMV, fontes/verificacao/ccfgts_pre2009);", 1) if _PM.get("n_pre") else _s
+        # 20/09/26: caixa verde em uma linha + follow-up numa linha (agente de formatação: as duas abriam 2 linhas)
+        _s = _s.replace("Cada revisão alarga o programa para cima: mais renda, mais teto, mais gente — por portaria, paga pelo cotista.", "Cada revisão alarga o programa para cima, por portaria, paga pelo cotista do FGTS.", 1)
+        _s = _s.replace("Dois subsídios empilhados: juro abaixo do mercado em todas as faixas e desconto de até R$ 55 mil (Faixas 1-2). Mesmo assim a entrada não fecha sem a incorporadora: o pró-soluto é a terceira perna do crédito, e a única sem garantia.", "Juro subsidiado e desconto de até R$ 55 mil; ainda assim a entrada só fecha com o pró-soluto da incorporadora, a única perna sem garantia.", 1)
+        final[_k] = _s; break
 # tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
-_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro de obra no médio e alto padrão", "Estouro de obra no MCMV")
+_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro no MAP", "Estouro no MCMV", "Cury × Vivaz")
 for _k, _s in enumerate(final):
     if any(n in _h2(_s) for n in _NOVOS):
         final[_k] = _s.replace('<p class="kick">', '<p class="kick"><span class="tag-novo" title="slide novo">★ Slide Novo</span>', 1)
