@@ -258,5 +258,160 @@
     0.0
    ]
   ]
+ },
+ "_meta": {
+  "fonte": "BCB IF.data (API Olinda), relatório 3 Passivo, tipo 1 (conglomerados prudenciais e IFs independentes), colunas Letras de Crédito Imobiliário (c1) e Depósitos de Poupança (a2); R$ bi"
+ },
+ "serie": {
+  "202112": {
+   "total_lci_bi": 140884.1,
+   "total_poup_bi": 1053810.5,
+   "emissores": {
+    "Caixa": {
+     "lci_bi": 22454.7,
+     "poup_bi": 365091.4
+    },
+    "Bradesco": {
+     "lci_bi": 41461.9,
+     "poup_bi": 139341.0
+    },
+    "Itaú": {
+     "lci_bi": 10662.3,
+     "poup_bi": 190619.2
+    },
+    "Santander": {
+     "lci_bi": 28924.2,
+     "poup_bi": 65220.1
+    },
+    "Banco do Brasil": {
+     "lci_bi": 12547.8,
+     "poup_bi": 225452.7
+    },
+    "Inter": {
+     "lci_bi": 3570.6,
+     "poup_bi": 1230.0
+    }
+   }
+  },
+  "202312": {
+   "total_lci_bi": 361617.4,
+   "total_poup_bi": 1000617.7,
+   "emissores": {
+    "Caixa": {
+     "lci_bi": 146555.0,
+     "poup_bi": 358327.6
+    },
+    "Bradesco": {
+     "lci_bi": 52115.7,
+     "poup_bi": 131003.6
+    },
+    "Itaú": {
+     "lci_bi": 48955.5,
+     "poup_bi": 174791.3
+    },
+    "Santander": {
+     "lci_bi": 41677.8,
+     "poup_bi": 58112.0
+    },
+    "Banco do Brasil": {
+     "lci_bi": 14760.6,
+     "poup_bi": 206915.1
+    },
+    "Inter": {
+     "lci_bi": 7898.5,
+     "poup_bi": 1540.6
+    }
+   }
+  },
+  "202412": {
+   "total_lci_bi": 392996.3,
+   "total_poup_bi": 1055787.1,
+   "emissores": {
+    "Caixa": {
+     "lci_bi": 186381.0,
+     "poup_bi": 385360.3
+    },
+    "Bradesco": {
+     "lci_bi": 55865.7,
+     "poup_bi": 132502.2
+    },
+    "Itaú": {
+     "lci_bi": 52112.3,
+     "poup_bi": 180763.9
+    },
+    "Santander": {
+     "lci_bi": 41165.0,
+     "poup_bi": 57452.7
+    },
+    "Banco do Brasil": {
+     "lci_bi": 14706.6,
+     "poup_bi": 218362.6
+    },
+    "Inter": {
+     "lci_bi": 9182.6,
+     "poup_bi": 1883.4
+    }
+   }
+  },
+  "202512": {
+   "total_lci_bi": 500064.7,
+   "total_poup_bi": 1046310.0,
+   "emissores": {
+    "Caixa": {
+     "lci_bi": 253942.2,
+     "poup_bi": 396218.7
+    },
+    "Bradesco": {
+     "lci_bi": 75321.7,
+     "poup_bi": 124461.4
+    },
+    "Itaú": {
+     "lci_bi": 71121.8,
+     "poup_bi": 177369.0
+    },
+    "Santander": {
+     "lci_bi": 51697.9,
+     "poup_bi": 53075.5
+    },
+    "Banco do Brasil": {
+     "lci_bi": 16103.9,
+     "poup_bi": 215188.6
+    },
+    "Inter": {
+     "lci_bi": 11163.8,
+     "poup_bi": 1599.6
+    }
+   }
+  },
+  "202606": {
+   "total_lci_bi": 537293.8,
+   "total_poup_bi": 1046412.5,
+   "emissores": {
+    "Caixa": {
+     "lci_bi": 271175.1,
+     "poup_bi": 405581.4
+    },
+    "Bradesco": {
+     "lci_bi": 81815.2,
+     "poup_bi": 121285.9
+    },
+    "Itaú": {
+     "lci_bi": 80533.7,
+     "poup_bi": 172307.3
+    },
+    "Santander": {
+     "lci_bi": 53857.3,
+     "poup_bi": 51234.2
+    },
+    "Banco do Brasil": {
+     "lci_bi": 15439.9,
+     "poup_bi": 216111.5
+    },
+    "Inter": {
+     "lci_bi": 12423.8,
+     "poup_bi": 1371.3
+    }
+   }
+  }
  }
 }
