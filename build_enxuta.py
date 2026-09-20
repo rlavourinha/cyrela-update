@@ -726,45 +726,41 @@ body += ('<div class="cards3" style="margin-top:10px">'
 body += ('<p style="margin:8px 2px 0;padding:6px 10px;border-left:3px solid #c5003e;color:#c5003e;font-size:12.5px;line-height:1.35"><b>O mercado viu isso na Cury:</b> na semana de 14/09/26 a ação caiu ~6% num dia, após a companhia dizer que as chuvas recordes em SP (temporais desde 11/09) atrasam a obra, ou seja, a usinagem. A Cyrela, com a mesma exposição a SP e canteiros debaixo da mesma chuva, não caiu nada: ou a obra da Cyrela não molha, ou o mercado ainda não fez a conta.</p>')
 body += output(fmt(uShare[-1], 0) + '% da receita é obra do já vendido: acertar a receita é acertar o ritmo de obra, não a venda.', 'A REF de R$ 12,2 bi diz quanto; o cronograma, que menos da metade cai em um ano; 1 p.p. de PoC na base vendida vale R$ ' + fmt(_pp, 1) + ' bi.')
 slides.append(sl(P5, "Usinagem: o que a receita deve à obra, e por que ela é difícil de acertar.", body, nota="Fontes: DRE (CYREMod, receita líquida trimestral); planilha do RI (vendas de lançamento, de estoque em construção e de estoque pronto, VGV 100%); ITR (nota de estoques: imóveis a comercializar em construção; nota de obras em andamento: receita total de vendas e apropriada); releases (custo orçado a incorrer das unidades em estoque), em _usinagem.json. Estimativa com as premissas do slide anterior, mas com o PoC do estoque de cada trimestre (o slide anterior usa o de jun/26); PoC interpolado em 3T21 e 4T22."))
-# --- slide novo (20/09/26): receita do trimestre por componente, histórico trimestral (pedido: "histórico trimestral da quebra da receita daquele trimestre por cada componente")
-_cq = {}
-for q in qs_u:
-    L, E, P = _qV(102, q), _qV(141, q), _qV(128, q); rev = mrow(21)[q] / 1000; pe = _pocE(q)
-    cL, cE, cP = SH_C * L * POC["lanc"], SH_C * E * pe, SH_C * P; _cq[q] = {"rev": rev, "lanc": cL, "obra": cE, "pronto": cP, "usin": rev - cL - cE - cP, "poc": pe}
-_qs37 = list(_cq); _n37 = len(_qs37)
-# 4T25: a renúncia em ata ao direito de desistir liberou o reconhecimento inicial de lançamentos represados (call 4T25; sem valor divulgado). Só nesse trimestre o modelo inverte
-# (pedido do usuário, 20/09/26): usinagem = tendência (média de 3T25 e 1T26) e a venda de lançamento absorve o resíduo, porque o represado é reconhecimento de lançamento
-for q in _qs37: _cq[q]["rep"] = 0.0
-if "4T25" in _cq and "3T25" in _cq and "1T26" in _cq:
-    _tr = (_cq["3T25"]["usin"] + _cq["1T26"]["usin"]) / 2; _cq["4T25"]["rep"] = _cq["4T25"]["usin"] - _tr; _cq["4T25"]["usin"] = _tr; _cq["4T25"]["lanc"] += _cq["4T25"]["rep"]
-_sv = lambda k: [_cq[q][k] for q in _qs37]; _sp = lambda k: [100 * _cq[q][k] / _cq[q]["rev"] for q in _qs37]
-_vmax = 0.5 * (int(max(_sv("rev")) / 0.5) + 1)
-c = Chart(60, 405, 46, 190, 0, _vmax, _n37); c.grid([i * 0.5 for i in range(int(_vmax / 0.5) + 1)], lambda t: fmt(t, 1)); c.xlabels(_qs37, 4, 1, lambda l: "" if l == "1T26" else "20" + l[2:])   # sem "2026": o tick colidia com o rótulo "lançamento" (agente de formatação)
-c.line(_sv("rev"), "#2b2a26", w=2.8, lab="receita", labval=lambda v: fmt(v, 1)); c.line(_sv("usin"), S1, w=2.6, lab="usinagem", labval=lambda v: fmt(v, 1))
-c.line(_sv("obra"), S2, w=2.2, lab="estoque em obra", labval=lambda v: fmt(v, 1)); c.line(_sv("lanc"), S3, w=2.2, lab="lançamento", labval=lambda v: fmt(v, 1)); c.line(_sv("pronto"), MU, w=1.8, dash="4 3", lab="pronto", labval=lambda v: fmt(v, 1))
-if _cq.get("4T25", {}).get("rep"):
-    _i4 = _qs37.index("4T25"); _xa = c.x(_i4); _yb = c.y(_cq["4T25"]["lanc"])
-    _yt = c.y(_vmax * 0.96)   # rótulo acima do pico da receita (3,2 de 3,5), à esquerda dele
-    c.g.append(f'<circle cx="{_xa:.1f}" cy="{_yb:.1f}" r="3.2" fill="none" stroke="{S3}" stroke-width="1.6"/><line x1="{_xa:.1f}" y1="{_yb-4:.1f}" x2="{_xa:.1f}" y2="{_yt+4:.1f}" stroke="{S3}" stroke-width="1" stroke-dasharray="2 3" opacity=".8"/><text x="{_xa-6:.1f}" y="{_yt:.1f}" class="fw-t2" fill="{S3}" text-anchor="end">4T25: lançamento com o represado, {fmt(_cq["4T25"]["lanc"], 1)}</text>')
-c.g.append('<text x="60" y="18" class="gtit">Receita líquida do trimestre por origem, R$ bi</text><text x="60" y="34" class="gsub">na venda: lançamento a 15%, estoque em obra ao PoC, pronto a 100% (× 90%); usinagem = resíduo</text>')
-c2 = Chart(560, 845, 46, 190, 0, 100, _n37); c2.grid([0, 25, 50, 75, 100], lambda t: f"{t:g}%"); c2.xlabels(_qs37, 4, 1, lambda l: "20" + l[2:])
-c2.line(_sp("usin"), S1, w=2.6, lab="usinagem", labval=lambda v: fmt(v, 0) + "%"); c2.line(_sp("obra"), S2, w=2.2, lab="estoque em obra", labval=lambda v: fmt(v, 0) + "%")
-c2.line(_sp("lanc"), S3, w=2.2, lab="lançamento", labval=lambda v: fmt(v, 0) + "%"); c2.line(_sp("pronto"), MU, w=1.8, dash="4 3", lab="pronto", labval=lambda v: fmt(v, 0) + "%")
-c2.g.append('<text x="560" y="18" class="gtit">Mesma quebra, % da receita do trimestre</text><text x="560" y="34" class="gsub">o peso da usinagem cai quando a venda acelera e volta quando a obra alcança</text>')
-body = svg(980, 212, c.flush(15) + c2.flush(15))
-_th = "".join(f'<th style="text-align:right;padding:2px 3px">{q}</th>' for q in _qs37)
-def _tr37(lab, key, pct=False, cls=""):
-    cells = "".join(f'<td style="text-align:right;padding:2px 3px{";color:var(--s3);font-weight:700" if q == "4T25" and key in ("lanc", "usin") and not pct else ""}">{(fmt(100 * _cq[q][key] / _cq[q]["rev"], 0) + "%" if pct else fmt(_cq[q][key], 1)) + ("*" if q == "4T25" and key == "lanc" and not pct else "")}</td>' for q in _qs37)
-    return f'<tr class="{cls}"><td style="white-space:nowrap;padding:2px 6px 2px 2px">{lab}</td>{cells}</tr>'
-body += ('<div class="viz" style="margin-top:6px"><table class="tl compact" style="width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;padding:2px 6px 2px 2px">R$ bi</th>' + _th + '</tr></thead><tbody>'
-         + _tr37("receita líquida (DRE)", "rev", cls="total") + _tr37("venda de lançamento (15%)", "lanc") + _tr37("venda de estoque em obra (PoC)", "obra") + _tr37("venda de estoque pronto", "pronto") + _tr37("usinagem (obra do já vendido)", "usin", cls="total") + _tr37("usinagem, % da receita", "usin", pct=True)
-         + '</tbody></table></div>')
-_u37 = _sp("usin"); _o37 = _sp("obra"); _u37x = [u for q, u in zip(_qs37, _u37) if q != "4T25"]   # faixa sem o 4T25 (a receita do 4T25 inclui o represado, o que derruba o % da usinagem)
-def _obox37(msg, sub):   # mesma caixa de _obox (definida mais abaixo no arquivo)
+# --- slide 'Receita por trimestre' (20/09/26, refeito à noite): série MEDIDA do Anexo III dos releases (_anexo3_novos.json): receita do trimestre de
+# projetos cujo primeiro reconhecimento ocorreu nos 12 meses anteriores ('obras reconhecidas após <mês do ano anterior>') × projetos antigos.
+# Venda de estoque (obra × PoC do trimestre + pronto, × 90%) e usinagem (= antigos − venda de estoque) continuam estimativas.
+def _obox37(msg, sub):   # mesma caixa de _obox (definida mais abaixo)
     return (output(msg, sub).replace('<div class="sl-output">', '<div class="sl-output" style="row-gap:3px;margin-top:6px">', 1).replace('<span class="out-msg">', '<span class="out-msg" style="flex:1 1 600px;line-height:1.2;font-size:19px">', 1).replace('<span class="out-sub">', '<span class="out-sub" style="flex:1 1 100%;line-height:1.35">', 1))
-body += _obox37(f'Usinagem: {fmt(_u37[-1], 0)}% da receita no {_qs37[-1]}, entre {fmt(min(_u37x), 0)}% e {fmt(max(_u37x), 0)}% desde {"20" + _qs37[0][2:]}; estoque em obra, {fmt(_o37[-1], 0)}%.',
-              f'O pico do 4T25 não é obra: a usinagem segue a tendência e a venda de lançamento absorve o represado (R$ {fmt(_cq["4T25"]["lanc"], 1)} bi, contra {fmt(_cq["3T25"]["lanc"], 1)} no 3T25).')
-_s37 = sl(P5, "Receita por trimestre: quanto veio da venda, quanto da obra.", body, nota="Fontes: DRE (CYREMod, receita líquida trimestral); planilha do RI (vendas de lançamento, de estoque em construção e de estoque pronto, VGV 100%); ITR (nota de estoques) e releases (custo a incorrer) para o PoC do estoque em construção de cada trimestre (_usinagem.json; interpolado em 3T21 e 4T22). Premissas do slide 'De onde vem a receita': 90% das vendas no perímetro consolidado, lançamento reconhecido a 15%, pronto a 100%; usinagem = receita − parcela reconhecida na venda (piso, porque a venda de unidade lançada em trimestre anterior conta como estoque). 4T25: renúncia em ata ao direito de desistir liberou reconhecimento represado (call 4T25, sem valor); *4T25: usinagem = média de 3T25 e 1T26 e lançamento como resíduo (o represado é reconhecimento inicial de lançamento).").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
+A3 = J("_anexo3_novos.json")["serie"]; _qs37 = [q for q in QS if q in A3 and mrow(21).get(q)]; _n37 = len(_qs37)
+_cq = {}
+for q in _qs37:
+    rev = mrow(21)[q] / 1000; k = rev / (A3[q]["total"] / 1000)   # escala o anexo (incorporação + loteamentos) para a receita líquida da DRE
+    nov = A3[q]["novos"] / 1000 * k; ant = A3[q]["antigos"] / 1000 * k
+    E, P = _qV(141, q), _qV(128, q); pe = _pocE(q) or POC_E26; est = SH_C * (E * pe + P)
+    _cq[q] = {"rev": rev, "novos": nov, "antigos": ant, "est": est, "usin": ant - est, "poc": A3[q]["poc_medio_listado"], "pn": 100 * nov / rev}
+_sv = lambda key: [_cq[q][key] for q in _qs37]; _sp = lambda key: [100 * _cq[q][key] / _cq[q]["rev"] for q in _qs37]
+_vmax = 0.5 * (int(max(_sv("rev")) / 0.5) + 1)
+c = Chart(60, 395, 46, 190, 0, _vmax, _n37); c.grid([i * 0.5 for i in range(int(_vmax / 0.5) + 1)], lambda t: fmt(t, 1)); c.xlabels(_qs37, 4, 0, lambda l: "20" + l[2:])
+c.line(_sv("rev"), "#2b2a26", w=2.8, lab="receita", labval=lambda v: fmt(v, 1)); c.line(_sv("antigos"), S2, w=2.4, lab="antigos", labval=lambda v: fmt(v, 1))
+c.line(_sv("novos"), S1, w=2.6, lab="novos", labval=lambda v: fmt(v, 1)); c.line(_sv("usin"), MU, w=1.8, dash="4 3", lab="usinagem", labval=lambda v: fmt(v, 1))
+c.g.append('<text x="60" y="18" class="gtit">Receita do trimestre: projetos novos × antigos, R$ bi</text><text x="60" y="34" class="gsub">novos = 1º reconhecimento nos 12 meses anteriores (Anexo III); usinagem = antigos − estoque (est.)</text>')
+c2 = Chart(560, 845, 46, 190, 0, 60, _n37); c2.grid([0, 20, 40, 60], lambda t: f"{t:g}%"); c2.xlabels(_qs37, 4, 0, lambda l: "20" + l[2:])
+c2.line(_sp("novos"), S1, w=2.6, lab="novos, % da receita", labval=lambda v: fmt(v, 0) + "%"); c2.line([_cq[q]["poc"] for q in _qs37], S3, w=2.2, dash="5 3", lab="PoC na entrada", labval=lambda v: fmt(v, 0) + "%")
+c2.g.append('<text x="560" y="18" class="gtit">Peso dos novos e PoC na entrada</text><text x="560" y="34" class="gsub">PoC médio dos projetos novos listados no anexo; o pulo é sempre no 4T</text>')
+body = svg(980, 212, c.flush(15) + c2.flush(15))
+_th = "".join(f'<th style="text-align:right;padding:2px 4px">{q}</th>' for q in _qs37)
+def _tr37(lab, f, cls="", pct=False):
+    cells = "".join(f'<td style="text-align:right;padding:2px 4px{";color:var(--s1);font-weight:700" if q in ("4T24", "4T25") and lab.startswith("projetos novos") else ""}">{("—" if f(q) is None else (fmt(f(q), 0) + "%" if pct else fmt(f(q), 1)))}</td>' for q in _qs37)
+    return f'<tr class="{cls}"><td style="white-space:nowrap;padding:2px 6px 2px 2px">{lab}</td>{cells}</tr>'
+body += ('<div class="viz" style="margin-top:6px"><table class="tl compact" style="width:100%;font-size:10px"><thead><tr><th style="text-align:left;padding:2px 6px 2px 2px">R$ bi</th>' + _th + '</tr></thead><tbody>'
+         + _tr37("receita líquida (DRE)", lambda q: _cq[q]["rev"], cls="total") + _tr37("projetos novos (1º reconhecimento < 12 m)", lambda q: _cq[q]["novos"]) + _tr37("projetos antigos", lambda q: _cq[q]["antigos"])
+         + _tr37("novos, % da receita", lambda q: _cq[q]["pn"], pct=True) + _tr37("PoC médio no 1º reconhecimento", lambda q: _cq[q]["poc"], pct=True)
+         + _tr37("venda de estoque em obra e pronto (est.)", lambda q: _cq[q]["est"]) + _tr37("usinagem = antigos − estoque (est.)", lambda q: _cq[q]["usin"], cls="total") + _tr37("usinagem, % da receita", lambda q: 100 * _cq[q]["usin"] / _cq[q]["rev"], pct=True)
+         + '</tbody></table></div>')
+_u4 = _cq["4T25"]; _u3 = _cq["3T25"]
+body += _obox37(f'4T25: R$ {fmt(_u4["novos"], 1)} bi ({fmt(_u4["pn"], 0)}%) de projetos novos, com PoC de {fmt(_u4["poc"], 0)}% na entrada; o 4T24 teve R$ {fmt(_cq["4T24"]["novos"], 1)} bi.',
+              f'Projeto novo entra com PoC de ~30%, não 15%: a renúncia ao direito de desistir sai no fechamento, sobretudo no 4T; antigos rendem R$ {fmt(min(_sv("antigos")[-8:]), 1)} a {fmt(max(_sv("antigos")[-8:]), 1)} bi.')
+_s37 = sl(P5, "Receita por trimestre: projeto novo entra com PoC de 30%.", body, nota="Fontes: releases trimestrais, Anexo III (reconhecimento de receita por empreendimento, incorporação residencial e loteamentos; subtotais 'obras reconhecidas após <mês do ano anterior>' = projetos com 1º reconhecimento nos 12 meses anteriores, e demais; escalado para a receita líquida da DRE, diferença de 1 a 4%); PoC na entrada = média simples do % de evolução financeira dos projetos novos listados; DRE (CYREMod); planilha do RI (vendas de estoque em construção e pronto, VGV 100%) e PoC do estoque em construção (_usinagem.json) para a venda de estoque estimada (× 90% de perímetro); usinagem = antigos − venda de estoque, aproximação (a venda de estoque em projetos novos está contada nos novos).").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
 # --- consenso de receita (Bloomberg, telas de 18/09/26) contra a mecânica da receita
 CONS = {"2026": 10.050, "2027": 11.606, "2028": 12.207, "2029": 13.442}   # R$ bi, consenso Bloomberg (8/8/7/2 estimativas), fontes/consenso_bloomberg_set26.md
 anos_cs = [a for a in YRS if mrow(21).get(a)]; rev_h = [mrow(21)[a] / 1000 for a in anos_cs]
@@ -1128,9 +1124,18 @@ def _obox47(msg, sub):   # mesma caixa de _obox (definida mais abaixo)
 # --- slide novo 47 (20/09/26): retorno por vertical, com a nota de segmentos dos ITR (_segmentos_full.json: receita, lucro bruto, despesas, lucro operacional, ativo, passivo e PL por segmento, trimestral desde 1T20; _roe_seg_serie.json: lucro operacional LTM ÷ PL médio do segmento)
 SGF = J("_segmentos_full.json"); _sq = sorted(SGF, key=ord_); _SEG = [("cyrela", "alto padrão", S3), ("living", "Living (médio)", S2), ("mcmv", "Vivaz (MCMV)", S1)]
 _rq = sorted(set(q for v in RSG.values() for q in v), key=ord_); _rq = [q for q in _rq if ord_(q) >= (14, 1)]
-c = Chart(60, 430, 46, 190, 0, 50, len(_rq)); c.grid([0, 10, 20, 30, 40, 50], lambda t: f"{t:g}%"); c.xlabels(_rq, 8, 3, lambda l: "20" + l[2:])
+CD = J("_cury_dre.json")["serie"]; _cqs = sorted(CD, key=ord_)   # Cury (benchmark MCMV): DRE e balanço trimestrais da planilha Fundamentos do RI
+def _cret(q):
+    if q not in CD: return None
+    i = _cqs.index(q)
+    if i < 4: return None
+    lop = sum(CD[x]["lop"] for x in _cqs[i - 3:i + 1]); pl = sum(CD[x]["pl_total"] for x in _cqs[i - 4:i + 1]) / 5; return 100 * lop / pl if pl else None
+def _cltm(f): return sum(CD[x][f] for x in _cqs[-4:]) / 1e6
+CU47 = {"rec": _cltm("rec"), "lb": _cltm("lb"), "desp": _cltm("desp"), "lop": _cltm("lop"), "ativo": CD[_cqs[-1]]["ativo"] / 1e6, "pl": CD[_cqs[-1]]["pl_total"] / 1e6, "ret": _cret(_cqs[-1])}
+c = Chart(60, 430, 46, 190, 0, 90, len(_rq)); c.grid([0, 30, 60, 90], lambda t: f"{t:g}%"); c.xlabels(_rq, 8, 3, lambda l: "20" + l[2:])
 for k, lab, col in _SEG: c.line([RSG[k].get(q) for q in _rq], col, w=2.6 if k == "mcmv" else 2.2, lab=lab.split(" (")[0], labval=lambda v: fmt(v, 0) + "%")
-c.g.append('<text x="60" y="18" class="gtit">Retorno operacional s/ capital por segmento, LTM</text><text x="60" y="34" class="gsub">lucro operacional 12m ÷ PL médio do segmento (nota do ITR); antes de juros e IR</text>')
+c.line([_cret(q) for q in _rq], "#2e7d32", w=2.2, dash="5 3", lab="Cury", labval=lambda v: fmt(v, 0) + "%")
+c.g.append('<text x="60" y="18" class="gtit">Retorno operacional s/ capital por segmento, LTM</text><text x="60" y="34" class="gsub">lucro operacional 12m ÷ PL médio (nota do ITR; Cury: DRE e balanço do RI); antes de juros e IR</text>')
 _plmax = 0.5 * (int(max(SGF[q][k]["pl"] for q in _sq for k, _, _ in _SEG) / 500) + 1)
 c2 = Chart(560, 850, 46, 190, 0, _plmax, len(_sq)); c2.grid([i * 1.0 for i in range(int(_plmax) + 1)], lambda t: fmt(t, 0)); c2.xlabels(_sq, 4, 3, lambda l: "20" + l[2:])
 for k, lab, col in _SEG: c2.line([SGF[q][k]["pl"] / 1000 for q in _sq], col, w=2.6 if k == "mcmv" else 2.2, lab=lab, labval=lambda v: fmt(v, 1))
@@ -1142,24 +1147,25 @@ def _qf(k, f, q):   # fluxos da nota vêm acumulados no ano: trimestre = acumula
 def _ltm(k, f): return sum(_qf(k, f, q) for q in _L4) / 1000
 _cols = _SEG + [("demais", "demais / holding", MU)]
 _tot = {f: sum(_ltm(k, f) for k, _, _ in _cols) for f in ("rec", "lb", "desp", "lop")}; _tot["pl"] = sum(SGF[_u][k]["pl"] for k, _, _ in _cols) / 1000; _tot["ativo"] = sum(SGF[_u][k]["ativo"] for k, _, _ in _cols) / 1000
-def _row(lab, f, pct=False, cls=""):
+def _row(lab, f, pct=False, cls="", cury=None):
     cells = ""
     for k, _, _ in _cols:
         v = f(k); cells += f'<td style="text-align:right">{(fmt(v, 1) + "%" if pct else fmt(v, 1)) if v is not None else "—"}</td>'
+    cells += f'<td style="text-align:right;border-left:1px solid var(--grid);color:#2e7d32">{(fmt(cury, 1) + "%" if pct else fmt(cury, 1)) if cury is not None else "—"}</td>'
     return f'<tr class="{cls}"><td>{lab}</td>{cells}</tr>'
-_th = "".join(f'<th style="text-align:right;color:{col}">{lab}</th>' for _, lab, col in _cols)
+_th = "".join(f'<th style="text-align:right;color:{col}">{lab}</th>' for _, lab, col in _cols) + '<th style="text-align:right;border-left:1px solid var(--grid);color:#2e7d32">Cury (benchmark)</th>'
 _tbl = (f'<table class="tl compact" style="width:100%;margin-top:0"><thead><tr><th style="text-align:left">LTM {_u}, R$ bi</th>{_th}</tr></thead><tbody>'
-        + _row("receita líquida", lambda k: _ltm(k, "rec")) + _row("lucro bruto", lambda k: _ltm(k, "lb")) + _row("margem bruta", lambda k: 100 * _ltm(k, "lb") / _ltm(k, "rec") if k != "demais" and _ltm(k, "rec") else None, pct=True)
-        + _row("despesas do segmento", lambda k: _ltm(k, "desp")) + _row("lucro operacional", lambda k: _ltm(k, "lop"), cls="total")
-        + _row(f"ativo ({_u})", lambda k: SGF[_u][k]["ativo"] / 1000) + _row(f"PL atribuído ({_u})", lambda k: SGF[_u][k]["pl"] / 1000, cls="total") + _row("% do PL dos segmentos", lambda k: 100 * SGF[_u][k]["pl"] / 1000 / _tot["pl"], pct=True)
-        + _row("retorno operacional s/ capital, LTM", lambda k: RSG[k][_u] if k in RSG else None, pct=True, cls="total")
+        + _row("receita líquida", lambda k: _ltm(k, "rec"), cury=CU47["rec"]) + _row("lucro bruto", lambda k: _ltm(k, "lb"), cury=CU47["lb"]) + _row("margem bruta", lambda k: 100 * _ltm(k, "lb") / _ltm(k, "rec") if k != "demais" and _ltm(k, "rec") else None, pct=True, cury=100 * CU47["lb"] / CU47["rec"])
+        + _row("despesas do segmento", lambda k: _ltm(k, "desp"), cury=CU47["desp"]) + _row("lucro operacional", lambda k: _ltm(k, "lop"), cls="total", cury=CU47["lop"])
+        + _row(f"ativo ({_u})", lambda k: SGF[_u][k]["ativo"] / 1000, cury=CU47["ativo"]) + _row(f"PL atribuído ({_u})", lambda k: SGF[_u][k]["pl"] / 1000, cls="total", cury=CU47["pl"]) + _row("% do PL dos segmentos", lambda k: 100 * SGF[_u][k]["pl"] / 1000 / _tot["pl"], pct=True)
+        + _row("retorno operacional s/ capital, LTM", lambda k: RSG[k][_u] if k in RSG else None, pct=True, cls="total", cury=CU47["ret"])
         + '</tbody></table>')
 body += '<div class="viz" style="margin-top:6px">' + _tbl + '</div>'
 _r = {k: RSG[k][_u] for k, _, _ in _SEG}; _plsh = {k: 100 * SGF[_u][k]["pl"] / 1000 / _tot["pl"] for k, _, _ in _cols}
-body += _obox47(f'Vivaz rende {fmt(_r["mcmv"], 0)}% sobre o capital com {fmt(_plsh["mcmv"], 0)}% do PL; alto padrão, {fmt(_r["cyrela"], 0)}% com {fmt(_plsh["cyrela"], 0)}%; Living, {fmt(_r["living"], 0)}%.',
-              f'O capital está no alto padrão e o retorno marginal na Vivaz: cada real que migra de um para o outro sobe o retorno consolidado.')
+body += _obox47(f'Vivaz rende {fmt(_r["mcmv"], 0)}% sobre o capital com {fmt(_plsh["mcmv"], 0)}% do PL; alto padrão, {fmt(_r["cyrela"], 0)}% com {fmt(_plsh["cyrela"], 0)}%; a Cury, {fmt(CU47["ret"], 0)}%.',
+              f'O capital está no alto padrão e o retorno marginal na Vivaz; a Cury, no mesmo MCMV, faz {fmt(100 * CU47["lb"] / CU47["rec"], 0)}% de margem bruta e o dobro do retorno: o teto do modelo.')
 _s47 = sl("parte 4 · onde estamos no ciclo", "Retorno por vertical: a Vivaz rende mais com menos capital.", body,
-    nota="Fontes: nota explicativa de informações por segmento dos ITR/DFP (Cyrela = alto padrão; Living = médio; MCMV = Vivaz; demais = loteamento, serviços e corporativo), R$ mi, trimestral desde 1T20 (fluxos por diferença dos acumulados no ano; balanço do 2T22 da Vivaz corrigido pela leitura da nota) e anual antes (_segmentos_full.json, _roe_seg_serie.json). Retorno operacional sobre o capital = lucro operacional do segmento em 12 meses (lucro bruto menos despesas alocadas, antes de resultado financeiro, equivalência e IR) ÷ PL médio atribuído ao segmento (ativo menos passivo do segmento, 5 balanços). Não é ROE: a nota não aloca juros, IR nem o resultado das JVs (Cury, Plano&Plano, Lavvi entram por equivalência, fora dos segmentos). A base de capital da Vivaz é pequena e o retorno oscila mais.").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
+    nota="Fontes: nota explicativa de informações por segmento dos ITR/DFP (Cyrela = alto padrão; Living = médio; MCMV = Vivaz; demais = loteamento, serviços e corporativo), R$ mi, trimestral desde 1T20 (fluxos por diferença dos acumulados no ano; balanço do 2T22 da Vivaz corrigido pela leitura da nota) e anual antes (_segmentos_full.json, _roe_seg_serie.json). Retorno operacional sobre o capital = lucro operacional do segmento em 12 meses (lucro bruto menos despesas alocadas, antes de resultado financeiro, equivalência e IR) ÷ PL médio atribuído ao segmento (ativo menos passivo do segmento, 5 balanços). Não é ROE: a nota não aloca juros, IR nem o resultado das JVs (Cury, Plano&Plano, Lavvi entram por equivalência, fora dos segmentos). Cury: DRE e balanço trimestrais da planilha Fundamentos do RI (lucro antes do resultado financeiro LTM ÷ PL total médio de 5 pontas; ativo e PL de 2T26), consolidado, 100%; é o benchmark do MCMV, não um segmento da Cyrela.").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
 # --- slide 47: retorno por vertical, logo depois de 'Terreno a prazo, obra e recebível' (antes do slide de lucro/caixa/dívida, que vira 48)
 final.insert(next(i for i, s in enumerate(final) if "Terreno a prazo, obra e recebível" in _h2(s)) + 1, _s47)
 # tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
