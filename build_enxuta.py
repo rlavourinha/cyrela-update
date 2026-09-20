@@ -993,8 +993,26 @@ _ts = sl("anexo · follow-up · Tecnisa", "Tecnisa: R$ 95 mi de equity, ~R$ 75 m
 _ts = _ts.replace('<div class="sl-in">', '<div class="wm-anexo" aria-hidden="true">ANEXO · FOLLOW-UP</div><div class="sl-in">', 1)
 _ts = _ts.replace('<h2 class="head-xl">Tecnisa:', '<h2 class="head-xl" style="font-size:36px;margin-bottom:4px">Tecnisa:', 1)   # título em uma linha (a 46px quebrava em duas: +50px; a 38px " sobrou." ainda caía na 2ª linha, ~1045px > 1020)
 final.append(_ts)
+# --- mercado agregado × Cyrela: dois slides (MAP; MCMV), depois do slide operacional de lançamentos (19/09/26); svgs de grafico_mercado_map.py
+MF = J("_mercado_frag.json"); _n = MF["num"]
+def _mslide(seg, title, card_n, card_txt, out_msg, out_sub):
+    body = ('<div class="viz" style="margin-top:2px">' + MF[seg]["svg"] + '</div>'
+            '<div class="fwgrid" style="grid-template-columns:1.1fr 1fr;gap:14px;margin-top:6px;align-items:center"><div class="viz" style="margin-top:0">' + MF[seg]["secovi"] + '</div>'
+            f'<div class="c3 tight2"><span class="c3n">{card_n}</span>{card_txt}</div></div>' + output(out_msg, out_sub))
+    return sl("parte 5 · atualização operacional · mercado", title, body, nota="Fontes: ABRAINC-FIPE, Indicadores do Mercado Imobiliário (lançamentos e vendas líquidas de distratos por segmento, 12 meses, abr/26); Secovi-SP, PMI jun/26 (cidade de São Paulo, empresas associadas; MCMV = Faixas 1-3 pelos limites de abr/26; VGV a INCC de jun/26); Cyrela, planilha de dados operacionais do RI (VGV lançado 100%, 12 meses). Rio de Janeiro: a Ademi-RJ/Brain publica só o agregado (2025: R$ 17,6 bi lançados, +37%; 1S26: 13,3 mil unidades lançadas, +2%), sem abertura por padrão.")
+_pl, _pv = _n["map_lanc_pico"], _n["map_vend_pico"]
+_sm = _mslide("map", "Médio e alto padrão: o mercado desacelera, e a Cyrela vai junto.",
+    f'−{fmt(100 * (1 - _n["map_lanc_ult"][1] / _pl[1]))}% · −{fmt(100 * (1 - _n["map_vend_ult"] / _pv[1]))}%',
+    f'<b>Brasil</b>: lançamentos e vendas do médio e alto padrão desde o pico ({_pl[0][5:]}/{_pl[0][2:4]} e {_pv[0][5:]}/{_pv[0][2:4]}). <b>São Paulo</b>: vendas fora do MCMV −21% em unidades, −11% em VGV, em 12 meses. <b>Cyrela</b>: R$ {fmt(_n["cy_map_pico"][1], 1)} → {fmt(_n["cy_map_ult"][1], 1)} bi lançados em 12 meses.',
+    "O médio e alto padrão desacelera no Brasil e em São Paulo: a queda da Cyrela é o mercado, não a companhia.", "Rio: sem série pública por padrão; o agregado (Ademi/Brain) ainda crescia no 1S26.")
+_sc = _mslide("mcmv", "MCMV: o mercado segue no recorde, com funding próprio.",
+    f'{fmt(_n["mcmv_lanc_ult"])} mil · {fmt(_n["mcmv_vend_ult"])} mil',
+    f'<b>Brasil</b>: unidades lançadas e vendidas em 12 meses, recorde da série. <b>São Paulo</b>: 81% do lançado e 75% do vendido em jun/26; VSO 11,6% contra 5,7% do resto. <b>Cyrela (Vivaz)</b>: R$ {fmt(_n["cy_mcmv_ult"][1], 1)} bi lançados em 12 meses, recorde.',
+    "O MCMV não desacelera: FGTS e orçamento do programa, não a Selic, decidem o volume.", "É o segmento que segura o lançado da Cyrela em 2026, com a margem exposta ao INCC e à Caixa.")
+_io = next(i for i, s in enumerate(final) if "Operacional: lançamentos e velocidade de venda" in _h2(s))
+final.insert(_io + 1, _sm); final.insert(_io + 2, _sc)
 # tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
-_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity")
+_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde")
 for _k, _s in enumerate(final):
     if any(n in _h2(_s) for n in _NOVOS):
         final[_k] = _s.replace('<p class="kick">', '<p class="kick"><span class="tag-novo" title="slide novo">★ Slide Novo</span>', 1)
