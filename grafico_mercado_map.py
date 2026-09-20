@@ -128,16 +128,29 @@ UF12 = {k: _r12(U[k]) for k in ("sp_rj", "sp", "rj")}; FIN12 = {k: _r12(U["fin_"
 MU = [m for m in sorted(UF12["sp_rj"]) if m >= "2015-01"]
 # ABRAINC-FIPE só publica VGV nominal para o total, não por segmento: o slide do MAP fica em unidades
 PW3 = 353
-for seg, ttl, ymB, cy, ymC in (("map", "médio e alto padrão", 80, CM, 20), ("mcmv", "MCMV", 300, CC, 8)):
+# market share: Vivaz (RI, un. MCMV 2 e 3 + Faixa 1, ex-Cury/P&P, todas as praças) e Cury (RI da Cury, unidades lançadas) ÷ unidades financiadas em SP+RJ (MCid), 12 meses
+CH = json.load(io.open(os.path.join(here, "_cury_hist.json"), encoding="utf-8")); _cu = next(v for k, v in CH.items() if k.endswith("Número de unidades") and "LANÇ" in k.upper())
+_vz = {q: (L["un_mcmv23"].get(q) or 0) + (L["un_mcmv1"].get(q) or 0) for q in Q}
+_ks = sorted(U["sp_rj"])
+def _den12(q):
+    m = f"{2000 + int(q[2:])}-{int(q[0]) * 3:02d}"; k = _ks.index(m); return sum(U["sp_rj"][_ks[x]] for x in range(k - 11, k + 1))
+QS_ = [q for q in Q if ORD(q) >= (15, 4)]
+SH_VZ = {q: 100 * sum(_vz[Q[Q.index(q) - x]] for x in range(4)) / _den12(q) for q in QS_}
+SH_CU = {q: 100 * sum((_cu.get(Q[Q.index(q) - x]) or 0) for x in range(4)) / _den12(q) for q in QS_ if ORD(q) >= (17, 4)}
+GEO = json.load(io.open(os.path.join(here, "_geoimovel.json"), encoding="utf-8"))["share"]; GY = sorted(GEO)
+for seg in ("map", "mcmv"):
     if seg == "mcmv":
-        gg = deck_panel(0, 0, PW3, 250, "SP + RJ · MCMV, mil unidades, 12 m", "MCid; unidades financiadas FGTS/FS por UF", [([UF12["sp_rj"][m] for m in MU], "var(--s1)", 2.6, "", "SP+RJ"), ([UF12["sp"][m] for m in MU], "var(--s2)", 2.0, "", "SP"), ([UF12["rj"][m] for m in MU], "var(--s3)", 2.0, "", "RJ")], ymB, MU, xl2)
+        gg = deck_panel(0, 0, PW3, 250, "SP + RJ · MCMV, mil unidades, 12 m", "MCid; unidades financiadas FGTS/FS por UF", [([UF12["sp_rj"][m] for m in MU], "var(--s1)", 2.6, "", "SP+RJ"), ([UF12["sp"][m] for m in MU], "var(--s2)", 2.0, "", "SP"), ([UF12["rj"][m] for m in MU], "var(--s3)", 2.0, "", "RJ")], 300, MU, xl2)
         gg += deck_panel(PW3, 0, PW3, 250, "SP + RJ · MCMV, R$ bi nominal, 12 m", "MCid; valor financiado FGTS/FS (sem entrada e subsídio)", [([FIN12["sp_rj"][m] for m in MU], "var(--s1)", 2.6, "", "SP+RJ"), ([FIN12["sp"][m] for m in MU], "var(--s2)", 2.0, "", "SP"), ([FIN12["rj"][m] for m in MU], "var(--s3)", 2.0, "", "RJ")], 60, MU, xl2)
+        _qs = [q for q in QS_]; _cuv = [SH_CU.get(q) for q in _qs]
+        gg += deck_panel(2 * PW3, 0, PW3, 250, "Share no MCMV de SP + RJ, %", "lançadas ÷ financiadas, 12 m; Vivaz (RI, ex-Cury), Cury (RI)", [([SH_VZ[q] for q in _qs], "var(--s1)", 2.6, "", "Vivaz"), (_cuv, "var(--s3)", 2.2, "", "Cury")], 16, _qs, xq2)
     else:
-        gg = deck_panel(0, 0, 530, 250, "Brasil · médio e alto padrão, 12 meses", "ABRAINC-FIPE; mil unidades; lançamentos e vendas líquidas de distratos", [(A["seg"][seg]["lanc12"][i0:], "var(--s1)", 2.6, "", "lanç."), (A["seg"][seg]["vend12"][i0:], "var(--s2)", 2.6, "", "vendas")], ymB, MS, xl2)
-    _ox, _pw = (2 * PW3, PW3) if seg == "mcmv" else (530, 530)
-    gg += deck_panel(_ox, 0, _pw, 250, f"Cyrela · {ttl}, R$ bi, 12 m", "RI; VGV lançado 100%" + ("; alto + médio + Vivaz Prime" if seg == "map" else "; Vivaz (+ Faixa 1 até 2014)"), [([cy[q] for q in QL], "var(--s1)", 2.6, "", "lanç.")], ymC, QL, xq2)
+        gg = deck_panel(0, 0, 530, 250, "Cyrela · médio e alto padrão, 12 meses", "RI; VGV lançado 100%, R$ bi; alto padrão + médio + Vivaz Prime", [([CM[q] for q in QL], "var(--s1)", 2.6, "", "lanç.")], 20, QL, xq2)
+        gg += deck_panel(530, 0, 530, 250, "Market share da Cyrela em São Paulo capital, %", "Geoimóvel, residencial vertical lançado por ano; Cyrela + Living + Vivaz; 2026 = jan-mai", [([GEO[y]["share_vgv"] for y in GY], "var(--s1)", 2.6, "", "VGV"), ([GEO[y]["share_un"] for y in GY], "var(--s2)", 2.2, "", "unidades")], 20, GY, lambda y: y)
     FR[seg] = {"svg": '<svg viewBox="0 0 1060 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + gg + "</svg>", "secovi": secovi_svg(seg)}
 FR["num"] = {"sprj_ult": [MU[-1], UF12["sp_rj"][MU[-1]]], "sprj_2a": UF12["sp_rj"][MU[-25]], "sp_ult": UF12["sp"][MU[-1]], "rj_ult": UF12["rj"][MU[-1]], "sprj_fin_ult": FIN12["sp_rj"][MU[-1]], "sprj_fin_2a": FIN12["sp_rj"][MU[-25]],
+             "sh_vz_ult": [QS_[-1], SH_VZ[QS_[-1]]], "sh_vz_pico": max((v, q) for q, v in SH_VZ.items()), "sh_cu_ult": SH_CU[QS_[-1]], "sh_vz_4T22": SH_VZ["4T22"],
+             "geo_ult": [GY[-1], GEO[GY[-1]]["share_vgv"], GEO[GY[-1]]["share_un"]], "geo_2019": [GEO["2019"]["share_vgv"], GEO["2019"]["share_un"]], "geo_2025": [GEO["2025"]["share_vgv"], GEO["2025"]["share_un"]],
              "map_lanc_pico": [MA[pkL], mapL[pkL]], "map_lanc_ult": [MA[-1], mapL[-1]], "map_vend_pico": [MA[pkV], mapV[pkV]], "map_vend_ult": mapV[-1], "mcmv_lanc_ult": mcL[-1], "mcmv_vend_ult": mcV[-1],
              "mcmv_lanc_pico": [MA[max(range(len(mcL)), key=lambda i: mcL[i] or 0)], max(v for v in mcL if v)], "cy_map_pico": [cm_pk, CM[cm_pk]], "cy_map_ult": [QL[-1], CM[QL[-1]]], "cy_mcmv_ult": [QL[-1], CC[QL[-1]]], "cy_mcmv_pico": [max(QL, key=lambda q: CC[q]), max(CC[q] for q in QL)]}
 json.dump(FR, io.open(os.path.join(here, "_mercado_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)

@@ -14,6 +14,7 @@ VERSAO = "v1.1 · 17/09/2026"
 H = io.open(os.path.join(here, "index.html"), encoding="utf-8").read()
 CSS = H[H.index("<style>"):H.index("</style>") + 8]
 JS = H[H.index("// ================= APRESENTACAO (v5)"):H.rindex("</script>")]
+JS = JS.replace('var a = document.createElement("a");', 'var a = document.createElement("a"); if (sl.querySelector(".tag-novo")) a.classList.add("novo");', 1)   # bolinha amarela nos slides novos (19/09/26)
 deck = H[H.index('<div class="deck"'):H.index('<section class="tab on"')]
 SECS = re.split(r'(?=<section class="slide")', deck)[1:]
 
@@ -1005,13 +1006,13 @@ def _mslide(seg, title, card_n, card_txt, out_msg, out_sub, h2px):
               ).replace('<h2 class="head-xl">', f'<h2 class="head-xl" style="font-size:{h2px}px;margin-bottom:4px">', 1)   # 19/09/26: h2 por slide (46px abria 2 linhas de 98px nos dois)
 _pl, _pv = _n["map_lanc_pico"], _n["map_vend_pico"]
 _sm = _mslide("map", "Médio e alto padrão: o mercado desacelera, e a Cyrela vai junto.",
-    f'−{fmt(100 * (1 - _n["map_lanc_ult"][1] / _pl[1]))}% · −{fmt(100 * (1 - _n["map_vend_ult"] / _pv[1]))}%',
-    f'<b>Brasil</b>: lançamentos e vendas desde o pico ({_pl[0][5:]}/{_pl[0][2:4]} e {_pv[0][5:]}/{_pv[0][2:4]}). <b>São Paulo</b>: vendas fora do MCMV −21% em unidades, −11% em VGV (12 meses). <b>Cyrela</b>: R$ {fmt(_n["cy_map_pico"][1], 1)} → {fmt(_n["cy_map_ult"][1], 1)} bi lançados (12 meses).',
-    "A queda da Cyrela no médio e alto padrão é o mercado, não a companhia.", "Rio: sem série pública por padrão; o agregado (Ademi/Brain) ainda crescia no 1S26.", 40)   # 19/09/26: título não cabe em uma linha nem a 36px (1176px > 1020): fica em 2 linhas a 40px; mensagem da caixa enxugada (a 20px tinha 1117px; "desacelera no Brasil e em SP" já está no título e no cartão)
+    f'{fmt(_n["geo_ult"][1], 1)}% · {fmt(_n["geo_ult"][2], 1)}%',
+    f'<b>Market share em São Paulo capital</b> (Geoimóvel, VGV e unidades lançados): de {fmt(_n["geo_2019"][0], 1)}% e {fmt(_n["geo_2019"][1], 1)}% em 2019 para {fmt(_n["geo_2025"][0], 1)}% e {fmt(_n["geo_2025"][1], 1)}% em 2025 e {fmt(_n["geo_ult"][1], 1)}% e {fmt(_n["geo_ult"][2], 1)}% em jan-mai/26: a Cyrela ganha fatia num mercado que encolhe. <b>São Paulo, fora do MCMV</b>: vendas −21% em unidades e −11% em VGV em 12 meses. <b>Brasil</b> (ABRAINC): lançamentos −{fmt(100 * (1 - _n["map_lanc_ult"][1] / _n["map_lanc_pico"][1]))}% e vendas −{fmt(100 * (1 - _n["map_vend_ult"] / _n["map_vend_pico"][1]))}% desde o pico.',
+    "A queda da Cyrela no médio e alto padrão é o mercado, não a companhia: o share em São Paulo sobe.", "Rio: sem série pública por padrão; o agregado (Ademi/Brain) ainda crescia no 1S26.", h2px=40)
 _sc = _mslide("mcmv", "MCMV: o mercado segue no recorde, com funding próprio.",
-    f'{fmt(_n["sprj_ult"][1])} mil · R$ {fmt(_n["sprj_fin_ult"])} bi',
-    f'<b>SP + RJ, 12 meses</b>: {fmt(_n["sprj_ult"][1])} mil unidades financiadas (SP {fmt(_n["sp_ult"])}, RJ {fmt(_n["rj_ult"])}), +{fmt(100 * (_n["sprj_ult"][1] / _n["sprj_2a"] - 1))}% em dois anos; R$ {fmt(_n["sprj_fin_ult"])} bi financiados, +{fmt(100 * (_n["sprj_fin_ult"] / _n["sprj_fin_2a"] - 1))}%. <b>São Paulo capital</b>: 81% do lançado e 75% do vendido (jun/26); VSO 11,6% contra 5,7% do resto. <b>Cyrela (Vivaz)</b>: R$ {fmt(_n["cy_mcmv_ult"][1], 1)} bi lançados em 12 meses, recorde; na praça São Paulo, 15,5 mil unidades em 12 meses, ~16% das 96,5 mil do MCMV lançadas na capital (Secovi).',
-    "O MCMV não desacelera em SP e RJ: FGTS e orçamento do programa, não a Selic, decidem o volume.", "É o segmento que segura o lançado da Cyrela em 2026, com a margem exposta ao INCC e à Caixa.", h2px=37)
+    f'{fmt(_n["sh_vz_ult"][1], 1)}% · {fmt(_n["sh_cu_ult"], 1)}%',
+    f'<b>Market share no MCMV de SP + RJ</b> (lançadas ÷ financiadas, 12 meses): Vivaz {fmt(_n["sh_vz_ult"][1], 1)}% e Cury {fmt(_n["sh_cu_ult"], 1)}% no 2T26; a Vivaz veio de {fmt(_n["sh_vz_4T22"], 1)}% em 2022, a Cury de 2% em 2017. <b>SP + RJ</b>: {fmt(_n["sprj_ult"][1])} mil unidades financiadas em 12 meses (+{fmt(100 * (_n["sprj_ult"][1] / _n["sprj_2a"] - 1))}% em dois anos), R$ {fmt(_n["sprj_fin_ult"])} bi. <b>São Paulo capital</b>: 81% do lançado e 75% do vendido (jun/26).',
+    "O MCMV não desacelera em SP e RJ, e a Vivaz recupera fatia: FGTS e orçamento decidem o volume.", "É o segmento que segura o lançado da Cyrela em 2026, com a margem exposta ao INCC e à Caixa.", h2px=37)
 _io = next(i for i, s in enumerate(final) if "Operacional: lançamentos e velocidade de venda" in _h2(s))
 final.insert(_io + 1, _sm); final.insert(_io + 2, _sc)
 # --- bancos: LCI por emissor e o funding da Caixa (19/09/26), depois do slide do SBPE; svg de grafico_bancos_slide.py
@@ -1067,6 +1068,8 @@ EXTRA_CSS = """
   .deck .slide.anexo .sl-in { position:relative; z-index:1; }
   .deck .ev3 { columns:4; column-gap:14px; font-size:10px; line-height:1.22; margin:4px 0 0; padding-left:15px; color:var(--ink-2); }   /* 19/09/26: 3 col/10,8px → 4 col/10,3px (slide 45 a 953px); textos mais longos → 10px/1,22 (slide a 774px) */
   .deck .ev3 li { break-inside:avoid; margin-bottom:2px; }
+  .dots a.novo { background:#ffd54f; border-color:#d9a400; }
+  .dots a.novo.on { background:var(--s1); border-color:var(--s1); }
   .deck .kick .tag-novo { float:right; background:#ffd54f; color:#2b2a26; padding:3px 10px; border-radius:6px; font-size:10.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin-left:12px; box-shadow:0 1px 2px rgba(0,0,0,.12); }
   .deck .cards3.tight2r .c3 { font-size:11.6px; line-height:1.3; padding:9px 12px; }   /* 2ª linha do slide do terreno: dois cartões dentro da altura do gráfico */
   .deck .cards3.tight2r .c3n { font-size:19px; margin-bottom:2px; }
