@@ -85,7 +85,7 @@ io.open(os.path.join(here, "mercado_map.html"), "w", encoding="utf-8").write(htm
 def deck_panel(ox, oy, w, h, title, sub, series, ymax, xs, xlab):
     X0, X1, Y0, Y1 = ox + 44, ox + w - 96, oy + 44, oy + h - 20
     x = lambda i: X0 + (X1 - X0) * i / (len(xs) - 1); y = lambda v: Y1 - (Y1 - Y0) * v / ymax
-    g = [f'<text x="{ox+44}" y="{oy+16}" class="gtit">{title}</text><text x="{ox+44}" y="{oy+31}" class="gsub">{sub}</text>']
+    g = [f'<text x="{ox+44}" y="{oy+17}" class="gtit">{title}</text><text x="{ox+44}" y="{oy+32}" class="gsub">{sub}</text>']   # 19/09/26: y 16/31 → 17/32 (bbox do gtit a 19px começava em y=-1)
     for k in range(5):
         tv = ymax * k / 4; g.append(f'<line x1="{X0}" y1="{y(tv):.1f}" x2="{X1}" y2="{y(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-6}" y="{y(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(tv)}</text>')
     for i, m in enumerate(xs):
@@ -103,27 +103,28 @@ def deck_panel(ox, oy, w, h, title, sub, series, ymax, xs, xlab):
     for v, col, lab in sorted(ends, reverse=True):
         yy = y(v)
         for pv in ys:
-            if abs(yy - pv) < 13: yy = pv + 13
+            if abs(yy - pv) < 14: yy = pv + 14   # 19/09/26: passo 13 → 14 (bbox de 14px a 12px: "vendas 33" e "lanç. 28" se tocavam por 1px)
         ys.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{y(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab} {fmt(v, 1) if ymax <= 20 else fmt(v)}</text>')
     return "".join(g)
 def secovi_svg(seg):
     """barras: MCMV ou outros mercados em SP capital (unidades vendidas 12m e VGV 12m), jun/24-jun/26"""
     idx = 0 if seg == "mcmv" else 1; col = "var(--s3)" if seg == "mcmv" else "var(--s1)"
-    g = [f'<text x="10" y="16" class="gtit">São Paulo capital, 12 meses (Secovi-SP)</text><text x="10" y="31" class="gsub">{"MCMV (Faixas 1-3)" if seg == "mcmv" else "outros mercados: médio e alto padrão, compactos, HMP"}</text>']
+    g = [f'<text x="10" y="17" class="gtit">São Paulo capital, 12 meses (Secovi-SP)</text><text x="10" y="32" class="gsub">{"MCMV (Faixas 1-3)" if seg == "mcmv" else "outros mercados: médio e alto padrão, compactos, HMP"}</text>']
     for k, (key, lab, ymax) in enumerate((("un", "unidades vendidas (mil)", 100), ("vgv", "VGV vendido (R$ bi, INCC jun/26)", 60))):
-        bx = 14 + k * 230; by0, by1 = 62, 150
+        bx = 14 + k * 230; by0, by1 = 58, 126   # 19/09/26: barras 62-150 → 58-126 e viewBox 168 → 144 de altura (o svg mandava na altura da linha do grid: 188px contra 98px do cartão)
         y = lambda v: by1 - (by1 - by0) * v / ymax
         g.append(f'<text x="{bx}" y="{by0-8}" class="axq" opacity=".85">{lab}</text><line x1="{bx}" y1="{by1}" x2="{bx+205}" y2="{by1}" stroke="var(--baseline)"/>')
         for j, (per, vals) in enumerate(SV[key].items()):
             v = vals[idx]; cx = bx + 18 + j * 66
             g.append(f'<rect x="{cx}" y="{y(v):.1f}" width="34" height="{by1-y(v):.1f}" rx="2" fill="{col}" opacity="{1 if j == 2 else .55}"/><text x="{cx+17}" y="{y(v)-4:.1f}" text-anchor="middle" class="fw-s2" fill="{col}">{fmt(v,1)}</text><text x="{cx+17}" y="{by1+13}" text-anchor="middle" class="axq" opacity=".75">{per}</text>')
-    return '<svg viewBox="0 0 470 168" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+    return '<svg viewBox="0 0 470 144" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 xl2 = lambda m: m[:4] if m.endswith("-01") and int(m[:4]) % 2 == 1 else ""
 xq2 = lambda q: "20" + q[2:] if q.startswith("1T") and int(q[2:]) % 2 == 1 else ""
 FR = {}
 for seg, ttl, ymB, cy, ymC in (("map", "médio e alto padrão", 80, CM, 20), ("mcmv", "MCMV", 200, CC, 8)):
-    gg = deck_panel(0, 0, 530, 250, f"Brasil · {ttl}: mil unidades, 12 meses", "ABRAINC-FIPE; lançamentos e vendas líquidas de distratos", [(A["seg"][seg]["lanc12"][i0:], "var(--s1)", 2.6, "", "lanç."), (A["seg"][seg]["vend12"][i0:], "var(--s2)", 2.6, "", "vendas")], ymB, MS, xl2)
-    gg += deck_panel(530, 0, 530, 250, f"Cyrela · {ttl}: VGV lançado, R$ bi, 12 meses", "alto padrão + médio + Vivaz Prime" if seg == "map" else "Vivaz + MCMV Faixa 1 (Cury/FAR até 2014)", [([cy[q] for q in QL], "var(--s1)", 2.6, "", "lanç.")], ymC, QL, xq2)
+    # 19/09/26: unidade sai do gtit e vai para o gsub (o título "Cyrela · médio e alto padrão: VGV lançado, R$ bi, 12 meses" terminava em x=1093 > 1060 e o layout_enxuta alargava o viewBox)
+    gg = deck_panel(0, 0, 530, 250, f"Brasil · {ttl}, 12 meses", "ABRAINC-FIPE; mil unidades; lançamentos e vendas líquidas de distratos", [(A["seg"][seg]["lanc12"][i0:], "var(--s1)", 2.6, "", "lanç."), (A["seg"][seg]["vend12"][i0:], "var(--s2)", 2.6, "", "vendas")], ymB, MS, xl2)
+    gg += deck_panel(530, 0, 530, 250, f"Cyrela · {ttl}, 12 meses", "RI; VGV lançado 100%, R$ bi; " + ("alto padrão + médio + Vivaz Prime" if seg == "map" else "Vivaz + MCMV Faixa 1 (Cury/FAR até 2014)"), [([cy[q] for q in QL], "var(--s1)", 2.6, "", "lanç.")], ymC, QL, xq2)
     FR[seg] = {"svg": '<svg viewBox="0 0 1060 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + gg + "</svg>", "secovi": secovi_svg(seg)}
 FR["num"] = {"map_lanc_pico": [MA[pkL], mapL[pkL]], "map_lanc_ult": [MA[-1], mapL[-1]], "map_vend_pico": [MA[pkV], mapV[pkV]], "map_vend_ult": mapV[-1], "mcmv_lanc_ult": mcL[-1], "mcmv_vend_ult": mcV[-1],
              "mcmv_lanc_pico": [MA[max(range(len(mcL)), key=lambda i: mcL[i] or 0)], max(v for v in mcL if v)], "cy_map_pico": [cm_pk, CM[cm_pk]], "cy_map_ult": [QL[-1], CM[QL[-1]]], "cy_mcmv_ult": [QL[-1], CC[QL[-1]]], "cy_mcmv_pico": [max(QL, key=lambda q: CC[q]), max(CC[q] for q in QL)]}
