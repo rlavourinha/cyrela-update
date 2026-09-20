@@ -13,9 +13,9 @@ COL = {"Caixa": "var(--s1)", "Bradesco": "var(--s2)", "Itaú": "var(--s3)", "San
 def fmt(v, d=0): return f"{v:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
 def xlab(m): return "20" + m[2:4] if m.endswith("-12") and int(m[:4]) % 2 == 1 else ""
 def panel(ox, oy, w, h, title, sub, xs, series, ymax, lab_d=0, ygrid=4, sub2=None):
-    X0, X1, Y0, Y1 = ox + 40, ox + w - 70, oy + 34, oy + h - 18
+    X0, X1, Y0, Y1 = ox + 40, ox + w - 72, oy + 34, oy + h - 18   # 20/09/26: X1 −2 e rótulo em X1+7 (mesma borda direita de antes): o "2025" do eixo x (31 un.) terminava em X1+5,2, em cima do rótulo em X1+5
     x = lambda i: X0 + (X1 - X0) * i / (len(xs) - 1); y = lambda v: Y1 - (Y1 - Y0) * v / ymax
-    g = [f'<text x="{ox+40}" y="{oy+13}" class="gtit" style="font-size:13px">{title}</text><text x="{ox+40}" y="{oy+26}" class="gsub">{sub}</text>']
+    g = [f'<text x="{ox+40}" y="{oy+13}" class="gtit" style="font-size:13px">{title}</text><text x="{ox+40}" y="{oy+28}" class="gsub">{sub}</text>']   # 20/09/26: gsub +2 (bbox do título terminava em oy+16,1 e o do subtítulo começava em oy+15,6; a 28 fica 1,5 un. de folga e ainda acima da 1ª linha de grade em oy+34)
     for k in range(ygrid + 1):
         tv = ymax * k / ygrid; g.append(f'<line x1="{X0}" y1="{y(tv):.1f}" x2="{X1}" y2="{y(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{y(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(tv)}</text>')
     for i, m in enumerate(xs):
@@ -28,15 +28,21 @@ def panel(ox, oy, w, h, title, sub, xs, series, ymax, lab_d=0, ygrid=4, sub2=Non
         pts = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, v in enumerate(vals) if v is not None)
         g.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{wd}"{f" stroke-dasharray=\"{dash}\"" if dash else ""} stroke-linejoin="round" stroke-linecap="round"/>')
         ends.append((vals[-1], col, lab))
-    ys = []
-    for v, col, lab in sorted(ends, reverse=True):
+    GAP = 13   # 20/09/26: bbox de um rótulo de 10px mede 11,5 un. (12,5 com descendente, "poup."); com 11 os empilhados encostavam (poup. 121 / hab. PF 110)
+    ends = sorted(ends, reverse=True); ys = []
+    for v, col, lab in ends:   # 1ª passada: de cima para baixo, empurra para baixo quem encosta
         yy = y(v)
         for pv in ys:
-            if abs(yy - pv) < 11: yy = pv + 11
-        ys.append(yy); g.append(f'<text x="{X1+5}" y="{yy+3.5:.1f}" class="fw-s2" fill="{col}" style="font-weight:700">{lab} {fmt(v, lab_d)}</text>')
+            if abs(yy - pv) < GAP: yy = pv + GAP
+        ys.append(yy)
+    lim = Y1 - 5   # 2ª passada: o rótulo de baixo não desce ao eixo x (bbox = yy−8..yy+7; os anos começam em Y1+1,6) e empurra a pilha para cima
+    for i in range(len(ys) - 1, -1, -1):
+        ys[i] = min(ys[i], lim); lim = ys[i] - GAP
+    for (v, col, lab), yy in zip(ends, ys):
+        g.append(f'<text x="{X1+7}" y="{yy+3.5:.1f}" class="fw-s2" fill="{col}" style="font-weight:700">{lab} {fmt(v, lab_d)}</text>')
     return "".join(g)
 # ---- svg A: seis painéis
-PW, PH = 353, 205
+PW, PH = 353, 220   # 20/09/26: 205 → 220 (o slide ganhou ~43px com a caixa verde em uma linha; painéis mais altos folgam os rótulos empilhados)
 YM = {"Caixa": 1000, "Bradesco": 250, "Itaú": 250, "Santander": 125, "Banco do Brasil": 250, "Sistema": 1500}
 gA = []
 for n, b in enumerate(BK):
@@ -56,9 +62,10 @@ SH_PF["Outros"] = [100 - sum(SH_PF[b][i] for b in BK[:-1]) for i in range(len(MQ
 SH_PJ = {b: [100 * H[m][b]["hab_pj"] / H[m]["Sistema"]["hab_pj"] for m in MQ] for b in BK[:-1]}
 SH_PJ["Outros"] = [100 - sum(SH_PJ[b][i] for b in BK[:-1]) for i in range(len(MQ))]
 LB = {"Banco do Brasil": "BB"}
-gB = [panel(0, 0, 530, 300, "Share no crédito habitacional PF ex-FGTS, %", "carteira PF do banco ÷ sistema; Caixa e sistema sem os repasses do FGTS", MQ, [(SH_PF[b], COL[b], 2.4 if b == "Caixa" else 1.8, "5 3" if b == "Outros" else "", LB.get(b, b)) for b in BK[:-1] + ["Outros"]], 60, ygrid=4),
-      panel(530, 0, 530, 300, "Share no crédito habitacional PJ (plano empresário), %", "carteira PJ habitacional do banco ÷ sistema", MQ, [(SH_PJ[b], COL[b], 2.4 if b == "Caixa" else 1.8, "5 3" if b == "Outros" else "", LB.get(b, b)) for b in BK[:-1] + ["Outros"]], 60, ygrid=4)]
-svgB = '<svg viewBox="0 0 1060 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(gB) + "</svg>"
+PHB = 340   # 20/09/26: 300 → 340 (slide 21 ficou em ~578px com a caixa verde em uma linha; h2 de duas linhas não cabe em uma nem a 34px)
+gB = [panel(0, 0, 530, PHB, "Share no crédito habitacional PF ex-FGTS, %", "carteira PF do banco ÷ sistema; Caixa e sistema sem os repasses do FGTS", MQ, [(SH_PF[b], COL[b], 2.4 if b == "Caixa" else 1.8, "5 3" if b == "Outros" else "", LB.get(b, b)) for b in BK[:-1] + ["Outros"]], 60, ygrid=4),
+      panel(530, 0, 530, PHB, "Share no crédito habitacional PJ (plano empresário), %", "carteira PJ habitacional do banco ÷ sistema", MQ, [(SH_PJ[b], COL[b], 2.4 if b == "Caixa" else 1.8, "5 3" if b == "Outros" else "", LB.get(b, b)) for b in BK[:-1] + ["Outros"]], 60, ygrid=4)]
+svgB = f'<svg viewBox="0 0 1060 {PHB}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(gB) + "</svg>"
 i22 = MQ.index("2022-06")
 num = {"ult": MQ[-1], "sh_pf": {b: (round(SH_PF[b][0], 1), round(SH_PF[b][i22], 1), round(SH_PF[b][-1], 1)) for b in SH_PF}, "sh_pj": {b: (round(SH_PJ[b][0], 1), round(SH_PJ[b][i22], 1), round(SH_PJ[b][-1], 1)) for b in SH_PJ},
        "caixa_lci": F[MQ[-1]]["Caixa"]["lci"] / 1000, "tot_lci": F[MQ[-1]]["Sistema"]["lci"] / 1000, "caixa_jun22": F["2022-06"]["Caixa"]["lci"] / 1000, "tot_jun22": F["2022-06"]["Sistema"]["lci"] / 1000}

@@ -1017,13 +1017,18 @@ _io = next(i for i, s in enumerate(final) if "Operacional: lançamentos e veloci
 final.insert(_io + 1, _sm); final.insert(_io + 2, _sc)
 # --- bancos: funding e carteira habitacional por banco + market share PF ex-FGTS e PJ (19/09/26); svgs de grafico_bancos_slide.py
 BF = J("_bancos_frag.json"); _bn = BF["num"]; _pf = _bn["sh_pf"]; _pj = _bn["sh_pj"]
+def _obox(msg, sub):   # 20/09/26: caixa verde no padrão dos slides 30/31: mensagem numa linha (19px) ao lado da tag, follow-up numa linha inteira embaixo (a mensagem única media 1240/1257px a 20px e abria 2 linhas: caixa de 103px)
+    return (output(msg, sub).replace('<div class="sl-output">', '<div class="sl-output" style="row-gap:3px;margin-top:6px">', 1)
+            .replace('<span class="out-msg">', '<span class="out-msg" style="flex:1 1 600px;line-height:1.2;font-size:19px">', 1).replace('<span class="out-sub">', '<span class="out-sub" style="flex:1 1 100%;line-height:1.35">', 1))
 _sb = sl("parte 3 · a operação hoje · demanda", "Banco a banco: a Caixa carrega o FGTS e a LCI.",
     '<div class="viz" style="margin-top:0">' + BF["svgA"] + '</div>'
-    + output(f'A Caixa foi de R$ {fmt(_bn["caixa_jun22"])} bi para R$ {fmt(_bn["caixa_lci"])} bi de LCI desde jun/22, {fmt(100 * (_bn["caixa_lci"] - _bn["caixa_jun22"]) / (_bn["tot_lci"] - _bn["tot_jun22"]))}% do crescimento do sistema; nos privados a LCI repôs a poupança que saiu.'),
+    + _obox(f'A Caixa foi de R$ {fmt(_bn["caixa_jun22"])} bi para R$ {fmt(_bn["caixa_lci"])} bi de LCI desde jun/22, {fmt(100 * (_bn["caixa_lci"] - _bn["caixa_jun22"]) / (_bn["tot_lci"] - _bn["tot_jun22"]))}% do crescimento do sistema.',   # 20/09/26: 794px a 19px (cabe em 876)
+            'Nos privados a LCI repôs a poupança que saiu.'),
     nota="Fontes: BCB, IF.data (API Olinda), conglomerados prudenciais, trimestral mar/15-jun/26: relatório Passivo (Depósitos de Poupança, inclui rural; Letras de Crédito Imobiliário; Obrigações por Empréstimos e Repasses, que na Caixa são o FGTS: R$ 652 bi contra R$ 629 bi de carteira FGTS no BCB) e carteira de crédito por modalidade (Habitação PF; Habitacional PJ = plano empresário; até dez/24 pelos conglomerados financeiros, com degrau de consolidação em dez/24).")
 _sb2 = sl("parte 3 · a operação hoje · demanda", "Share no crédito habitacional sem FGTS: a Caixa perde no PF e ganha no plano empresário.",
     '<div class="viz" style="margin-top:0">' + BF["svgB"] + '</div>'
-    + output(f'PF sem FGTS: Caixa de {fmt(_pf["Caixa"][0])}% para {fmt(_pf["Caixa"][2])}% desde 2015; Itaú {fmt(_pf["Itaú"][0])}% → {fmt(_pf["Itaú"][2])}%, Bradesco {fmt(_pf["Bradesco"][0])}% → {fmt(_pf["Bradesco"][2])}%. Plano empresário: Caixa {fmt(_pj["Caixa"][0])}% → {fmt(_pj["Caixa"][2])}%.'),
+    + _obox(f'PF sem FGTS: Caixa de {fmt(_pf["Caixa"][0])}% para {fmt(_pf["Caixa"][2])}% desde 2015; plano empresário: Caixa {fmt(_pj["Caixa"][0])}% → {fmt(_pj["Caixa"][2])}%.',   # 20/09/26: 757px a 19px (cabe em 876); Itaú/Bradesco foram para a linha de baixo, mesmos números
+            f'No PF sem FGTS, Itaú {fmt(_pf["Itaú"][0])}% → {fmt(_pf["Itaú"][2])}% e Bradesco {fmt(_pf["Bradesco"][0])}% → {fmt(_pf["Bradesco"][2])}% no mesmo período.'),
     nota="Fontes: BCB, IF.data, carteira de crédito ativa por modalidade (Habitação PF; Habitacional PJ), conglomerados prudenciais (financeiros até dez/24). Share PF ex-FGTS = carteira PF do banco ÷ sistema, ambos sem os repasses do FGTS da Caixa; o FGTS operado por outros agentes (pequeno) fica no PF deles. Santander PJ habitacional zera em 2026 por reclassificação de modalidade. Outros = sistema menos os cinco.")
 _isb = next(i for i, s in enumerate(final) if "SBPE: a poupança só sai" in _h2(s))
 final.insert(_isb + 1, _sb); final.insert(_isb + 2, _sb2)
