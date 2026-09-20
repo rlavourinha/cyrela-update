@@ -1,43 +1,66 @@
 # -*- coding: utf-8 -*-
-"""Fragmento do slide 'bancos' do deck enxuto: LCI por emissor (semestral, IF.data) e o funding da Caixa (trimestral).
-Saída: _bancos_frag.json {svg}. Estilo do deck (var(--s1) etc.), viewBox 1060×300, dois painéis."""
+"""Fragmento do slide 'bancos' do deck enxuto (BCB IF.data, trimestral 2015-2026):
+svg A: seis painéis (Caixa, Bradesco, Itaú, Santander, BB, sistema) com carteira habitacional PF, PJ, poupança, LCI (Caixa: + FGTS);
+svg B: market share no crédito habitacional ex-FGTS, PF e PJ, por banco.
+Saída: _bancos_frag.json {svgA, svgB, num}."""
 import io, json, os
 here = os.path.dirname(os.path.abspath(__file__))
-L = json.load(io.open(os.path.join(here, "_lci_emissor_semestral.json"), encoding="utf-8"))["serie"]; MS = sorted(L)
 F = json.load(io.open(os.path.join(here, "_funding_emissor_trimestral.json"), encoding="utf-8"))["serie"]
 H = json.load(io.open(os.path.join(here, "_funding_emissor_hab_trimestral.json"), encoding="utf-8"))["serie"]
 MQ = sorted(m for m in F if m in H and H[m]["Sistema"]["hab_pf"] > 0)
+BK = ["Caixa", "Bradesco", "Itaú", "Santander", "Banco do Brasil", "Sistema"]
+COL = {"Caixa": "var(--s1)", "Bradesco": "var(--s2)", "Itaú": "var(--s3)", "Santander": "var(--ink)", "Banco do Brasil": "var(--muted)", "Outros": "var(--ink-2)"}
 def fmt(v, d=0): return f"{v:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
-def panel(ox, w, title, sub, xs, series, ymax, xlab, lab_d=0):
-    X0, X1, Y0, Y1 = ox + 44, ox + w - 96, 46, 272
+def xlab(m): return "20" + m[2:4] if m.endswith("-12") and int(m[:4]) % 2 == 1 else ""
+def panel(ox, oy, w, h, title, sub, xs, series, ymax, lab_d=0, ygrid=4, sub2=None):
+    X0, X1, Y0, Y1 = ox + 40, ox + w - 70, oy + 34, oy + h - 18
     x = lambda i: X0 + (X1 - X0) * i / (len(xs) - 1); y = lambda v: Y1 - (Y1 - Y0) * v / ymax
-    g = [f'<text x="{ox+44}" y="17" class="gtit">{title}</text><text x="{ox+44}" y="32" class="gsub">{sub}</text>']
-    for k in range(5):
-        tv = ymax * k / 4; g.append(f'<line x1="{X0}" y1="{y(tv):.1f}" x2="{X1}" y2="{y(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-6}" y="{y(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(tv)}</text>')
+    g = [f'<text x="{ox+40}" y="{oy+13}" class="gtit" style="font-size:13px">{title}</text><text x="{ox+40}" y="{oy+26}" class="gsub">{sub}</text>']
+    for k in range(ygrid + 1):
+        tv = ymax * k / ygrid; g.append(f'<line x1="{X0}" y1="{y(tv):.1f}" x2="{X1}" y2="{y(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{y(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(tv)}</text>')
     for i, m in enumerate(xs):
         lb = xlab(m)
-        if lb: g.append(f'<text x="{x(i):.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".75">{lb}</text>')
+        if lb: g.append(f'<text x="{x(i):.1f}" y="{Y1+13}" text-anchor="middle" class="axq" opacity=".75">{lb}</text>')
     g.append(f'<line x1="{X0}" y1="{Y1}" x2="{X1}" y2="{Y1}" stroke="var(--baseline)"/>')
-    i22 = next(i for i, m in enumerate(xs) if m >= "2022-06"); g.append(f'<line x1="{x(i22):.1f}" y1="{Y0-4}" x2="{x(i22):.1f}" y2="{Y1}" stroke="var(--muted)" stroke-dasharray="2 4" opacity=".7"/><text x="{x(i22)+4:.1f}" y="{Y0+4}" class="fw-s2" fill="var(--muted)">jun/22</text>')
+    i22 = next(i for i, m in enumerate(xs) if m >= "2022-06"); g.append(f'<line x1="{x(i22):.1f}" y1="{Y0}" x2="{x(i22):.1f}" y2="{Y1}" stroke="var(--muted)" stroke-dasharray="2 4" opacity=".7"/>')
     ends = []
     for vals, col, wd, dash, lab in series:
-        pts = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, v in enumerate(vals))
+        pts = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, v in enumerate(vals) if v is not None)
         g.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{wd}"{f" stroke-dasharray=\"{dash}\"" if dash else ""} stroke-linejoin="round" stroke-linecap="round"/>')
         ends.append((vals[-1], col, lab))
     ys = []
     for v, col, lab in sorted(ends, reverse=True):
         yy = y(v)
         for pv in ys:
-            if abs(yy - pv) < 13: yy = pv + 13
-        ys.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{y(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab} {fmt(v, lab_d)}</text>')
+            if abs(yy - pv) < 11: yy = pv + 11
+        ys.append(yy); g.append(f'<text x="{X1+5}" y="{yy+3.5:.1f}" class="fw-s2" fill="{col}" style="font-weight:700">{lab} {fmt(v, lab_d)}</text>')
     return "".join(g)
-EM = [("Caixa", "var(--s1)", 2.8, ""), ("Bradesco", "var(--s2)", 2.0, ""), ("Itaú", "var(--s3)", 2.0, ""), ("Santander", "var(--ink)", 1.8, ""), ("Banco do Brasil", "var(--ink-2)", 1.6, "5 3"), ("Outros", "var(--muted)", 1.6, "5 3")]
-p1 = panel(0, 530, "LCI por emissor, R$ bi (semestral)", "BCB IF.data, conglomerados prudenciais; Outros = sistema menos os cinco", MS, [([L[m][k] / 1000 for m in MS], c, w, d, k.replace("Banco do Brasil", "BB")) for k, c, w, d in EM], 300, lambda m: "dez/" + m[2:4] if m.endswith("-12") and int(m[:4]) % 2 == 1 else "")
-cx = lambda k: [F[m]["Caixa"][k] / 1000 for m in MQ]
-hab = [(H[m]["Caixa"]["hab_pf"] + H[m]["Caixa"]["hab_pj"]) / 1000 for m in MQ]
-p2 = panel(530, 530, "Caixa: como o crédito habitacional é financiado, R$ bi", "BCB IF.data; carteira habitacional PF + PJ (inclui FGTS); repasses = FGTS", MQ,
-           [(hab, "var(--ink)", 2.4, "", "carteira"), (cx("repasses"), "var(--s3)", 2.2, "", "FGTS"), (cx("poup"), "var(--s2)", 2.2, "", "poupança"), (cx("lci"), "var(--s1)", 2.8, "", "LCI")], 1000, lambda m: "20" + m[2:4] if m.endswith("-12") and int(m[:4]) % 2 == 1 else "")
-svg = '<svg viewBox="0 0 1060 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + p1 + p2 + "</svg>"
-num = {"caixa_lci": L[MS[-1]]["Caixa"] / 1000, "tot_lci": L[MS[-1]]["Total"] / 1000, "caixa_jun22": L["2022-06"]["Caixa"] / 1000, "tot_jun22": L["2022-06"]["Total"] / 1000, "caixa_2015": L["2015-12"]["Caixa"] / 1000, "caixa_2021": L["2021-12"]["Caixa"] / 1000, "ult": MS[-1]}
-json.dump({"svg": svg, "num": num}, io.open(os.path.join(here, "_bancos_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
-print("ok", num)
+# ---- svg A: seis painéis
+PW, PH = 353, 205
+YM = {"Caixa": 1000, "Bradesco": 250, "Itaú": 250, "Santander": 125, "Banco do Brasil": 250, "Sistema": 1500}
+gA = []
+for n, b in enumerate(BK):
+    ser = [([H[m][b]["hab_pf"] / 1000 for m in MQ], "var(--ink)", 2.2, "", "hab. PF"), ([H[m][b]["hab_pj"] / 1000 for m in MQ], "var(--s3)", 1.8, "", "PJ"),
+           ([F[m][b]["poup"] / 1000 for m in MQ], "var(--s2)", 2.0, "", "poup."), ([F[m][b]["lci"] / 1000 for m in MQ], "var(--s1)", 2.6, "", "LCI")]
+    if b == "Caixa": ser.append(([F[m][b]["repasses"] / 1000 for m in MQ], "#2e7d32", 2.0, "", "FGTS"))
+    sub = "R$ bi; poupança inclui rural" if b == "Banco do Brasil" else ("R$ bi; FGTS = obrigações por repasses" if b == "Caixa" else "R$ bi")
+    gA.append(panel((n % 3) * PW, (n // 3) * PH, PW, PH, b if b != "Sistema" else "Sistema (todos os bancos)", sub, MQ, ser, YM[b]))
+svgA = f'<svg viewBox="0 0 1060 {2*PH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(gA) + "</svg>"
+# ---- svg B: market share ex-FGTS (PF: Caixa menos repasses; sistema idem), PJ
+def pf_ex(m, b):
+    v = H[m][b]["hab_pf"]
+    if b in ("Caixa", "Sistema"): v -= F[m]["Caixa"]["repasses"]
+    return max(v, 0)
+SH_PF = {b: [100 * pf_ex(m, b) / pf_ex(m, "Sistema") for m in MQ] for b in BK[:-1]}
+SH_PF["Outros"] = [100 - sum(SH_PF[b][i] for b in BK[:-1]) for i in range(len(MQ))]
+SH_PJ = {b: [100 * H[m][b]["hab_pj"] / H[m]["Sistema"]["hab_pj"] for m in MQ] for b in BK[:-1]}
+SH_PJ["Outros"] = [100 - sum(SH_PJ[b][i] for b in BK[:-1]) for i in range(len(MQ))]
+LB = {"Banco do Brasil": "BB"}
+gB = [panel(0, 0, 530, 300, "Share no crédito habitacional PF ex-FGTS, %", "carteira PF do banco ÷ sistema; Caixa e sistema sem os repasses do FGTS", MQ, [(SH_PF[b], COL[b], 2.4 if b == "Caixa" else 1.8, "5 3" if b == "Outros" else "", LB.get(b, b)) for b in BK[:-1] + ["Outros"]], 60, ygrid=4),
+      panel(530, 0, 530, 300, "Share no crédito habitacional PJ (plano empresário), %", "carteira PJ habitacional do banco ÷ sistema", MQ, [(SH_PJ[b], COL[b], 2.4 if b == "Caixa" else 1.8, "5 3" if b == "Outros" else "", LB.get(b, b)) for b in BK[:-1] + ["Outros"]], 60, ygrid=4)]
+svgB = '<svg viewBox="0 0 1060 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(gB) + "</svg>"
+i22 = MQ.index("2022-06")
+num = {"ult": MQ[-1], "sh_pf": {b: (round(SH_PF[b][0], 1), round(SH_PF[b][i22], 1), round(SH_PF[b][-1], 1)) for b in SH_PF}, "sh_pj": {b: (round(SH_PJ[b][0], 1), round(SH_PJ[b][i22], 1), round(SH_PJ[b][-1], 1)) for b in SH_PJ},
+       "caixa_lci": F[MQ[-1]]["Caixa"]["lci"] / 1000, "tot_lci": F[MQ[-1]]["Sistema"]["lci"] / 1000, "caixa_jun22": F["2022-06"]["Caixa"]["lci"] / 1000, "tot_jun22": F["2022-06"]["Sistema"]["lci"] / 1000}
+json.dump({"svgA": svgA, "svgB": svgB, "num": num}, io.open(os.path.join(here, "_bancos_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
+print("ok", MQ[0], MQ[-1]); print("share PF ex-FGTS (2015-03, jun/22, jun/26):", num["sh_pf"]); print("share PJ:", num["sh_pj"])
