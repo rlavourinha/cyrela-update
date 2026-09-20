@@ -1,1708 +1,2030 @@
 {
  "_meta": {
-  "fonte": "BCB IF.data (API Olinda), tipo 1 (conglomerados prudenciais e IFs independentes): relatório 3 Passivo (Letras de Crédito Imobiliário c1; Depósitos de Poupança a2, inclui rural) e relatório 11 Carteira PF por modalidade (Habitação, Total); R$ mi; trimestral"
+  "fonte": "BCB IF.data (API Olinda), tipo 1 (conglomerados prudenciais e IFs independentes): relatório 3 Passivo (Letras de Crédito Imobiliário c1; Depósitos de Poupança a2, inclui rural) e relatório 11 Carteira PF por modalidade (Habitação, Total); R$ mi; trimestral; Obrigações por Empréstimos e Repasses (d) = repasses"
  },
  "serie": {
   "2015-03": {
    "Caixa": {
     "lci": 98090.8,
     "poup": 233150.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 192404.9
    },
    "Bradesco": {
     "lci": 14299.6,
     "poup": 91741.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 62348.6
    },
    "Itaú": {
     "lci": 10894.0,
     "poup": 117357.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 95713.7
    },
    "Santander": {
     "lci": 23655.4,
     "poup": 37569.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 45236.5
    },
    "Banco do Brasil": {
     "lci": 19283.5,
     "poup": 144089.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 122122.8
    },
    "Inter": {
     "lci": 566.4,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 39.6
    },
    "Sistema": {
     "lci": 181990.3,
     "poup": 657103.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1291375.6
    }
   },
   "2015-06": {
    "Caixa": {
     "lci": 105119.4,
     "poup": 232117.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 200430.9
    },
    "Bradesco": {
     "lci": 17424.4,
     "poup": 91008.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 61351.7
    },
    "Itaú": {
     "lci": 12475.2,
     "poup": 113974.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 91529.7
    },
    "Santander": {
     "lci": 24479.6,
     "poup": 36595.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 45277.3
    },
    "Banco do Brasil": {
     "lci": 18526.0,
     "poup": 147306.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 115430.3
    },
    "Inter": {
     "lci": 669.5,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 39.7
    },
    "Sistema": {
     "lci": 194396.8,
     "poup": 653741.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1276245.0
    }
   },
   "2015-09": {
    "Caixa": {
     "lci": 107371.3,
     "poup": 234466.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 215598.5
    },
    "Bradesco": {
     "lci": 18988.4,
     "poup": 89616.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 69643.2
    },
    "Itaú": {
     "lci": 12415.7,
     "poup": 111450.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 104003.4
    },
    "Santander": {
     "lci": 23267.8,
     "poup": 35540.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 54123.4
    },
    "Banco do Brasil": {
     "lci": 18474.0,
     "poup": 149763.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 123616.3
    },
    "Inter": {
     "lci": 792.4,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 39.2
    },
    "Sistema": {
     "lci": 197414.2,
     "poup": 653179.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1384857.7
    }
   },
   "2015-12": {
    "Caixa": {
     "lci": 111231.7,
     "poup": 241362.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 222078.9
    },
    "Bradesco": {
     "lci": 20223.2,
     "poup": 91878.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 70335.0
    },
    "Itaú": {
     "lci": 14453.5,
     "poup": 111318.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 103900.7
    },
    "Santander": {
     "lci": 23795.3,
     "poup": 35984.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 52999.5
    },
    "Banco do Brasil": {
     "lci": 18121.4,
     "poup": 151845.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 121522.1
    },
    "Inter": {
     "lci": 904.6,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 39.2
    },
    "Sistema": {
     "lci": 204938.2,
     "poup": 665106.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1363289.2
    }
   },
   "2016-03": {
    "Caixa": {
     "lci": 112592.3,
     "poup": 238407.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 221082.5
    },
    "Bradesco": {
     "lci": 21179.5,
     "poup": 88261.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 62839.5
    },
    "Itaú": {
     "lci": 14399.0,
     "poup": 107292.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 93945.3
    },
    "Santander": {
     "lci": 24782.8,
     "poup": 34963.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 48184.6
    },
    "Banco do Brasil": {
     "lci": 18681.1,
     "poup": 151919.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 114140.6
    },
    "Inter": {
     "lci": 970.6,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 38.9
    },
    "Sistema": {
     "lci": 209783.9,
     "poup": 652953.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1320392.4
    }
   },
   "2016-06": {
    "Caixa": {
     "lci": 108993.4,
     "poup": 238702.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 230097.9
    },
    "Bradesco": {
     "lci": 23762.9,
     "poup": 87209.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 57529.4
    },
    "Itaú": {
     "lci": 16331.5,
     "poup": 104493.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 84324.5
    },
    "Santander": {
     "lci": 22884.3,
     "poup": 34517.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 43555.5
    },
    "Banco do Brasil": {
     "lci": 18066.5,
     "poup": 148367.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 110157.5
    },
    "Inter": {
     "lci": 1051.1,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 38.4
    },
    "Sistema": {
     "lci": 208147.9,
     "poup": 645887.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1290619.7
    }
   },
   "2016-09": {
    "Caixa": {
     "lci": 107241.1,
     "poup": 241110.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 236932.9
    },
    "Bradesco": {
     "lci": 28206.8,
     "poup": 93289.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 62792.0
    },
    "Itaú": {
     "lci": 18869.7,
     "poup": 104863.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 78716.6
    },
    "Santander": {
     "lci": 23191.7,
     "poup": 34764.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 45495.8
    },
    "Banco do Brasil": {
     "lci": 17521.4,
     "poup": 148681.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 108694.1
    },
    "Inter": {
     "lci": 1090.5,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 38.3
    },
    "Sistema": {
     "lci": 209073.0,
     "poup": 650832.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1304570.4
    }
   },
   "2016-12": {
    "Caixa": {
     "lci": 100902.5,
     "poup": 252403.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 244446.2
    },
    "Bradesco": {
     "lci": 26955.6,
     "poup": 97088.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 58200.2
    },
    "Itaú": {
     "lci": 19178.7,
     "poup": 108390.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 74221.5
    },
    "Santander": {
     "lci": 23983.4,
     "poup": 36051.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 47007.8
    },
    "Banco do Brasil": {
     "lci": 17073.6,
     "poup": 151763.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 104287.0
    },
    "Inter": {
     "lci": 1181.0,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 37.4
    },
    "Sistema": {
     "lci": 203274.0,
     "poup": 674760.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1189290.1
    }
   },
   "2017-03": {
    "Caixa": {
     "lci": 95884.6,
     "poup": 252920.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 251960.9
    },
    "Bradesco": {
     "lci": 25622.9,
     "poup": 94352.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 56412.2
    },
    "Itaú": {
     "lci": 18438.9,
     "poup": 107179.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 71726.5
    },
    "Santander": {
     "lci": 23733.9,
     "poup": 36113.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 44440.4
    },
    "Banco do Brasil": {
     "lci": 21012.1,
     "poup": 148910.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 99200.3
    },
    "Inter": {
     "lci": 1302.5,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 37.1
    },
    "Sistema": {
     "lci": 200718.8,
     "poup": 668514.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1180124.1
    }
   },
   "2017-06": {
    "Caixa": {
     "lci": 93928.8,
     "poup": 261251.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 256990.6
    },
    "Bradesco": {
     "lci": 25885.3,
     "poup": 95736.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 56542.4
    },
    "Itaú": {
     "lci": 18871.9,
     "poup": 109656.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 67940.9
    },
    "Santander": {
     "lci": 26257.6,
     "poup": 37063.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 44481.3
    },
    "Banco do Brasil": {
     "lci": 20131.5,
     "poup": 150982.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 99193.7
    },
    "Inter": {
     "lci": 1304.6,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 36.6
    },
    "Sistema": {
     "lci": 200770.9,
     "poup": 684968.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1186643.7
    }
   },
   "2017-09": {
    "Caixa": {
     "lci": 89327.1,
     "poup": 267000.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 263420.5
    },
    "Bradesco": {
     "lci": 28543.8,
     "poup": 98224.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 52069.5
    },
    "Itaú": {
     "lci": 19178.6,
     "poup": 112492.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 63916.5
    },
    "Santander": {
     "lci": 26800.4,
     "poup": 38570.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 42807.4
    },
    "Banco do Brasil": {
     "lci": 18479.8,
     "poup": 154516.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 101042.5
    },
    "Inter": {
     "lci": 1386.2,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 35.4
    },
    "Sistema": {
     "lci": 197894.9,
     "poup": 702990.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1167743.9
    }
   },
   "2017-12": {
    "Caixa": {
     "lci": 82382.8,
     "poup": 276693.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 271757.4
    },
    "Bradesco": {
     "lci": 27020.9,
     "poup": 103332.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 49289.9
    },
    "Itaú": {
     "lci": 18524.8,
     "poup": 120288.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 61176.2
    },
    "Santander": {
     "lci": 27713.9,
     "poup": 40572.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 50106.2
    },
    "Banco do Brasil": {
     "lci": 16886.0,
     "poup": 160289.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 100457.7
    },
    "Inter": {
     "lci": 1372.0,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 34.8
    },
    "Sistema": {
     "lci": 187694.9,
     "poup": 734359.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1172324.4
    }
   },
   "2018-03": {
    "Caixa": {
     "lci": 75093.3,
     "poup": 278725.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 278816.4
    },
    "Bradesco": {
     "lci": 26355.4,
     "poup": 101777.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 47733.4
    },
    "Itaú": {
     "lci": 16428.1,
     "poup": 122701.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 60238.5
    },
    "Santander": {
     "lci": 27231.1,
     "poup": 41408.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 47819.5
    },
    "Banco do Brasil": {
     "lci": 16546.3,
     "poup": 162560.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 99560.8
    },
    "Inter": {
     "lci": 1404.8,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 34.0
    },
    "Sistema": {
     "lci": 177136.2,
     "poup": 741276.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1154999.1
    }
   },
   "2018-06": {
    "Caixa": {
     "lci": 68289.6,
     "poup": 283207.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 288065.8
    },
    "Bradesco": {
     "lci": 25856.8,
     "poup": 103076.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 51386.3
    },
    "Itaú": {
     "lci": 14830.3,
     "poup": 127638.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 60714.6
    },
    "Santander": {
     "lci": 26019.0,
     "poup": 42571.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 60884.4
    },
    "Banco do Brasil": {
     "lci": 16577.0,
     "poup": 167089.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 100930.4
    },
    "Inter": {
     "lci": 1478.7,
     "poup": 0.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 33.3
    },
    "Sistema": {
     "lci": 168294.5,
     "poup": 760050.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1175090.4
    }
   },
   "2018-09": {
    "Caixa": {
     "lci": 64044.9,
     "poup": 291400.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 294634.5
    },
    "Bradesco": {
     "lci": 26457.7,
     "poup": 106375.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 55535.4
    },
    "Itaú": {
     "lci": 10873.3,
     "poup": 132665.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 65297.6
    },
    "Santander": {
     "lci": 26402.0,
     "poup": 44429.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 64225.7
    },
    "Banco do Brasil": {
     "lci": 17579.9,
     "poup": 172753.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 91831.7
    },
    "Inter": {
     "lci": 1542.1,
     "poup": 22.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 32.3
    },
    "Sistema": {
     "lci": 163013.2,
     "poup": 786539.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1128555.7
    }
   },
   "2018-12": {
    "Caixa": {
     "lci": 58779.6,
     "poup": 298352.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 300583.5
    },
    "Bradesco": {
     "lci": 25381.7,
     "poup": 111170.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 54884.8
    },
    "Itaú": {
     "lci": 9546.5,
     "poup": 136908.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 65164.9
    },
    "Santander": {
     "lci": 27160.0,
     "poup": 46068.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 45936.4
    },
    "Banco do Brasil": {
     "lci": 17264.7,
     "poup": 174854.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 87718.3
    },
    "Inter": {
     "lci": 1719.4,
     "poup": 73.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 32.0
    },
    "Sistema": {
     "lci": 156649.0,
     "poup": 807634.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1117038.2
    }
   },
   "2019-03": {
    "Caixa": {
     "lci": 55148.2,
     "poup": 296625.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 303809.2
    },
    "Bradesco": {
     "lci": 25166.9,
     "poup": 108574.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 57882.6
    },
    "Itaú": {
     "lci": 11914.4,
     "poup": 136617.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 67040.1
    },
    "Santander": {
     "lci": 27019.8,
     "poup": 46211.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 56863.4
    },
    "Banco do Brasil": {
     "lci": 15836.0,
     "poup": 174155.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 84485.1
    },
    "Inter": {
     "lci": 1762.1,
     "poup": 115.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 31.2
    },
    "Sistema": {
     "lci": 152791.8,
     "poup": 802597.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1126275.1
    }
   },
   "2019-06": {
    "Caixa": {
     "lci": 53933.5,
     "poup": 301589.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 308855.2
    },
    "Bradesco": {
     "lci": 24870.7,
     "poup": 108497.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 55160.6
    },
    "Itaú": {
     "lci": 10596.4,
     "poup": 137572.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 69990.3
    },
    "Santander": {
     "lci": 28269.7,
     "poup": 46574.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 60992.9
    },
    "Banco do Brasil": {
     "lci": 15168.6,
     "poup": 174480.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 80638.5
    },
    "Inter": {
     "lci": 1812.1,
     "poup": 162.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 31.3
    },
    "Sistema": {
     "lci": 151158.2,
     "poup": 810490.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1090067.8
    }
   },
   "2019-09": {
    "Caixa": {
     "lci": 51520.6,
     "poup": 311469.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 309926.8
    },
    "Bradesco": {
     "lci": 25237.6,
     "poup": 109079.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 52974.5
    },
    "Itaú": {
     "lci": 9337.6,
     "poup": 140127.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 75393.6
    },
    "Santander": {
     "lci": 27764.0,
     "poup": 47340.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 65149.3
    },
    "Banco do Brasil": {
     "lci": 15491.6,
     "poup": 176723.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 81503.6
    },
    "Inter": {
     "lci": 1950.5,
     "poup": 218.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 31.3
    },
    "Sistema": {
     "lci": 147999.8,
     "poup": 828210.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1077453.5
    }
   },
   "2019-12": {
    "Caixa": {
     "lci": 48232.6,
     "poup": 321189.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 320716.5
    },
    "Bradesco": {
     "lci": 27019.4,
     "poup": 114177.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 51777.0
    },
    "Itaú": {
     "lci": 7635.0,
     "poup": 144562.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 74093.2
    },
    "Santander": {
     "lci": 24995.3,
     "poup": 49039.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 54424.0
    },
    "Banco do Brasil": {
     "lci": 16992.7,
     "poup": 180942.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 79397.5
    },
    "Inter": {
     "lci": 1734.0,
     "poup": 307.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 37.9
    },
    "Sistema": {
     "lci": 142087.7,
     "poup": 855728.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1031932.2
    }
   },
   "2020-03": {
    "Caixa": {
     "lci": 46684.7,
     "poup": 321106.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 324449.4
    },
    "Bradesco": {
     "lci": 27427.9,
     "poup": 113106.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 57338.0
    },
    "Itaú": {
     "lci": 4692.8,
     "poup": 149605.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 93626.2
    },
    "Santander": {
     "lci": 27692.2,
     "poup": 50184.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 66312.2
    },
    "Banco do Brasil": {
     "lci": 14640.7,
     "poup": 181647.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 78077.5
    },
    "Inter": {
     "lci": 1663.2,
     "poup": 346.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 42.0
    },
    "Sistema": {
     "lci": 137495.0,
     "poup": 863202.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1154081.9
    }
   },
   "2020-06": {
    "Caixa": {
     "lci": 46031.7,
     "poup": 363841.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 330735.3
    },
    "Bradesco": {
     "lci": 26403.0,
     "poup": 123270.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 52031.3
    },
    "Itaú": {
     "lci": 2965.3,
     "poup": 163761.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 93896.1
    },
    "Santander": {
     "lci": 27008.4,
     "poup": 55755.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 64772.6
    },
    "Banco do Brasil": {
     "lci": 13296.1,
     "poup": 199135.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 78743.6
    },
    "Inter": {
     "lci": 1770.0,
     "poup": 515.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 48.3
    },
    "Sistema": {
     "lci": 132279.1,
     "poup": 959603.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1160885.6
    }
   },
   "2020-09": {
    "Caixa": {
     "lci": 41694.1,
     "poup": 387614.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 335776.2
    },
    "Bradesco": {
     "lci": 26305.7,
     "poup": 129669.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 51973.0
    },
    "Itaú": {
     "lci": 3349.3,
     "poup": 172397.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 89575.0
    },
    "Santander": {
     "lci": 26162.8,
     "poup": 59443.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 67529.3
    },
    "Banco do Brasil": {
     "lci": 12524.4,
     "poup": 210009.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 74653.4
    },
    "Inter": {
     "lci": 1753.8,
     "poup": 700.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 28.2
    },
    "Sistema": {
     "lci": 125626.8,
     "poup": 1018564.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1201251.4
    }
   },
   "2020-12": {
    "Caixa": {
     "lci": 36463.9,
     "poup": 389770.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 342073.2
    },
    "Bradesco": {
     "lci": 27601.3,
     "poup": 136698.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 47804.8
    },
    "Itaú": {
     "lci": 4205.4,
     "poup": 179475.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 81390.9
    },
    "Santander": {
     "lci": 25710.5,
     "poup": 63306.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 67173.7
    },
    "Banco do Brasil": {
     "lci": 12437.9,
     "poup": 219396.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 73884.1
    },
    "Inter": {
     "lci": 1728.3,
     "poup": 887.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 27.6
    },
    "Sistema": {
     "lci": 122003.2,
     "poup": 1051731.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1150817.2
    }
   },
   "2021-03": {
    "Caixa": {
     "lci": 31667.3,
     "poup": 368492.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 346194.8
    },
    "Bradesco": {
     "lci": 26469.7,
     "poup": 134181.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 52055.4
    },
    "Itaú": {
     "lci": 5381.4,
     "poup": 183285.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 85571.3
    },
    "Santander": {
     "lci": 25144.0,
     "poup": 63673.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 83804.1
    },
    "Banco do Brasil": {
     "lci": 12551.7,
     "poup": 219055.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 72754.5
    },
    "Inter": {
     "lci": 1704.7,
     "poup": 935.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 27.2
    },
    "Sistema": {
     "lci": 118336.9,
     "poup": 1032255.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1144402.6
    }
   },
   "2021-06": {
    "Caixa": {
     "lci": 28006.9,
     "poup": 371409.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 351042.2
    },
    "Bradesco": {
     "lci": 26333.3,
     "poup": 137400.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 56619.5
    },
    "Itaú": {
     "lci": 6299.0,
     "poup": 184239.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 82919.8
    },
    "Santander": {
     "lci": 24859.9,
     "poup": 64748.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 79331.3
    },
    "Banco do Brasil": {
     "lci": 12778.2,
     "poup": 223426.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 68207.5
    },
    "Inter": {
     "lci": 2112.2,
     "poup": 1049.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 26.2
    },
    "Sistema": {
     "lci": 116316.8,
     "poup": 1048231.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1092409.4
    }
   },
   "2021-09": {
    "Caixa": {
     "lci": 24941.8,
     "poup": 370016.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 353479.0
    },
    "Bradesco": {
     "lci": 29210.3,
     "poup": 137134.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 56461.5
    },
    "Itaú": {
     "lci": 7896.0,
     "poup": 187582.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 92272.5
    },
    "Santander": {
     "lci": 25095.5,
     "poup": 65225.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 86052.8
    },
    "Banco do Brasil": {
     "lci": 12846.4,
     "poup": 225458.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 67035.9
    },
    "Inter": {
     "lci": 3085.6,
     "poup": 1138.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 25.5
    },
    "Sistema": {
     "lci": 120620.3,
     "poup": 1052212.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1126210.4
    }
   },
   "2021-12": {
    "Caixa": {
     "lci": 22454.7,
     "poup": 365091.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 357073.7
    },
    "Bradesco": {
     "lci": 41461.9,
     "poup": 139341.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 50300.0
    },
    "Itaú": {
     "lci": 10662.3,
     "poup": 190619.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 95235.0
    },
    "Santander": {
     "lci": 28924.2,
     "poup": 65220.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 91052.6
    },
    "Banco do Brasil": {
     "lci": 12547.8,
     "poup": 225452.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 65732.3
    },
    "Inter": {
     "lci": 3570.6,
     "poup": 1230.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 25.0
    },
    "Sistema": {
     "lci": 140884.1,
     "poup": 1053810.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1166902.3
    }
   },
   "2022-03": {
    "Caixa": {
     "lci": 24234.7,
     "poup": 359352.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 359949.7
    },
    "Bradesco": {
     "lci": 45822.7,
     "poup": 134394.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 57829.1
    },
    "Itaú": {
     "lci": 15639.8,
     "poup": 183888.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 105649.9
    },
    "Santander": {
     "lci": 37561.2,
     "poup": 62909.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 82352.8
    },
    "Banco do Brasil": {
     "lci": 12373.5,
     "poup": 219330.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 64849.1
    },
    "Inter": {
     "lci": 4294.5,
     "poup": 1215.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 33.3
    },
    "Sistema": {
     "lci": 164863.3,
     "poup": 1026809.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1146443.0
    }
   },
   "2022-06": {
    "Caixa": {
     "lci": 30498.6,
     "poup": 366697.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 366169.7
    },
    "Bradesco": {
     "lci": 48555.7,
     "poup": 134762.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 61259.6
    },
    "Itaú": {
     "lci": 20826.5,
     "poup": 184906.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 118487.6
    },
    "Santander": {
     "lci": 34088.9,
     "poup": 61398.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 87505.2
    },
    "Banco do Brasil": {
     "lci": 12877.4,
     "poup": 216894.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 64391.3
    },
    "Inter": {
     "lci": 4962.2,
     "poup": 1182.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 31.7
    },
    "Sistema": {
     "lci": 178937.2,
     "poup": 1032805.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1194762.1
    }
   },
   "2022-09": {
    "Caixa": {
     "lci": 42559.5,
     "poup": 353435.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 375891.7
    },
    "Bradesco": {
     "lci": 47681.7,
     "poup": 132847.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 61312.5
    },
    "Itaú": {
     "lci": 24008.1,
     "poup": 181871.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 123735.2
    },
    "Santander": {
     "lci": 34081.5,
     "poup": 60237.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 89291.4
    },
    "Banco do Brasil": {
     "lci": 13085.5,
     "poup": 214574.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 64608.1
    },
    "Inter": {
     "lci": 5336.7,
     "poup": 1216.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 33.0
    },
    "Sistema": {
     "lci": 193605.2,
     "poup": 1009139.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1223357.6
    }
   },
   "2022-12": {
    "Caixa": {
     "lci": 73933.3,
     "poup": 360729.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 385041.5
    },
    "Bradesco": {
     "lci": 51258.5,
     "poup": 134624.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 56600.8
    },
    "Itaú": {
     "lci": 28116.8,
     "poup": 179771.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 111823.4
    },
    "Santander": {
     "lci": 34139.2,
     "poup": 60204.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 82649.5
    },
    "Banco do Brasil": {
     "lci": 12197.4,
     "poup": 213435.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 64386.3
    },
    "Inter": {
     "lci": 5793.8,
     "poup": 1307.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 36.7
    },
    "Sistema": {
     "lci": 238428.3,
     "poup": 1017495.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1177297.4
    }
   },
   "2023-03": {
    "Caixa": {
     "lci": 93527.1,
     "poup": 349335.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 392746.7
    },
    "Bradesco": {
     "lci": 55852.3,
     "poup": 128311.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 49166.5
    },
    "Itaú": {
     "lci": 35519.0,
     "poup": 175972.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 101998.2
    },
    "Santander": {
     "lci": 35650.3,
     "poup": 58649.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 82827.0
    },
    "Banco do Brasil": {
     "lci": 12075.3,
     "poup": 206768.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 61793.9
    },
    "Inter": {
     "lci": 6237.2,
     "poup": 1274.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 36.6
    },
    "Sistema": {
     "lci": 276498.3,
     "poup": 986198.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1133604.6
    }
   },
   "2023-06": {
    "Caixa": {
     "lci": 109308.6,
     "poup": 353443.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 403177.1
    },
    "Bradesco": {
     "lci": 52211.2,
     "poup": 128300.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 50106.5
    },
    "Itaú": {
     "lci": 39145.7,
     "poup": 174479.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 100333.6
    },
    "Santander": {
     "lci": 39089.6,
     "poup": 57672.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 90931.7
    },
    "Banco do Brasil": {
     "lci": 13974.4,
     "poup": 205952.5,
-    "hab": 0
+    "hab": 0,
+    "repasses": 62495.0
    },
    "Inter": {
     "lci": 6561.8,
     "poup": 1305.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 38.7
    },
    "Sistema": {
     "lci": 301091.7,
     "poup": 988247.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1155607.9
    }
   },
   "2023-09": {
    "Caixa": {
     "lci": 129154.3,
     "poup": 352385.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 417282.0
    },
    "Bradesco": {
     "lci": 49489.2,
     "poup": 127330.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 50809.7
    },
    "Itaú": {
     "lci": 49092.4,
     "poup": 174014.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 107632.2
    },
    "Santander": {
     "lci": 38490.9,
     "poup": 57283.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 107417.3
    },
    "Banco do Brasil": {
     "lci": 14510.3,
     "poup": 206503.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 62124.8
    },
    "Inter": {
     "lci": 7226.7,
     "poup": 1350.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 87.6
    },
    "Sistema": {
     "lci": 334187.7,
     "poup": 987032.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1193957.6
    }
   },
   "2023-12": {
    "Caixa": {
     "lci": 146555.0,
     "poup": 358327.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 435176.8
    },
    "Bradesco": {
     "lci": 52115.7,
     "poup": 131003.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 47227.6
    },
    "Itaú": {
     "lci": 48955.5,
     "poup": 174791.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 95885.7
    },
    "Santander": {
     "lci": 41677.8,
     "poup": 58112.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 89785.8
    },
    "Banco do Brasil": {
     "lci": 14760.6,
     "poup": 206915.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 62038.1
    },
    "Inter": {
     "lci": 7898.5,
     "poup": 1540.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 107.4
    },
    "Sistema": {
     "lci": 361617.4,
     "poup": 1000617.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1201606.9
    }
   },
   "2024-03": {
    "Caixa": {
     "lci": 158224.5,
     "poup": 358684.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 449062.4
    },
    "Bradesco": {
     "lci": 51825.5,
     "poup": 127387.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 45848.1
    },
    "Itaú": {
     "lci": 46740.3,
     "poup": 174191.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 105818.9
    },
    "Santander": {
     "lci": 39109.9,
     "poup": 57093.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 94322.7
    },
    "Banco do Brasil": {
     "lci": 14295.6,
     "poup": 205678.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 63120.2
    },
    "Inter": {
     "lci": 7937.6,
     "poup": 1549.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 102.0
    },
    "Sistema": {
     "lci": 363390.3,
     "poup": 994563.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1235784.9
    }
   },
   "2024-06": {
    "Caixa": {
     "lci": 162534.0,
     "poup": 374543.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 467714.1
    },
    "Bradesco": {
     "lci": 54166.2,
     "poup": 131429.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 58020.7
    },
    "Itaú": {
     "lci": 43908.0,
     "poup": 179045.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 115312.4
    },
    "Santander": {
     "lci": 41435.6,
     "poup": 57979.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 109364.5
    },
    "Banco do Brasil": {
     "lci": 14238.7,
     "poup": 212664.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 70874.5
    },
    "Inter": {
     "lci": 8164.8,
     "poup": 1715.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 101.6
    },
    "Sistema": {
     "lci": 362488.2,
     "poup": 1032772.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1346005.7
    }
   },
   "2024-09": {
    "Caixa": {
     "lci": 171688.9,
     "poup": 380985.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 488275.9
    },
    "Bradesco": {
     "lci": 55046.7,
     "poup": 129742.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 64399.4
    },
    "Itaú": {
     "lci": 41117.3,
     "poup": 176863.0,
-    "hab": 0
+    "hab": 0,
+    "repasses": 115763.9
    },
    "Santander": {
     "lci": 41103.4,
     "poup": 57144.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 119383.2
    },
    "Banco do Brasil": {
     "lci": 14134.6,
     "poup": 215320.8,
-    "hab": 0
+    "hab": 0,
+    "repasses": 76275.0
    },
    "Inter": {
     "lci": 8638.4,
     "poup": 1777.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 114.9
    },
    "Sistema": {
     "lci": 367368.0,
     "poup": 1039676.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1424966.7
    }
   },
   "2024-12": {
    "Caixa": {
     "lci": 186381.0,
     "poup": 385360.3,
-    "hab": 0
+    "hab": 0,
+    "repasses": 503286.7
    },
    "Bradesco": {
     "lci": 55865.7,
     "poup": 132502.2,
-    "hab": 0
+    "hab": 0,
+    "repasses": 74483.0
    },
    "Itaú": {
     "lci": 52112.3,
     "poup": 180763.9,
-    "hab": 0
+    "hab": 0,
+    "repasses": 132260.5
    },
    "Santander": {
     "lci": 41165.0,
     "poup": 57452.7,
-    "hab": 0
+    "hab": 0,
+    "repasses": 118639.9
    },
    "Banco do Brasil": {
     "lci": 14706.6,
     "poup": 218362.6,
-    "hab": 0
+    "hab": 0,
+    "repasses": 80853.5
    },
    "Inter": {
     "lci": 9182.6,
     "poup": 1883.4,
-    "hab": 0
+    "hab": 0,
+    "repasses": 129.0
    },
    "Sistema": {
     "lci": 392996.3,
     "poup": 1055787.1,
-    "hab": 0
+    "hab": 0,
+    "repasses": 1523242.6
    }
   },
   "2025-03": {
    "Caixa": {
     "lci": 213160.4,
     "poup": 379393.9,
-    "hab": 823731.4
+    "hab": 823731.4,
+    "repasses": 515996.1
    },
    "Bradesco": {
     "lci": 60940.0,
     "poup": 126124.1,
-    "hab": 101802.7
+    "hab": 101802.7,
+    "repasses": 80295.8
    },
    "Itaú": {
     "lci": 57131.6,
     "poup": 174680.3,
-    "hab": 131379.9
+    "hab": 131379.9,
+    "repasses": 120686.0
    },
    "Santander": {
     "lci": 42797.9,
     "poup": 54786.5,
-    "hab": 63394.0
+    "hab": 63394.0,
+    "repasses": 124218.5
    },
    "Banco do Brasil": {
     "lci": 15184.4,
     "poup": 213379.2,
-    "hab": 48129.0
+    "hab": 48129.0,
+    "repasses": 81961.3
    },
    "Inter": {
     "lci": 9864.8,
     "poup": 1727.8,
-    "hab": 6235.5
+    "hab": 6235.5,
+    "repasses": 240.6
    },
    "Sistema": {
     "lci": 431349.2,
     "poup": 1027417.3,
-    "hab": 1206979.0
+    "hab": 1206979.0,
+    "repasses": 1517299.9
    }
   },
   "2025-06": {
    "Caixa": {
     "lci": 222676.2,
     "poup": 390358.3,
-    "hab": 848272.3
+    "hab": 848272.3,
+    "repasses": 534025.1
    },
    "Bradesco": {
     "lci": 68652.5,
     "poup": 127352.6,
-    "hab": 105872.8
+    "hab": 105872.8,
+    "repasses": 82036.5
    },
    "Itaú": {
     "lci": 61013.2,
     "poup": 173260.6,
-    "hab": 134085.1
+    "hab": 134085.1,
+    "repasses": 117350.3
    },
    "Santander": {
     "lci": 44464.1,
     "poup": 53884.2,
-    "hab": 64809.5
+    "hab": 64809.5,
+    "repasses": 120281.4
    },
    "Banco do Brasil": {
     "lci": 14941.7,
     "poup": 216142.9,
-    "hab": 47738.1
+    "hab": 47738.1,
+    "repasses": 82952.5
    },
    "Inter": {
     "lci": 9849.0,
     "poup": 1705.2,
-    "hab": 6916.6
+    "hab": 6916.6,
+    "repasses": 240.0
    },
    "Sistema": {
     "lci": 455639.4,
     "poup": 1042468.8,
-    "hab": 1240993.5
+    "hab": 1240993.5,
+    "repasses": 1511165.6
    }
   },
   "2025-09": {
    "Caixa": {
     "lci": 236100.4,
     "poup": 391922.2,
-    "hab": 875251.7
+    "hab": 875251.7,
+    "repasses": 558243.3
    },
    "Bradesco": {
     "lci": 68244.6,
     "poup": 123974.3,
-    "hab": 106634.4
+    "hab": 106634.4,
+    "repasses": 81383.8
    },
    "Itaú": {
     "lci": 64296.2,
     "poup": 169398.1,
-    "hab": 136822.7
+    "hab": 136822.7,
+    "repasses": 126005.2
    },
    "Santander": {
     "lci": 46673.6,
     "poup": 52776.4,
-    "hab": 66490.4
+    "hab": 66490.4,
+    "repasses": 119256.0
    },
    "Banco do Brasil": {
     "lci": 15435.9,
     "poup": 213506.4,
-    "hab": 47307.6
+    "hab": 47307.6,
+    "repasses": 85132.6
    },
    "Inter": {
     "lci": 10508.0,
     "poup": 1618.1,
-    "hab": 7697.5
+    "hab": 7697.5,
+    "repasses": 327.3
    },
    "Sistema": {
     "lci": 474951.4,
     "poup": 1033325.5,
-    "hab": 1274553.2
+    "hab": 1274553.2,
+    "repasses": 1560304.5
    }
   },
   "2025-12": {
    "Caixa": {
     "lci": 253942.2,
     "poup": 396218.7,
-    "hab": 913746.3
+    "hab": 913746.3,
+    "repasses": 590593.0
    },
    "Bradesco": {
     "lci": 75321.7,
     "poup": 124461.4,
-    "hab": 107096.1
+    "hab": 107096.1,
+    "repasses": 84867.0
    },
    "Itaú": {
     "lci": 71121.8,
     "poup": 177369.0,
-    "hab": 141487.2
+    "hab": 141487.2,
+    "repasses": 137148.9
    },
    "Santander": {
     "lci": 51697.9,
     "poup": 53075.5,
-    "hab": 67831.2
+    "hab": 67831.2,
+    "repasses": 113871.0
    },
    "Banco do Brasil": {
     "lci": 16103.9,
     "poup": 215188.6,
-    "hab": 46661.5
+    "hab": 46661.5,
+    "repasses": 89059.9
    },
    "Inter": {
     "lci": 11163.8,
     "poup": 1599.6,
-    "hab": 8509.9
+    "hab": 8509.9,
+    "repasses": 338.4
    },
    "Sistema": {
     "lci": 500064.7,
     "poup": 1046310.0,
-    "hab": 1320404.8
+    "hab": 1320404.8,
+    "repasses": 1665974.3
    }
   },
   "2026-03": {
    "Caixa": {
     "lci": 265557.1,
     "poup": 392370.7,
-    "hab": 942100.0
+    "hab": 942100.0,
+    "repasses": 620821.9
    },
    "Bradesco": {
     "lci": 80473.0,
     "poup": 119593.4,
-    "hab": 108284.4
+    "hab": 108284.4,
+    "repasses": 84428.9
    },
    "Itaú": {
     "lci": 78571.1,
     "poup": 172342.4,
-    "hab": 146123.3
+    "hab": 146123.3,
+    "repasses": 130508.8
    },
    "Santander": {
     "lci": 52787.8,
     "poup": 51372.8,
-    "hab": 68899.2
+    "hab": 68899.2,
+    "repasses": 121753.2
    },
    "Banco do Brasil": {
     "lci": 16224.7,
     "poup": 211233.8,
-    "hab": 45910.5
+    "hab": 45910.5,
+    "repasses": 91176.2
    },
    "Inter": {
     "lci": 11558.2,
     "poup": 1423.5,
-    "hab": 9144.2
+    "hab": 9144.2,
+    "repasses": 279.9
    },
    "Sistema": {
     "lci": 525031.9,
     "poup": 1024590.4,
-    "hab": 1356414.6
+    "hab": 1356414.6,
+    "repasses": 1700207.7
    }
   },
   "2026-06": {
    "Caixa": {
     "lci": 271175.1,
     "poup": 405581.4,
-    "hab": 979180.8
+    "hab": 979180.8,
+    "repasses": 652348.8
    },
    "Bradesco": {
     "lci": 81815.2,
     "poup": 121285.9,
-    "hab": 110415.2
+    "hab": 110415.2,
+    "repasses": 88947.8
    },
    "Itaú": {
     "lci": 80533.7,
     "poup": 172307.3,
-    "hab": 151913.2
+    "hab": 151913.2,
+    "repasses": 129647.3
    },
    "Santander": {
     "lci": 53857.3,
     "poup": 51234.2,
-    "hab": 70331.3
+    "hab": 70331.3,
+    "repasses": 125384.7
    },
    "Banco do Brasil": {
     "lci": 15439.9,
     "poup": 216111.5,
-    "hab": 45226.5
+    "hab": 45226.5,
+    "repasses": 92955.4
    },
    "Inter": {
     "lci": 12423.8,
     "poup": 1371.3,
-    "hab": 9710.2
+    "hab": 9710.2,
+    "repasses": 326.4
    },
    "Sistema": {
     "lci": 537293.8,
     "poup": 1046412.5,
-    "hab": 1402951.6
+    "hab": 1402951.6,
+    "repasses": 1732474.2
    }
   }
  }

@@ -24,7 +24,8 @@ def panel(bank, ox, oy, w, h, ymax):
         if m.endswith("-12") and int(m[:4]) % 2 == 1: g.append(f'<text x="{x(i):.1f}" y="{Y1+14}" text-anchor="middle" class="ax">{m[2:4]}</text>')
     g.append(f'<line x1="{X0}" y1="{Y1}" x2="{X1}" y2="{Y1}" stroke="#bfb8ab"/>')
     i22 = MS.index("2022-06"); g.append(f'<line x1="{x(i22):.1f}" y1="{Y0-4}" x2="{x(i22):.1f}" y2="{Y1}" stroke="#8a8378" stroke-dasharray="2 4" opacity=".7"/>')
-    ser = [("hab", "#2b2a26", 2.2, "carteira habitacional PF + PJ"), ("poup", "#2f5fa8", 2.2, "poupança"), ("lci", "#b3123f", 2.6, "LCI")]
+    ser = [("hab_pf", "#2b2a26", 2.2, "carteira habitacional PF"), ("hab_pj", "#a07a12", 2.0, "carteira PJ (plano empresário)"), ("poup", "#2f5fa8", 2.2, "poupança"), ("lci", "#b3123f", 2.6, "LCI")]
+    if bank == "Caixa": ser.append(("repasses", "#2e7d32", 2.2, "repasses (FGTS)"))
     for key, col, wd, lab in ser:
         pts = " ".join(f"{x(i):.1f},{y(D[m][bank][key]/1000):.1f}" for i, m in enumerate(MS))
         g.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{wd}" stroke-linejoin="round" stroke-linecap="round"/>')
@@ -32,7 +33,7 @@ def panel(bank, ox, oy, w, h, ymax):
     for v, k, col in ends:
         yy = y(v)
         for p in ys:
-            if abs(yy - p) < 12: yy = p + 12
+            if abs(yy - p) < 11: yy = p + 11
         ys.append(yy); g.append(f'<text x="{X1-2}" y="{yy-5:.1f}" text-anchor="end" class="lb" fill="{col}">{fmt(v)}</text>')
     return "".join(g)
 W = 1060; PW, PH = 353, 200
@@ -40,8 +41,8 @@ YM = {"Caixa": 1000, "Bradesco": 250, "Itaú": 250, "Santander": 125, "Banco do 
 g = []
 for n, b in enumerate(BK):
     g.append(panel(b, (n % 3) * PW, 40 + (n // 3) * PH, PW, PH, YM[b]))
-g.append('<text x="46" y="18" class="tit">Poupança, LCI e carteira habitacional (PF + PJ) por banco (R$ bi, trimestral)</text>')
-g.append(f'<text x="46" y="32" class="sub">BCB IF.data, conglomerados prudenciais; tracejado = jun/22. Cada painel tem sua escala; poupança inclui rural (BB). <tspan fill="#2b2a26" font-weight="700">■</tspan> carteira habitacional PF + PJ  <tspan fill="#2f5fa8" font-weight="700">■</tspan> poupança  <tspan fill="#b3123f" font-weight="700">■</tspan> LCI</text>')
+g.append('<text x="46" y="18" class="tit">Poupança, LCI, repasses e carteira habitacional PF e PJ por banco (R$ bi, trimestral)</text>')
+g.append(f'<text x="46" y="32" class="sub">BCB IF.data, prudenciais; tracejado = jun/22; escalas próprias; poupança inclui rural. <tspan fill="#2b2a26" font-weight="700">■</tspan> hab. PF  <tspan fill="#a07a12" font-weight="700">■</tspan> hab. PJ (plano empresário)  <tspan fill="#2f5fa8" font-weight="700">■</tspan> poupança  <tspan fill="#b3123f" font-weight="700">■</tspan> LCI  <tspan fill="#2e7d32" font-weight="700">■</tspan> repasses (Caixa = FGTS)</text>')
 svg = f'<svg viewBox="0 0 {W} {40 + 2 * PH + 6}" xmlns="http://www.w3.org/2000/svg">' + "".join(g) + "</svg>"
 # tabela: variação jun/22 → jun/26 e dez/15 → jun/22
 def dlt(b, a, z, k): return (D[z][b][k] - D[a][b][k]) / 1000
@@ -68,7 +69,7 @@ td.n{{text-align:right;font-variant-numeric:tabular-nums}} td.b{{font-weight:600
 {svg}
 <table><thead><tr><th>Δ R$ bi</th><th>hab. PF+PJ dez/15→jun/22</th><th>poupança</th><th>LCI</th><th class="g">hab. PF+PJ jun/22→jun/26</th><th>poupança</th><th>LCI</th><th>LCI ÷ Δhab.</th></tr></thead><tbody>{tb}</tbody></table>
 <div class="out"><b>O que fica:</b> em 2015-22 a poupança financiou sozinha o crescimento da carteira (sistema: carteira +R$ {fmt(sx[1][0])} bi, poupança +R$ {fmt(sx[1][1])} bi, LCI {fmt(sx[1][2])}). Em jun/22-jun/26 a carteira cresceu R$ {fmt(sx[2][0])} bi com poupança parada (+{fmt(sx[2][1])}) e a LCI entrou com R$ {fmt(sx[2][2])} bi, {fmt(100 * sx[2][2] / sx[2][0])}% do crescimento. Nos privados a resposta à pergunta é sim em parte: Itaú, Bradesco e Santander perderam R$ 13, 13 e 10 bi de poupança e repuseram com LCI (+60, +33 e +20), ou seja, a LCI cobriu a saída da poupança do estoque antigo e financiou o crédito novo. Na Caixa a poupança não caiu (+R$ {fmt(cx[2][1])} bi); a carteira cresceu R$ {fmt(cx[2][0])} bi e a LCI (+R$ {fmt(cx[2][2])} bi) mais o FGTS (+~R$ 240 bi) mais a poupança somam mais que isso: a Caixa captou LCI além do que o crédito habitacional pediu, e o excedente financia o resto do balanço.</div>
-<p class="fn">Fontes: BCB, IF.data (API Olinda), tipo 1 (conglomerados prudenciais e instituições independentes): relatório 3 "Passivo" (Depósitos de Poupança a2, inclui poupança rural; Letras de Crédito Imobiliário c1) relatório 11 "Carteira de crédito ativa PF por modalidade" (Habitação, Total) e relatório 13 "Carteira PJ por modalidade" (Habitacional, Total: plano empresário). Trimestral mar/15 a jun/26 (_funding_emissor_trimestral.json e _funding_emissor_pj_trimestral.json, R$ mi). A carteira habitacional da Caixa inclui os financiamentos com recursos do FGTS. Até dez/24 os relatórios de carteira existem só para conglomerados financeiros (tipo 2) e a partir de mar/25 só para prudenciais (tipo 1): há um degrau em dez/24 (Itaú R$ 180 bi contra R$ 119 bi em set/24 e R$ 131 bi em mar/25) que é de consolidação, não de crédito.</p>
+<p class="fn">Fontes: BCB, IF.data (API Olinda), tipo 1 (conglomerados prudenciais e instituições independentes): relatório 3 "Passivo" (Depósitos de Poupança a2, inclui poupança rural; Letras de Crédito Imobiliário c1) relatório 3 coluna (d) "Obrigações por Empréstimos e Repasses" (na Caixa, essencialmente os repasses do FGTS), relatório 11 "Carteira de crédito ativa PF por modalidade" (Habitação, Total) e relatório 13 "Carteira PJ por modalidade" (Habitacional, Total: plano empresário). Trimestral mar/15 a jun/26 (_funding_emissor_trimestral.json e _funding_emissor_pj_trimestral.json, R$ mi). A carteira habitacional da Caixa inclui os financiamentos com recursos do FGTS. Até dez/24 os relatórios de carteira existem só para conglomerados financeiros (tipo 2) e a partir de mar/25 só para prudenciais (tipo 1): há um degrau em dez/24 (Itaú R$ 180 bi contra R$ 119 bi em set/24 e R$ 131 bi em mar/25) que é de consolidação, não de crédito.</p>
 </div></body></html>"""
 io.open(os.path.join(here, "funding_emissor.html"), "w", encoding="utf-8").write(html)
 print("ok", MS[0], MS[-1], {b: (round(D[MS[-1]][b]["hab"] / 1000), round(D[MS[-1]][b]["poup"] / 1000), round(D[MS[-1]][b]["lci"] / 1000)) for b in BK})
