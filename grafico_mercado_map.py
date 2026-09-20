@@ -121,12 +121,24 @@ def secovi_svg(seg):
 xl2 = lambda m: m[:4] if m.endswith("-01") and int(m[:4]) % 2 == 1 else ""
 xq2 = lambda q: "20" + q[2:] if q.startswith("1T") and int(q[2:]) % 2 == 1 else ""
 FR = {}
-for seg, ttl, ymB, cy, ymC in (("map", "médio e alto padrão", 80, CM, 20), ("mcmv", "MCMV", 200, CC, 8)):
-    # 19/09/26: unidade sai do gtit e vai para o gsub (o título "Cyrela · médio e alto padrão: VGV lançado, R$ bi, 12 meses" terminava em x=1093 > 1060 e o layout_enxuta alargava o viewBox)
-    gg = deck_panel(0, 0, 530, 250, f"Brasil · {ttl}, 12 meses", "ABRAINC-FIPE; mil unidades; lançamentos e vendas líquidas de distratos", [(A["seg"][seg]["lanc12"][i0:], "var(--s1)", 2.6, "", "lanç."), (A["seg"][seg]["vend12"][i0:], "var(--s2)", 2.6, "", "vendas")], ymB, MS, xl2)
-    gg += deck_panel(530, 0, 530, 250, f"Cyrela · {ttl}, 12 meses", "RI; VGV lançado 100%, R$ bi; " + ("alto padrão + médio + Vivaz Prime" if seg == "map" else "Vivaz + MCMV Faixa 1 (Cury/FAR até 2014)"), [([cy[q] for q in QL], "var(--s1)", 2.6, "", "lanç.")], ymC, QL, xq2)
+U = json.load(io.open(os.path.join(here, "_mcmv_uf_mensal.json"), encoding="utf-8"))
+def _r12(d, div=1000.0):
+    ks = sorted(d); return {ks[k]: sum(d[ks[j]] for j in range(k - 11, k + 1)) / div for k in range(11, len(ks))}
+UF12 = {k: _r12(U[k]) for k in ("sp_rj", "sp", "rj")}; FIN12 = {k: _r12(U["fin_" + k]) for k in ("sp_rj", "sp", "rj")}   # mil unidades; R$ bi nominal
+MU = [m for m in sorted(UF12["sp_rj"]) if m >= "2015-01"]
+# ABRAINC-FIPE só publica VGV nominal para o total, não por segmento: o slide do MAP fica em unidades
+PW3 = 353
+for seg, ttl, ymB, cy, ymC in (("map", "médio e alto padrão", 80, CM, 20), ("mcmv", "MCMV", 300, CC, 8)):
+    if seg == "mcmv":
+        gg = deck_panel(0, 0, PW3, 250, "SP + RJ · MCMV, mil unidades, 12 m", "MCid; unidades financiadas FGTS/FS por UF", [([UF12["sp_rj"][m] for m in MU], "var(--s1)", 2.6, "", "SP+RJ"), ([UF12["sp"][m] for m in MU], "var(--s2)", 2.0, "", "SP"), ([UF12["rj"][m] for m in MU], "var(--s3)", 2.0, "", "RJ")], ymB, MU, xl2)
+        gg += deck_panel(PW3, 0, PW3, 250, "SP + RJ · MCMV, R$ bi nominal, 12 m", "MCid; valor financiado FGTS/FS (sem entrada e subsídio)", [([FIN12["sp_rj"][m] for m in MU], "var(--s1)", 2.6, "", "SP+RJ"), ([FIN12["sp"][m] for m in MU], "var(--s2)", 2.0, "", "SP"), ([FIN12["rj"][m] for m in MU], "var(--s3)", 2.0, "", "RJ")], 60, MU, xl2)
+    else:
+        gg = deck_panel(0, 0, 530, 250, "Brasil · médio e alto padrão, 12 meses", "ABRAINC-FIPE; mil unidades; lançamentos e vendas líquidas de distratos", [(A["seg"][seg]["lanc12"][i0:], "var(--s1)", 2.6, "", "lanç."), (A["seg"][seg]["vend12"][i0:], "var(--s2)", 2.6, "", "vendas")], ymB, MS, xl2)
+    _ox, _pw = (2 * PW3, PW3) if seg == "mcmv" else (530, 530)
+    gg += deck_panel(_ox, 0, _pw, 250, f"Cyrela · {ttl}, R$ bi, 12 m", "RI; VGV lançado 100%" + ("; alto + médio + Vivaz Prime" if seg == "map" else "; Vivaz (+ Faixa 1 até 2014)"), [([cy[q] for q in QL], "var(--s1)", 2.6, "", "lanç.")], ymC, QL, xq2)
     FR[seg] = {"svg": '<svg viewBox="0 0 1060 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + gg + "</svg>", "secovi": secovi_svg(seg)}
-FR["num"] = {"map_lanc_pico": [MA[pkL], mapL[pkL]], "map_lanc_ult": [MA[-1], mapL[-1]], "map_vend_pico": [MA[pkV], mapV[pkV]], "map_vend_ult": mapV[-1], "mcmv_lanc_ult": mcL[-1], "mcmv_vend_ult": mcV[-1],
+FR["num"] = {"sprj_ult": [MU[-1], UF12["sp_rj"][MU[-1]]], "sprj_2a": UF12["sp_rj"][MU[-25]], "sp_ult": UF12["sp"][MU[-1]], "rj_ult": UF12["rj"][MU[-1]], "sprj_fin_ult": FIN12["sp_rj"][MU[-1]], "sprj_fin_2a": FIN12["sp_rj"][MU[-25]],
+             "map_lanc_pico": [MA[pkL], mapL[pkL]], "map_lanc_ult": [MA[-1], mapL[-1]], "map_vend_pico": [MA[pkV], mapV[pkV]], "map_vend_ult": mapV[-1], "mcmv_lanc_ult": mcL[-1], "mcmv_vend_ult": mcV[-1],
              "mcmv_lanc_pico": [MA[max(range(len(mcL)), key=lambda i: mcL[i] or 0)], max(v for v in mcL if v)], "cy_map_pico": [cm_pk, CM[cm_pk]], "cy_map_ult": [QL[-1], CM[QL[-1]]], "cy_mcmv_ult": [QL[-1], CC[QL[-1]]], "cy_mcmv_pico": [max(QL, key=lambda q: CC[q]), max(CC[q] for q in QL)]}
 json.dump(FR, io.open(os.path.join(here, "_mercado_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("frag ok", FR["num"])
