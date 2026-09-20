@@ -726,6 +726,36 @@ body += ('<div class="cards3" style="margin-top:10px">'
 body += ('<p style="margin:8px 2px 0;padding:6px 10px;border-left:3px solid #c5003e;color:#c5003e;font-size:12.5px;line-height:1.35"><b>O mercado viu isso na Cury:</b> na semana de 14/09/26 a ação caiu ~6% num dia, após a companhia dizer que as chuvas recordes em SP (temporais desde 11/09) atrasam a obra, ou seja, a usinagem. A Cyrela, com a mesma exposição a SP e canteiros debaixo da mesma chuva, não caiu nada: ou a obra da Cyrela não molha, ou o mercado ainda não fez a conta.</p>')
 body += output(fmt(uShare[-1], 0) + '% da receita é obra do já vendido: acertar a receita é acertar o ritmo de obra, não a venda.', 'A REF de R$ 12,2 bi diz quanto; o cronograma, que menos da metade cai em um ano; 1 p.p. de PoC na base vendida vale R$ ' + fmt(_pp, 1) + ' bi.')
 slides.append(sl(P5, "Usinagem: o que a receita deve à obra, e por que ela é difícil de acertar.", body, nota="Fontes: DRE (CYREMod, receita líquida trimestral); planilha do RI (vendas de lançamento, de estoque em construção e de estoque pronto, VGV 100%); ITR (nota de estoques: imóveis a comercializar em construção; nota de obras em andamento: receita total de vendas e apropriada); releases (custo orçado a incorrer das unidades em estoque), em _usinagem.json. Estimativa com as premissas do slide anterior, mas com o PoC do estoque de cada trimestre (o slide anterior usa o de jun/26); PoC interpolado em 3T21 e 4T22."))
+# --- slide novo (20/09/26): receita do trimestre por componente, histórico trimestral (pedido: "histórico trimestral da quebra da receita daquele trimestre por cada componente")
+_cq = {}
+for q in qs_u:
+    L, E, P = _qV(102, q), _qV(141, q), _qV(128, q); rev = mrow(21)[q] / 1000; pe = _pocE(q)
+    cL, cE, cP = SH_C * L * POC["lanc"], SH_C * E * pe, SH_C * P; _cq[q] = {"rev": rev, "lanc": cL, "obra": cE, "pronto": cP, "usin": rev - cL - cE - cP, "poc": pe}
+_qs37 = list(_cq); _n37 = len(_qs37)
+_sv = lambda k: [_cq[q][k] for q in _qs37]; _sp = lambda k: [100 * _cq[q][k] / _cq[q]["rev"] for q in _qs37]
+_vmax = 0.5 * (int(max(_sv("rev")) / 0.5) + 1)
+c = Chart(60, 405, 46, 190, 0, _vmax, _n37); c.grid([i * 0.5 for i in range(int(_vmax / 0.5) + 1)], lambda t: fmt(t, 1)); c.xlabels(_qs37, 4, 1, lambda l: "20" + l[2:])
+c.line(_sv("rev"), "#2b2a26", w=2.8, lab="receita", labval=lambda v: fmt(v, 1)); c.line(_sv("usin"), S1, w=2.6, lab="usinagem", labval=lambda v: fmt(v, 1))
+c.line(_sv("obra"), S2, w=2.2, lab="estoque em obra", labval=lambda v: fmt(v, 1)); c.line(_sv("lanc"), S3, w=2.2, lab="lançamento", labval=lambda v: fmt(v, 1)); c.line(_sv("pronto"), MU, w=1.8, dash="4 3", lab="pronto", labval=lambda v: fmt(v, 1))
+c.g.append('<text x="60" y="18" class="gtit">Receita líquida do trimestre por origem, R$ bi</text><text x="60" y="34" class="gsub">na venda: lançamento a 15%, estoque em obra ao PoC, pronto a 100% (× 90%); usinagem = resíduo</text>')
+c2 = Chart(560, 845, 46, 190, 0, 100, _n37); c2.grid([0, 25, 50, 75, 100], lambda t: f"{t:g}%"); c2.xlabels(_qs37, 4, 1, lambda l: "20" + l[2:])
+c2.line(_sp("usin"), S1, w=2.6, lab="usinagem", labval=lambda v: fmt(v, 0) + "%"); c2.line(_sp("obra"), S2, w=2.2, lab="estoque em obra", labval=lambda v: fmt(v, 0) + "%")
+c2.line(_sp("lanc"), S3, w=2.2, lab="lançamento", labval=lambda v: fmt(v, 0) + "%"); c2.line(_sp("pronto"), MU, w=1.8, dash="4 3", lab="pronto", labval=lambda v: fmt(v, 0) + "%")
+c2.g.append('<text x="560" y="18" class="gtit">Mesma quebra, % da receita do trimestre</text><text x="560" y="34" class="gsub">o peso da usinagem cai quando a venda acelera e volta quando a obra alcança</text>')
+body = svg(980, 212, c.flush(15) + c2.flush(15))
+_th = "".join(f'<th style="text-align:right;padding:2px 3px">{q}</th>' for q in _qs37)
+def _tr37(lab, key, pct=False, cls=""):
+    cells = "".join(f'<td style="text-align:right;padding:2px 3px">{fmt(100 * _cq[q][key] / _cq[q]["rev"], 0) + "%" if pct else fmt(_cq[q][key], 1)}</td>' for q in _qs37)
+    return f'<tr class="{cls}"><td style="white-space:nowrap;padding:2px 6px 2px 2px">{lab}</td>{cells}</tr>'
+body += ('<div class="viz" style="margin-top:6px"><table class="tl compact" style="width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;padding:2px 6px 2px 2px">R$ bi</th>' + _th + '</tr></thead><tbody>'
+         + _tr37("receita líquida (DRE)", "rev", cls="total") + _tr37("venda de lançamento (15%)", "lanc") + _tr37("venda de estoque em obra (PoC)", "obra") + _tr37("venda de estoque pronto", "pronto") + _tr37("usinagem (obra do já vendido)", "usin", cls="total") + _tr37("usinagem, % da receita", "usin", pct=True)
+         + '</tbody></table></div>')
+_u37 = _sp("usin"); _o37 = _sp("obra")
+def _obox37(msg, sub):   # mesma caixa de _obox (definida mais abaixo no arquivo)
+    return (output(msg, sub).replace('<div class="sl-output">', '<div class="sl-output" style="row-gap:3px;margin-top:6px">', 1).replace('<span class="out-msg">', '<span class="out-msg" style="flex:1 1 600px;line-height:1.2;font-size:19px">', 1).replace('<span class="out-sub">', '<span class="out-sub" style="flex:1 1 100%;line-height:1.35">', 1))
+body += _obox37(f'Usinagem: {fmt(_u37[-1], 0)}% da receita no {_qs37[-1]}, entre {fmt(min(_u37), 0)}% e {fmt(max(_u37), 0)}% desde {"20" + _qs37[0][2:]}; venda de estoque em obra, {fmt(_o37[-1], 0)}%.',
+              f'Lançamento entra com 15% e pronto quase não pesa; o pico de 4T25 (70%) é o reconhecimento inicial represado do slide anterior.')
+_s37 = sl(P5, "Receita por trimestre: quanto veio da venda, quanto da obra.", body, nota="Fontes: DRE (CYREMod, receita líquida trimestral); planilha do RI (vendas de lançamento, de estoque em construção e de estoque pronto, VGV 100%); ITR (nota de estoques) e releases (custo a incorrer) para o PoC do estoque em construção de cada trimestre (_usinagem.json; interpolado em 3T21 e 4T22). Premissas do slide 'De onde vem a receita': 90% das vendas no perímetro consolidado, lançamento reconhecido a 15%, pronto a 100%; usinagem = receita − parcela reconhecida na venda (piso, porque a venda de unidade lançada em trimestre anterior conta como estoque).").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
 # --- consenso de receita (Bloomberg, telas de 18/09/26) contra a mecânica da receita
 CONS = {"2026": 10.050, "2027": 11.606, "2028": 12.207, "2029": 13.442}   # R$ bi, consenso Bloomberg (8/8/7/2 estimativas), fontes/consenso_bloomberg_set26.md
 anos_cs = [a for a in YRS if mrow(21).get(a)]; rev_h = [mrow(21)[a] / 1000 for a in anos_cs]
@@ -1024,27 +1054,29 @@ _sb = sl("parte 3 · a operação hoje · demanda", "Banco a banco: a Caixa carr
     '<div class="viz" style="margin-top:0">' + BF["svgA"] + '</div>'
     + _obox(f'A Caixa foi de R$ {fmt(_bn["caixa_jun22"])} bi para R$ {fmt(_bn["caixa_lci"])} bi de LCI desde jun/22, {fmt(100 * (_bn["caixa_lci"] - _bn["caixa_jun22"]) / (_bn["tot_lci"] - _bn["tot_jun22"]))}% do crescimento do sistema.',   # 20/09/26: 794px a 19px (cabe em 876)
             'Nos privados a LCI repôs a poupança que saiu.'),
-    nota="Fontes: BCB, IF.data (API Olinda), conglomerados prudenciais, trimestral mar/15-jun/26: relatório Passivo (Depósitos de Poupança, inclui rural; Letras de Crédito Imobiliário; Obrigações por Empréstimos e Repasses, que na Caixa são o FGTS: R$ 652 bi contra R$ 629 bi de carteira FGTS no BCB) e carteira de crédito por modalidade (Habitação PF; Habitacional PJ = plano empresário; até dez/24 pelos conglomerados financeiros, com degrau de consolidação em dez/24).")
+    nota="Fontes: BCB, IF.data (API Olinda), conglomerados financeiros (prudenciais de 2025), trimestral: relatório Passivo desde mar/00 (Depósitos de Poupança, inclui rural; Letras de Crédito Imobiliário, criadas em 2004; Obrigações por Empréstimos e Repasses, que na Caixa são o FGTS: R$ 652 bi contra R$ 629 bi de carteira FGTS no BCB) e carteira de crédito por modalidade desde jun/14 (Habitação PF; Habitacional PJ = plano empresário; degrau de consolidação em dez/24). Degraus de fusão: Santander + Banespa (2001) e + Real (2009); Itaú + Unibanco (2009).")
 _sb2 = sl("parte 3 · a operação hoje · demanda", "Share no crédito habitacional sem FGTS: a Caixa perde no PF e ganha no plano empresário.",
     '<div class="viz" style="margin-top:0">' + BF["svgB"] + '</div>'
-    + _obox(f'PF sem FGTS: Caixa de {fmt(_pf["Caixa"][0])}% para {fmt(_pf["Caixa"][2])}% desde 2015; plano empresário: Caixa {fmt(_pj["Caixa"][0])}% → {fmt(_pj["Caixa"][2])}%.',   # 20/09/26: 757px a 19px (cabe em 876); Itaú/Bradesco foram para a linha de baixo, mesmos números
+    + _obox(f'PF sem FGTS: Caixa de {fmt(_pf["Caixa"][0])}% para {fmt(_pf["Caixa"][2])}% desde 2014; plano empresário: Caixa {fmt(_pj["Caixa"][0])}% → {fmt(_pj["Caixa"][2])}%.',   # 20/09/26: 757px a 19px (cabe em 876); Itaú/Bradesco foram para a linha de baixo, mesmos números
             f'No PF sem FGTS, Itaú {fmt(_pf["Itaú"][0])}% → {fmt(_pf["Itaú"][2])}% e Bradesco {fmt(_pf["Bradesco"][0])}% → {fmt(_pf["Bradesco"][2])}% no mesmo período.'),
-    nota="Fontes: BCB, IF.data, carteira de crédito ativa por modalidade (Habitação PF; Habitacional PJ), conglomerados prudenciais (financeiros até dez/24). Share PF ex-FGTS = carteira PF do banco ÷ sistema, ambos sem os repasses do FGTS da Caixa; o FGTS operado por outros agentes (pequeno) fica no PF deles. Santander PJ habitacional zera em 2026 por reclassificação de modalidade. Outros = sistema menos os cinco.")
+    nota="Fontes: BCB, IF.data, carteira de crédito ativa por modalidade (Habitação PF; Habitacional PJ), desde jun/14 (primeiro trimestre publicado), conglomerados prudenciais (financeiros até dez/24). Share PF ex-FGTS = carteira PF do banco ÷ sistema, ambos sem os repasses do FGTS da Caixa; o FGTS operado por outros agentes (pequeno) fica no PF deles. Santander PJ habitacional zera em 2026 por reclassificação de modalidade. Outros = sistema menos os cinco.")
 _isb = next(i for i, s in enumerate(final) if "SBPE: a poupança só sai" in _h2(s))
 final.insert(_isb + 1, _sb); final.insert(_isb + 2, _sb2)
 final[_isb] = re.sub(r'\s*<span class="pill-teoria"[^>]*>to-do · entender para onde corre o estoque de LCI[^<]*</span>', '', final[_isb], count=1)   # o to-do virou slide
 # --- estouro de obra: orçamento +10%, 0% × 100% vendido, com e sem INCC; MAP e MCMV (20/09/26); svgs de grafico_estouro.py
 EF = J("_estouro_frag.json")
-def _eslide(seg, title, msg, sub):
-    body = '<div class="viz" style="margin-top:2px">' + EF[seg]["svg"] + '</div>' + _obox(msg, sub)   # 20/09/26: agente de formatação: mensagem numa linha (19px), follow-up embaixo
-    return sl("parte 5 · atualização operacional · margem", title, body, nota="Modelo por R$ 100 de VGV, revisão de orçamento no meio da obra (50% do custo de construção incorrido), PoC pelo custo incorrido (CPC 47); premissas do slide do caixa por segmento (MAP: terreno 18%, margem 33%, 15% do preço pago na revisão, saldo devedor a INCC; MCMV: terreno 10%, margem 32%, preço travado com a Caixa). INCC = índice perfeito da inflação de custo; sem juros capitalizados nem distratos.")   # 20/09/26: nota encurtada de 4 para 2 linhas (agente de formatação)
+def _eslide(seg, title, msg, sub, nota=None):
+    body = ('<div class="fwgrid" style="grid-template-columns:1.7fr 1fr;gap:18px;margin-top:2px;align-items:start"><div class="viz" style="margin-top:0">' + EF[seg]["table"] + '</div>'
+            '<div class="viz" style="margin-top:0">' + EF[seg]["svg"] + '</div></div>' + _obox(msg, sub))   # 20/09/26: tabela didática por componente (pedido do usuário: "não existe cenário sem INCC"; cenários = inflação com INCC, inflação sem venda, erro de orçamento) + barras da margem; mensagem numa linha (19px), follow-up embaixo
+    return sl("parte 5 · atualização operacional · margem", title, body, nota=nota or "Modelo por R$ 100 de VGV, revisão de orçamento no meio da obra (50% do custo de construção incorrido); PoC = custo incorrido ÷ custo total orçado (CPC 47); receita acumulada = PoC × preço vendido. Premissas do slide do caixa por segmento (MAP: terreno 18%, margem 33%, 15% do preço recebido até a revisão e o saldo devedor corrigido pelo INCC; MCMV: terreno 10%, margem 32%, preço travado na assinatura com a Caixa). INCC tratado como índice perfeito da inflação de custo; erro de orçamento = mais quantidade ou menos produtividade, sem inflação. Sem juros capitalizados nem distratos.")   # 20/09/26: nota encurtada de 4 para 2 linhas (agente de formatação)
 _m, _c = EF["map"]["num"], EF["mcmv"]["num"]
-_es1 = _eslide("map", "Estouro no MAP: o INCC devolve a margem só do já vendido.",   # 20/09/26: agente de formatação: h2 em 2 linhas → ≤ 60 chars a 38px
-    f'Obra +10%: margem de {fmt(_m["m_base"], 0)}% para {fmt(_m["m_fixo"], 1)}% se o preço não anda; {fmt(_m["m_incc"], 1)}% com o INCC no saldo devedor.',
-    f'Estorno de R$ {fmt(_m["rev"], 1)} de receita por R$ 100 de VGV vendido; erro de quantidade não é INCC, aí a margem cai de verdade.')
-_es2 = _eslide("mcmv", "Estouro no MCMV: o preço é travado, o INCC não passa.",
-    f'Obra +10%: margem de {fmt(_c["m_base"], 0)}% para {fmt(_c["m_fixo"], 1)}% em qualquer cenário vendido; o preço travado não devolve.',
-    f'Estorno de R$ {fmt(_c["rev"], 1)} de receita por R$ 100 de VGV. Só o estoque não vendido remarca, e o teto limita: a proteção do MCMV é a velocidade, não o contrato.')
+_es1 = _eslide("map", "Estouro no MAP: INCC repassa inflação, não erro.",   # 20/09/26: agente de formatação: h2 em 2 linhas → ≤ 60 chars a 38px
+    f'Custo +10% com INCC: margem de {fmt(_m["A"]["mg"], 0)}% vai a {fmt(_m["B"]["mg"], 1)}%; custo +10% por erro de quantidade: cai a {fmt(_m["D"]["mg"], 1)}%.',
+    f'Com o INCC a receita não estorna (R$ {fmt(_m["B"]["rec0"], 1)} → {fmt(_m["B"]["rec1"], 1)} por R$ 100 de VGV); sem índice, estorna R$ {fmt(abs(_m["D"]["est"]), 1)} no trimestre da revisão.')
+_es2 = _eslide("mcmv", "Estouro no MCMV: inflação e erro custam o mesmo.",
+    f'Preço travado: custo +10% leva a margem de {fmt(_c["A"]["mg"], 0)}% a {fmt(_c["B"]["mg"], 1)}%, por inflação ou por erro.',
+    f'Estorno de R$ {fmt(abs(_c["B"]["est"]), 1)} por R$ 100 de VGV vendido. Só o estoque não vendido remarca, e o teto limita: a defesa é obra curta e venda rápida.',
+    nota="Mesmas premissas do slide anterior; MCMV: terreno 10% do VGV, margem 32%, preço travado na assinatura com a Caixa, obra paga por medição, sem INCC para o comprador.")
 for _s_ in ("_es1", "_es2"): globals()[_s_] = globals()[_s_].replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
 _im = next(i for i, s in enumerate(final) if "quem tem o INCC a favor" in _h2(s))
 final.insert(_im + 1, _es1); final.insert(_im + 2, _es2)
@@ -1052,9 +1084,9 @@ final.insert(_im + 1, _es1); final.insert(_im + 2, _es2)
 CV = J("_cury_vivaz_frag.json"); _cv = CV["num"]
 _scv = sl("parte 5 · atualização operacional · MCMV", "Cury × Vivaz: a Cury vende mais rápido, com ticket maior.",
     '<div class="viz" style="margin-top:2px">' + CV["svg"] + '</div>'
-    + _obox(f'A Cury vende {fmt(_cv["cury_0_6"])}% em seis meses; a Vivaz, {fmt(_cv["vivaz_0_6"])}%. VSO de 12 meses: {fmt(_cv["vso_cury"])}% contra {fmt(_cv["vso_vivaz"])}%.',
+    + _obox(f'Cury vende {fmt(_cv["cury_0_6"], 0)}% em seis meses; Vivaz, {fmt(_cv["vivaz_0_6"], 0)}%. VSO trimestral: {fmt(_cv["vso_cury_med"], 0)}% contra {fmt(_cv["vso_vivaz_med"], 0)}%, média de um ano.',
             f'O ticket não explica: a Cury lança a R$ {fmt(_cv["ticket_cury"])} mil e a Vivaz a R$ {fmt(_cv["ticket_vivaz"])} mil. A diferença está na praça e no giro, não no preço.'),
-    nota=f"Fontes: Geoimóvel, mai/26 (cidade de São Paulo, % de unidades vendidas por idade do lançamento; Cury {_cv['n_cury']} empreendimentos, Vivaz {_cv['n_vivaz']}; mercado econômico = até R$ 500 mil); Cury, planilha Fundamentos do RI (VSO líquida UDM, preço médio lançado); Cyrela, planilha operacional do RI (Vivaz = MCMV Faixas 1-3; VSO bruta = vendas 12m ÷ estoque inicial + lançamentos 12m; ticket = VGV ÷ unidades lançadas).")   # 20/09/26: nota encurtada (agente de formatação).replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
+    nota=f"Fontes: Geoimóvel, mai/26 (cidade de São Paulo, % de unidades vendidas por idade do lançamento; Cury {_cv['n_cury']} empreendimentos, Vivaz {_cv['n_vivaz']}; mercado econômico = até R$ 500 mil); Cury, planilha Fundamentos do RI (VSO líquida do trimestre; preço médio lançado por ano); Cyrela, planilha operacional do RI (Vivaz = MCMV Faixas 1-3; VSO bruta do trimestre = vendas ÷ estoque no fim do trimestre anterior + lançamentos; ticket anual = VGV ÷ unidades lançadas).").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)   # 20/09/26: nota encurtada (agente de formatação); h2 a 38px para caber em uma linha
 _ic = next(i for i, s in enumerate(final) if "MCMV: o mercado segue no recorde" in _h2(s))
 final.insert(_ic + 1, _scv)
 # --- slide 'Os parâmetros do MCMV' (vem pronto da base): quatro gráficos regenerados com a série alongada para antes de 2009 (grafico_param_mcmv.py)
@@ -1069,8 +1101,10 @@ for _k, _s in enumerate(final):
         _s = _s.replace("Cada revisão alarga o programa para cima: mais renda, mais teto, mais gente — por portaria, paga pelo cotista.", "Cada revisão alarga o programa para cima, por portaria, paga pelo cotista do FGTS.", 1)
         _s = _s.replace("Dois subsídios empilhados: juro abaixo do mercado em todas as faixas e desconto de até R$ 55 mil (Faixas 1-2). Mesmo assim a entrada não fecha sem a incorporadora: o pró-soluto é a terceira perna do crédito, e a única sem garantia.", "Juro subsidiado e desconto de até R$ 55 mil; ainda assim a entrada só fecha com o pró-soluto da incorporadora, a única perna sem garantia.", 1)
         final[_k] = _s; break
+# --- slide 37: receita por trimestre por componente, logo depois de 'De onde vem a receita' (20/09/26)
+final.insert(next(i for i, s in enumerate(final) if "De onde vem a receita" in _h2(s)) + 1, _s37)
 # tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
-_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro no MAP", "Estouro no MCMV", "Cury × Vivaz")
+_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro no MAP", "Estouro no MCMV", "Cury × Vivaz", "Receita por trimestre")
 for _k, _s in enumerate(final):
     if any(n in _h2(_s) for n in _NOVOS):
         final[_k] = _s.replace('<p class="kick">', '<p class="kick"><span class="tag-novo" title="slide novo">★ Slide Novo</span>', 1)
