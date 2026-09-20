@@ -45,7 +45,7 @@ pb_cury_g = gord(cu["roe"]); pb_viv = gord(V["roe_est"]); val_viv = pb_viv * V["
 mc_cyre = MKT["CYRE3"] * MKT["acoes_cyre"] / 1e9; stake = MKT["cyrela_em_cury"] / 100 * mc_cury
 # ---- svg: painel 1 retornos (Cury ROE, Cury op, Vivaz op); painel 2 estrutura da Cury (% do PL)
 g = []; X0, X1, Y0, Y1 = 46, 420, 46, 200; n = len(QC); x = lambda i: X0 + (X1 - X0) * i / (n - 1); y = lambda v: Y1 - (Y1 - Y0) * v / 100
-g.append(f'<text x="{X0}" y="17" class="gtit">Retorno LTM: Cury × Vivaz, %</text><text x="{X0}" y="32" class="gsub">Cury: ROE (lucro ÷ PL controladora) e retorno operacional (antes de juros e IR); Vivaz: operacional, nota do ITR</text>')
+g.append(f'<text x="{X0}" y="17" class="gtit">Retorno LTM: Cury × Vivaz, %</text><text x="{X0}" y="32" class="gsub">Cury: ROE (lucro ÷ PL) e retorno operacional (antes de juros e IR); Vivaz: operacional, ITR</text>')
 for t in (0, 25, 50, 75, 100): g.append(f'<line x1="{X0}" y1="{y(t):.1f}" x2="{X1}" y2="{y(t):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-6}" y="{y(t)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{t}%</text>')
 for i, q in enumerate(QC):
     if q.startswith("4T"): g.append(f'<text x="{x(i):.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".75">20{q[2:]}</text>')
