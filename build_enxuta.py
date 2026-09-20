@@ -1214,8 +1214,18 @@ _dsl = sl("anexo · follow-up · Lei do Distrato", "Lei do Distrato: antes, a le
     ).replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
 _dsl = _dsl.replace('<div class="sl-in">', '<div class="wm-anexo" aria-hidden="true">ANEXO · FOLLOW-UP</div><div class="sl-in">', 1)
 final.append(_dsl)
+# --- anexo · follow-up: retomadas em SP (ITBI, resolução da alienação fiduciária), 20/09/26; dados de grafico_retomadas_itbi.py
+RT = J("_retomadas_frag.json"); _rn = RT["num"]; _ra = {r["ano"][:4]: r for r in _rn["ano"]}
+_rb = ('<div class="viz" style="margin-top:6px">' + RT["svg"] + '</div>' + RT["table"]
+    + _obox(f'Retomada em SP: de {fmt(_ra["2020"]["shr"], 1)}% para {fmt(_ra["2025"]["shr"], 1)}% das compras residenciais, e {fmt(_ra["2025"]["p350"], 0)}% delas até R$ 350 mil.',
+            f'Média de 12 meses de {fmt(_rn["ret12_min"], 0)} retomadas por mês (mar/21) para {fmt(_rn["ret12"], 0)} (jul/26); os leilões sobem menos ({fmt(_rn["arr12"], 0)} por mês), então o estoque retomado acumula no banco. Depois do repasse o risco é do banco; para a incorporadora, o sinal pega no pró-soluto, na venda direta e na demanda do MCMV.'))
+_rsl = sl("anexo · follow-up · retomadas em SP", "Retomadas em SP: 4x desde 2019, e cada vez mais baratas.", _rb, cls="anexo",
+    nota=f"Fonte: Prefeitura de São Paulo, Secretaria da Fazenda, guias de ITBI pagas (dados abertos), jan/2019 a jul/2026, pelo mês da guia. Retomada = natureza '17. Resolução da alienação fiduciária por inadimplemento' (o credor fiduciário consolida a propriedade e recolhe o ITBI; Lei 9.514/1997, art. 26); leilão = natureza '4. Arrematação em leilão ou hasta pública' (inclui leilões judiciais, não só de imóveis retomados). Residencial = uso IPTU 10 (residência) e 20 (apartamento). Faixa e valor médio pela base de cálculo (valor venal de referência), porque na retomada não há preço de venda. Denominador da razão: guias de compra e venda residenciais com 100% transmitido. Só o município de São Paulo."
+    ).replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
+_rsl = _rsl.replace('<div class="sl-in">', '<div class="wm-anexo" aria-hidden="true">ANEXO · FOLLOW-UP</div><div class="sl-in">', 1)
+final.append(_rsl)
 # tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
-_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro no MAP", "Estouro no MCMV", "Cury × Vivaz", "tem venda direta dentro", "Receita por trimestre", "SP no mapa", "Retorno por vertical", "x book com ROE", "MAP × Vivaz por dentro", "Lei do Distrato: antes")
+_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro no MAP", "Estouro no MCMV", "Cury × Vivaz", "tem venda direta dentro", "Receita por trimestre", "SP no mapa", "Retorno por vertical", "x book com ROE", "MAP × Vivaz por dentro", "Lei do Distrato: antes", "Retomadas em SP")
 for _k, _s in enumerate(final):
     if any(n in _h2(_s) for n in _NOVOS):
         final[_k] = _s.replace('<p class="kick">', '<p class="kick"><span class="tag-novo" title="slide novo">★ Slide Novo</span>', 1)
