@@ -1113,8 +1113,57 @@ for _k, _s in enumerate(final):
         final[_k] = _s; break
 # --- slide 37: receita por trimestre por componente, logo depois de 'De onde vem a receita' (20/09/26)
 final.insert(next(i for i, s in enumerate(final) if "De onde vem a receita" in _h2(s)) + 1, _s37)
+# --- mapa de SP: onde Cury e Vivaz lançam, por período (20/09/26); svg e tabela de grafico_mapa_sp.py (Geoimóvel + malha GeoSampa)
+MP = J("_mapa_sp_frag.json"); _ms = MP["num"]["share"]
+_cO = (_ms["Cury"]["2019-21"]["Oeste"], _ms["Cury"]["2025-26"]["Oeste"]); _vNL = (_ms["Vivaz"]["2019-21"]["Norte"] + _ms["Vivaz"]["2019-21"]["Leste"], _ms["Vivaz"]["2025-26"]["Norte"] + _ms["Vivaz"]["2025-26"]["Leste"])
+_vNL22 = _ms["Vivaz"]["2022-24"]["Norte"] + _ms["Vivaz"]["2022-24"]["Leste"]; _vSO = _ms["Vivaz"]["2025-26"]["Sul"] + _ms["Vivaz"]["2025-26"]["Oeste"]
+_smp = sl("parte 5 · atualização operacional · MCMV", "SP no mapa: Cury vai para o Oeste, Vivaz deixa a periferia.",
+    '<div class="viz" style="margin-top:2px">' + MP["svg"] + '</div><div class="viz" style="margin-top:4px">' + MP["table"] + '</div>'
+    + _obox(f'Cury: Oeste de {fmt(_cO[0], 0)}% para {fmt(_cO[1], 0)}% das unidades; Vivaz: Norte e Leste de {fmt(_vNL22, 0)}% para {fmt(_vNL[1], 0)}% desde 2022-24.',
+            f'A Cury sobe de praça (Lapa, Jaguaré, Barra Funda, Santo Amaro) e de ticket; a Vivaz deixa a borda para o Sul e o Oeste ({fmt(_vSO, 0)}%), com unidade menor.'),
+    nota="Fontes: Geoimóvel, Mercado Completo, cidade de São Paulo, residencial vertical, foto de mai/26 (unidades lançadas por empreendimento, distrito e data de lançamento; Cury e Vivaz pelo grupo incorporador); Prefeitura de São Paulo, GeoSampa (malha de distritos e regiões, WFS, EPSG:31983), polígonos simplificados. Bolha no centroide do distrito, área proporcional às unidades lançadas no período; 2025-26 vai até mai/26. Só a capital: a Cury lança também no Rio e na Grande SP, e a Vivaz na Grande SP e no Rio, fora deste mapa.").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
+final.insert(next(i for i, s in enumerate(final) if "Cury × Vivaz" in _h2(s)) + 1, _smp)
+def _obox47(msg, sub):   # mesma caixa de _obox (definida mais abaixo)
+    return (output(msg, sub).replace('<div class="sl-output">', '<div class="sl-output" style="row-gap:3px;margin-top:6px">', 1).replace('<span class="out-msg">', '<span class="out-msg" style="flex:1 1 600px;line-height:1.2;font-size:19px">', 1).replace('<span class="out-sub">', '<span class="out-sub" style="flex:1 1 100%;line-height:1.35">', 1))
+# --- slide novo 47 (20/09/26): retorno por vertical, com a nota de segmentos dos ITR (_segmentos_full.json: receita, lucro bruto, despesas, lucro operacional, ativo, passivo e PL por segmento, trimestral desde 1T20; _roe_seg_serie.json: lucro operacional LTM ÷ PL médio do segmento)
+SGF = J("_segmentos_full.json"); _sq = sorted(SGF, key=ord_); _SEG = [("cyrela", "alto padrão", S3), ("living", "Living (médio)", S2), ("mcmv", "Vivaz (MCMV)", S1)]
+_rq = sorted(set(q for v in RSG.values() for q in v), key=ord_); _rq = [q for q in _rq if ord_(q) >= (14, 1)]
+c = Chart(60, 430, 46, 190, 0, 50, len(_rq)); c.grid([0, 10, 20, 30, 40, 50], lambda t: f"{t:g}%"); c.xlabels(_rq, 8, 3, lambda l: "20" + l[2:])
+for k, lab, col in _SEG: c.line([RSG[k].get(q) for q in _rq], col, w=2.6 if k == "mcmv" else 2.2, lab=lab, labval=lambda v: fmt(v, 0) + "%")
+c.g.append('<text x="60" y="18" class="gtit">Retorno operacional s/ capital por segmento, LTM</text><text x="60" y="34" class="gsub">lucro operacional 12m ÷ PL médio do segmento (nota do ITR); antes de juros e IR</text>')
+_plmax = 0.5 * (int(max(SGF[q][k]["pl"] for q in _sq for k, _, _ in _SEG) / 500) + 1)
+c2 = Chart(560, 850, 46, 190, 0, _plmax, len(_sq)); c2.grid([i * 1.0 for i in range(int(_plmax) + 1)], lambda t: fmt(t, 0)); c2.xlabels(_sq, 4, 3, lambda l: "20" + l[2:])
+for k, lab, col in _SEG: c2.line([SGF[q][k]["pl"] / 1000 for q in _sq], col, w=2.6 if k == "mcmv" else 2.2, lab=lab, labval=lambda v: fmt(v, 1))
+c2.g.append('<text x="560" y="18" class="gtit">PL atribuído por segmento, R$ bi</text><text x="560" y="34" class="gsub">ativo menos passivo do segmento, nota do ITR</text>')
+body = svg(980, 212, c.flush(15) + c2.flush(15))
+_L4 = _sq[-4:]; _u = _sq[-1]
+def _qf(k, f, q):   # fluxos da nota vêm acumulados no ano: trimestre = acumulado − acumulado do trimestre anterior
+    t_ = int(q[0]); return SGF[q][k][f] if t_ == 1 else SGF[q][k][f] - SGF[f"{t_ - 1}T{q[2:]}"][k][f]
+def _ltm(k, f): return sum(_qf(k, f, q) for q in _L4) / 1000
+_cols = _SEG + [("demais", "demais / holding", MU)]
+_tot = {f: sum(_ltm(k, f) for k, _, _ in _cols) for f in ("rec", "lb", "desp", "lop")}; _tot["pl"] = sum(SGF[_u][k]["pl"] for k, _, _ in _cols) / 1000; _tot["ativo"] = sum(SGF[_u][k]["ativo"] for k, _, _ in _cols) / 1000
+def _row(lab, f, pct=False, cls=""):
+    cells = ""
+    for k, _, _ in _cols:
+        v = f(k); cells += f'<td style="text-align:right">{(fmt(v, 1) + "%" if pct else fmt(v, 1)) if v is not None else "—"}</td>'
+    return f'<tr class="{cls}"><td>{lab}</td>{cells}</tr>'
+_th = "".join(f'<th style="text-align:right;color:{col}">{lab}</th>' for _, lab, col in _cols)
+_tbl = (f'<table class="tl compact" style="width:100%;margin-top:0"><thead><tr><th style="text-align:left">LTM {_u}, R$ bi</th>{_th}</tr></thead><tbody>'
+        + _row("receita líquida", lambda k: _ltm(k, "rec")) + _row("lucro bruto", lambda k: _ltm(k, "lb")) + _row("margem bruta", lambda k: 100 * _ltm(k, "lb") / _ltm(k, "rec") if k != "demais" and _ltm(k, "rec") else None, pct=True)
+        + _row("despesas do segmento", lambda k: _ltm(k, "desp")) + _row("lucro operacional", lambda k: _ltm(k, "lop"), cls="total")
+        + _row(f"ativo ({_u})", lambda k: SGF[_u][k]["ativo"] / 1000) + _row(f"PL atribuído ({_u})", lambda k: SGF[_u][k]["pl"] / 1000, cls="total") + _row("% do PL dos segmentos", lambda k: 100 * SGF[_u][k]["pl"] / 1000 / _tot["pl"], pct=True)
+        + _row("retorno operacional s/ capital, LTM", lambda k: RSG[k][_u] if k in RSG else None, pct=True, cls="total")
+        + '</tbody></table>')
+body += '<div class="viz" style="margin-top:6px">' + _tbl + '</div>'
+_r = {k: RSG[k][_u] for k, _, _ in _SEG}; _plsh = {k: 100 * SGF[_u][k]["pl"] / 1000 / _tot["pl"] for k, _, _ in _cols}
+body += _obox47(f'Vivaz rende {fmt(_r["mcmv"], 0)}% sobre o capital com {fmt(_plsh["mcmv"], 0)}% do PL; alto padrão, {fmt(_r["cyrela"], 0)}% com {fmt(_plsh["cyrela"], 0)}%; Living, {fmt(_r["living"], 0)}%.',
+              f'O capital está no alto padrão e o retorno marginal na Vivaz: cada real que migra de um para o outro sobe o retorno consolidado.')
+_s47 = sl("parte 4 · onde estamos no ciclo", "Retorno por vertical: a Vivaz rende mais com menos capital.", body,
+    nota="Fontes: nota explicativa de informações por segmento dos ITR/DFP (Cyrela = alto padrão; Living = médio; MCMV = Vivaz; demais = loteamento, serviços e corporativo), R$ mi, trimestral desde 1T20 (fluxos por diferença dos acumulados no ano; balanço do 2T22 da Vivaz corrigido pela leitura da nota) e anual antes (_segmentos_full.json, _roe_seg_serie.json). Retorno operacional sobre o capital = lucro operacional do segmento em 12 meses (lucro bruto menos despesas alocadas, antes de resultado financeiro, equivalência e IR) ÷ PL médio atribuído ao segmento (ativo menos passivo do segmento, 5 balanços). Não é ROE: a nota não aloca juros, IR nem o resultado das JVs (Cury, Plano&Plano, Lavvi entram por equivalência, fora dos segmentos). A base de capital da Vivaz é pequena e o retorno oscila mais.").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
+# --- slide 47: retorno por vertical, logo depois de 'Terreno a prazo, obra e recebível' (antes do slide de lucro/caixa/dívida, que vira 48)
+final.insert(next(i for i, s in enumerate(final) if "Terreno a prazo, obra e recebível" in _h2(s)) + 1, _s47)
 # tag "Slide Novo" (estrela, caixa amarela, extremo direito do kick) nos slides criados em 18-19/09/26
-_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro no MAP", "Estouro no MCMV", "Cury × Vivaz", "Receita por trimestre")
+_NOVOS = ("Lucro, caixa, dívida e payout", "Tecnisa: R$ 95 mi de equity", "Médio e alto padrão: o mercado desacelera", "MCMV: o mercado segue no recorde", "Banco a banco: a Caixa carrega", "Share no crédito habitacional sem FGTS", "Estouro no MAP", "Estouro no MCMV", "Cury × Vivaz", "Receita por trimestre", "SP no mapa", "Retorno por vertical")
 for _k, _s in enumerate(final):
     if any(n in _h2(_s) for n in _NOVOS):
         final[_k] = _s.replace('<p class="kick">', '<p class="kick"><span class="tag-novo" title="slide novo">★ Slide Novo</span>', 1)
