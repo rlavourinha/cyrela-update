@@ -140,8 +140,11 @@ for t_ in (0, 50, 100, 150): g.append(f'<line x1="{X0}" y1="{yb(t_):.1f}" x2="{X
 for i, m in enumerate(MS):
     if m.endswith("-01"): g.append(f'<text x="{x(i):.1f}" y="{PA[1]+14}" text-anchor="middle" class="axt">{m[:4]}</text><text x="{x(i):.1f}" y="{PB[1]+14}" text-anchor="middle" class="axt">{m[:4]}</text>')
 g.append(f'<line x1="{X0}" y1="{PA[1]}" x2="{X1}" y2="{PA[1]}" stroke="var(--muted)" opacity=".5"/><line x1="{X0}" y1="{PB[1]}" x2="{X1}" y2="{PB[1]}" stroke="var(--muted)" opacity=".5"/>')
+# 19/09/26: o marcador 4 (2S17) foi de out/17 para ago/17 e ficou a 6 un. do 3 (jul/17) e a 18 do 2 (mai/17): com dois níveis a 17 un. os círculos (r=8) ficavam a 2 un.;
+# agora dois níveis a 20 un. (50/30) e o 4 num terceiro nível abaixo (70, encostado na grade de 1.500, longe da linha que ali passa em ~600): folgas 2-3 = 7, 2-4 = 24, 3-4 = 5
+_TIER = {3: -1}   # índice do evento → deslocamento de nível (negativo = para baixo)
 for k, (m, lab, _) in enumerate(EV):
-    i = MS.index(m); xx = x(i); cy = PA[0] - 20 - (17 if k % 2 else 0)
+    i = MS.index(m); xx = x(i); cy = PA[0] - 20 - 20 * _TIER.get(k, k % 2)
     g.append(f'<line x1="{xx:.1f}" y1="{cy+8}" x2="{xx:.1f}" y2="{PB[1]}" stroke="var(--muted)" stroke-dasharray="2 4" opacity=".7"/>')
     g.append(f'<circle cx="{xx:.1f}" cy="{cy}" r="8" fill="var(--ink)"/><text x="{xx:.1f}" y="{cy+3.2}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#fff">{lab}</text>')
 g.append(poly(mcap, ya, "var(--s2)", 2.4)); g.append(poly(pos, yb, "var(--s1)", 2.2))
