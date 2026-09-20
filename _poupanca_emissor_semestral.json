@@ -1,0 +1,237 @@
+{
+ "_meta": {
+  "fonte": "BCB IF.data (API Olinda), relatório 3 Passivo, tipo 1 (conglomerados prudenciais e IFs independentes), coluna Depósitos de Poupança (a2), inclui poupança rural; R$ mi; semestral jun/dez"
+ },
+ "serie": {
+  "2015-06": {
+   "Caixa": 232117.3,
+   "Bradesco": 91008.5,
+   "Itaú": 113974.3,
+   "Santander": 36595.4,
+   "Banco do Brasil": 147306.1,
+   "Inter": 0.0,
+   "Outros": 32740.2,
+   "Total": 653741.8
+  },
+  "2015-12": {
+   "Caixa": 241362.6,
+   "Bradesco": 91878.8,
+   "Itaú": 111318.8,
+   "Santander": 35984.8,
+   "Banco do Brasil": 151845.3,
+   "Inter": 0.0,
+   "Outros": 32715.8,
+   "Total": 665106.1
+  },
+  "2016-06": {
+   "Caixa": 238702.3,
+   "Bradesco": 87209.2,
+   "Itaú": 104493.2,
+   "Santander": 34517.0,
+   "Banco do Brasil": 148367.6,
+   "Inter": 0.0,
+   "Outros": 32597.9,
+   "Total": 645887.2
+  },
+  "2016-12": {
+   "Caixa": 252403.1,
+   "Bradesco": 97088.8,
+   "Itaú": 108390.4,
+   "Santander": 36051.5,
+   "Banco do Brasil": 151763.3,
+   "Inter": 0.0,
+   "Outros": 29062.9,
+   "Total": 674760.0
+  },
+  "2017-06": {
+   "Caixa": 261251.0,
+   "Bradesco": 95736.8,
+   "Itaú": 109656.9,
+   "Santander": 37063.8,
+   "Banco do Brasil": 150982.4,
+   "Inter": 0.0,
+   "Outros": 30277.6,
+   "Total": 684968.5
+  },
+  "2017-12": {
+   "Caixa": 276693.3,
+   "Bradesco": 103332.7,
+   "Itaú": 120288.7,
+   "Santander": 40572.4,
+   "Banco do Brasil": 160289.9,
+   "Inter": 0.0,
+   "Outros": 33182.1,
+   "Total": 734359.1
+  },
+  "2018-06": {
+   "Caixa": 283207.1,
+   "Bradesco": 103076.7,
+   "Itaú": 127638.2,
+   "Santander": 42571.0,
+   "Banco do Brasil": 167089.2,
+   "Inter": 0.0,
+   "Outros": 36468.3,
+   "Total": 760050.5
+  },
+  "2018-12": {
+   "Caixa": 298352.5,
+   "Bradesco": 111170.9,
+   "Itaú": 136908.6,
+   "Santander": 46068.3,
+   "Banco do Brasil": 174854.7,
+   "Inter": 73.8,
+   "Outros": 40205.4,
+   "Total": 807634.2
+  },
+  "2019-06": {
+   "Caixa": 301589.6,
+   "Bradesco": 108497.4,
+   "Itaú": 137572.6,
+   "Santander": 46574.5,
+   "Banco do Brasil": 174480.3,
+   "Inter": 162.6,
+   "Outros": 41613.4,
+   "Total": 810490.4
+  },
+  "2019-12": {
+   "Caixa": 321189.3,
+   "Bradesco": 114177.8,
+   "Itaú": 144562.5,
+   "Santander": 49039.9,
+   "Banco do Brasil": 180942.9,
+   "Inter": 307.1,
+   "Outros": 45508.6,
+   "Total": 855728.1
+  },
+  "2020-06": {
+   "Caixa": 363841.6,
+   "Bradesco": 123270.4,
+   "Itaú": 163761.4,
+   "Santander": 55755.6,
+   "Banco do Brasil": 199135.2,
+   "Inter": 515.5,
+   "Outros": 53324.2,
+   "Total": 959603.9
+  },
+  "2020-12": {
+   "Caixa": 389770.8,
+   "Bradesco": 136698.2,
+   "Itaú": 179475.7,
+   "Santander": 63306.5,
+   "Banco do Brasil": 219396.3,
+   "Inter": 887.7,
+   "Outros": 62195.9,
+   "Total": 1051731.1
+  },
+  "2021-06": {
+   "Caixa": 371409.1,
+   "Bradesco": 137400.7,
+   "Itaú": 184239.3,
+   "Santander": 64748.4,
+   "Banco do Brasil": 223426.5,
+   "Inter": 1049.2,
+   "Outros": 65958.1,
+   "Total": 1048231.3
+  },
+  "2021-12": {
+   "Caixa": 365091.4,
+   "Bradesco": 139341.0,
+   "Itaú": 190619.2,
+   "Santander": 65220.1,
+   "Banco do Brasil": 225452.7,
+   "Inter": 1230.0,
+   "Outros": 66856.1,
+   "Total": 1053810.5
+  },
+  "2022-06": {
+   "Caixa": 366697.1,
+   "Bradesco": 134762.8,
+   "Itaú": 184906.9,
+   "Santander": 61398.9,
+   "Banco do Brasil": 216894.5,
+   "Inter": 1182.0,
+   "Outros": 66963.6,
+   "Total": 1032805.8
+  },
+  "2022-12": {
+   "Caixa": 360729.5,
+   "Bradesco": 134624.5,
+   "Itaú": 179771.8,
+   "Santander": 60204.5,
+   "Banco do Brasil": 213435.8,
+   "Inter": 1307.1,
+   "Outros": 67422.0,
+   "Total": 1017495.2
+  },
+  "2023-06": {
+   "Caixa": 353443.3,
+   "Bradesco": 128300.6,
+   "Itaú": 174479.0,
+   "Santander": 57672.1,
+   "Banco do Brasil": 205952.5,
+   "Inter": 1305.8,
+   "Outros": 67094.1,
+   "Total": 988247.4
+  },
+  "2023-12": {
+   "Caixa": 358327.6,
+   "Bradesco": 131003.6,
+   "Itaú": 174791.3,
+   "Santander": 58112.0,
+   "Banco do Brasil": 206915.1,
+   "Inter": 1540.6,
+   "Outros": 69927.5,
+   "Total": 1000617.7
+  },
+  "2024-06": {
+   "Caixa": 374543.0,
+   "Bradesco": 131429.7,
+   "Itaú": 179045.2,
+   "Santander": 57979.9,
+   "Banco do Brasil": 212664.3,
+   "Inter": 1715.8,
+   "Outros": 75395.0,
+   "Total": 1032772.9
+  },
+  "2024-12": {
+   "Caixa": 385360.3,
+   "Bradesco": 132502.2,
+   "Itaú": 180763.9,
+   "Santander": 57452.7,
+   "Banco do Brasil": 218362.6,
+   "Inter": 1883.4,
+   "Outros": 79462.0,
+   "Total": 1055787.1
+  },
+  "2025-06": {
+   "Caixa": 390358.3,
+   "Bradesco": 127352.6,
+   "Itaú": 173260.6,
+   "Santander": 53884.2,
+   "Banco do Brasil": 216142.9,
+   "Inter": 1705.2,
+   "Outros": 79765.0,
+   "Total": 1042468.8
+  },
+  "2025-12": {
+   "Caixa": 396218.7,
+   "Bradesco": 124461.4,
+   "Itaú": 177369.0,
+   "Santander": 53075.5,
+   "Banco do Brasil": 215188.6,
+   "Inter": 1599.6,
+   "Outros": 78397.2,
+   "Total": 1046310.0
+  },
+  "2026-06": {
+   "Caixa": 405581.4,
+   "Bradesco": 121285.9,
+   "Itaú": 172307.3,
+   "Santander": 51234.2,
+   "Banco do Brasil": 216111.5,
+   "Inter": 1371.3,
+   "Outros": 78520.9,
+   "Total": 1046412.5
+  }
+ }
+}

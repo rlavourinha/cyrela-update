@@ -1,0 +1,1433 @@
+{
+ "_meta": {
+  "fonte": "BCB IF.data: relatório 11 (Carteira PF por modalidade, grupo Habitação, Total) e 13 (Carteira PJ por modalidade, grupo Habitacional, Total); tipo 2 conglomerados financeiros até onde existe, senão tipo 1 prudencial (_tipo); R$ mi; trimestral"
+ },
+ "serie": {
+  "2015-03": {
+   "Caixa": {
+    "hab_pf": 341579.2,
+    "hab_pj": 10478.7
+   },
+   "Bradesco": {
+    "hab_pf": 18188.9,
+    "hab_pj": 18206.3
+   },
+   "Itaú": {
+    "hab_pf": 27142.1,
+    "hab_pj": 10206.3
+   },
+   "Santander": {
+    "hab_pf": 22756.2,
+    "hab_pj": 9214.3
+   },
+   "Banco do Brasil": {
+    "hab_pf": 30080.0,
+    "hab_pj": 5077.5
+   },
+   "Inter": {
+    "hab_pf": 324.4,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 451454.2,
+    "hab_pj": 55957.5
+   },
+   "_tipo": 2
+  },
+  "2015-06": {
+   "Caixa": {
+    "hab_pf": 353492.6,
+    "hab_pj": 11001.6
+   },
+   "Bradesco": {
+    "hab_pf": 18586.9,
+    "hab_pj": 18060.9
+   },
+   "Itaú": {
+    "hab_pf": 28847.5,
+    "hab_pj": 10487.2
+   },
+   "Santander": {
+    "hab_pf": 24235.0,
+    "hab_pj": 9342.8
+   },
+   "Banco do Brasil": {
+    "hab_pf": 32541.8,
+    "hab_pj": 5366.3
+   },
+   "Inter": {
+    "hab_pf": 382.9,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 470136.2,
+    "hab_pj": 57023.7
+   },
+   "_tipo": 2
+  },
+  "2015-09": {
+   "Caixa": {
+    "hab_pf": 361735.9,
+    "hab_pj": 11726.1
+   },
+   "Bradesco": {
+    "hab_pf": 20137.8,
+    "hab_pj": 18273.9
+   },
+   "Itaú": {
+    "hab_pf": 30728.0,
+    "hab_pj": 10828.6
+   },
+   "Santander": {
+    "hab_pf": 25156.2,
+    "hab_pj": 9562.6
+   },
+   "Banco do Brasil": {
+    "hab_pf": 34847.8,
+    "hab_pj": 5588.4
+   },
+   "Inter": {
+    "hab_pf": 482.4,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 485552.2,
+    "hab_pj": 58806.1
+   },
+   "_tipo": 2
+  },
+  "2015-12": {
+   "Caixa": {
+    "hab_pf": 369700.6,
+    "hab_pj": 12115.6
+   },
+   "Bradesco": {
+    "hab_pf": 21825.6,
+    "hab_pj": 9632.1
+   },
+   "Itaú": {
+    "hab_pf": 31986.1,
+    "hab_pj": 10763.0
+   },
+   "Santander": {
+    "hab_pf": 25931.9,
+    "hab_pj": 9434.5
+   },
+   "Banco do Brasil": {
+    "hab_pf": 36841.0,
+    "hab_pj": 5958.6
+   },
+   "Inter": {
+    "hab_pf": 573.7,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 499708.9,
+    "hab_pj": 50860.9
+   },
+   "_tipo": 2
+  },
+  "2016-03": {
+   "Caixa": {
+    "hab_pf": 374876.4,
+    "hab_pj": 12100.5
+   },
+   "Bradesco": {
+    "hab_pf": 22930.8,
+    "hab_pj": 9450.8
+   },
+   "Itaú": {
+    "hab_pf": 32832.4,
+    "hab_pj": 10767.6
+   },
+   "Santander": {
+    "hab_pf": 26527.3,
+    "hab_pj": 9285.1
+   },
+   "Banco do Brasil": {
+    "hab_pf": 38132.3,
+    "hab_pj": 5962.2
+   },
+   "Inter": {
+    "hab_pf": 624.3,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 509131.8,
+    "hab_pj": 50540.6
+   },
+   "_tipo": 2
+  },
+  "2016-06": {
+   "Caixa": {
+    "hab_pf": 379192.0,
+    "hab_pj": 12139.7
+   },
+   "Bradesco": {
+    "hab_pf": 23510.3,
+    "hab_pj": 9528.4
+   },
+   "Itaú": {
+    "hab_pf": 33562.6,
+    "hab_pj": 6604.2
+   },
+   "Santander": {
+    "hab_pf": 26966.8,
+    "hab_pj": 9273.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 39048.5,
+    "hab_pj": 6160.1
+   },
+   "Inter": {
+    "hab_pf": 660.8,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 516548.6,
+    "hab_pj": 46934.4
+   },
+   "_tipo": 2
+  },
+  "2016-09": {
+   "Caixa": {
+    "hab_pf": 386868.4,
+    "hab_pj": 12178.5
+   },
+   "Bradesco": {
+    "hab_pf": 30600.1,
+    "hab_pj": 11212.0
+   },
+   "Itaú": {
+    "hab_pf": 34758.0,
+    "hab_pj": 6410.4
+   },
+   "Santander": {
+    "hab_pf": 27074.7,
+    "hab_pj": 8710.4
+   },
+   "Banco do Brasil": {
+    "hab_pf": 40522.4,
+    "hab_pj": 6165.2
+   },
+   "Inter": {
+    "hab_pf": 711.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 528439.2,
+    "hab_pj": 46345.7
+   },
+   "_tipo": 2
+  },
+  "2016-12": {
+   "Caixa": {
+    "hab_pf": 391140.0,
+    "hab_pj": 12230.0
+   },
+   "Bradesco": {
+    "hab_pf": 30763.0,
+    "hab_pj": 10726.4
+   },
+   "Itaú": {
+    "hab_pf": 35198.4,
+    "hab_pj": 6164.5
+   },
+   "Santander": {
+    "hab_pf": 27153.2,
+    "hab_pj": 8029.7
+   },
+   "Banco do Brasil": {
+    "hab_pf": 41441.7,
+    "hab_pj": 6084.3
+   },
+   "Inter": {
+    "hab_pf": 738.5,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 534467.1,
+    "hab_pj": 44881.5
+   },
+   "_tipo": 2
+  },
+  "2017-03": {
+   "Caixa": {
+    "hab_pf": 397796.5,
+    "hab_pj": 12388.8
+   },
+   "Bradesco": {
+    "hab_pf": 31140.3,
+    "hab_pj": 10220.3
+   },
+   "Itaú": {
+    "hab_pf": 35568.1,
+    "hab_pj": 5926.3
+   },
+   "Santander": {
+    "hab_pf": 27059.3,
+    "hab_pj": 7512.2
+   },
+   "Banco do Brasil": {
+    "hab_pf": 42058.3,
+    "hab_pj": 5627.0
+   },
+   "Inter": {
+    "hab_pf": 752.8,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 542493.8,
+    "hab_pj": 43240.1
+   },
+   "_tipo": 2
+  },
+  "2017-06": {
+   "Caixa": {
+    "hab_pf": 406332.2,
+    "hab_pj": 12441.6
+   },
+   "Bradesco": {
+    "hab_pf": 31540.7,
+    "hab_pj": 9944.9
+   },
+   "Itaú": {
+    "hab_pf": 35648.8,
+    "hab_pj": 5525.4
+   },
+   "Santander": {
+    "hab_pf": 27045.5,
+    "hab_pj": 5181.3
+   },
+   "Banco do Brasil": {
+    "hab_pf": 42502.9,
+    "hab_pj": 5286.1
+   },
+   "Inter": {
+    "hab_pf": 758.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 551938.9,
+    "hab_pj": 39864.9
+   },
+   "_tipo": 2
+  },
+  "2017-09": {
+   "Caixa": {
+    "hab_pf": 414243.5,
+    "hab_pj": 11916.9
+   },
+   "Bradesco": {
+    "hab_pf": 31982.8,
+    "hab_pj": 9422.9
+   },
+   "Itaú": {
+    "hab_pf": 35822.4,
+    "hab_pj": 5139.1
+   },
+   "Santander": {
+    "hab_pf": 27251.1,
+    "hab_pj": 4698.1
+   },
+   "Banco do Brasil": {
+    "hab_pf": 43136.7,
+    "hab_pj": 5008.6
+   },
+   "Inter": {
+    "hab_pf": 759.4,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 561308.5,
+    "hab_pj": 37544.5
+   },
+   "_tipo": 2
+  },
+  "2017-12": {
+   "Caixa": {
+    "hab_pf": 417287.4,
+    "hab_pj": 11781.2
+   },
+   "Bradesco": {
+    "hab_pf": 32397.0,
+    "hab_pj": 9012.1
+   },
+   "Itaú": {
+    "hab_pf": 37384.5,
+    "hab_pj": 4817.0
+   },
+   "Santander": {
+    "hab_pf": 28112.5,
+    "hab_pj": 4084.4
+   },
+   "Banco do Brasil": {
+    "hab_pf": 44075.0,
+    "hab_pj": 4556.8
+   },
+   "Inter": {
+    "hab_pf": 798.1,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 567131.5,
+    "hab_pj": 35568.3
+   },
+   "_tipo": 2
+  },
+  "2018-03": {
+   "Caixa": {
+    "hab_pf": 419178.5,
+    "hab_pj": 11381.7
+   },
+   "Bradesco": {
+    "hab_pf": 33154.4,
+    "hab_pj": 8463.3
+   },
+   "Itaú": {
+    "hab_pf": 37790.1,
+    "hab_pj": 4415.4
+   },
+   "Santander": {
+    "hab_pf": 29117.4,
+    "hab_pj": 3388.8
+   },
+   "Banco do Brasil": {
+    "hab_pf": 45045.2,
+    "hab_pj": 4073.3
+   },
+   "Inter": {
+    "hab_pf": 819.5,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 572412.8,
+    "hab_pj": 33004.5
+   },
+   "_tipo": 2
+  },
+  "2018-06": {
+   "Caixa": {
+    "hab_pf": 423085.1,
+    "hab_pj": 10774.8
+   },
+   "Bradesco": {
+    "hab_pf": 34438.3,
+    "hab_pj": 7927.4
+   },
+   "Itaú": {
+    "hab_pf": 38430.1,
+    "hab_pj": 3952.9
+   },
+   "Santander": {
+    "hab_pf": 30330.5,
+    "hab_pj": 2755.1
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46405.0,
+    "hab_pj": 3628.7
+   },
+   "Inter": {
+    "hab_pf": 845.3,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 580933.5,
+    "hab_pj": 30402.8
+   },
+   "_tipo": 2
+  },
+  "2018-09": {
+   "Caixa": {
+    "hab_pf": 427734.8,
+    "hab_pj": 10090.9
+   },
+   "Bradesco": {
+    "hab_pf": 35938.6,
+    "hab_pj": 7096.1
+   },
+   "Itaú": {
+    "hab_pf": 39286.5,
+    "hab_pj": 3691.5
+   },
+   "Santander": {
+    "hab_pf": 31494.8,
+    "hab_pj": 2414.8
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47527.2,
+    "hab_pj": 3072.8
+   },
+   "Inter": {
+    "hab_pf": 910.9,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 590325.6,
+    "hab_pj": 27601.7
+   },
+   "_tipo": 2
+  },
+  "2018-12": {
+   "Caixa": {
+    "hab_pf": 432300.9,
+    "hab_pj": 9970.5
+   },
+   "Bradesco": {
+    "hab_pf": 37429.5,
+    "hab_pj": 6268.2
+   },
+   "Itaú": {
+    "hab_pf": 40217.9,
+    "hab_pj": 3500.1
+   },
+   "Santander": {
+    "hab_pf": 32438.4,
+    "hab_pj": 2074.9
+   },
+   "Banco do Brasil": {
+    "hab_pf": 48047.6,
+    "hab_pj": 2821.5
+   },
+   "Inter": {
+    "hab_pf": 969.5,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 598949.6,
+    "hab_pj": 25870.4
+   },
+   "_tipo": 2
+  },
+  "2019-03": {
+   "Caixa": {
+    "hab_pf": 435133.4,
+    "hab_pj": 9293.1
+   },
+   "Bradesco": {
+    "hab_pf": 39206.9,
+    "hab_pj": 5637.3
+   },
+   "Itaú": {
+    "hab_pf": 41134.9,
+    "hab_pj": 3053.0
+   },
+   "Santander": {
+    "hab_pf": 33283.1,
+    "hab_pj": 1926.9
+   },
+   "Banco do Brasil": {
+    "hab_pf": 48377.1,
+    "hab_pj": 2575.7
+   },
+   "Inter": {
+    "hab_pf": 1006.4,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 605758.4,
+    "hab_pj": 23646.3
+   },
+   "_tipo": 2
+  },
+  "2019-06": {
+   "Caixa": {
+    "hab_pf": 440706.3,
+    "hab_pj": 8605.6
+   },
+   "Bradesco": {
+    "hab_pf": 40764.0,
+    "hab_pj": 5088.5
+   },
+   "Itaú": {
+    "hab_pf": 42366.8,
+    "hab_pj": 2845.7
+   },
+   "Santander": {
+    "hab_pf": 33962.0,
+    "hab_pj": 1704.7
+   },
+   "Banco do Brasil": {
+    "hab_pf": 48951.1,
+    "hab_pj": 2271.4
+   },
+   "Inter": {
+    "hab_pf": 1058.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 615514.2,
+    "hab_pj": 21696.2
+   },
+   "_tipo": 2
+  },
+  "2019-09": {
+   "Caixa": {
+    "hab_pf": 445267.5,
+    "hab_pj": 8108.1
+   },
+   "Bradesco": {
+    "hab_pf": 42440.9,
+    "hab_pj": 4825.5
+   },
+   "Itaú": {
+    "hab_pf": 43363.5,
+    "hab_pj": 2483.5
+   },
+   "Santander": {
+    "hab_pf": 35489.7,
+    "hab_pj": 1502.4
+   },
+   "Banco do Brasil": {
+    "hab_pf": 48913.5,
+    "hab_pj": 2081.2
+   },
+   "Inter": {
+    "hab_pf": 1123.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 624932.6,
+    "hab_pj": 20027.9
+   },
+   "_tipo": 2
+  },
+  "2019-12": {
+   "Caixa": {
+    "hab_pf": 454593.1,
+    "hab_pj": 7834.8
+   },
+   "Bradesco": {
+    "hab_pf": 43823.3,
+    "hab_pj": 4175.8
+   },
+   "Itaú": {
+    "hab_pf": 44729.5,
+    "hab_pj": 2137.3
+   },
+   "Santander": {
+    "hab_pf": 37218.5,
+    "hab_pj": 1338.8
+   },
+   "Banco do Brasil": {
+    "hab_pf": 48901.8,
+    "hab_pj": 1685.9
+   },
+   "Inter": {
+    "hab_pf": 1191.8,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 638974.0,
+    "hab_pj": 18149.4
+   },
+   "_tipo": 2
+  },
+  "2020-03": {
+   "Caixa": {
+    "hab_pf": 460226.6,
+    "hab_pj": 7626.6
+   },
+   "Bradesco": {
+    "hab_pf": 45749.0,
+    "hab_pj": 4041.1
+   },
+   "Itaú": {
+    "hab_pf": 46420.3,
+    "hab_pj": 2213.5
+   },
+   "Santander": {
+    "hab_pf": 37714.4,
+    "hab_pj": 1289.2
+   },
+   "Banco do Brasil": {
+    "hab_pf": 48432.3,
+    "hab_pj": 2368.3
+   },
+   "Inter": {
+    "hab_pf": 1321.1,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 648638.4,
+    "hab_pj": 18493.0
+   },
+   "_tipo": 2
+  },
+  "2020-06": {
+   "Caixa": {
+    "hab_pf": 473709.7,
+    "hab_pj": 8254.3
+   },
+   "Bradesco": {
+    "hab_pf": 48646.8,
+    "hab_pj": 3738.6
+   },
+   "Itaú": {
+    "hab_pf": 48352.6,
+    "hab_pj": 2432.5
+   },
+   "Santander": {
+    "hab_pf": 38372.6,
+    "hab_pj": 1224.8
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47637.8,
+    "hab_pj": 2082.6
+   },
+   "Inter": {
+    "hab_pf": 1486.0,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 667379.4,
+    "hab_pj": 18754.0
+   },
+   "_tipo": 2
+  },
+  "2020-09": {
+   "Caixa": {
+    "hab_pf": 488418.9,
+    "hab_pj": 7556.1
+   },
+   "Bradesco": {
+    "hab_pf": 51902.1,
+    "hab_pj": 3480.5
+   },
+   "Itaú": {
+    "hab_pf": 50921.1,
+    "hab_pj": 2354.2
+   },
+   "Santander": {
+    "hab_pf": 40896.6,
+    "hab_pj": 1033.6
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47123.9,
+    "hab_pj": 1880.7
+   },
+   "Inter": {
+    "hab_pf": 1752.1,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 690651.1,
+    "hab_pj": 17249.7
+   },
+   "_tipo": 2
+  },
+  "2020-12": {
+   "Caixa": {
+    "hab_pf": 500620.7,
+    "hab_pj": 7326.2
+   },
+   "Bradesco": {
+    "hab_pf": 56399.7,
+    "hab_pj": 3331.1
+   },
+   "Itaú": {
+    "hab_pf": 55381.2,
+    "hab_pj": 2317.6
+   },
+   "Santander": {
+    "hab_pf": 43993.1,
+    "hab_pj": 841.4
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46714.6,
+    "hab_pj": 1639.7
+   },
+   "Inter": {
+    "hab_pf": 2102.0,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 715787.9,
+    "hab_pj": 16354.0
+   },
+   "_tipo": 2
+  },
+  "2021-03": {
+   "Caixa": {
+    "hab_pf": 508346.0,
+    "hab_pj": 7406.5
+   },
+   "Bradesco": {
+    "hab_pf": 60800.9,
+    "hab_pj": 3018.9
+   },
+   "Itaú": {
+    "hab_pf": 62169.2,
+    "hab_pj": 2296.7
+   },
+   "Santander": {
+    "hab_pf": 46472.8,
+    "hab_pj": 823.9
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46250.7,
+    "hab_pj": 812.5
+   },
+   "Inter": {
+    "hab_pf": 2524.9,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 737876.6,
+    "hab_pj": 15169.6
+   },
+   "_tipo": 2
+  },
+  "2021-06": {
+   "Caixa": {
+    "hab_pf": 519026.6,
+    "hab_pj": 7910.2
+   },
+   "Bradesco": {
+    "hab_pf": 65939.2,
+    "hab_pj": 3147.5
+   },
+   "Itaú": {
+    "hab_pf": 70217.5,
+    "hab_pj": 2381.9
+   },
+   "Santander": {
+    "hab_pf": 49182.2,
+    "hab_pj": 783.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46080.7,
+    "hab_pj": 639.0
+   },
+   "Inter": {
+    "hab_pf": 2761.7,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 765721.3,
+    "hab_pj": 15654.9
+   },
+   "_tipo": 2
+  },
+  "2021-09": {
+   "Caixa": {
+    "hab_pf": 531325.5,
+    "hab_pj": 8229.6
+   },
+   "Bradesco": {
+    "hab_pf": 70902.6,
+    "hab_pj": 3350.9
+   },
+   "Itaú": {
+    "hab_pf": 78865.8,
+    "hab_pj": 2426.3
+   },
+   "Santander": {
+    "hab_pf": 51584.0,
+    "hab_pj": 756.9
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46135.8,
+    "hab_pj": 549.9
+   },
+   "Inter": {
+    "hab_pf": 3146.4,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 796692.0,
+    "hab_pj": 16136.8
+   },
+   "_tipo": 2
+  },
+  "2021-12": {
+   "Caixa": {
+    "hab_pf": 545738.2,
+    "hab_pj": 9537.3
+   },
+   "Bradesco": {
+    "hab_pf": 74417.5,
+    "hab_pj": 3559.2
+   },
+   "Itaú": {
+    "hab_pf": 85377.3,
+    "hab_pj": 2659.2
+   },
+   "Santander": {
+    "hab_pf": 52992.8,
+    "hab_pj": 652.7
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46064.2,
+    "hab_pj": 514.9
+   },
+   "Inter": {
+    "hab_pf": 3441.8,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 824330.7,
+    "hab_pj": 17748.5
+   },
+   "_tipo": 2
+  },
+  "2022-03": {
+   "Caixa": {
+    "hab_pf": 557974.2,
+    "hab_pj": 10108.7
+   },
+   "Bradesco": {
+    "hab_pf": 75775.7,
+    "hab_pj": 3845.3
+   },
+   "Itaú": {
+    "hab_pf": 89997.7,
+    "hab_pj": 3046.3
+   },
+   "Santander": {
+    "hab_pf": 53521.9,
+    "hab_pj": 689.8
+   },
+   "Banco do Brasil": {
+    "hab_pf": 45819.8,
+    "hab_pj": 452.9
+   },
+   "Inter": {
+    "hab_pf": 3470.3,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 844765.4,
+    "hab_pj": 19110.9
+   },
+   "_tipo": 2
+  },
+  "2022-06": {
+   "Caixa": {
+    "hab_pf": 576343.8,
+    "hab_pj": 11043.9
+   },
+   "Bradesco": {
+    "hab_pf": 77056.9,
+    "hab_pj": 4208.2
+   },
+   "Itaú": {
+    "hab_pf": 95101.2,
+    "hab_pj": 3494.0
+   },
+   "Santander": {
+    "hab_pf": 54339.7,
+    "hab_pj": 600.2
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46054.3,
+    "hab_pj": 566.5
+   },
+   "Inter": {
+    "hab_pf": 3568.5,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 872085.3,
+    "hab_pj": 21041.8
+   },
+   "_tipo": 2
+  },
+  "2022-09": {
+   "Caixa": {
+    "hab_pf": 599178.6,
+    "hab_pj": 11820.9
+   },
+   "Bradesco": {
+    "hab_pf": 79042.2,
+    "hab_pj": 4754.4
+   },
+   "Itaú": {
+    "hab_pf": 100537.9,
+    "hab_pj": 3913.1
+   },
+   "Santander": {
+    "hab_pf": 55405.4,
+    "hab_pj": 398.6
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46025.4,
+    "hab_pj": 695.1
+   },
+   "Inter": {
+    "hab_pf": 3737.6,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 905310.5,
+    "hab_pj": 22917.0
+   },
+   "_tipo": 2
+  },
+  "2022-12": {
+   "Caixa": {
+    "hab_pf": 619703.3,
+    "hab_pj": 12982.5
+   },
+   "Bradesco": {
+    "hab_pf": 80720.6,
+    "hab_pj": 5447.5
+   },
+   "Itaú": {
+    "hab_pf": 105804.5,
+    "hab_pj": 4384.8
+   },
+   "Santander": {
+    "hab_pf": 56270.8,
+    "hab_pj": 249.5
+   },
+   "Banco do Brasil": {
+    "hab_pf": 45979.4,
+    "hab_pj": 889.5
+   },
+   "Inter": {
+    "hab_pf": 3889.8,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 934639.1,
+    "hab_pj": 25567.9
+   },
+   "_tipo": 2
+  },
+  "2023-03": {
+   "Caixa": {
+    "hab_pf": 638685.7,
+    "hab_pj": 13649.0
+   },
+   "Bradesco": {
+    "hab_pf": 82028.5,
+    "hab_pj": 5818.5
+   },
+   "Itaú": {
+    "hab_pf": 109236.4,
+    "hab_pj": 4863.1
+   },
+   "Santander": {
+    "hab_pf": 57152.7,
+    "hab_pj": 104.1
+   },
+   "Banco do Brasil": {
+    "hab_pf": 45849.1,
+    "hab_pj": 1133.5
+   },
+   "Inter": {
+    "hab_pf": 4029.6,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 960573.0,
+    "hab_pj": 27472.1
+   },
+   "_tipo": 2
+  },
+  "2023-06": {
+   "Caixa": {
+    "hab_pf": 660575.2,
+    "hab_pj": 14929.8
+   },
+   "Bradesco": {
+    "hab_pf": 82435.2,
+    "hab_pj": 6576.0
+   },
+   "Itaú": {
+    "hab_pf": 111340.0,
+    "hab_pj": 5637.6
+   },
+   "Santander": {
+    "hab_pf": 57824.7,
+    "hab_pj": 40.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46271.4,
+    "hab_pj": 1477.9
+   },
+   "Inter": {
+    "hab_pf": 4248.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 987411.1,
+    "hab_pj": 30916.7
+   },
+   "_tipo": 2
+  },
+  "2023-09": {
+   "Caixa": {
+    "hab_pf": 684546.6,
+    "hab_pj": 16032.5
+   },
+   "Bradesco": {
+    "hab_pf": 83549.0,
+    "hab_pj": 7053.9
+   },
+   "Itaú": {
+    "hab_pf": 112791.6,
+    "hab_pj": 6548.1
+   },
+   "Santander": {
+    "hab_pf": 58654.8,
+    "hab_pj": 15.6
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46722.1,
+    "hab_pj": 1800.3
+   },
+   "Inter": {
+    "hab_pf": 4544.8,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1016576.3,
+    "hab_pj": 34179.9
+   },
+   "_tipo": 2
+  },
+  "2023-12": {
+   "Caixa": {
+    "hab_pf": 708288.1,
+    "hab_pj": 17539.8
+   },
+   "Bradesco": {
+    "hab_pf": 84994.8,
+    "hab_pj": 7754.2
+   },
+   "Itaú": {
+    "hab_pf": 113013.0,
+    "hab_pj": 7036.0
+   },
+   "Santander": {
+    "hab_pf": 59503.1,
+    "hab_pj": 10.7
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47190.0,
+    "hab_pj": 2056.2
+   },
+   "Inter": {
+    "hab_pf": 4914.9,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1044537.9,
+    "hab_pj": 37574.5
+   },
+   "_tipo": 2
+  },
+  "2024-03": {
+   "Caixa": {
+    "hab_pf": 728127.0,
+    "hab_pj": 18470.8
+   },
+   "Bradesco": {
+    "hab_pf": 86397.2,
+    "hab_pj": 8121.7
+   },
+   "Itaú": {
+    "hab_pf": 112657.2,
+    "hab_pj": 7254.7
+   },
+   "Santander": {
+    "hab_pf": 60157.7,
+    "hab_pj": 10.6
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47271.8,
+    "hab_pj": 2193.5
+   },
+   "Inter": {
+    "hab_pf": 5215.1,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1067132.7,
+    "hab_pj": 39479.4
+   },
+   "_tipo": 2
+  },
+  "2024-06": {
+   "Caixa": {
+    "hab_pf": 756109.1,
+    "hab_pj": 19408.8
+   },
+   "Bradesco": {
+    "hab_pf": 89403.7,
+    "hab_pj": 8616.6
+   },
+   "Itaú": {
+    "hab_pf": 114283.5,
+    "hab_pj": 7703.5
+   },
+   "Santander": {
+    "hab_pf": 60938.6,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47713.9,
+    "hab_pj": 2543.9
+   },
+   "Inter": {
+    "hab_pf": 5447.9,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1102382.0,
+    "hab_pj": 42035.3
+   },
+   "_tipo": 2
+  },
+  "2024-09": {
+   "Caixa": {
+    "hab_pf": 784228.7,
+    "hab_pj": 19402.3
+   },
+   "Bradesco": {
+    "hab_pf": 92563.7,
+    "hab_pj": 9157.2
+   },
+   "Itaú": {
+    "hab_pf": 118690.6,
+    "hab_pj": 8074.6
+   },
+   "Santander": {
+    "hab_pf": 61333.2,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47977.3,
+    "hab_pj": 2961.1
+   },
+   "Inter": {
+    "hab_pf": 5578.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1140108.5,
+    "hab_pj": 43666.4
+   },
+   "_tipo": 2
+  },
+  "2024-12": {
+   "Caixa": {
+    "hab_pf": 805622.3,
+    "hab_pj": 21050.0
+   },
+   "Bradesco": {
+    "hab_pf": 102713.6,
+    "hab_pj": 9953.2
+   },
+   "Itaú": {
+    "hab_pf": 180244.7,
+    "hab_pj": 8667.3
+   },
+   "Santander": {
+    "hab_pf": 62542.9,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 51122.2,
+    "hab_pj": 3439.1
+   },
+   "Inter": {
+    "hab_pf": 5932.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1239182.1,
+    "hab_pj": 47491.4
+   },
+   "_tipo": 2
+  },
+  "2025-03": {
+   "Caixa": {
+    "hab_pf": 823731.4,
+    "hab_pj": 24382.8
+   },
+   "Bradesco": {
+    "hab_pf": 101802.7,
+    "hab_pj": 10190.3
+   },
+   "Itaú": {
+    "hab_pf": 131379.9,
+    "hab_pj": 9121.9
+   },
+   "Santander": {
+    "hab_pf": 63394.0,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 48129.0,
+    "hab_pj": 3710.0
+   },
+   "Inter": {
+    "hab_pf": 6235.5,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1206979.0,
+    "hab_pj": 52082.9
+   },
+   "_tipo": 1
+  },
+  "2025-06": {
+   "Caixa": {
+    "hab_pf": 848272.3,
+    "hab_pj": 25340.9
+   },
+   "Bradesco": {
+    "hab_pf": 105872.8,
+    "hab_pj": 11002.9
+   },
+   "Itaú": {
+    "hab_pf": 134085.1,
+    "hab_pj": 9761.5
+   },
+   "Santander": {
+    "hab_pf": 64809.5,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47738.1,
+    "hab_pj": 3937.3
+   },
+   "Inter": {
+    "hab_pf": 6916.6,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1240993.5,
+    "hab_pj": 54931.7
+   },
+   "_tipo": 1
+  },
+  "2025-09": {
+   "Caixa": {
+    "hab_pf": 875251.7,
+    "hab_pj": 24166.9
+   },
+   "Bradesco": {
+    "hab_pf": 106634.4,
+    "hab_pj": 11742.8
+   },
+   "Itaú": {
+    "hab_pf": 136822.7,
+    "hab_pj": 10128.4
+   },
+   "Santander": {
+    "hab_pf": 66490.4,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 47307.6,
+    "hab_pj": 4244.4
+   },
+   "Inter": {
+    "hab_pf": 7697.5,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1274553.2,
+    "hab_pj": 55179.0
+   },
+   "_tipo": 1
+  },
+  "2025-12": {
+   "Caixa": {
+    "hab_pf": 913746.3,
+    "hab_pj": 25572.5
+   },
+   "Bradesco": {
+    "hab_pf": 107096.1,
+    "hab_pj": 12753.7
+   },
+   "Itaú": {
+    "hab_pf": 141487.2,
+    "hab_pj": 10617.5
+   },
+   "Santander": {
+    "hab_pf": 67831.2,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 46661.5,
+    "hab_pj": 4514.8
+   },
+   "Inter": {
+    "hab_pf": 8509.9,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1320404.8,
+    "hab_pj": 58989.0
+   },
+   "_tipo": 1
+  },
+  "2026-03": {
+   "Caixa": {
+    "hab_pf": 942100.0,
+    "hab_pj": 26196.9
+   },
+   "Bradesco": {
+    "hab_pf": 108284.4,
+    "hab_pj": 13208.2
+   },
+   "Itaú": {
+    "hab_pf": 146123.3,
+    "hab_pj": 10802.3
+   },
+   "Santander": {
+    "hab_pf": 68899.2,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 45910.5,
+    "hab_pj": 4739.1
+   },
+   "Inter": {
+    "hab_pf": 9144.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1356414.6,
+    "hab_pj": 60480.2
+   },
+   "_tipo": 1
+  },
+  "2026-06": {
+   "Caixa": {
+    "hab_pf": 979180.8,
+    "hab_pj": 28073.5
+   },
+   "Bradesco": {
+    "hab_pf": 110415.2,
+    "hab_pj": 14066.4
+   },
+   "Itaú": {
+    "hab_pf": 151913.2,
+    "hab_pj": 11149.3
+   },
+   "Santander": {
+    "hab_pf": 70331.3,
+    "hab_pj": 0.0
+   },
+   "Banco do Brasil": {
+    "hab_pf": 45226.5,
+    "hab_pj": 4954.7
+   },
+   "Inter": {
+    "hab_pf": 9710.2,
+    "hab_pj": 0.0
+   },
+   "Sistema": {
+    "hab_pf": 1402951.6,
+    "hab_pj": 63538.5
+   },
+   "_tipo": 1
+  }
+ }
+}
