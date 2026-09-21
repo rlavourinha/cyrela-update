@@ -61,7 +61,7 @@ c2 = [a for a in cols if a == "12m" or a >= "2020"]
 bars(450, 740, c2, [(lambda a: col(a, DIV, DIV12) / 1000, S1, .9), (lambda a: col(a, PART, PART12) / 1000, S3, .9), (lambda a: col(a, OPER, OPER12) / 1000, S2, .8)], y, lambda a: a[2:] if a != "12m" else "12m")
 y = axis(830, 1030, "Payout, três leituras, %", "reportado; sem ganhos; líquido das sócias", 0, 100, (0, 25, 50, 75, 100), lambda t: f"{t:g}%")
 c3 = [a for a in cols if a == "12m" or a >= "2019"]; n3 = len(c3); x3 = lambda i: 830 + 200 * i / (n3 - 1)
-for f_, colr, dash, lab in ((pay, S1, "", "reportado"), (pay_exg, S3, "5 3", "sem ganhos"), (pay_liq, S2, "2 3", "líq. participações")):
+for f_, colr, dash, lab in ((pay, S1, "", "reportado"), (pay_exg, S3, "5 3", "sem ganhos"), (pay_liq, S2, "2 3", "líq. sócias")):
     pts = [(x3(i), y(min(f_(a), 100))) for i, a in enumerate(c3) if f_(a) is not None]
     g.append(f'<polyline points="{" ".join(f"{px:.1f},{py:.1f}" for px, py in pts)}" fill="none" stroke="{colr}" stroke-width="2.4"{f" stroke-dasharray=\"{dash}\"" if dash else ""} stroke-linejoin="round"/>')
     g.append(f'<text x="{pts[-1][0]+5:.1f}" y="{pts[-1][1]+4:.1f}" class="fw-t2" fill="{colr}">{lab} {fmt(f_(c3[-1]))}%</text>')
