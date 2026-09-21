@@ -777,8 +777,10 @@ def _vyear(a):
     qs = [q for q in _vcbr if len(q) == 4 and q[2:] == a[2:]]
     return sum((_vcbr[q] or 0) for q in qs) / 1e6 if len(qs) == 4 else ((_vcbr.get(a) or 0) / 1e6 if _vcbr.get(a) else None)
 vals_v = [_vyear(a) for a in anos_cs] + [None] * len(CONS)
+IBBA = {"rec": {"2026": 10.023, "2027": 11.374, "2028": 12.684, "2029": 13.774}, "lanc26": 15.7, "lanc25": 18.6, "vso_lanc": 35, "vso_est25": 62, "vso_est30": 76, "cancel": 14, "ll26": 1.887, "ll27": 2.362, "div26": 0, "div27": 0.943, "tp": 35, "ke": 16.3, "g": 3.5, "data": "25/05/26"}   # modelo Itaú BBA (fontes/sellside/CYRE_Model_1Q26_IBBA.xlsx), abas Operating, IS, Valuation
+vals_i = [None] * (len(anos_cs) - 1) + [rev_h[-1]] + [IBBA["rec"][a] for a in CONS]
 c = Chart(60, 470, 46, 178, 0, 16, len(lab_cs)); c.grid([0, 4, 8, 12, 16]); c.xlabels(lab_cs, 3, 1, lambda l: l[2:] if len(l) == 4 else l)
-c.line(vals_v, S2, w=2.2); c.line(vals_h, S1, w=2.6); c.line(vals_c, S1, lab="consenso", labval=lambda v: fmt(v, 1), dash="5 3", opacity=.6, w=2.6)
+c.line(vals_v, S2, w=2.2); c.line(vals_h, S1, w=2.6); c.line(vals_c, S1, lab="consenso", labval=lambda v: fmt(v, 1), dash="5 3", opacity=.6, w=2.6); c.line(vals_i, S3, lab="Itaú BBA", labval=lambda v: fmt(v, 1), dash="2 3", opacity=.9, w=2.0)
 # rótulos manuais no último ponto (2025): "reportada" acima e à esquerda; "vendas %Cyrela" abaixo e à direita.
 # O rótulo padrão (flush: à direita, na altura do ponto) cruzaria o tracejado do consenso, que sai desse ponto para cima.
 _xl, _yv = c.x(len(anos_cs) - 1), c.y([v for v in vals_v if v is not None][-1])
@@ -800,10 +802,10 @@ body = svg(980, 200, c.flush(15) + c2.flush(15))
 body += ('<div class="cards3" style="margin-top:10px">'
          f'<div class="c3"><span class="c3n">+{fmt(100 * (CONS["2026"] / rev_h[-1] - 1), 0)}% · +{fmt(100 * (CONS["2027"] / CONS["2026"] - 1), 0)}%</span><b>Consenso: R$ {fmt(CONS["2026"], 1)} bi em 2026 e R$ {fmt(CONS["2027"], 1)} bi em 2027</b> (8 estimativas; R$ {fmt(CONS["2028"], 1)} bi em 2028 com 7, R$ {fmt(CONS["2029"], 1)} bi em 2029 com 2). O 1S26 fez R$ {fmt(_h1, 1)} bi: 2026 pede R$ {fmt(_h2, 1)} bi no 2S26, contra R$ {fmt(_ltm - _h1, 1)} bi no 2S25.</div>'
          f'<div class="c3"><span class="c3n">R$ {fmt(_usin12, 1)} bi</span><b>já contratados para os próximos 12 meses</b>: REF de R$ {fmt(_ref, 1)} bi × {fmt(100 * _cr, 0)}% do cronograma. O resto do consenso de 2027 (R$ {fmt(_need, 1)} bi) vem de venda nova reconhecida no ato e da obra dessas vendas: é aí que mora o erro, nos dois sentidos.</div>'
-         '<div class="c3"><span class="c3n">sem premissa</span><b>Nenhuma casa publica a premissa de lançamento e VSO por trás da receita</b>: a Bloomberg não traz; Itaú e BTG só têm o trimestre reportado. A receita de 2027-28 depende de vender o que está lançado; o consenso trata isso como dado.</div></div>')
+         f'<div class="c3"><span class="c3n">Itaú BBA · {IBBA["data"]}</span><b>A única premissa que temos (modelo da casa): lançamentos caem para R$ {fmt(IBBA["lanc26"], 1)} bi em 2026 ({fmt(100 * (IBBA["lanc26"] / IBBA["lanc25"] - 1), 0)}%)</b>, VSO de lançamento de {IBBA["vso_lanc"]}%, VSO de estoque subindo de {IBBA["vso_est25"]}% para {IBBA["vso_est30"]}% ao ano até 2030, distratos em {IBBA["cancel"]}% das vendas brutas, dividendo zero em 2026. A receita ({fmt(IBBA["rec"]["2026"], 1)} / {fmt(IBBA["rec"]["2027"], 1)} bi) só fecha se o estoque girar mais rápido; Ke {fmt(IBBA["ke"], 1)}%, g {fmt(IBBA["g"], 1)}%, alvo R$ {IBBA["tp"]}.</div></div>')
 body += ('<p style="margin:8px 2px 0;padding:6px 10px;border-left:3px solid #c5003e;color:#c5003e;font-size:12.5px;line-height:1.35"><b>Leitura contrária ao consenso:</b> a companhia lançou (R$ ' + fmt(oT[-1], 1) + ' bi em 12 meses), não vendeu no ritmo (VSO do alto padrão em ' + fmt(vA[-1], 0) + '%, o menor desde 2019), <b>recuou o lançamento</b> (alto padrão de R$ 10,3 bi em 2025 para R$ ' + fmt(oA[-1], 1) + ' bi no LTM) e está com o <b>maior estoque da série</b> (R$ ' + fmt(eT[-1], 1) + ' bi, ' + fmt(mv[-1], 1) + ' meses de venda). Muito difícil acreditar em aceleração de vendas com o lançamento apontando para baixo.</p>')
 body += output('O consenso pede dois dígitos em 2027 com menos da metade da REF caindo em um ano.','Metade da receita de 2027 ainda não foi vendida; sem premissa de lançamento e VSO, o consenso extrapola.')
-slides.append(sl(P5 + ' <span class="pill-teoria" style="background:#c5003e">to-do · pedir às casas a premissa de lançamento, VSO e obra</span>', "Consenso de receita: o que ele exige, e o que já está contratado.", body, nota="Fontes: consenso Bloomberg (Standard, BRL, 18/09/2026; fontes/consenso_bloomberg_set26.md); DFs/ITR (receita líquida, CYREMod linha 21); ITR 2T26 (nota de obras em andamento: REF e cronograma do custo a incorrer); notas Itaú BBA (13/08/26) e BTG (13/08/26)."))
+slides.append(sl(P5 + ' <span class="pill-teoria" style="background:#c5003e">to-do · falta a premissa do BTG</span>', "Consenso: o que ele exige, e o que já está contratado.", body, nota="Fontes: consenso Bloomberg (Standard, BRL, 18/09/2026; fontes/consenso_bloomberg_set26.md); DFs/ITR (receita líquida, CYREMod linha 21); ITR 2T26 (nota de obras em andamento: REF e cronograma do custo a incorrer); notas Itaú BBA (13/08/26) e BTG (13/08/26); modelo Itaú BBA de 25/05/26 (Outperform, TP R$ 35: abas Operating, IS e Valuation, receita 2026-29E, lançamentos, VSO de lançamento e de estoque, cancelamentos, dividendos)."))
 # --- margens: reportada (DRE, ex-juros), da REF (a apropriar) e do estoque (VGV líquido de impostos − custo total)
 EC = J("_estoque_custo.json")
 TAXR = 124 / (_h1 * 1000 + 124)   # deduções da receita bruta ÷ receita bruta, 1S26 (release 2T26): ~2,5%
@@ -1145,10 +1147,21 @@ def _cret(q):
     lop = sum(CD[x]["lop"] for x in _cqs[i - 3:i + 1]); pl = sum(CD[x]["pl_total"] for x in _cqs[i - 4:i + 1]) / 5; return 100 * lop / pl if pl else None
 def _cltm(f): return sum(CD[x][f] for x in _cqs[-4:]) / 1e6
 CU47 = {"rec": _cltm("rec"), "lb": _cltm("lb"), "desp": _cltm("desp"), "lop": _cltm("lop"), "ativo": CD[_cqs[-1]]["ativo"] / 1e6, "pl": CD[_cqs[-1]]["pl_total"] / 1e6, "ret": _cret(_cqs[-1])}
+# Plano & Plano (2º benchmark do MCMV, 21/09/26): DRE e balanço consolidados da CVM (dados_cvm_lavvi_pp.py); lucro operacional = 3.05 (antes do financeiro)
+PPV = J("_cvm_lavvi_pp.json")["pp"]; _pqs = sorted(PPV, key=ord_)
+def _pret(q):
+    if q not in PPV: return None
+    i = _pqs.index(q)
+    if i < 4: return None
+    ebit = sum(PPV[x]["ebit_tri"] for x in _pqs[i - 3:i + 1]); pl = sum(PPV[x]["pl_total"] for x in _pqs[i - 4:i + 1]) / 5; return 100 * ebit / pl if pl else None
+def _pltm(f): return sum(PPV[x][f + "_tri"] for x in _pqs[-4:]) / 1000
+PP47 = {"rec": _pltm("rec"), "lb": _pltm("lb"), "lop": _pltm("ebit"), "desp": _pltm("lb") - _pltm("ebit"), "ativo": None, "pl": PPV[_pqs[-1]]["pl_total"] / 1000, "ret": _pret(_pqs[-1]), "ret_max": max(v for v in (_pret(q) for q in _pqs) if v), "mb": 100 * _pltm("lb") / _pltm("rec")}
+PP47["q_max"] = next(q for q in _pqs if _pret(q) == PP47["ret_max"])
 c = Chart(60, 430, 46, 190, 0, 90, len(_rq)); c.grid([0, 30, 60, 90], lambda t: f"{t:g}%"); c.xlabels(_rq, 8, 3, lambda l: "20" + l[2:])
 for k, lab, col in _SEG: c.line([RSG[k].get(q) for q in _rq], col, w=2.6 if k == "mcmv" else 2.2, lab=lab.split(" (")[0], labval=lambda v: fmt(v, 0) + "%")
 c.line([_cret(q) for q in _rq], "#2e7d32", w=2.2, dash="5 3", lab="Cury", labval=lambda v: fmt(v, 0) + "%")
-c.g.append('<text x="60" y="18" class="gtit">Retorno operacional s/ capital por segmento, LTM</text><text x="60" y="34" class="gsub">lucro operacional 12m ÷ PL médio (nota do ITR; Cury: DRE e balanço do RI); antes de juros e IR</text>')
+c.line([_pret(q) for q in _rq], "#6b4e9b", w=2.0, dash="2 3", lab="P&amp;P", labval=lambda v: fmt(v, 0) + "%")
+c.g.append('<text x="60" y="18" class="gtit">Retorno operacional s/ capital por segmento, LTM</text><text x="60" y="34" class="gsub">lucro operacional 12m ÷ PL médio, antes de juros e IR; Cury e P&amp;P: RI/CVM</text>')
 _plmax = 0.5 * (int(max(SGF[q][k]["pl"] for q in _sq for k, _, _ in _SEG) / 500) + 1)
 c2 = Chart(560, 850, 46, 190, 0, _plmax, len(_sq)); c2.grid([i * 1.0 for i in range(int(_plmax) + 1)], lambda t: fmt(t, 0)); c2.xlabels(_sq, 4, 3, lambda l: "20" + l[2:])
 for k, lab, col in _SEG: c2.line([SGF[q][k]["pl"] / 1000 for q in _sq], col, w=2.6 if k == "mcmv" else 2.2, lab=lab, labval=lambda v: fmt(v, 1))
@@ -1160,25 +1173,26 @@ def _qf(k, f, q):   # fluxos da nota vêm acumulados no ano: trimestre = acumula
 def _ltm(k, f): return sum(_qf(k, f, q) for q in _L4) / 1000
 _cols = _SEG + [("demais", "demais / holding", MU)]
 _tot = {f: sum(_ltm(k, f) for k, _, _ in _cols) for f in ("rec", "lb", "desp", "lop")}; _tot["pl"] = sum(SGF[_u][k]["pl"] for k, _, _ in _cols) / 1000; _tot["ativo"] = sum(SGF[_u][k]["ativo"] for k, _, _ in _cols) / 1000
-def _row(lab, f, pct=False, cls="", cury=None):
+def _row(lab, f, pct=False, cls="", cury=None, pp=None):
     cells = ""
     for k, _, _ in _cols:
         v = f(k); cells += f'<td style="text-align:right">{(fmt(v, 1) + "%" if pct else fmt(v, 1)) if v is not None else "—"}</td>'
     cells += f'<td style="text-align:right;border-left:1px solid var(--grid);color:#2e7d32">{(fmt(cury, 1) + "%" if pct else fmt(cury, 1)) if cury is not None else "—"}</td>'
+    cells += f'<td style="text-align:right;color:#6b4e9b">{(fmt(pp, 1) + "%" if pct else fmt(pp, 1)) if pp is not None else "—"}</td>'
     return f'<tr class="{cls}"><td>{lab}</td>{cells}</tr>'
-_th = "".join(f'<th style="text-align:right;color:{col}">{lab}</th>' for _, lab, col in _cols) + '<th style="text-align:right;border-left:1px solid var(--grid);color:#2e7d32">Cury (benchmark)</th>'
+_th = "".join(f'<th style="text-align:right;color:{col}">{lab}</th>' for _, lab, col in _cols) + '<th style="text-align:right;border-left:1px solid var(--grid);color:#2e7d32">Cury (benchmark)</th><th style="text-align:right;color:#6b4e9b">P&amp;P (benchmark)</th>'
 _tbl = (f'<table class="tl compact" style="width:100%;margin-top:0"><thead><tr><th style="text-align:left">LTM {_u}, R$ bi</th>{_th}</tr></thead><tbody>'
-        + _row("receita líquida", lambda k: _ltm(k, "rec"), cury=CU47["rec"]) + _row("lucro bruto", lambda k: _ltm(k, "lb"), cury=CU47["lb"]) + _row("margem bruta", lambda k: 100 * _ltm(k, "lb") / _ltm(k, "rec") if k != "demais" and _ltm(k, "rec") else None, pct=True, cury=100 * CU47["lb"] / CU47["rec"])
-        + _row("despesas do segmento", lambda k: _ltm(k, "desp"), cury=CU47["desp"]) + _row("lucro operacional", lambda k: _ltm(k, "lop"), cls="total", cury=CU47["lop"])
-        + _row(f"ativo ({_u})", lambda k: SGF[_u][k]["ativo"] / 1000, cury=CU47["ativo"]) + _row(f"PL atribuído ({_u})", lambda k: SGF[_u][k]["pl"] / 1000, cls="total", cury=CU47["pl"]) + _row("% do PL dos segmentos", lambda k: 100 * SGF[_u][k]["pl"] / 1000 / _tot["pl"], pct=True)
-        + _row("retorno operacional s/ capital, LTM", lambda k: RSG[k][_u] if k in RSG else None, pct=True, cls="total", cury=CU47["ret"])
+        + _row("receita líquida", lambda k: _ltm(k, "rec"), cury=CU47["rec"], pp=PP47["rec"]) + _row("lucro bruto", lambda k: _ltm(k, "lb"), cury=CU47["lb"], pp=PP47["lb"]) + _row("margem bruta", lambda k: 100 * _ltm(k, "lb") / _ltm(k, "rec") if k != "demais" and _ltm(k, "rec") else None, pct=True, cury=100 * CU47["lb"] / CU47["rec"], pp=PP47["mb"])
+        + _row("despesas do segmento", lambda k: _ltm(k, "desp"), cury=CU47["desp"], pp=PP47["desp"]) + _row("lucro operacional", lambda k: _ltm(k, "lop"), cls="total", cury=CU47["lop"], pp=PP47["lop"])
+        + _row(f"ativo ({_u})", lambda k: SGF[_u][k]["ativo"] / 1000, cury=CU47["ativo"], pp=PP47["ativo"]) + _row(f"PL atribuído ({_u})", lambda k: SGF[_u][k]["pl"] / 1000, cls="total", cury=CU47["pl"], pp=PP47["pl"]) + _row("% do PL dos segmentos", lambda k: 100 * SGF[_u][k]["pl"] / 1000 / _tot["pl"], pct=True)
+        + _row("retorno operacional s/ capital, LTM", lambda k: RSG[k][_u] if k in RSG else None, pct=True, cls="total", cury=CU47["ret"], pp=PP47["ret"])
         + '</tbody></table>')
 body += '<div class="viz" style="margin-top:6px">' + _tbl + '</div>'
 _r = {k: RSG[k][_u] for k, _, _ in _SEG}; _plsh = {k: 100 * SGF[_u][k]["pl"] / 1000 / _tot["pl"] for k, _, _ in _cols}
 body += _obox47(f'Vivaz rende {fmt(_r["mcmv"], 0)}% sobre o capital com {fmt(_plsh["mcmv"], 0)}% do PL; alto padrão, {fmt(_r["cyrela"], 0)}% com {fmt(_plsh["cyrela"], 0)}%; a Cury, {fmt(CU47["ret"], 0)}%.',
-              f'O capital está no alto padrão e o retorno marginal na Vivaz; a Cury, no mesmo MCMV, faz {fmt(100 * CU47["lb"] / CU47["rec"], 0)}% de margem bruta e o dobro do retorno: o teto do modelo.')
+              f'O capital está no alto padrão e o retorno marginal na Vivaz; a Cury, no mesmo MCMV, faz {fmt(100 * CU47["lb"] / CU47["rec"], 0)}% de margem bruta e o dobro do retorno: o teto do modelo. A P&P mostra o piso: de {fmt(PP47["ret_max"], 0)}% ({PP47["q_max"]}) para {fmt(PP47["ret"], 0)}%, com a margem bruta de 34% para {fmt(PP47["mb"], 0)}% (programa público e custo).')
 _s47 = sl("parte 4 · onde estamos no ciclo", "Retorno por vertical: a Vivaz rende mais com menos capital.", body,
-    nota="Fontes: nota explicativa de informações por segmento dos ITR/DFP (Cyrela = alto padrão; Living = médio; MCMV = Vivaz; demais = loteamento, serviços e corporativo), R$ mi, trimestral desde 1T20 (fluxos por diferença dos acumulados; balanço 2T22 da Vivaz corrigido pela nota) e anual antes. Retorno operacional sobre o capital = lucro operacional do segmento em 12 meses (antes de resultado financeiro, equivalência e IR) ÷ PL médio atribuído ao segmento (ativo menos passivo, 5 balanços); as JVs ficam fora dos segmentos. Cury: DRE e balanço trimestrais da planilha Fundamentos do RI (lucro antes do resultado financeiro LTM ÷ PL total médio de 5 pontas; ativo e PL de 2T26), consolidado, 100%; é o benchmark do MCMV, não um segmento da Cyrela.").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
+    nota="Fontes: nota explicativa de informações por segmento dos ITR/DFP (Cyrela = alto padrão; Living = médio; MCMV = Vivaz; demais = loteamento, serviços e corporativo), R$ mi, trimestral desde 1T20 (fluxos por diferença dos acumulados; balanço 2T22 da Vivaz corrigido pela nota) e anual antes. Retorno operacional sobre o capital = lucro operacional do segmento em 12 meses (antes de resultado financeiro, equivalência e IR) ÷ PL médio atribuído ao segmento (ativo menos passivo, 5 balanços); as JVs ficam fora dos segmentos. Cury: DRE e balanço trimestrais da planilha Fundamentos do RI (lucro antes do resultado financeiro LTM ÷ PL total médio de 5 pontas; ativo e PL de 2T26), consolidado, 100%. Plano & Plano: ITR/DFP consolidados na CVM (mesma conta; despesas = lucro bruto − lucro operacional; sem ativo); a queda de 2025-26 vem do programa municipal Pode Entrar (margem de 8% a 13%) e do custo absorvido (release 2T26). Cury e P&P são benchmarks, não segmentos.").replace('<h2 class="head-xl">', '<h2 class="head-xl" style="font-size:38px;margin-bottom:4px">', 1)
 # --- slide 47: retorno por vertical, logo depois de 'Terreno a prazo, obra e recebível' (antes do slide de lucro/caixa/dívida, que vira 48)
 final.insert(next(i for i, s in enumerate(final) if "Terreno a prazo, obra e recebível" in _h2(s)) + 1, _s47)
 # --- slide 48 (20/09/26): Cury × Vivaz, alavancagem e valor; de grafico_cury_valor.py
