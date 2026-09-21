@@ -20,7 +20,7 @@ def pre(key):
     return out
 # ---- marcos 2009-2026 (os que estavam no deck)
 TETO = [(a, v / 1000) for a, v in pre("teto_imovel_rmsp")] + [(2009.3, 130), (2011.1, 170), (2012.8, 190), (2016.2, 225), (2017.0, 240), (2021.6, 264), (2025.8, 275)]
-TETO_F3 = [(2023.3, 350), (2026.1, 400)]; TETO_F4 = [(2025.1, 500), (2026.1, 600)]; TETO_BANDA = [(2017.0, 300), (2020.5, 300)]
+TETO_F3 = [t for t in TETO if t[0] < 2023] + [(2023.3, 350), (2026.1, 400)]; TETO_F4 = [(2025.1, 500), (2026.1, 600)]; TETO_BANDA = [(2017.0, 300), (2020.5, 300)]
 JMIN = pre("juros_min_mutuario") + [(2009.3, 6.0), (2016.2, 7.0)]
 JMAX = pre("juros_max_mutuario") + [(2011.0, 8.16), (2021.7, 7.66), (2022.8, 8.16)]
 J_F4 = [(2025.1, 10.0)]; J_BANDA = [(2017.0, 9.16), (2020.5, 9.16)]
@@ -63,7 +63,7 @@ S1, S2, S3, MU, I2 = "var(--s1)", "var(--s2)", "var(--s3)", "var(--muted)", "var
 FOOT = False   # 20/09/26: rodapés de texto removidos (agente de formatação: ilegíveis a ~6px; "mais imagem, menos texto")
 n_pre = f"{int(A0)}-2026" if A0 < 2009 else "2009-2026"
 svg_teto = chart(280, 250, 40, 640, 0, (150, 300, 450, 600), lambda v: fmt(v), f"O teto do imóvel — {2026 - int(A0)} anos de degraus", "R$ mil · RMSP, topo da tabela · CCFGTS",
-    [(TETO, S2, 2.6, "", False), (TETO_F3, S3, 2.6, "", False), (TETO_F4, S1, 2.6, "", False), (TETO_BANDA, S1, 1.6, ' stroke-dasharray="3 4" opacity=".7"', True)],
+    [(TETO_F3, S3, 2.6, "", False), (TETO, S2, 2.6, "", False), (TETO_F4, S1, 2.6, "", False), (TETO_BANDA, S1, 1.6, ' stroke-dasharray="3 4" opacity=".7"', True)],   # F3 por baixo: até 2023 o teto era um só (F3 = F1-2), a linha dourada só aparece quando separa
     [(2020.4, 300, "banda estendida 2017–20 · renda 9 mil · proto-F4 (Res. 836/17)", I2, -10, "end"), (2007.4, 130, "FGTS pré-MCMV: 62 → 130 mil", S2, -8, "end")],
     [(275, "F1–2 · 275", S2, 250 - (250 - 40) * 275 / 640 + 20), (400, "F3 · 400", S3, 250 - (250 - 40) * 400 / 640 + 16), (600, "F4 · 600", S1, 250 - (250 - 40) * 600 / 640 + 16)])
 svg_juro = chart(240, 210, 40, 10.8, 3.2, (4, 6, 8, 10), lambda v: f"{v}%", "O juro do programa — quase imóvel", "% a.a. + TR · topo da faixa · não-cotista · Sudeste",
