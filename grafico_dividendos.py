@@ -28,6 +28,9 @@ for q, v in G["part"].items(): PART["20" + q[2:]] += -v
 for q, v in G["oper"].items(): OPER["20" + q[2:]] += v
 L4 = ("3T25", "4T25", "1T26", "2T26"); PART12 = sum(-G["part"].get(q, 0) for q in L4); OPER12 = sum(G["oper"].get(q, 0) for q in L4)
 GAN = {"2020": 1335.0, "2022": 139.0, "2024": 135.0, "2025": 240.0}; GAN12 = 240.0
+# dividendos pagos pela tabela de geração de caixa dos releases, linha '(+) Dividendos' (_div_release_raw.json, trimestral desde 1T20;
+# 2019 pelas colunas comparativas: 300 no 3T19 e 400 no 4T19). Confere com a série da B3 por ano; o 12m difere só pelo timing (pago no 4T25 o que teve data ex em 2025)
+REL = {"2019": 700.0, "2020": 699.0, "2021": 418.0, "2022": 217.0, "2023": 317.0, "2024": 224.0, "2025": 1392.0}; REL12 = 1392.0
 cols = ANOS + ["12m"]
 def col(a, D, v12): return v12 if a == "12m" else D.get(a, 0.0)
 def pay(a):
@@ -53,10 +56,10 @@ def bars(X0, X1, keys, series, y, lab):
         g.append(f'<text x="{X0 + gw * (j + 0.5):.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".75">{lab(key)}</text>')
 y = axis(44, 380, "Proventos e lucro por ano, R$ bi", "vinho: proventos (data ex); cinza: lucro atribuível; 12m = até jun/26", -0.2, 2.2, (0, 1, 2), lambda t: fmt(t))
 bars(44, 380, cols, [(lambda a: col(a, DIV, DIV12) / 1000, S1, .9), (lambda a: (LL12 if a == "12m" else LL[a]) / 1000, MU, .6)], y, lambda a: a[2:] if a != "12m" else "12m")
-y = axis(450, 740, "De onde saiu o caixa, R$ bi", "proventos (vinho), venda de participações (dourado), caixa operacional (azul)", -0.5, 1.5, (-0.5, 0, 0.5, 1, 1.5), lambda t: fmt(t, 1))
+y = axis(450, 740, "De onde saiu o caixa, R$ bi", "vinho: proventos; dourado: participações; azul: caixa operacional", -0.5, 1.5, (-0.5, 0, 0.5, 1, 1.5), lambda t: fmt(t, 1))
 c2 = [a for a in cols if a == "12m" or a >= "2020"]
 bars(450, 740, c2, [(lambda a: col(a, DIV, DIV12) / 1000, S1, .9), (lambda a: col(a, PART, PART12) / 1000, S3, .9), (lambda a: col(a, OPER, OPER12) / 1000, S2, .8)], y, lambda a: a[2:] if a != "12m" else "12m")
-y = axis(830, 1030, "Payout, três leituras, %", "reportado; sem ganho com participações; líquido do caixa das sócias", 0, 100, (0, 25, 50, 75, 100), lambda t: f"{t:g}%")
+y = axis(830, 1030, "Payout, três leituras, %", "reportado; sem ganhos; líquido das sócias", 0, 100, (0, 25, 50, 75, 100), lambda t: f"{t:g}%")
 c3 = [a for a in cols if a == "12m" or a >= "2019"]; n3 = len(c3); x3 = lambda i: 830 + 200 * i / (n3 - 1)
 for f_, colr, dash, lab in ((pay, S1, "", "reportado"), (pay_exg, S3, "5 3", "sem ganhos"), (pay_liq, S2, "2 3", "líq. participações")):
     pts = [(x3(i), y(min(f_(a), 100))) for i, a in enumerate(c3) if f_(a) is not None]
@@ -70,7 +73,7 @@ tc = ANOS[2:] + ["12m"]
 def row(lab, f, cls="", pct=False, d=0):
     return f'<tr class="{cls}"><td>{lab}</td>' + "".join(f'<td style="text-align:right">{cell(f(a), d, pct)}</td>' for a in tc) + "</tr>"
 table = ('<table class="tl compact" style="width:100%;margin-top:0"><thead><tr><th style="text-align:left">R$ mi</th>' + "".join(f'<th style="text-align:right">{a if a != "12m" else "12m 2T26"}</th>' for a in tc) + '</tr></thead><tbody>'
-         + row("proventos declarados (data ex)", lambda a: col(a, DIV, DIV12), cls="total") + row("lucro líquido atribuível", lambda a: LL12 if a == "12m" else LL[a])
+         + row("proventos declarados (B3, data ex)", lambda a: col(a, DIV, DIV12), cls="total") + row("dividendos pagos (tabela de caixa do release)", lambda a: col(a, REL, REL12) or None) + row("lucro líquido atribuível", lambda a: LL12 if a == "12m" else LL[a])
          + row("caixa de venda de participações (Cury, P&P, Lavvi)", lambda a: col(a, PART, PART12)) + row("ganho contábil com participações", lambda a: col(a, GAN, GAN12) or None)
          + row("caixa operacional (ex-participações e recompra)", lambda a: (OPER12 if a == "12m" else OPER.get(a)) if (a == "12m" or a >= "2020") else None)
          + row("payout sobre o lucro", pay, pct=True, cls="total") + row("payout sem os ganhos com participações", pay_exg, pct=True) + row("payout líquido do caixa das participações", pay_liq, pct=True) + "</tbody></table>")
