@@ -22,4 +22,4 @@ Seções futuras do roteiro (Operacional, Resultados, Soma das partes, Valuation
 
 ## Versão enxuta
 
-`enxuta.html` (v1.1, 17/09/2026): apresentação de 45-60 min, 61 slides, gerada por `build_enxuta.py` a partir de `index.html` (CSS, navegação e slides reaproveitados), dos JSONs e do dump do modelo. Os dois decks têm link cruzado no cabeçalho. Publicada em https://rlavourinha.github.io/cyrela-update/enxuta.html
+`enxuta.html` (v1.1, 17/09/2026): apresentação de 45-60 min, 62 slides, gerada por `build_enxuta.py` a partir de `index.html` (CSS, navegação e slides reaproveitados), dos JSONs e do dump do modelo. Os dois decks têm link cruzado no cabeçalho. Publicada em https://rlavourinha.github.io/cyrela-update/enxuta.html
