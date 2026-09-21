@@ -1367,8 +1367,26 @@ ALIGN_JS = """
     }
     window.addEventListener('load', ajusta); window.addEventListener('resize', ajusta); setTimeout(ajusta, 900);
   })();
+  // capa (21/09/26): os chips numerados viram botões que levam ao primeiro slide de cada parte (casado pelo kick "parte N")
+  (function () {
+    var deck = document.getElementById('deck'); if (!deck) return;
+    var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+    function alvo(n) {
+      var rx = new RegExp('^\\\\s*parte\\\\s*' + n + '\\\\b', 'i');
+      for (var i = 0; i < slides.length; i++) { var k = slides[i].querySelector('.kick'); if (k && rx.test(k.textContent)) return slides[i]; }
+      return null;
+    }
+    document.querySelectorAll('#sl0 .chip2').forEach(function (c) {
+      var b = c.querySelector('b'); var n = b ? parseInt(b.textContent, 10) : NaN; var s = isNaN(n) ? null : alvo(n);
+      if (!s) return;
+      c.setAttribute('role', 'button'); c.setAttribute('tabindex', '0'); c.title = 'ir para a parte ' + n;
+      c.addEventListener('click', function () { s.scrollIntoView({ behavior: 'smooth' }); });
+      c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); s.scrollIntoView({ behavior: 'smooth' }); } });
+    });
+  })();
 """
-out.append('</div>\n<div class="dots" id="dots"></div>\n<script>\n' + JS + ALIGN_JS + '</script>\n</body>\n</html>\n')
+CHIP_CSS = "<style>#sl0 .chip2[role=button]{cursor:pointer;transition:background .15s,border-color .15s,transform .15s}#sl0 .chip2[role=button]:hover,#sl0 .chip2[role=button]:focus-visible{background:var(--surface-1);border-color:var(--s1);color:var(--ink-1);transform:translateY(-1px);outline:none}#sl0 .chip2[role=button]:hover b{color:var(--s1)}</style>\n"
+out.append('</div>\n<div class="dots" id="dots"></div>\n' + CHIP_CSS + '<script>\n' + JS + ALIGN_JS + '</script>\n</body>\n</html>\n')
 html = "".join(out)
 # layout: alarga o viewBox dos svgs cujo texto saiu do quadro (medido por layout_enxuta.py em _layout_enxuta.json) — só nos slides gerados
 _lp = os.path.join(here, "_layout_enxuta.json")
