@@ -56,7 +56,7 @@ ANX[2026] = rows_of(os.path.join(here, "fontes", "release_2T26.txt"), 2026)
 # correção pontual: no PDF do 4T22 o produto do 'Vivaz Prime Vila Nova Cachoeirinha' (428 un., out/22) sai como 'CVA 2 e 3'; a planilha do RI
 # tem 428 un. de Vivaz Prime (médio) no 4T22 e 250 de MCMV, então a linha é Prime. Com isso 1T22-3T22 batem com o RI trimestre a trimestre.
 for r in ANX[2022]:
-    if r["nome"].endswith("Vila Nova Cachoeirinha") and r["tri"] == "4T22": r["prod"] = "Médio (Vivaz Prime; corrigido)"
+    if "Cachoeirinha" in r["nome"] and r["tri"] == "4T22": r["prod"] = "Médio (Vivaz Prime; corrigido)"
 # 2026 sem coluna de unidades: estima pelo ticket MCMV do trimestre (planilha do RI: VGV ÷ unidades)
 tk = {q: L["vgv_mcmv23"][q] / L["un_mcmv23"][q] for q in L["un_mcmv23"] if L["un_mcmv23"].get(q) and L["vgv_mcmv23"].get(q)}   # R$ mil por unidade (VGV da planilha em R$ mil)
 for r in ANX[2026]:
