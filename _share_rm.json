@@ -1,0 +1,714 @@
+{
+ "vivaz": {
+  "2017": {
+   "sp": 3721.0,
+   "rj": 1455.0,
+   "outros": 0.0,
+   "n": 17,
+   "n_semun": 0,
+   "jv": [
+    "Parque dos Sonhos São Gonçalo (RJ, 25%, 380 un.)",
+    "Dez Cerejeira (SP, 50%, 300 un.)",
+    "Plano & Bonsucesso (SP, 50%, 392 un.)",
+    "Fontoura Xavier I - Lote II (SP, 50%, 300 un.)",
+    "Meu Lar Pirituba (SP, 50%, 300 un.)",
+    "Único Zona Sul (SP, 50%, 280 un.)",
+    "Plano & Vila Prudente (SP, 50%, 284 un.)",
+    "Dez Vila Ema (SP, 25%, 294 un.)",
+    "Meu Lar Monte Mór (SP, 50%, 320 un.)",
+    "Completo - Engenho Novo (RJ, 50%, 420 un.)",
+    "Meu Lar Cantareira (SP, 50%, 300 un.)",
+    "Dez Bom Retiro (SP, 50%, 268 un.)",
+    "Dez Jardim Botanico (SP, 25%, 250 un.)",
+    "Dez Tiradentes (SP, 50%, 268 un.)"
+   ],
+   "total": 5176.0,
+   "ri": 5176
+  },
+  "2018": {
+   "sp": 7908.0,
+   "rj": 2374.0,
+   "outros": 775.0,
+   "n": 37,
+   "n_semun": 0,
+   "jv": [
+    "Vida Sol (CO, 50%, 268 un.)",
+    "Plano & Parque São Vicente (SP, 50%, 634 un.)",
+    "Plano & Largo do Cambuci (SP, 50%, 298 un.)",
+    "Dez Portal (RJ, 50%, 286 un.)",
+    "Bela Vista São Gonçalo (RJ, 25%, 420 un.)",
+    "Dez Jardim Botanico F2 (SP, 25%, 250 un.)",
+    "Plano& Estação Itaquera - Lagoa do Campelo II (SP, 50%, 330 un.)",
+    "Plano& Cupecê I - Terrenos Bentos (SP, 50%, 290 un.)",
+    "Máximo Zona Sul (SP, 50%, 198 un.)",
+    "Plano& Cupecê II (SP, 50%, 293 un.)",
+    "Super Cittá Paraíso (SP, 40%, 260 un.)",
+    "Plano& Largo do Cambuci - Ana Neri (SP, 50%, 282 un.)",
+    "Dez Anhaia Melo (SP, 25%, 222 un.)",
+    "Viva Mais Engenho Novo (RJ, 50%, 380 un.)",
+    "Máximo Zona Sul - Fase II (SP, 50%, 200 un.)",
+    "Dez Parque Do Carmo (SP, 50%, 450 un.)",
+    "Plano & Jacu Pessego - Augusto Bauman (SP, 50%, 330 un.)",
+    "Plano & José Bonifácio -Hasegawa I (SP, 50%, 300 un.)",
+    "Plano & Parque do Carmo - Iososuke II (SP, 50%, 298 un.)",
+    "Plano& Cursino-Ourives II (SP, 50%, 400 un.)",
+    "Plano & Raposo - Eiras Garcia (SP, 50%, 399 un.)",
+    "Dez Anhaia Melo II (SP, 25%, 222 un.)",
+    "Dez Sacomã (SP, 50%, 374 un.)",
+    "Dez Jacarepaguá (RJ, 25%, 450 un.)",
+    "Ville Hollywood (MG, 49%, 176 un.)",
+    "Ville Heliodora (MG, 49%, 125 un.)",
+    "Ville Helena (MG, 49%, 120 un.)",
+    "Ville Hércules (MG, 49%, 86 un.)",
+    "Dez Vila Guilherme (SP, 40%, 452 un.)",
+    "Plano & Butantã Manuel Dias (SP, 50%, 282 un.)",
+    "Residencial Magia (SP, 40%, 120 un.)",
+    "Plano & Iguatemi - Santa Teresa I (SP, 40%, 398 un.)",
+    "Plano & Estação Campo Limpo - Serra Ribeiro II (SP, 50%, 296 un.)"
+   ],
+   "total": 11057.0,
+   "ri": 11057
+  },
+  "2019": {
+   "sp": 9829.0,
+   "rj": 4014.0,
+   "outros": 1468.0,
+   "n": 51,
+   "n_semun": 0,
+   "jv": [
+    "Ville Texas (MG, 49%, 336 un.)",
+    "Ville Estancia (MG, 49%, 92 un.)",
+    "Plano & Pirituba - Serra da Velha (SP, 50%, 400 un.)",
+    "Plano & Estação Campo Limpo - Serra Ribeiro III (SP, 50%, 242 un.)",
+    "Ville Firenze (MG, 49%, 88 un.)",
+    "Ville Vermont (MG, 49%, 96 un.)",
+    "Único Sacomã (SP, 50%, 374 un.)",
+    "Ville Everest (MG, 49%, 60 un.)",
+    "Dez Gamelinha (SP, 50%, 399 un.)",
+    "Viva Mais São Gonçalo (RJ, 50%, 400 un.)",
+    "Ville Cristal (MG, 49%, 96 un.)",
+    "Ville Hollywood - Fase III (MG, 49%, 76 un.)",
+    "Plano & Estação Vila Sônia Caminho do Engenho (SP, 50%, 379 un.)",
+    "Plano & Parque do Carmo Iososuke I (SP, 50%, 298 un.)",
+    "Dez Vila Das Belezas (SP, 50%, 354 un.)",
+    "Plano & Sacomã - Antônio Gomes Ferreira III (SP, 50%, 494 un.)",
+    "Único Penha (SP, 50%, 400 un.)",
+    "Dez Cursino (SP, 25%, 400 un.)",
+    "Dez Gamelinha II (SP, 50%, 399 un.)",
+    "Plano & Butantã - Edvard Camilo I (SP, 50%, 282 un.)",
+    "Plano & Penha -Manuel Leiroz I (SP, 50%, 240 un.)",
+    "Completo Parque Brito (RJ, 50%, 500 un.)",
+    "Plano & Vila Carmosina - Victorio Santim (SP, 50%, 494 un.)",
+    "Plano & Estação Campo Limpo - Serra Ribeiro I (SP, 50%, 330 un.)",
+    "Plano & Bairro do Limão - Bartolomeu do Canto (SP, 50%, 379 un.)",
+    "Plano & Penha - Manuel Leiroz III (SP, 50%, 150 un.)",
+    "Plano & Reserva do Carmo - Hasegawa II (SP, 50%, 120 un.)",
+    "Dez Parque Das Bandeiras (SP, 50%, 406 un.)",
+    "Ville Roma (RJ, 49%, 288 un.)",
+    "Ville Firenze II (MG, 49%, 93 un.)",
+    "Plano & Reserva do Carmo - Hasegawa II - G a H (RJ, 50%, 40 un.)",
+    "Completo Piedade (RJ, 50%, 500 un.)",
+    "Plano & Penha - Manuel Leiroz III - Torre B (RJ, 50%, 142 un.)",
+    "Reserva Girassol (MG, 50%, 240 un.)",
+    "Galeria 635 - Guaicurus (RJ, 50%, 500 un.)",
+    "Laguna 430 by Plano e Plano (RJ, 50%, 491 un.)",
+    "Ville Europa (MG, 49%, 112 un.)",
+    "Ville Firenze III (MG, 49%, 96 un.)",
+    "Ville Honolulu (MG, 49%, 83 un.)",
+    "Urban Mooca (SP, 50%, 496 un.)",
+    "Urban Mooca 2 (SP, 50%, 224 un.)",
+    "Dez Vila Das Belezas 2 (SP, 50%, 344 un.)",
+    "Mérito Jacarepaguá (RJ, 25%, 500 un.)",
+    "Plano & Reserva da Vila - Vila Ema (SP, 50%, 398 un.)",
+    "Plano & Mooca I - Torre A (SP, 50%, 145 un.)"
+   ],
+   "total": 15311.0,
+   "ri": 4091
+  },
+  "2020": {
+   "sp": 7324.0,
+   "rj": 1220.0,
+   "outros": 1939.0,
+   "n": 30,
+   "n_semun": 0,
+   "jv": [
+    "4Ville Cuba (MG, 49%, 95 un.)",
+    "5Jardim Vênus (MG, 40%, 238 un.)",
+    "6Ville Honduras (MG, 40%, 190 un.)",
+    "22Vida Milão (CO, 50%, 136 un.)",
+    "27Ville Colorado (MG, 40%, 160 un.)",
+    "39Jardim Austria (MG, 30%, 334 un.)",
+    "50Meu Mundo Estação Mooca - Fase 1 (SP, 50%, 379 un.)",
+    "57Gran Egito (MG, 40%, 240 un.)",
+    "58Ville Violeta (MG, 30%, 230 un.)"
+   ],
+   "total": 10483.0,
+   "ri": 10483
+  },
+  "2021": {
+   "sp": 4566.0,
+   "rj": 1660.0,
+   "outros": 1632.0,
+   "n": 23,
+   "n_semun": 0,
+   "jv": [
+    "Ville Luxemburgo (MG, 30%, 168 un.)",
+    "Ville Hong Kong (MG, 40%, 116 un.)",
+    "Jardim Indonésia (MG, 49%, 410 un.)",
+    "Ville Estrela (MG, 30%, 84 un.)",
+    "Vida Mar (CO, 50%, 134 un.)",
+    "Meu Mundo Estação Mooca - Fase 2 (SP, 50%, 397 un.)",
+    "Vida Milão - Fase 2 (CO, 50%, 136 un.)",
+    "Wish Bella Vista (CO, 50%, 164 un.)"
+   ],
+   "total": 7858.0,
+   "ri": 7858
+  },
+  "2022": {
+   "sp": 1536.0,
+   "rj": 947.0,
+   "outros": 706.0,
+   "n": 11,
+   "n_semun": 0,
+   "jv": [
+    "5Ville Hibisco (MG, 30%, 66 un.)",
+    "16Ville Roma II (RJ, 50%, 192 un.)",
+    "19Now Parque Amazônia (CO, 50%, 324 un.)",
+    "42Now Reserva das Águas (CO, 50%, 316 un.)"
+   ],
+   "total": 3189.0,
+   "ri": 2695
+  },
+  "2023": {
+   "sp": 2294.0,
+   "rj": 1462.0,
+   "outros": 1550.0,
+   "n": 17,
+   "n_semun": 0,
+   "jv": [
+    "Vida Mar - Fase 2 (CO, 50%, 134 un.)",
+    "Now Praça C8 (CO, 50%, 316 un.)",
+    "Vida Milão - F3 (CO, 50%, 136 un.)",
+    "Nova Norte Samba (RJ, 40%, 391 un.)",
+    "Now Parque Amazônia - F3 (CO, 50%, 158 un.)",
+    "Nova Caxias Fun (RJ, 40%, 420 un.)",
+    "Now Reserva das Águas - F3 (CO, 50%, 158 un.)",
+    "Vida Samambaia (CO, 50%, 364 un.)",
+    "Now Milão F1 (CO, 50%, 284 un.)"
+   ],
+   "total": 5306.0,
+   "ri": 5306
+  },
+  "2024": {
+   "sp": 7814.0,
+   "rj": 2457.0,
+   "outros": 958.0,
+   "n": 21,
+   "n_semun": 0,
+   "jv": [
+    "Residencial Porto Maravilha (RJ, 40%, 499 un.)",
+    "Pitangueira Reserva Urbana (CO, 50%, 480 un.)",
+    "Nova Norte Residencial - Ginga (RJ, 40%, 500 un.)",
+    "Now Milão - F2 (CO, 50%, 142 un.)",
+    "Now Alameda Das Águas (CO, 50%, 336 un.)",
+    "Orla Maua (RJ, 50%, 809 un.)",
+    "Cidade Villa Lobos - Sonata (SP, 40%, 318 un.)",
+    "Cidade Villa Lobos - Soprano (SP, 40%, 417 un.)"
+   ],
+   "total": 11229.0,
+   "ri": 11229
+  },
+  "2025": {
+   "sp": 14320.0,
+   "rj": 3794.0,
+   "outros": 1195.0,
+   "n": 35,
+   "n_semun": 0,
+   "jv": [
+    "Now Laguna (CO, 50%, 252 un.)",
+    "Residencial Nova Olaria I (RJ, 40%, 498 un.)",
+    "Residencial Nova Olaria II (RJ, 40%, 249 un.)",
+    "Residencial Pixinguinha - Condominio Carinhoso (RJ, 20%, 952 un.)",
+    "Cidade Villa Lobos - Maestro (SP, 40%, 782 un.)",
+    "Pitangueira Reserva Urbana - F2 (CO, 50%, 240 un.)",
+    "Residencial Pixinguinha - Condominio Carinhoso F2 (RJ, 20%, 1018 un.)",
+    "Nova Norte Residencial - Raízes - F1 (RJ, 40%, 254 un.)",
+    "Cidade Villa Lobos - Melodia - F1 (SP, 40%, 414 un.)",
+    "Now 111 (CO, 50%, 283 un.)",
+    "Now Alameda das Águas - F2 (CO, 50%, 168 un.)",
+    "Nova Caxias Up - F1 (RJ, 40%, 160 un.)",
+    "Now Laguna - F2 (CO, 50%, 252 un.)",
+    "Atmosfera Jaguare (SP, 40%, 704 un.)",
+    "Cidade Villa Lobos - Melodia - F2 (SP, 40%, 368 un.)"
+   ],
+   "total": 19309.0,
+   "ri": 19309
+  },
+  "2026": {
+   "sp": 6665.664506193305,
+   "rj": 1480.2956305813093,
+   "outros": 347.0437284069114,
+   "n": 17,
+   "n_semun": 0,
+   "jv": [
+    "Residencial Pixinguinha - Condomínio Rosa (RJ, 20%, 629 un.)",
+    "Nova Norte Residencial - Raízes - F2 (RJ, 40%, 215 un.)",
+    "Cidade Villa Lobos - Condomínio Tenor (SP, 40%, 423 un.)",
+    "Nova Leopoldina - Condominio Art - F1 (SP, 40%, 423 un.)",
+    "Nova Caxias UP - F2 (RJ, 40%, 184 un.)",
+    "Now 29 (CO, 50%, 347 un.)"
+   ],
+   "total": 8493.003865181527,
+   "ri": 8491
+  }
+ },
+ "cury_cnt": {
+  "2T26": [
+   11,
+   8,
+   3
+  ],
+  "3T25": [
+   9,
+   6,
+   3
+  ],
+  "4T22": [
+   5,
+   3,
+   2
+  ],
+  "4T23": [
+   6,
+   4,
+   2
+  ],
+  "4T24": [
+   7,
+   5,
+   2
+  ],
+  "1T23": [
+   8,
+   6,
+   2
+  ],
+  "1T24": [
+   10,
+   5,
+   5
+  ],
+  "1T25": [
+   14,
+   9,
+   5
+  ],
+  "1T26": [
+   10,
+   7,
+   3
+  ],
+  "2T23": [
+   8,
+   5,
+   3
+  ],
+  "2T24": [
+   8,
+   5,
+   3
+  ],
+  "2T25": [
+   9,
+   6,
+   3
+  ],
+  "3T23": [
+   7,
+   5,
+   2
+  ],
+  "3T24": [
+   9,
+   4,
+   5
+  ],
+  "4T25": [
+   5,
+   4,
+   1
+  ],
+  "2025": [
+   37,
+   25,
+   12
+  ]
+ },
+ "den": {
+  "2017": {
+   "est": 145075,
+   "rmsp": 36397,
+   "rmrj": 17973,
+   "cap": 28288,
+   "rm": 54370,
+   "br": 441873
+  },
+  "2018": {
+   "est": 150892,
+   "rmsp": 38416,
+   "rmrj": 18164,
+   "cap": 29686,
+   "rm": 56580,
+   "br": 442831
+  },
+  "2019": {
+   "est": 131981,
+   "rmsp": 38792,
+   "rmrj": 15530,
+   "cap": 32086,
+   "rm": 54322,
+   "br": 391519
+  },
+  "2020": {
+   "est": 142272,
+   "rmsp": 42160,
+   "rmrj": 18040,
+   "cap": 38538,
+   "rm": 60200,
+   "br": 387902
+  },
+  "2021": {
+   "est": 135467,
+   "rmsp": 46030,
+   "rmrj": 15897,
+   "cap": 43698,
+   "rm": 61927,
+   "br": 353444
+  },
+  "2022": {
+   "est": 145846,
+   "rmsp": 53152,
+   "rmrj": 15840,
+   "cap": 46110,
+   "rm": 68992,
+   "br": 383367
+  },
+  "2023": {
+   "est": 187201,
+   "rmsp": 73690,
+   "rmrj": 20067,
+   "cap": 64353,
+   "rm": 93757,
+   "br": 491209
+  },
+  "2024": {
+   "est": 219055,
+   "rmsp": 86747,
+   "rmrj": 20270,
+   "cap": 77940,
+   "rm": 107017,
+   "br": 605554
+  },
+  "2025": {
+   "est": 241715,
+   "rmsp": 101528,
+   "rmrj": 21421,
+   "cap": 91739,
+   "rm": 122949,
+   "br": 668553
+  },
+  "2026": {
+   "est": 133149,
+   "rmsp": 60268,
+   "rmrj": 11904,
+   "cap": 55085,
+   "rm": 72172,
+   "br": 355865
+  },
+  "LTM 2T26": {
+   "est": 264651,
+   "rmsp": 113024,
+   "rmrj": 23983,
+   "cap": 102661,
+   "rm": 137007,
+   "br": 729347
+  }
+ },
+ "idx": {
+  "2017": {
+   "vivaz": {
+    "sp": 2880.0,
+    "rj": 1455.0,
+    "outros": 0.0,
+    "pp": 841.0,
+    "total": 4335.0
+   },
+   "cury": {
+    "total": 4284,
+    "sp": null,
+    "rj": null,
+    "n": 0,
+    "nsp": 0,
+    "nrj": 0
+   },
+   "den": {
+    "est": 145075,
+    "rmsp": 36397,
+    "rmrj": 17973,
+    "cap": 28288,
+    "rm": 54370,
+    "br": 441873
+   }
+  },
+  "2018": {
+   "vivaz": {
+    "sp": 2748.0,
+    "rj": 2374.0,
+    "outros": 775.0,
+    "pp": 5160.0,
+    "total": 5897.0
+   },
+   "cury": {
+    "total": 4578,
+    "sp": null,
+    "rj": null,
+    "n": 0,
+    "nsp": 0,
+    "nrj": 0
+   },
+   "den": {
+    "est": 150892,
+    "rmsp": 38416,
+    "rmrj": 18164,
+    "cap": 29686,
+    "rm": 56580,
+    "br": 442831
+   }
+  },
+  "2019": {
+   "vivaz": {
+    "sp": 5478.0,
+    "rj": 3341.0,
+    "outros": 1468.0,
+    "pp": 5024.0,
+    "total": 10287.0
+   },
+   "cury": {
+    "total": 6080,
+    "sp": null,
+    "rj": null,
+    "n": 0,
+    "nsp": 0,
+    "nrj": 0
+   },
+   "den": {
+    "est": 131981,
+    "rmsp": 38792,
+    "rmrj": 15530,
+    "cap": 32086,
+    "rm": 54322,
+    "br": 391519
+   }
+  },
+  "2020": {
+   "vivaz": {
+    "sp": 7324.0,
+    "rj": 1220.0,
+    "outros": 1939.0,
+    "pp": 0.0,
+    "total": 10483.0
+   },
+   "cury": {
+    "total": 8233,
+    "sp": null,
+    "rj": null,
+    "n": 0,
+    "nsp": 0,
+    "nrj": 0
+   },
+   "den": {
+    "est": 142272,
+    "rmsp": 42160,
+    "rmrj": 18040,
+    "cap": 38538,
+    "rm": 60200,
+    "br": 387902
+   }
+  },
+  "2021": {
+   "vivaz": {
+    "sp": 4566.0,
+    "rj": 1660.0,
+    "outros": 1632.0,
+    "pp": 0.0,
+    "total": 7858.0
+   },
+   "cury": {
+    "total": 12639,
+    "sp": null,
+    "rj": null,
+    "n": 0,
+    "nsp": 0,
+    "nrj": 0
+   },
+   "den": {
+    "est": 135467,
+    "rmsp": 46030,
+    "rmrj": 15897,
+    "cap": 43698,
+    "rm": 61927,
+    "br": 353444
+   }
+  },
+  "2022": {
+   "vivaz": {
+    "sp": 1536.0,
+    "rj": 947.0,
+    "outros": 706.0,
+    "pp": 0.0,
+    "total": 3189.0
+   },
+   "cury": {
+    "total": 12585,
+    "sp": null,
+    "rj": null,
+    "n": 5,
+    "nsp": 3,
+    "nrj": 2
+   },
+   "den": {
+    "est": 145846,
+    "rmsp": 53152,
+    "rmrj": 15840,
+    "cap": 46110,
+    "rm": 68992,
+    "br": 383367
+   }
+  },
+  "2023": {
+   "vivaz": {
+    "sp": 2294.0,
+    "rj": 1462.0,
+    "outros": 1550.0,
+    "pp": 0.0,
+    "total": 5306.0
+   },
+   "cury": {
+    "total": 15675,
+    "sp": 10810.344827586207,
+    "rj": 4864.6551724137935,
+    "n": 29,
+    "nsp": 20,
+    "nrj": 9
+   },
+   "den": {
+    "est": 187201,
+    "rmsp": 73690,
+    "rmrj": 20067,
+    "cap": 64353,
+    "rm": 93757,
+    "br": 491209
+   }
+  },
+  "2024": {
+   "vivaz": {
+    "sp": 7814.0,
+    "rj": 2457.0,
+    "outros": 958.0,
+    "pp": 0.0,
+    "total": 11229.0
+   },
+   "cury": {
+    "total": 20765,
+    "sp": 11603.970588235294,
+    "rj": 9161.029411764706,
+    "n": 34,
+    "nsp": 19,
+    "nrj": 15
+   },
+   "den": {
+    "est": 219055,
+    "rmsp": 86747,
+    "rmrj": 20270,
+    "cap": 77940,
+    "rm": 107017,
+    "br": 605554
+   }
+  },
+  "2025": {
+   "vivaz": {
+    "sp": 14320.0,
+    "rj": 3794.0,
+    "outros": 1195.0,
+    "pp": 0.0,
+    "total": 19309.0
+   },
+   "cury": {
+    "total": 26366,
+    "sp": 17814.864864864863,
+    "rj": 8551.135135135135,
+    "n": 37,
+    "nsp": 25,
+    "nrj": 12
+   },
+   "den": {
+    "est": 241715,
+    "rmsp": 101528,
+    "rmrj": 21421,
+    "cap": 91739,
+    "rm": 122949,
+    "br": 668553
+   }
+  },
+  "2026": {
+   "vivaz": {
+    "sp": 6665.664506193305,
+    "rj": 1480.2956305813093,
+    "outros": 347.0437284069114,
+    "pp": 0.0,
+    "total": 8493.003865181527
+   },
+   "cury": {
+    "total": 14550,
+    "sp": 10392.857142857143,
+    "rj": 4157.142857142857,
+    "n": 21,
+    "nsp": 15,
+    "nrj": 6
+   },
+   "den": {
+    "est": 133149,
+    "rmsp": 60268,
+    "rmrj": 11904,
+    "cap": 55085,
+    "rm": 72172,
+    "br": 355865
+   }
+  },
+  "LTM 2T26": {
+   "vivaz": {
+    "sp": 15368.664506193305,
+    "rj": 3125.2956305813095,
+    "outros": 1050.0437284069114,
+    "pp": 0.0,
+    "total": 19544.003865181527
+   },
+   "cury": {
+    "total": 25196,
+    "sp": 17997.14285714286,
+    "rj": 7198.857142857143,
+    "n": 35,
+    "nsp": 25,
+    "nrj": 10
+   },
+   "den": {
+    "est": 264651,
+    "rmsp": 113024,
+    "rmrj": 23983,
+    "cap": 102661,
+    "rm": 137007,
+    "br": 729347
+   }
+  }
+ }
+}
