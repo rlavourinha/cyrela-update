@@ -13,7 +13,8 @@ def row(k):
     v, c, t = D[k]["vivaz"], D[k]["cury"], D[k]["den"]
     return {"v_sp": v["sp"], "v_rj": v["rj"], "v_out": v["outros"], "v_tot": v["total"], "v_prj": sh(v["rj"], v["sp"] + v["rj"]), "v_rmsp": sh(v["sp"], t["rmsp"]), "v_rmrj": sh(v["rj"], t["rmrj"]), "v_br": sh(v["total"], t["br"]),
             "c_tot": c["total"], "c_sp": c["sp"], "c_rj": c["rj"], "c_prj": sh(c["rj"], c["total"]) if c["rj"] is not None else None, "c_rmsp": sh(c["sp"], t["rmsp"]), "c_rmrj": sh(c["rj"], t["rmrj"]), "c_br": sh(c["total"], t["br"]),
-            "nsp": c["nsp"], "nrj": c["nrj"], "rmsp": t["rmsp"], "rmrj": t["rmrj"], "br": t["br"]}
+            "nsp": c["nsp"], "nrj": c["nrj"], "rmsp": t["rmsp"], "rmrj": t["rmrj"], "br": t["br"],
+            "c_geo": c["geo_sp"], "c_teto": c["rj_teto"] if (k.startswith("LTM") or int(k[:4]) >= 2023) else None, "c_teto_rmrj": sh(c["rj_teto"], t["rmrj"]) if (k.startswith("LTM") or int(k[:4]) >= 2023) else None, "v_geo": v["geo_sp"]}
 R = {k: row(k) for k in PER}
 # --- svg: quatro painéis lado a lado
 def panel(ox, w, title, sub, cury, vivaz, ymax, step):
@@ -54,14 +55,15 @@ def c(v, d=0, pct=False, cls=""):
 tr = []
 for k in ("2019", "2021", "2022", "2023", "2024", "2025", "2026", "LTM 2T26"):
     r = R[k]; lab = {"2026": "1S26"}.get(k, k)
-    tr.append(f'<tr><td style="white-space:nowrap">{lab}</td>{c(r["c_tot"])}{c(r["c_sp"])}{c(r["c_rj"])}{c(r["c_prj"], 0, True)}{c(r["c_rmsp"], 1, True, ";color:var(--s3);font-weight:700")}{c(r["c_rmrj"], 1, True, ";color:var(--s3);font-weight:700")}{c(r["c_br"], 1, True)}'
+    tr.append(f'<tr><td style="white-space:nowrap">{lab}</td>{c(r["c_tot"])}{c(r["c_sp"])}{c(r["c_rj"])}{c(r["c_prj"], 0, True)}{c(r["c_rmsp"], 1, True, ";color:var(--s3);font-weight:700")}{c(r["c_rmrj"], 1, True, ";color:var(--s3);font-weight:700")}{c(r["c_teto_rmrj"], 0, True, ";color:var(--muted)")}{c(r["c_br"], 1, True)}'
               f'<td style="border-left:1px solid var(--grid)"></td>{c(r["v_tot"])}{c(r["v_sp"])}{c(r["v_rj"])}{c(r["v_prj"], 0, True)}{c(r["v_rmsp"], 1, True, ";color:var(--s1);font-weight:700")}{c(r["v_rmrj"], 1, True, ";color:var(--s1);font-weight:700")}{c(r["v_br"], 1, True)}</tr>')
 th = lambda s, a="right": f'<th style="text-align:{a}">{s}</th>'
-table = ('<table class="tl compact" style="margin-top:4px;width:100%;font-size:9.5px"><thead><tr><th></th><th colspan="7" style="text-align:center;color:var(--s3)">Cury (SP e RJ estimados pela contagem de projetos)</th><th></th><th colspan="7" style="text-align:center;color:var(--s1)">Vivaz (anexo de lançamentos, ex-P&amp;P)</th></tr>'
-         '<tr>' + th("período", "left") + th("un.") + th("SP") + th("RJ") + th("peso RJ") + th("RMSP") + th("RMRJ") + th("Brasil") + '<th></th>' + th("un.") + th("SP") + th("RJ") + th("peso RJ") + th("RMSP") + th("RMRJ") + th("Brasil") + '</tr></thead><tbody>' + "".join(tr) + '</tbody></table>')
+table = ('<table class="tl compact" style="margin-top:4px;width:100%;font-size:9.5px"><thead><tr><th></th><th colspan="8" style="text-align:center;color:var(--s3)">Cury (SP e RJ estimados pela contagem de projetos; RMRJ teto = total − capital paulista da Geoimóvel)</th><th></th><th colspan="7" style="text-align:center;color:var(--s1)">Vivaz (anexo de lançamentos, ex-P&amp;P e Cury)</th></tr>'
+         '<tr>' + th("período", "left") + th("un.") + th("SP") + th("RJ") + th("peso RJ") + th("RMSP") + th("RMRJ") + th("RMRJ teto") + th("Brasil") + '<th></th>' + th("un.") + th("SP") + th("RJ") + th("peso RJ") + th("RMSP") + th("RMRJ") + th("Brasil") + '</tr></thead><tbody>' + "".join(tr) + '</tbody></table>')
 L, Y25 = R["LTM 2T26"], R["2025"]
 num = {"c_rmsp": L["c_rmsp"], "c_rmrj": L["c_rmrj"], "c_br": L["c_br"], "v_rmsp": L["v_rmsp"], "v_rmrj": L["v_rmrj"], "v_br": L["v_br"], "c_prj": L["c_prj"], "v_prj": L["v_prj"],
        "c_rmrj_25": Y25["c_rmrj"], "c_rmrj_24": R["2024"]["c_rmrj"], "soma_rmsp_25": Y25["c_rmsp"] + Y25["v_rmsp"], "soma_rmrj_25": Y25["c_rmrj"] + Y25["v_rmrj"], "rmrj_25": Y25["rmrj"], "rmsp_25": Y25["rmsp"],
-       "v_rmsp_20": R["2020"]["v_rmsp"], "v_rmsp_22": R["2022"]["v_rmsp"], "v_rmsp_25": Y25["v_rmsp"], "c_rj_25": Y25["c_rj"], "v_rj_25": Y25["v_rj"]}
+       "v_rmsp_20": R["2020"]["v_rmsp"], "v_rmsp_22": R["2022"]["v_rmsp"], "v_rmsp_25": Y25["v_rmsp"], "c_rj_25": Y25["c_rj"], "v_rj_25": Y25["v_rj"],
+       "c_teto_25": Y25["c_teto_rmrj"], "c_teto_ltm": L["c_teto_rmrj"], "c_geo_pct_25": 100 * Y25["c_geo"] / Y25["c_tot"], "c_teto_min": min(R[k]["c_teto_rmrj"] for k in ("2023", "2024", "2025", "LTM 2T26")), "c_teto_max": max(R[k]["c_teto_rmrj"] for k in ("2023", "2024", "2025", "LTM 2T26"))}
 json.dump({"svg": svg, "table": table, "num": num}, io.open(os.path.join(here, "_share_rm_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("ok", {k: round(v, 1) for k, v in num.items()})

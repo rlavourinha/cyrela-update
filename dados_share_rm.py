@@ -5,7 +5,7 @@ unidades, produto, % CBR; unidades 100%; produto MCMV/CVA 2 e 3 e MCMV 1); Cury 
 de empreendimentos por região nos releases/prévias (frase 'foram lançados N empreendimentos, sendo X em SP e Y no RJ', 4T22+).
 Denominadores: MCid, unidades financiadas MCMV (FGTS/FS) por município e mês (_mcmv_sprj_metro.json: RMSP 39 mun., RMRJ 22 mun.,
 capitais, estados) e Brasil (_mcmv_mensal.json). Saída: _share_rm.json + tabela impressa."""
-import io, json, os, re, glob
+import io, json, os, re, glob, collections
 here = os.path.dirname(os.path.abspath(__file__))
 def J(n): return json.load(io.open(os.path.join(here, n), encoding="utf-8"))
 L = J("_lancamentos_ri.json"); CH = J("_cury_hist.json"); M = J("_mcmv_sprj_metro.json"); MM = J("_mcmv_mensal.json")["mensal"]
@@ -88,26 +88,40 @@ for f in glob.glob(os.path.join(here, "fontes", "verificacao", "cury_*.txt")):
         if m: CNT["4T25"] = (5, 4, 1); CNT["2025"] = (37, 25, 12)
 # denominadores por ano e LTM
 def den(f):
-    t = {"est": 0, "rmsp": 0, "rmrj": 0, "cap": 0, "rm": 0}
+    t = {"est": 0, "rmsp": 0, "rmrj": 0, "cap": 0, "rm": 0, "fin_rmsp": 0.0, "fin_rmrj": 0.0, "sub_rmsp": 0.0, "sub_rmrj": 0.0, "fin_est": 0.0, "sub_est": 0.0}
     for k, v in M.items():
         if f(k):
             for c in t: t[c] += v.get(c, 0)
-    t["br"] = sum(v["un"] for k, v in MM.items() if f(k)); return t
+    t["br"] = sum(v["un"] for k, v in MM.items() if f(k)); t["fin_br"] = 1000 * sum(v["fin_bi"] for k, v in MM.items() if f(k)); t["sub_br"] = 1000 * sum(v["sub_bi"] for k, v in MM.items() if f(k)); return t
 OUT = {"vivaz": VZ, "cury_cnt": CNT, "den": {}}
 for y in range(2017, 2027):
     f = (lambda k, y=y: k[:4] == str(y)) if y < 2026 else (lambda k: "2026-01" <= k <= "2026-06")
     OUT["den"][str(y)] = den(f)
 OUT["den"]["LTM 2T26"] = den(lambda k: "2025-07" <= k <= "2026-06")
 # --- índice por região metropolitana
-def is_pp(r): return bool(re.search(r"Plano ?&|Plano e Plano", r["nome"]))
-def viv_rows(pred):
+# JVs fora da Vivaz: Plano & Plano ('Plano &', 'by Plano e Plano') e Cury (marca 'Dez', ex.: 'Dez Ipiranga' na apresentação 3T20 da Cury; nos anexos
+# de 2017-19 aparecem 'Dez ...' a 25-50% CBR). 'Meu Mundo Estação Mooca' (50%, 2020-21) fica: a planilha do RI inclui (2020 bate exato).
+def is_pp(r): return bool(re.search(r"Plano ?&|Plano e Plano|^Dez\b", r["nome"]))
+def viv_rows(pred, key="un"):
     d = {"sp": 0.0, "rj": 0.0, "outros": 0.0, "pp": 0.0}
     for y, rs in ANX.items():
         for r in rs:
-            if not is_mcmv(r) or r["un"] is None or not pred(y, r): continue
-            if is_pp(r): d["pp"] += r["un"]
-            else: d[regkey(r)] += r["un"]
+            if not is_mcmv(r) or r.get(key) is None or not pred(y, r): continue
+            if is_pp(r): d["pp"] += r[key]
+            else: d[regkey(r)] += r[key]
     d["total"] = d["sp"] + d["rj"] + d["outros"]; return d
+# Geoimóvel (Mercado Completo, cidade de São Paulo): unidades lançadas por grupo incorporador e data de lançamento → Cury e Vivaz na capital
+import openpyxl, datetime
+_ws = openpyxl.load_workbook(os.path.join(here, "fontes", "geoimovel", "mercado_completo_geoimovel.xlsx"), read_only=True, data_only=True)["plan"]
+_rows = list(_ws.iter_rows(values_only=True)); _H = {h: i for i, h in enumerate(_rows[0])}
+GEO = {"cury": collections.Counter(), "vivaz": collections.Counter()}
+for _r in _rows[1:]:
+    _d = _r[_H["Data Lançamento"]]
+    if not isinstance(_d, datetime.datetime): continue
+    _g = str(_r[_H["Grupo Incorporador Apelido"]] or "").upper(); _q = f"{(_d.month - 1) // 3 + 1}T{str(_d.year)[2:]}"
+    if _g.startswith("CURY"): GEO["cury"][_q] += _r[_H["Unidades"]] or 0
+    if "VIVAZ" in _g: GEO["vivaz"][_q] += _r[_H["Unidades"]] or 0
+def geo(k, qs): return sum(GEO[k].get(q, 0) for q in qs)
 def cury_reg(qs):
     """unidades da Cury por região: total da planilha × fatia da contagem de empreendimentos (estimativa; a Cury não abre unidades por praça)"""
     tot = sum(CUN.get(q, 0) for q in qs); c = [CNT[q] for q in qs if q in CNT]
@@ -115,10 +129,14 @@ def cury_reg(qs):
     n, nsp, nrj = (sum(x[i] for x in c) for i in range(3))
     return {"total": tot, "sp": tot * nsp / n, "rj": tot * nrj / n, "n": n, "nsp": nsp, "nrj": nrj}
 IDX = {}
+def block(qs, pred, denk):
+    c = cury_reg(qs); c["geo_sp"] = geo("cury", qs); c["rj_teto"] = c["total"] - c["geo_sp"]   # teto do RJ = total − capital paulista (Geoimóvel); sobra RMSP fora da capital
+    v = viv_rows(pred); v["geo_sp"] = geo("vivaz", qs)
+    return {"vivaz": v, "vivaz_vgv": viv_rows(pred, "vgv"), "cury": c, "den": OUT["den"][denk]}
 for y in range(2017, 2027):
     qs = [f"{i}T{str(y)[2:]}" for i in range(1, 5 if y < 2026 else 3)]
-    IDX[str(y)] = {"vivaz": viv_rows(lambda yy, r, y=y: yy == y), "cury": cury_reg(qs), "den": OUT["den"][str(y)]}
-IDX["LTM 2T26"] = {"vivaz": viv_rows(lambda yy, r: (yy == 2025 and r["tri"] in ("3T25", "4T25")) or yy == 2026), "cury": cury_reg(["3T25", "4T25", "1T26", "2T26"]), "den": OUT["den"]["LTM 2T26"]}
+    IDX[str(y)] = block(qs, lambda yy, r, y=y: yy == y, str(y))
+IDX["LTM 2T26"] = block(["3T25", "4T25", "1T26", "2T26"], lambda yy, r: (yy == 2025 and r["tri"] in ("3T25", "4T25")) or yy == 2026, "LTM 2T26")
 OUT["idx"] = IDX
 json.dump(OUT, io.open(os.path.join(here, "_share_rm.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 pc = lambda a, b: f"{100 * a / b:5.1f}%" if a is not None and b else "   — "
@@ -127,6 +145,16 @@ print(f"{'período':9}|{'Vivaz SP':>9}{'RJ':>7}{'outros':>7}{'P&P':>7}|{'peso RJ
 for k, d in IDX.items():
     v, c, t = d["vivaz"], d["cury"], d["den"]
     print(f"{k:9}|{v['sp']:9,.0f}{v['rj']:7,.0f}{v['outros']:7,.0f}{v['pp']:7,.0f}|{pc(v['rj'], v['sp'] + v['rj']):>8}|{pc(v['sp'], t['rmsp']):>7}{pc(v['rj'], t['rmrj']):>7}{pc(v['total'], t['br']):>7}|| {c['total']:7,.0f}{(f'{c['sp']:8,.0f}' if c['sp'] is not None else '       —')}{(f'{c['rj']:8,.0f}' if c['rj'] is not None else '       —')}|{pc(c['rj'], c['total']):>8}|{pc(c['sp'], t['rmsp']):>7}{pc(c['rj'], t['rmrj']):>7}{pc(c['total'], t['br']):>7}| {c['nsp']}/{c['nrj']} de {c['n']}")
+print("\nCRUZAMENTO GEOIMÓVEL (cidade de São Paulo, unidades lançadas por grupo): Cury capital ÷ total RI; RJ teto = total − capital; Vivaz capital ÷ SP do anexo")
+print(f"{'período':9}|{'Cury tot':>9}{'SP cap':>8}{'% cap':>7}{'RJ teto':>8}{'RJ cont':>8}|{'teto/RMRJ':>10}{'cont/RMRJ':>10}|| {'Vivaz SP':>9}{'SP cap':>8}{'% cap':>7}")
+for k, d in IDX.items():
+    v, c, t = d["vivaz"], d["cury"], d["den"]
+    print(f"{k:9}|{c['total']:9,.0f}{c['geo_sp']:8,.0f}{pc(c['geo_sp'], c['total']):>7}{c['rj_teto']:8,.0f}{(f'{c['rj']:8,.0f}' if c['rj'] is not None else '       —')}|{pc(c['rj_teto'], t['rmrj']):>10}{pc(c['rj'], t['rmrj']):>10}|| {v['sp']:9,.0f}{v['geo_sp']:8,.0f}{pc(v['geo_sp'], v['sp']):>7}")
+print("\nVERSÃO EM VALOR: Vivaz VGV lançado (R$ mi, anexo, 100%) ÷ (valor financiado + subsídio MCMV/FGTS, R$ mi, MCid); ticket = VGV ÷ unidades (R$ mil)")
+print(f"{'período':9}|{'VGV SP':>8}{'VGV RJ':>8}{'outros':>8}|{'peso RJ':>8}|{'tkt SP':>7}{'tkt RJ':>7}|{'fin+sub RMSP':>13}{'RMRJ':>9}|{'sh RMSP':>8}{'sh RMRJ':>8}{'Brasil':>8}")
+for k, d in IDX.items():
+    g, v, t = d["vivaz_vgv"], d["vivaz"], d["den"]
+    print(f"{k:9}|{g['sp']:8,.0f}{g['rj']:8,.0f}{g['outros']:8,.0f}|{pc(g['rj'], g['sp'] + g['rj']):>8}|{(1000 * g['sp'] / v['sp'] if v['sp'] else 0):7,.0f}{(1000 * g['rj'] / v['rj'] if v['rj'] else 0):7,.0f}|{t['fin_rmsp'] + t['sub_rmsp']:13,.0f}{t['fin_rmrj'] + t['sub_rmrj']:9,.0f}|{pc(g['sp'], t['fin_rmsp'] + t['sub_rmsp']):>8}{pc(g['rj'], t['fin_rmrj'] + t['sub_rmrj']):>8}{pc(g['total'], t['fin_br'] + t['sub_br']):>8}")
 print("Vivaz (anexos Cyrela, un. 100%, MCMV/CVA):")
 print(f"{'ano':6}|{'SP':>7}|{'RJ':>7}|{'outros':>7}|{'total':>7}|{'RI ex-Cury/P&P':>15}|{'proj':>5}|{'s/un':>5}| JV ≤50%")
 for y, d in VZ.items(): print(f"{y:6}|{d['sp']:7,.0f}|{d['rj']:7,.0f}|{d['outros']:7,.0f}|{d['total']:7,.0f}|{d['ri']:15,.0f}|{d['n']:5}|{d['n_semun']:5}| {'; '.join(d['jv'])[:150]}")
