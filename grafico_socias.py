@@ -10,7 +10,8 @@ here = os.path.dirname(os.path.abspath(__file__))
 def J(n): return json.load(io.open(os.path.join(here, n), encoding="utf-8"))
 def fmt(v, d=0): return f"{v:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
 S1, S2, S3, MU, I2 = "var(--s1)", "var(--s2)", "var(--s3)", "var(--muted)", "var(--ink-2)"
-C = J("_cotacao_socias.json"); IB = J("_invest_book.json")["2T26"]; CV = J("_cvm_lavvi_pp.json"); CD = J("_cury_dre.json")["serie"]
+C = J("_cotacao_socias.json"); IBA = J("_invest_book.json"); IB = IBA["2T26"]; CV = J("_cvm_lavvi_pp.json"); CD = J("_cury_dre.json")["serie"]
+EQ = J("_equiv_investidas_v5.json")["trimestre"]   # equivalência reconhecida pela Cyrela por investida (nota do ITR), R$ mi por trimestre
 ORD = lambda q: (int(q[2:]), int(q[0]))
 STK = {"CURY3": 0.1508, "PLPL3": 0.3360, "LAVV3": 0.2836}; NOME = {"CURY3": "Cury", "PLPL3": "Plano&Plano", "LAVV3": "Lavvi"}; COR = {"CURY3": S3, "PLPL3": S1, "LAVV3": S2}
 BOOK = {"CURY3": IB["cury"], "PLPL3": IB["pp"], "LAVV3": IB["lavvi"]}; GW = {"CURY3": 0.0, "PLPL3": 528.0, "LAVV3": 175.0}
@@ -25,13 +26,15 @@ for t in STK:
     mens[t] = {m: px[d] * acoes(t, d) / 1000 for m, d in last.items()}   # R$ bi
 meses = sorted(set().union(*[set(v) for v in mens.values()]))
 # PL das investidas e lucro 12m
-def inv(t):
+def inv(t):   # PL dos controladores no fim, PL médio de 5 pontas, lucro atribuível 12m (mesma régua do ROE da Cyrela no deck)
     if t == "CURY3":
-        qs = sorted([k for k in CD if "T" in k], key=ORD)[-4:]; return CD[qs[-1]]["pl_ctrl"] / 1e3, sum(CD[q]["ll_ctrl"] for q in qs) / 1e3   # planilha em R$ mil
-    d = CV["pp" if t == "PLPL3" else "lavvi"]; qs = sorted(d, key=ORD)[-4:]; return d[qs[-1]]["pl_ctrl"], sum(d[q]["ll_ctrl_tri"] for q in qs)
-PL, LL, MC, PXU = {}, {}, {}, {}
+        qa = sorted([k for k in CD if "T" in k], key=ORD); qs = qa[-4:]; return CD[qs[-1]]["pl_ctrl"] / 1e3, sum(CD[q]["pl_ctrl"] for q in qa[-5:]) / 5e3, sum(CD[q]["ll_ctrl"] for q in qs) / 1e3   # planilha em R$ mil
+    d = CV["pp" if t == "PLPL3" else "lavvi"]; qa = sorted(d, key=ORD); qs = qa[-4:]; return d[qs[-1]]["pl_ctrl"], sum(d[q]["pl_ctrl"] for q in qa[-5:]) / 5, sum(d[q]["ll_ctrl_tri"] for q in qs)
+EQK = {"CURY3": "cury", "PLPL3": "pp", "LAVV3": "lavvi"}; _bq = sorted(IBA, key=ORD); _l4 = ["3T25", "4T25", "1T26", "2T26"]
+EQ12 = {t: sum(EQ[q][EQK[t]] for q in _l4) for t in EQK}; BOOKM = {t: sum(IBA[q][EQK[t]] for q in _bq) / len(_bq) for t in EQK}   # equivalência 12m e book médio (5 fechamentos)
+PL, PLM, LL, MC, PXU = {}, {}, {}, {}, {}
 for t in STK:
-    PL[t], LL[t] = inv(t); du = max(C[t]["px"]); PXU[t] = (du, C[t]["px"][du]); MC[t] = mens[t][max(mens[t])] * 1000
+    PL[t], PLM[t], LL[t] = inv(t); du = max(C[t]["px"]); PXU[t] = (du, C[t]["px"][du]); MC[t] = mens[t][max(mens[t])] * 1000
 # ---- svg
 g = []; Y0, Y1 = 46, 226; X0, X1 = 44, 640; n = len(meses); x = lambda i: X0 + (X1 - X0) * i / (n - 1)
 ymax = 2 * (int(max(max(v.values()) for v in mens.values()) / 2) + 1); y = lambda v: Y1 - (Y1 - Y0) * v / ymax
@@ -71,10 +74,10 @@ def row(lab, f, cls="", d=0, pct=False): return f'<tr class="{cls}"><td>{lab}</t
 table = ('<table class="tl compact" style="width:100%;margin-top:0"><thead><tr><th style="text-align:left">2T26, R$ mi</th>' + "".join(f'<th style="text-align:right;color:{COR[t]}">{NOME[t]} ({fmt(100 * STK[t], 1)}%)</th>' for t in cols) + '</tr></thead><tbody>'
          + row("PL da sócia (controladores)", lambda t: PL[t]) + row("fatia da Cyrela no PL", lambda t: STK[t] * PL[t]) + row("goodwill dos IPOs de 2020 ainda no book", lambda t: GW[t]) + row("book na Cyrela (nota de investimentos)", lambda t: BOOK[t], cls="total")
          + row("valor em bolsa da fatia", lambda t: MKT[t], cls="total") + row("book ÷ fatia do PL", lambda t: BOOK[t] / (STK[t] * PL[t]), d=2) + row("book ÷ valor em bolsa", lambda t: BOOK[t] / MKT[t], d=2)
-         + row("ROE da sócia, 12 meses", lambda t: 100 * LL[t] / PL[t], pct=True) + row("retorno da fatia sobre o book da Cyrela", lambda t: 100 * STK[t] * LL[t] / BOOK[t], pct=True, cls="total") + "</tbody></table>")
+         + row("ROE da sócia: lucro 12m ÷ PL médio dela", lambda t: 100 * LL[t] / PLM[t], pct=True) + row("retorno sobre o book da Cyrela: equivalência 12m ÷ book médio", lambda t: 100 * EQ12[t] / BOOKM[t], pct=True, cls="total") + "</tbody></table>")
 gw_tot = sum(GW.values()); DU = J("_dupont.json")["dados"]["2026-06"]
 num = {"gw_tot": gw_tot, "gw_2020": 756.0, "pp_book": BOOK["PLPL3"], "pp_mkt": MKT["PLPL3"], "pp_fatia_pl": STK["PLPL3"] * PL["PLPL3"], "lv_book": BOOK["LAVV3"], "lv_mkt": MKT["LAVV3"], "cy_book": BOOK["CURY3"], "cy_mkt": MKT["CURY3"],
-       "roe_pp": 100 * LL["PLPL3"] / PL["PLPL3"], "ret_pp": 100 * STK["PLPL3"] * LL["PLPL3"] / BOOK["PLPL3"], "roe_lv": 100 * LL["LAVV3"] / PL["LAVV3"], "ret_lv": 100 * STK["LAVV3"] * LL["LAVV3"] / BOOK["LAVV3"],
+       "roe_pp": 100 * LL["PLPL3"] / PLM["PLPL3"], "ret_pp": 100 * EQ12["PLPL3"] / BOOKM["PLPL3"], "roe_lv": 100 * LL["LAVV3"] / PLM["LAVV3"], "ret_lv": 100 * EQ12["LAVV3"] / BOOKM["LAVV3"], "roe_cu": 100 * LL["CURY3"] / PLM["CURY3"], "ret_cu": 100 * EQ12["CURY3"] / BOOKM["CURY3"],
        "roe_cy": DU["roe"], "roe_ex_gw": 100 * DU["ll_ltm"] / (DU["pl_med"] - gw_tot), "pl_med": DU["pl_med"], "gw_pl": 100 * gw_tot / DU["pl_med"], "mc": {t: MC[t] for t in cols}, "px": PXU, "ipo_mc": {t: mens[t].get("2020-09") for t in cols}, "exc_mkt": (BOOK["PLPL3"] - MKT["PLPL3"]) + (BOOK["LAVV3"] - MKT["LAVV3"])}
 json.dump({"svg": svg, "table": table, "num": num}, io.open(os.path.join(here, "_socias_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("ok", {k: (round(v, 1) if isinstance(v, float) else v) for k, v in num.items()})
