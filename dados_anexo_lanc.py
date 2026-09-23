@@ -24,7 +24,9 @@ def header_x(words):
         if t in ("Area", "Área") and "area" not in hx: hx["area"] = (w["x0"] + w["x1"]) / 2, w["top"]
     if not all(k in hx for k in ("tri", "mes", "reg", "un", "prod", "cbr")): return None
     ytop = hx["tri"][1]
-    return {k: v[0] for k, v in hx.items() if abs(v[1] - ytop) < 30}, ytop
+    out = {k: v[0] for k, v in hx.items() if abs(v[1] - ytop) < 30}
+    if "vgv" not in out and "reg" in out and "area" in out: out["vgv"] = (out["reg"] + out["area"]) / 2   # 4T19: 'VGV' e '(R$ MM)' se sobrepõem e não formam palavra
+    return out, ytop
 def parse_page(page, hx, xtol=1.5):
     words = page.extract_words(keep_blank_chars=False, x_tolerance=xtol)
     rows = [(w["top"] + w["bottom"]) / 2 for w in words if QRX.match(w["text"].strip())]

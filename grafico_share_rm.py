@@ -16,8 +16,10 @@ def row(k):
             "nsp": c["nsp"], "nrj": c["nrj"], "rmsp": t["rmsp"], "rmrj": t["rmrj"], "br": t["br"]}
 R = {k: row(k) for k in PER}
 # --- svg: quatro painéis lado a lado
-def panel(ox, title, sub, cury, vivaz, ymax, step):
-    w, h = 265, 250; X0, X1, Y0, Y1 = ox + 36, ox + w - 62, 44, h - 22
+def panel(ox, w, title, sub, cury, vivaz, ymax, step):
+    # 23/09/26 (formatação): larguras por painel (o 3º tem o título mais longo) e margem direita 68 para o rótulo de fim de linha
+    # ("Vivaz 14%", ~57 un.) parar ~20 un. antes do eixo y do painel vizinho; antes (265/62) o gtit do 3º encostava no do 4º (folga 7 un.)
+    h = 250; X0, X1, Y0, Y1 = ox + 36, ox + w - 68, 44, h - 22
     x = lambda i: X0 + (X1 - X0) * i / (len(PER) - 1); y = lambda v: Y1 - (Y1 - Y0) * v / ymax
     g = [f'<text x="{ox+36}" y="17" class="gtit">{title}</text><text x="{ox+36}" y="32" class="gsub">{sub}</text>']
     t = 0
@@ -39,11 +41,12 @@ def panel(ox, title, sub, cury, vivaz, ymax, step):
         ys.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{y(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab} {fmt(v)}%</text>')
     return "".join(g)
 g = []
-g.append(panel(0, "Share na RM de São Paulo", "lançadas ÷ financiadas MCMV, 39 mun.", [R[k]["c_rmsp"] for k in PER], [R[k]["v_rmsp"] for k in PER], 50, 10))
-g.append(panel(265, "Share na RM do Rio", "lançadas ÷ financiadas MCMV, 22 mun.", [R[k]["c_rmrj"] for k in PER], [R[k]["v_rmrj"] for k in PER], 50, 10))
-g.append(panel(530, "Peso do Rio nos lançamentos", "% das unidades lançadas em SP + RJ", [R[k]["c_prj"] for k in PER], [R[k]["v_prj"] for k in PER], 50, 10))
-g.append(panel(795, "Share no Brasil", "lançadas ÷ financiadas MCMV, país", [R[k]["c_br"] for k in PER], [R[k]["v_br"] for k in PER], 5, 1))
-svg = '<svg viewBox="0 0 1060 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+W = (262, 268, 290, 260); OX = (0, W[0], W[0] + W[1], W[0] + W[1] + W[2])
+g.append(panel(OX[0], W[0], "Share na RM de São Paulo", "lançadas ÷ financiadas MCMV, 39 mun.", [R[k]["c_rmsp"] for k in PER], [R[k]["v_rmsp"] for k in PER], 50, 10))
+g.append(panel(OX[1], W[1], "Share na RM do Rio", "lançadas ÷ financiadas MCMV, 22 mun.", [R[k]["c_rmrj"] for k in PER], [R[k]["v_rmrj"] for k in PER], 50, 10))
+g.append(panel(OX[2], W[2], "Peso do Rio nos lançamentos", "% das unidades lançadas em SP + RJ", [R[k]["c_prj"] for k in PER], [R[k]["v_prj"] for k in PER], 50, 10))
+g.append(panel(OX[3], W[3], "Share no Brasil", "lançadas ÷ financiadas MCMV, país", [R[k]["c_br"] for k in PER], [R[k]["v_br"] for k in PER], 5, 1))
+svg = f'<svg viewBox="0 0 {sum(W)} 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # --- tabela
 def c(v, d=0, pct=False, cls=""):
     if v is None: return f'<td style="text-align:right{cls}">—</td>'
