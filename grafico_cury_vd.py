@@ -43,9 +43,13 @@ def panel(X0, X1, title, sub, ymax, ticks, tf, series, xs):
         pts = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, v in enumerate(vals) if v is not None)
         g.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="{w}"{f" stroke-dasharray=\"{dash}\"" if dash else ""} stroke-linejoin="round"/>')
         last = [v for v in vals if v is not None][-1]; ends.append([y(last), col, f"{lab} {lf(last)}"])
-    ends.sort(key=lambda e: e[0])
-    for k in range(1, len(ends)):
-        if ends[k][0] - ends[k - 1][0] < 13: ends[k][0] = ends[k - 1][0] + 13
+    ends.sort(key=lambda e: e[0]); GAP = 15   # fonte 12px: rótulos a menos de 15 se afastam em partes iguais (um sobe, outro desce), preservando a ordem das linhas
+    for _ in range(30):
+        moved = False
+        for k in range(1, len(ends)):
+            d = ends[k][0] - ends[k - 1][0]
+            if d < GAP: s = (GAP - d) / 2; ends[k - 1][0] -= s; ends[k][0] += s; moved = True
+        if not moved: break
     for yy, col, lab in ends: g.append(f'<text x="{X1+5:.1f}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab}</text>')
 xs = [q for q in Q if q in VD and ORD(q) >= (22, 4)]
 panel(44, 255, "Carteira Cury, R$ bi", "recebível fora dos bancos, releases (gerencial)", 4, (0, 1, 2, 3, 4), lambda t: fmt(t, 1),
