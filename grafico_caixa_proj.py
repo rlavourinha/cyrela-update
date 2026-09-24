@@ -69,7 +69,7 @@ SHORT = {"lucro_bruto": "lucro bruto", "d_cr": "recebível", "d_est_ex": "obra",
 LAND, CASH = 0.18, 0.50   # terreno do alto padrão ~18% do VGV (slide de premissas do MAP); regime "caixa": metade paga no ano do lançamento; 2013 (compra em caixa) a linha foi −12% dos lançamentos, 2019-22 (permuta/prazo) −1% a −2%
 # cronograma de terrenos a pagar (nota do ITR 2T26, R$ mi): circulante 1.208 (até jun/27), 650 (12-24 m), 591 (24-36), 647 (36-48), 73 (48-60), 18 além; metade de cada balde cai em cada ano-calendário
 SCHED = {2027: 0.5 * 1207.658 + 0.5 * 649.862, 2028: 0.5 * 649.862 + 0.5 * 591.17, 2029: 0.5 * 591.17 + 0.5 * 646.569, 2030: 0.5 * 646.569 + 0.5 * 73.305, 2031: 0.5 * 73.305 + 18.376}
-def NL(y, L, dpp): return LAND * (1 - (MX[2026] + dpp)) * L[y + 1] if y + 1 in L and y >= 2027 else 0.0   # terreno comprado em t para os lançamentos de t+1 (landbank de um ano)
+def NL(y, L, dpp): return LAND * (1 - (MX[2026] + dpp)) * FREC * L[y + 1] if y + 1 in L and y >= 2027 else 0.0   # terreno comprado em t para os lançamentos de t+1 (landbank de um ano), na fatia consolidada (FREC ≈ 0,81: sócios pagam a parte deles); 24/09/26: antes a 100% do VGV, o que criava um vazamento permanente contra o CPV consolidado
 def project(sk, dpp=0.0, land="permuta"):
     L = LP[sk]; RECY = {y: FREC * lagL(y, L) for y in YS}; CRP = cr_path(RECY, dpp); R = {}; e_prev = est("2T26")
     for y in YS:

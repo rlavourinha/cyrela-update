@@ -35,7 +35,7 @@ for key, lab in SC:
 BASE = VAL["ltm"]; D = BASE["dre"]
 # ---- svg: painel 1 DRE projetada (base) barras LB e LL; painel 2 VPL por ação por cenário × preço
 g = []
-X0, X1, Y0, Y1 = 44, 400, 44, 176; ymx = 6000; xg = (X1 - X0) / (len(YS) + 1); yv = lambda v: Y1 - (Y1 - Y0) * v / ymx
+X0, X1, Y0, Y1 = 44, 400, 40, 161; ymx = 6000; xg = (X1 - X0) / (len(YS) + 1); yv = lambda v: Y1 - (Y1 - Y0) * v / ymx   # 25/09/26: 44/176 -> 40/161 (svg 205 -> 190) sem clipar os rótulos de 2 linhas do eixo x
 g.append(f'<text x="{X0}" y="17" class="gtit">Lucro bruto e lucro líquido projetados, R$ mi</text><text x="{X0}" y="32" class="gsub">+5% s/ LTM; linhas abaixo do lucro bruto em % da receita (2023-LTM)</text>')
 for tv_ in (0, 2000, 4000, 6000): g.append(f'<line x1="{X0}" y1="{yv(tv_):.1f}" x2="{X1}" y2="{yv(tv_):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{yv(tv_)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(tv_)}</text>')
 cols = [("LTM", LTM["lb"], LTM["ll"])] + [(str(y), D[y]["lb"], D[y]["ll"]) for y in YS]
@@ -52,11 +52,12 @@ for tv_ in (0, 20, 40, 60): g.append(f'<line x1="{bx0}" y1="{yb(tv_):.1f}" x2="{
 SH = {"ltm": "+5% LTM", "ltm|caixa": "+5% LTM", "2025": "+5% 2025", "2025|caixa": "+5% 2025", "corte": "corte 30%", "corte|caixa": "corte 30%", "ltm+30": "Vivaz +30", "ltm+30|caixa": "Vivaz +30"}
 for i, (k, v) in enumerate(items):
     x = bx0 + gb * i + gb * 0.15; w = gb * 0.7; col = S3 if "caixa" not in k else S1
-    g.append(f'<rect x="{x:.1f}" y="{yb(max(v["ps"], 0)):.1f}" width="{w:.1f}" height="{abs(yb(max(v["ps"], 0)) - yb(0)):.1f}" fill="{col}" fill-opacity=".85"/><text x="{x+w/2:.1f}" y="{yb(max(v["ps"], 0))-4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(v["ps"], 1)}</text>')
+    yt = yb(max(v["ps"], 0)); inside = (yt - 13) < (yb(PX) + 2)   # 25/09/26: rótulo colidia com o tracejado do preço -> dentro da barra, em branco, quando encostaria na linha
+    g.append(f'<rect x="{x:.1f}" y="{yt:.1f}" width="{w:.1f}" height="{abs(yt - yb(0)):.1f}" fill="{col}"/>' + (f'<text x="{x+w/2:.1f}" y="{yt+12:.1f}" text-anchor="middle" class="fw-s2" style="fill:#fff;font-weight:700;font-size:11px">{fmt(v["ps"], 1)}</text>' if inside else f'<text x="{x+w/2:.1f}" y="{yt-4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(v["ps"], 1)}</text>'))
     g.append(f'<text x="{x+w/2:.1f}" y="{Y1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{SH[k]}</text><text x="{x+w/2:.1f}" y="{Y1+24}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{"permuta" if "caixa" not in k else "terr. caixa"}</text>')
-g.append(f'<line x1="{bx0}" y1="{yb(PX):.1f}" x2="{bx1}" y2="{yb(PX):.1f}" stroke="{I2}" stroke-dasharray="4 3"/><text x="{bx1-2}" y="{yb(PX)-4:.1f}" text-anchor="end" class="fw-s2" fill="{I2}">preço {fmt(PX, 2)}</text>')
+g.append(f'<line x1="{bx0}" y1="{yb(PX):.1f}" x2="{bx1}" y2="{yb(PX):.1f}" stroke="{I2}" stroke-dasharray="4 3"/><text x="{bx0+3}" y="{yb(PX)-4:.1f}" class="fw-s2" fill="{I2}">preço {fmt(PX, 2)}</text>')
 g.append(f'<line x1="{bx0}" y1="{Y1}" x2="{bx1}" y2="{Y1}" stroke="var(--baseline)"/>')
-svg = '<svg viewBox="0 0 1060 205" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+svg = '<svg viewBox="0 0 1060 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela 1: DRE projetada (base) + caixa; tabela 2: VPL por cenário
 PAD = "padding:0 8px"
 def c(v, d=0, s_=""): return f'<td style="text-align:right;{PAD}">{fmt(v, d)}{s_}</td>'
@@ -71,7 +72,7 @@ table = ('<table class="tl compact" style="margin-top:0;width:100%;font-size:9px
 rows2 = []
 for k, lab in SC:
     v = VAL[k]; rows2.append(f'<tr><td style="text-align:left;{PAD}">{lab}</td>' + "".join(c(v["dre"][y]["caixa"]) for y in YS) + c(v["pv"]) + c(v["pvtv"]) + c(-v["dl"]) + c(v["eq"]) + f'<td style="text-align:right;{PAD};font-weight:700">{fmt(v["ps"], 1)}</td>' + c(100 * v["vs_px"], 0, "%") + '</tr>')
-table2 = ('<table class="tl compact" style="margin-top:4px;width:100%;font-size:9px"><thead><tr><th style="text-align:left;' + PAD + '">fluxo ao acionista, R$ mi</th>' + "".join(f'<th style="text-align:right;{PAD}">{y}E</th>' for y in YS) + f'<th style="text-align:right;{PAD}">VP 27-31</th><th style="text-align:right;{PAD}">VP perpet.</th><th style="text-align:right;{PAD}">− dív. líq.</th><th style="text-align:right;{PAD}">equity</th><th style="text-align:right;{PAD}">R$/ação</th><th style="text-align:right;{PAD}">vs preço</th></tr></thead><tbody>' + "".join(rows2) + '</tbody></table>')
+table2 = ('<table class="tl compact" style="margin-top:2px;width:100%;font-size:9px"><thead><tr><th style="text-align:left;' + PAD + '">fluxo ao acionista, R$ mi</th>' + "".join(f'<th style="text-align:right;{PAD}">{y}E</th>' for y in YS) + f'<th style="text-align:right;{PAD}">VP 27-31</th><th style="text-align:right;{PAD}">VP perpet.</th><th style="text-align:right;{PAD}">− dív. líq.</th><th style="text-align:right;{PAD}">equity</th><th style="text-align:right;{PAD}">R$/ação</th><th style="text-align:right;{PAD}">vs preço</th></tr></thead><tbody>' + "".join(rows2) + '</tbody></table>')
 num = {"ke": 100 * KE, "g": 100 * G, "px": PX, "nsh": NSH, "dl": DL, "pl": PL, "mc": PX * NSH, "pb": PX * NSH / PL, "ll_ltm": LTM["ll"], "pe_ltm": PX * NSH / LTM["ll"], "pr": {k: 100 * v for k, v in PR.items()},
        "ll27": D[2027]["ll"], "ll29": D[2029]["ll"], "ll31": D[2031]["ll"], "lpa27": D[2027]["ll"] / NSH, "lpa29": D[2029]["ll"] / NSH, "pe27": BASE["pe27"], "pe29": BASE["pe29"], "ll_lb_27": 100 * D[2027]["ll"] / D[2027]["lb"], "conv_ll_27_31": 100 * sum(D[y]["caixa"] for y in YS) / sum(D[y]["ll"] for y in YS)}
 def ps_at(key, ke, g=G):
