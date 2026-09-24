@@ -82,10 +82,10 @@ PJ = {k: project(k) for k in SC}; PJ["ltm+30"] = project("ltm", 0.30)
 # ---- svg: painel 1 lançamentos por cenário; painel 2 caixa operacional por cenário; painel 3 ponte 2029 (cenário LTM)
 g = []
 COL = {"ltm": S1, "2025": S3, "corte": S2, "ltm+30": S1}
-def lines_panel(ox, w, title, sub, series, ymin, ymax, step, unit="", rm=96):
-    X0, X1, Y0, Y1 = ox + 44, ox + w - rm, 44, 183
+def lines_panel(ox, w, title, sub, series, ymin, ymax, step, unit="", rm=96, lm=44, tl=None):   # 24/09/26: Y0 a 50 (o "3.000" do eixo encostava no subtítulo); lm parametrizado
+    X0, X1, Y0, Y1 = ox + lm, ox + w - rm, 50, 183
     xs_ = ["LTM"] + [str(y) for y in YS]; x = lambda i: X0 + (X1 - X0) * i / (len(xs_) - 1); yv = lambda v: Y1 - (Y1 - Y0) * (v - ymin) / (ymax - ymin)
-    gg = [f'<text x="{X0}" y="17" class="gtit">{title}</text><text x="{X0}" y="32" class="gsub">{sub}</text>']
+    tx = ox + (lm if tl is None else tl); gg = [f'<text x="{tx}" y="17" class="gtit">{title}</text><text x="{tx}" y="32" class="gsub">{sub}</text>']
     tv = ymin
     while tv <= ymax + 1e-9:
         gg.append(f'<line x1="{X0}" y1="{yv(tv):.1f}" x2="{X1}" y2="{yv(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{yv(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(tv)}</text>'); tv += step
@@ -103,24 +103,26 @@ def lines_panel(ox, w, title, sub, series, ymin, ymax, step, unit="", rm=96):
         ys_.append(yy); gg.append(f'<circle cx="{X1:.1f}" cy="{yv(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}" style="font-size:11px">{lab} {fmt(v, 1) if abs(v) < 100 else fmt(v)}</text>')
     return "".join(gg)
 LAB_S = {"ltm": "+5% s/ LTM", "2025": "+5% s/ 2025", "corte": "corte −30%", "ltm+30": "LTM, Vivaz +30 pp"}
-g.append(lines_panel(0, 330, "Lançamentos, R$ bi (VGV 100%)", "LTM 2T26 = R$ " + fmt(LY[2026] / 1000, 1) + " bi; 2025 = " + fmt(LY[2025] / 1000, 1),
-    [([LY[2026] / 1000] + [LP[k][y] / 1000 for y in YS], COL[k], "", LAB_S[k]) for k in ("2025", "ltm", "corte")], 0, 25, 5, rm=86))
-g.append(lines_panel(330, 370, "Caixa operacional, R$ mi por ano", "obra e recebível pelo lançamento; terreno neutro",
-    [([P[LTM]["cia_oper"]] + [PJ[k][y]["caixa"] for y in YS], COL[k], ("5 3" if k == "ltm+30" else ""), LAB_S[k]) for k in ("2025", "ltm", "ltm+30", "corte")], -500, 3000, 500, rm=120))
-# ponte 2029, cenário LTM
-ox = 700; R29 = PJ["ltm"][2029]; items = [(k, R29[k]) for k in ORDER if abs(R29[k]) > 1]
-bx0, bx1, by0, by1 = ox + 40, 1060 - 12, 44, 183; tot = R29["lucro_bruto"]; scale = (by1 - by0) / (max(tot, 1) * 1.15)
+# 24/09/26: painel 1 (3 linhas) a 280 de largura e painel 2 com margem para os rótulos de fim de linha (que invadiam o eixo do vizinho); painel 3 a 410
+g.append(lines_panel(0, 280, "Lançamentos, R$ bi (VGV 100%)", "LTM 2T26 = R$ " + fmt(LY[2026] / 1000, 1) + " bi; 2025 = " + fmt(LY[2025] / 1000, 1),
+    [([LY[2026] / 1000] + [LP[k][y] / 1000 for y in YS], COL[k], "", LAB_S[k]) for k in ("2025", "ltm", "corte")], 0, 25, 5, rm=98, lm=30, tl=12))
+g.append(lines_panel(280, 370, "Caixa operacional, R$ mi por ano", "obra e recebível pelo lançamento; terreno neutro",
+    [([P[LTM]["cia_oper"]] + [PJ[k][y]["caixa"] for y in YS], COL[k], ("5 3" if k == "ltm+30" else ""), LAB_S[k]) for k in ("2025", "ltm", "ltm+30", "corte")], -500, 3000, 500, rm=142))
+# ponte 2029, cenário LTM: valores dos negativos abaixo da barra, rótulos do eixo em duas alturas (14 colunas em 27 px cada)
+ox = 650; R29 = PJ["ltm"][2029]; items = [(k, R29[k]) for k in ORDER if abs(R29[k]) > 1]
+bx0, bx1, by0, by1 = ox + 22, 1060 - 6, 50, 183; tot = R29["lucro_bruto"]; scale = (by1 - by0) / (max(tot, 1) * 1.15)
 g.append(f'<text x="{bx0}" y="17" class="gtit">Ponte de 2029, +5% s/ LTM, R$ mi</text><text x="{bx0}" y="32" class="gsub">receita R$ {fmt(R29["receita"]/1000, 1)} bi; do lucro bruto ao caixa</text>')
 n = len(items) + 1; bw = (bx1 - bx0) / n * 0.72; step = (bx1 - bx0) / n; run = 0.0
 def yb(v): return by1 - v * scale
+def xlab(i, k): return f'<text x="{bx0 + i * step + bw/2:.1f}" y="{by1 + (10 if i % 2 == 0 else 19)}" text-anchor="middle" class="axq" opacity=".8" style="font-size:8.5px">{k}</text>'
 for i, (k, v) in enumerate(items):
     top, bot = (run + v, run) if v >= 0 else (run, run + v); xx = bx0 + i * step
-    col = S3 if k == "lucro_bruto" else (GR if v > 0 else S1)
-    g.append(f'<rect x="{xx:.1f}" y="{yb(top):.1f}" width="{bw:.1f}" height="{max(yb(bot)-yb(top),1):.1f}" rx="2" fill="{col}" opacity=".85"/><text x="{xx+bw/2:.1f}" y="{yb(top)-4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}" style="font-size:9px">{fmt(v)}</text>')
-    g.append(f'<text x="{xx+bw/2:.1f}" y="{by1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:8.5px">{SHORT[k]}</text>'); run += v
-xx = bx0 + len(items) * step; g.append(f'<rect x="{xx:.1f}" y="{yb(run):.1f}" width="{bw:.1f}" height="{max(by1-yb(run),1):.1f}" rx="2" fill="{I2}" opacity=".9"/><text x="{xx+bw/2:.1f}" y="{yb(run)-4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}" style="font-size:9px">{fmt(run)}</text><text x="{xx+bw/2:.1f}" y="{by1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:8.5px">caixa</text>')
+    col = S3 if k == "lucro_bruto" else (GR if v > 0 else S1); ty = yb(top) - 3.5 if v >= 0 else yb(bot) + 9.5
+    g.append(f'<rect x="{xx:.1f}" y="{yb(top):.1f}" width="{bw:.1f}" height="{max(yb(bot)-yb(top),1):.1f}" rx="2" fill="{col}" opacity=".85"/><text x="{xx+bw/2:.1f}" y="{ty:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}" style="font-size:8.5px">{fmt(v)}</text>')
+    g.append(xlab(i, SHORT[k])); run += v
+xx = bx0 + len(items) * step; g.append(f'<rect x="{xx:.1f}" y="{yb(run):.1f}" width="{bw:.1f}" height="{max(by1-yb(run),1):.1f}" rx="2" fill="{I2}" opacity=".9"/><text x="{xx+bw/2:.1f}" y="{yb(run)-3.5:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}" style="font-size:8.5px">{fmt(run)}</text>' + xlab(len(items), "caixa"))
 g.append(f'<line x1="{bx0}" y1="{by1}" x2="{bx1}" y2="{by1}" stroke="var(--baseline)"/>')
-svg = '<svg viewBox="0 0 1060 205" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+svg = '<svg viewBox="0 0 1060 208" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela: cenário LTM linha a linha (LTM, 2027, 2029, 2031) + caixa dos outros cenários
 PAD = "padding:0 8px"
 def c(v, d=0, s=""): return f'<td style="text-align:right;{PAD}">{fmt(v, d)}{s}</td>'
