@@ -82,22 +82,23 @@ def panel(ox, w, title, sub, series, ymax, step, xs, xlab, unit="%"):
             if abs(yy - pv) < 14: yy = pv + 14
         ys.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{y(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab} {fmt(v)}{unit}</text>')
     return "".join(g)
-xl = lambda q: ("20" + q[2:]) if q.startswith("4T") and int(q[2:]) % 2 == 1 else ""
+# 23/09/26 (formatação): anos com 2 dígitos a cada 2 anos, como no slide 33 (a 4 dígitos "2011 2013…" encostavam no painel 2); painéis 360/330/370 para as barras
+xl = lambda q: q[2:] if q.startswith("4T") and int(q[2:]) % 2 == 1 else ""
 D_CY = {q: v["dias"] for q, v in CY.items()}; D_CU = {q: v["dias"] for q, v in CU.items()}
 P_CY = {q: v["cr_pl"] for q, v in CY.items()}; P_CU = {q: v["cr_pl"] for q, v in CU.items()}
 xs = [q for q in QC if q in CY]
-g = [panel(0, 380, "Dias de recebível", "contas a receber ÷ receita 12 m × 365", [(D_CY, S1, "Cyrela", 2.6, ""), (D_CU, S3, "Cury", 2.4, "")], 400, 100, xs, xl, ""),
-     panel(380, 340, "Contas a receber ÷ PL, %", "balanço consolidado; Cury: PL total", [(P_CY, S1, "Cyrela", 2.6, ""), (P_CU, S3, "Cury", 2.4, "")], 250, 50, xs, xl)]   # Cury acima de 100%: PL pequeno
-# painel 3: barras dos cenários
-ox, w = 720, 340; X0, Y1, Y0 = ox + 40, 228, 60
+g = [panel(0, 360, "Dias de recebível", "contas a receber ÷ receita 12 m × 365", [(D_CY, S1, "Cyrela", 2.6, ""), (D_CU, S3, "Cury", 2.4, "")], 400, 100, xs, xl, ""),
+     panel(360, 330, "Contas a receber ÷ PL, %", "balanço consolidado; Cury: PL total", [(P_CY, S1, "Cyrela", 2.6, ""), (P_CU, S3, "Cury", 2.4, "")], 250, 50, xs, xl)]   # Cury acima de 100%: PL pequeno
+# painel 3: barras dos cenários (margens de 28/20 e barras de 40: passo de ~70 entre rótulos, "concluídos"/"MCMV 30%" sem encostar)
+ox, w = 690, 370; X0, XR, Y1, Y0 = ox + 28, ox + w - 20, 228, 60
 bars = [("hoje", cy["cr"], MU), ("concluídos", concl, S2), ("MCMV 30%", lib_30, S3), ("MCMV 40%", lib_40, S3), ("dias Cury", lib_a, S1)]
-ymx = 8000; yb = lambda v: Y1 - (Y1 - Y0) * v / ymx; bw = 44; gap = (w - 80 - 5 * bw) / 4
-g.append(f'<text x="{ox+40}" y="17" class="gtit">Caixa que sai do recebível, R$ bi</text><text x="{ox+40}" y="32" class="gsub">LTM 2T26; cenários sobre os dias da Cury ({fmt(cu["dias"])})</text>')
-for t in (0, 2000, 4000, 6000, 8000): g.append(f'<line x1="{X0}" y1="{yb(t):.1f}" x2="{ox+w-40}" y2="{yb(t):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{yb(t)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(t/1000)}</text>')
+ymx = 8000; yb = lambda v: Y1 - (Y1 - Y0) * v / ymx; bw = 40; gap = (XR - X0 - 5 * bw) / 4
+g.append(f'<text x="{X0}" y="17" class="gtit">Caixa que sai do recebível, R$ bi</text><text x="{X0}" y="32" class="gsub">LTM 2T26; cenários sobre os dias da Cury ({fmt(cu["dias"])})</text>')
+for t in (0, 2000, 4000, 6000, 8000): g.append(f'<line x1="{X0}" y1="{yb(t):.1f}" x2="{XR}" y2="{yb(t):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{yb(t)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(t/1000)}</text>')
 for i, (lab, v, col) in enumerate(bars):
     x0 = X0 + i * (bw + gap); g.append(f'<rect x="{x0:.1f}" y="{yb(v):.1f}" width="{bw}" height="{Y1-yb(v):.1f}" rx="2" fill="{col}" opacity="{.9 if i else .5}"/><text x="{x0+bw/2:.1f}" y="{yb(v)-5:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(v/1000, 1)}</text>')
     g.append(f'<text x="{x0+bw/2:.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".8">{lab}</text>')
-g.append(f'<line x1="{X0}" y1="{Y1}" x2="{ox+w-40}" y2="{Y1}" stroke="var(--baseline)"/>')
+g.append(f'<line x1="{X0}" y1="{Y1}" x2="{XR}" y2="{Y1}" stroke="var(--baseline)"/>')
 svg = '<svg viewBox="0 0 1060 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela: fim de ano e último
 cols = [q for q in xs if q.startswith("4T") and int(q[2:]) >= 13] + [u]
