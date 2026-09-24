@@ -44,11 +44,12 @@ def path(kind):
         for y in range(2027, 2033): L[y] = L[2026] * (1 + G) ** (y - 2026)
     elif kind == "2025":   # +5% a partir de 2025 (2026 = LTM já observado; 2027 = 2025 × 1,05²)
         for y in range(2027, 2033): L[y] = LY[2025] * (1 + G) ** (y - 2025)
-    elif kind == "corte":   # −30% em 2027 (entre o −15% do Itaú BBA para 2026 e o −50% de 2015-16), 2028 estável, depois +5%
-        L[2027] = L[2026] * 0.70; L[2028] = L[2027]
-        for y in range(2029, 2033): L[y] = L[y - 1] * (1 + G)
+    elif kind == "lstar":   # 'lançar o que vende': L* = VSO × estoque ÷ (1 − VSO) do LTM 2T26 (R$ 13,4 bi, o nível que mantém o estoque à VSO atual), depois +5%
+        L[2027] = LSTAR * 1000
+        for y in range(2028, 2033): L[y] = L[y - 1] * (1 + G)
     return L
-SC = {"ltm": ("+5% sobre o LTM", "ltm"), "2025": ("+5% sobre 2025", "2025"), "corte": ("−30% em 2027, depois +5%", "corte")}
+LSTAR = J("_lanc_vendas_anual.json")["LTM"]["lstar"]   # R$ bi (dados_share_rm/análise de 24/09/26: vendas 12 m ÷ (estoque inicial + lançamentos) = 44%, estoque R$ 17,2 bi)
+SC = {"ltm": ("+5% sobre o LTM", "ltm"), "2025": ("+5% sobre 2025", "2025"), "lstar": ("lançar o que vende (L*), depois +5%", "lstar")}
 LP = {k: path(v[1]) for k, v in SC.items()}
 # ---- recebível: mix de lançamentos → receita com defasagem 15/35/35/15; Vivaz a 160 dias, resto nos dias implícitos (mix base 32%)
 MX = {int(y): v["mix_stake"] for y, v in MXJ.items()}; MX[2018] = 0.21; MX[2019] = 0.19
@@ -83,11 +84,11 @@ def project(sk, dpp=0.0, land="permuta"):
         r["caixa"] = sum(r[k] for k in ORDER); r["dias"] = CRP[y]["dias"]; r["estoque"] = e_now; R[y] = r; e_prev = e_now
     return R
 PJ = {k: project(k) for k in SC}; PJ["ltm+30"] = project("ltm", 0.30)
-for k in list(SC): PJ[k + "|caixa"] = project(k, 0.0, "caixa")
+for k in list(SC): PJ[k + "|caixa"] = project(k, 0.0, "caixa")   # regime terrenista-exige-caixa fica calculado só para a nota (float dos R$ 3,2 bi)
 PJ["ltm+30|caixa"] = project("ltm", 0.30, "caixa")
 # ---- svg: painel 1 lançamentos por cenário; painel 2 caixa operacional por cenário; painel 3 ponte 2029 (cenário LTM)
 g = []
-COL = {"ltm": S1, "2025": S3, "corte": S2, "ltm+30": S1}
+COL = {"ltm": S1, "2025": S3, "lstar": S2, "ltm+30": S1}
 def lines_panel(ox, w, title, sub, series, ymin, ymax, step, unit="", rm=96, lm=44, tl=None):   # 24/09/26: Y0 a 50 (o "3.000" do eixo encostava no subtítulo); lm parametrizado
     X0, X1, Y0, Y1 = ox + lm, ox + w - rm, 46, 172   # 25/09/26: 50/183 → 46/172 (viewBox 208 → 193; o slide passou de 720 com as linhas de terreno em caixa)
     xs_ = ["LTM"] + [str(y) for y in YS]; x = lambda i: X0 + (X1 - X0) * i / (len(xs_) - 1); yv = lambda v: Y1 - (Y1 - Y0) * (v - ymin) / (ymax - ymin)
@@ -108,13 +109,13 @@ def lines_panel(ox, w, title, sub, series, ymin, ymax, step, unit="", rm=96, lm=
             if abs(yy - pv) < 13: yy = pv + 13
         ys_.append(yy); gg.append(f'<circle cx="{X1:.1f}" cy="{yv(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}" style="font-size:11px">{lab} {fmt(v, 1) if abs(v) < 100 else fmt(v)}</text>')
     return "".join(gg)
-LAB_S = {"ltm": "+5% s/ LTM", "2025": "+5% s/ 2025", "corte": "corte −30%", "ltm+30": "LTM, Vivaz +30 pp"}
+LAB_S = {"ltm": "+5% s/ LTM", "2025": "+5% s/ 2025", "lstar": "lançar o que vende", "ltm+30": "LTM, Vivaz +30 pp"}
 LAB_TC = {"ltm": "LTM, terr. caixa", "corte": "corte, terr. caixa"}   # 25/09/26: rótulos curtos das tracejadas (os longos invadiam o painel 3)
 # 24/09/26: painel 1 (3 linhas) a 280 de largura e painel 2 com margem para os rótulos de fim de linha (que invadiam o eixo do vizinho); painel 3 a 410
 g.append(lines_panel(0, 280, "Lançamentos, R$ bi (VGV 100%)", "LTM 2T26 = R$ " + fmt(LY[2026] / 1000, 1) + " bi; 2025 = " + fmt(LY[2025] / 1000, 1),
-    [([LY[2026] / 1000] + [LP[k][y] / 1000 for y in YS], COL[k], "", LAB_S[k]) for k in ("2025", "ltm", "corte")], 0, 25, 5, rm=98, lm=30, tl=12))
-g.append(lines_panel(280, 370, "Caixa operacional, R$ mi por ano", "sólido: permuta; tracejado: metade do terreno MAP em caixa",
-    [([P[LTM]["cia_oper"]] + [PJ[k][y]["caixa"] for y in YS], COL[k], "", LAB_S[k]) for k in ("2025", "ltm", "corte")] + [([P[LTM]["cia_oper"]] + [PJ[k + "|caixa"][y]["caixa"] for y in YS], COL[k], "5 3", LAB_TC[k]) for k in ("ltm", "corte")], -500, 3000, 500, rm=152))
+    [([LY[2026] / 1000] + [LP[k][y] / 1000 for y in YS], COL[k], "", LAB_S[k]) for k in ("2025", "ltm", "lstar")], 0, 25, 5, rm=98, lm=30, tl=12))
+g.append(lines_panel(280, 370, "Caixa operacional, R$ mi por ano", "obra e recebível pelo lançamento; terreno em permuta (float rola)",
+    [([P[LTM]["cia_oper"]] + [PJ[k][y]["caixa"] for y in YS], COL[k], "", LAB_S[k]) for k in ("2025", "ltm", "lstar")] + [([P[LTM]["cia_oper"]] + [PJ["ltm+30"][y]["caixa"] for y in YS], S1, "5 3", LAB_S["ltm+30"])], -500, 3000, 500, rm=152))
 # ponte 2029, cenário LTM: valores dos negativos abaixo da barra, rótulos do eixo em duas alturas (14 colunas em 27 px cada)
 ox = 650; R29 = PJ["ltm"][2029]; items = [(k, R29[k]) for k in ORDER if abs(R29[k]) > 1]
 bx0, bx1, by0, by1 = ox + 22, 1060 - 6, 46, 172; tot = R29["lucro_bruto"]; scale = (by1 - by0) / (max(tot, 1) * 1.15)
@@ -137,13 +138,11 @@ YT = (2027, 2029, 2031); rows = []
 rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">lançamentos, R$ mi (VGV 100%)</td><td style="text-align:right;{PAD};color:var(--muted)">+5% s/ LTM</td>{c(LY[2026])}' + "".join(c(PJ["ltm"][y]["lanc"]) for y in YT) + '</tr>')
 rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">receita, R$ mi</td><td style="text-align:right;{PAD};color:var(--muted)">{fmt(100 * FREC, 0)}% × lançamentos t−1..t−4 (15/35/35/15)</td>{c(rec0)}' + "".join(c(PJ["ltm"][y]["receita"]) for y in YT) + '</tr>')
 for k in ORDER:
-    prem = {"d_cr": "dias: Vivaz 160, resto " + fmt(N["dias_map"]) + ", mix 32%", "d_est_ex": f"estoque = {fmt(100 * BETA, 0)}% da média 3a de lançamentos", "terrenos": "permuta = 0; em caixa = CPV − parcelas da nota − terreno de t+1 (½ à vista)"}.get(k, f"{fmt(100 * PR.get(k, 0), 1)}% da receita")
+    prem = {"d_cr": "dias: Vivaz 160, resto " + fmt(N["dias_map"]) + ", mix 32%", "d_est_ex": f"estoque = {fmt(100 * BETA, 0)}% da média 3a de lançamentos", "terrenos": "permuta: o saldo a pagar (R$ 3,2 bi) rola"}.get(k, f"{fmt(100 * PR.get(k, 0), 1)}% da receita")
     rows.append(f'<tr><td style="text-align:left;{PAD}">{LABEL[k]}</td><td style="text-align:right;{PAD};color:var(--muted)">{prem}</td>{c(P[LTM][k])}' + "".join(c(PJ["ltm"][y][k]) for y in YT) + '</tr>')
 rows.append(f'<tr style="font-weight:700"><td style="text-align:left;{PAD}">= caixa operacional, +5% s/ LTM</td><td></td>{c(P[LTM]["cia_oper"])}' + "".join(c(PJ["ltm"][y]["caixa"]) for y in YT) + '</tr>')
-for k, lab in (("2025", "caixa · +5% sobre 2025"), ("corte", "caixa · corte de 30% em 2027, depois +5%"), ("ltm+30", "caixa · +5% s/ LTM com Vivaz +30 pp")):
+for k, lab in (("2025", "caixa · +5% sobre 2025"), ("lstar", "caixa · lançar o que vende (L* = R$ " + fmt(LSTAR, 1) + " bi), depois +5%"), ("ltm+30", "caixa · +5% s/ LTM com Vivaz +30 pp")):
     rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">{lab}</td><td style="text-align:right;{PAD};color:var(--muted)">lanç. 2027 R$ {fmt(PJ[k][2027]["lanc"] / 1000, 1)} bi; receita 2029 R$ {fmt(PJ[k][2029]["receita"] / 1000, 1)} bi</td><td></td>' + "".join(c(PJ[k][y]["caixa"]) for y in YT) + '</tr>')
-for k, lab in (("ltm", "caixa · +5% s/ LTM, terreno em caixa"), ("2025", "caixa · +5% s/ 2025, terreno em caixa"), ("corte", "caixa · corte de 30%, terreno em caixa")):
-    rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">{lab}</td><td style="text-align:right;{PAD};color:var(--muted)">terrenos 2027 R$ {fmt(PJ[k + "|caixa"][2027]["terrenos"] / 1000, 1)} bi</td><td></td>' + "".join(c(PJ[k + "|caixa"][y]["caixa"]) for y in YT) + '</tr>')
 table = ('<table class="tl compact" style="margin-top:0;width:100%;font-size:9px"><thead><tr><th style="text-align:left;' + PAD + '">R$ mi</th><th style="text-align:right;' + PAD + '">premissa</th><th style="text-align:right;' + PAD + '">LTM 2T26</th>'
          + "".join(f'<th style="text-align:right;{PAD}">{y}E</th>' for y in YT) + '</tr></thead><tbody>' + "".join(rows) + '</tbody></table>')
 num = {"ltm_cia": P[LTM]["cia_oper"], "ltm_terr": P[LTM]["terrenos"], "ltm_obra": P[LTM]["d_est_ex"], "ltm_cr": P[LTM]["d_cr"], "mg": 100 * PR["lucro_bruto"], "sga": 100 * PR["sga"], "g": 100 * G, "frec": 100 * FREC, "beta": 100 * BETA,

@@ -115,7 +115,7 @@ for lab in AGG:
 FWD = {}
 try:
     PJ = J("_caixa_proj_frag.json")["proj"]; ll_lb = R["ll"] / R["lucro_bruto"]   # lucro líquido projetado = lucro bruto × (LL ÷ LB do LTM); a projeção não modela o LL
-    for key, lab in (("ltm", "2027-31 · +5%, permuta"), ("ltm|caixa", "2027-31 · +5%, terreno em caixa"), ("corte", "2027-31 · corte 30%, permuta")):
+    for key, lab in (("ltm", "2027-31 · +5% s/ LTM"), ("lstar", "2027-31 · lançar o que vende"), ("ltm+30", "2027-31 · Vivaz +30 pp")):
         d = PJ[key]; lb = sum(d[str(y)]["lucro_bruto"] for y in range(2027, 2032)); cx = sum(d[str(y)]["caixa"] for y in range(2027, 2032))
         FWD[lab] = {"lucro_bruto": lb, "cia_oper": cx, "ll": lb * ll_lb, "conv_lb": 100 * cx / lb, "conv_ll": 100 * cx / (lb * ll_lb), "d_cr": sum(d[str(y)]["d_cr"] for y in range(2027, 2032)), "d_est_ex": sum(d[str(y)]["d_est_ex"] for y in range(2027, 2032)), "terrenos": sum(d[str(y)]["terrenos"] for y in range(2027, 2032)), "sga": sum(d[str(y)]["sga"] for y in range(2027, 2032))}
 except Exception as e: print("sem projeção:", e)
@@ -133,7 +133,7 @@ table2 = ('<table class="tl compact" style="width:100%;margin-top:0"><thead><tr>
           + "".join(f'<tr style="{"font-weight:700;color:var(--s3)" if k.startswith("conv") else ("color:var(--muted)" if k.startswith("err") else ("font-weight:700" if k in ("cia_oper", "lucro_bruto") else ""))}"><td style="{PAD2}">{l}</td>' + "".join(cell2(d, k, pct).replace('style="text-align:right"', f'style="text-align:right;{PAD2}"') for _, d in COLS) + '</tr>' for l, k, pct in rows2) + '</tbody></table>')
 num.update({"fase": {lab: {k: v for k, v in d.items()} for lab, d in AGG.items()}, "fwd": FWD, "conv_lb_tot": AGG["2013-25 · total"]["conv_lb"], "conv_ll_tot": AGG["2013-25 · total"]["conv_ll"], "conv_lb_exp": AGG["2023-25 · expansão"]["conv_lb"], "conv_ll_exp": AGG["2023-25 · expansão"]["conv_ll"],
             "conv_lb_col": AGG["2013-16 · colheita do legado"]["conv_lb"], "conv_lb_rec": AGG["2017-19 · reconstrução"]["conv_lb"], "conv_lb_ipo": AGG["2020-22 · IPOs e retomada"]["conv_lb"],
-            "fwd_lb_perm": FWD.get("2027-31 · +5%, permuta", {}).get("conv_lb"), "fwd_ll_perm": FWD.get("2027-31 · +5%, permuta", {}).get("conv_ll"), "fwd_lb_tc": FWD.get("2027-31 · +5%, terreno em caixa", {}).get("conv_lb"), "fwd_ll_tc": FWD.get("2027-31 · +5%, terreno em caixa", {}).get("conv_ll"), "fwd_lb_corte": FWD.get("2027-31 · corte 30%, permuta", {}).get("conv_lb")})
+            "fwd_lb_perm": FWD.get("2027-31 · +5% s/ LTM", {}).get("conv_lb"), "fwd_ll_perm": FWD.get("2027-31 · +5% s/ LTM", {}).get("conv_ll"), "fwd_lb_tc": FWD.get("2027-31 · lançar o que vende", {}).get("conv_lb"), "fwd_ll_tc": FWD.get("2027-31 · lançar o que vende", {}).get("conv_ll"), "fwd_lb_corte": FWD.get("2027-31 · Vivaz +30 pp", {}).get("conv_lb")})
 # svg2: barras da conversão caixa ÷ lucro bruto e ÷ lucro líquido por fase, LTM e projeção 2027-31
 g2 = []; X0b, X1b, Y0b, Y1b = 60, 1040, 44, 168; items2 = COLS; nb = len(items2); gw2 = (X1b - X0b) / nb; vmin3, vmax3 = -20, 140; y2 = lambda v: Y1b - (Y1b - Y0b) * (v - vmin3) / (vmax3 - vmin3)
 g2.append(f'<text x="{X0b}" y="17" class="gtit">Conversão em caixa por fase, %</text><text x="{X0b}" y="32" class="gsub">caixa operacional (release) ÷ lucro bruto (dourado) e ÷ lucro líquido (cinza); 2027-31 pelo modelo da projeção; 2017-19 ÷ lucro líquido fora da escala (941%)</text>')   # 25/09/26: Y1b 200 → 168 (viewBox 232 → 200) e subtítulo numa linha; slide a 808px

@@ -27,7 +27,7 @@ def dre(key):
         for k in ("sga", "outras", "fin", "equiv", "ir_corr", "ir_dif", "minor"): r[k] = PR[k] * rec
         r["ll"] = r["lb"] + sum(r[k] for k in ("sga", "outras", "fin", "equiv", "ir_corr", "ir_dif", "minor")); r["caixa"] = p["caixa"]; out[y] = r
     return out
-SC = [("ltm", "+5% s/ LTM · permuta"), ("ltm|caixa", "+5% s/ LTM · terreno em caixa"), ("2025", "+5% s/ 2025 · permuta"), ("2025|caixa", "+5% s/ 2025 · terreno em caixa"), ("corte", "corte 30% · permuta"), ("corte|caixa", "corte 30% · terreno em caixa"), ("ltm+30", "LTM, Vivaz +30 pp · permuta"), ("ltm+30|caixa", "LTM, Vivaz +30 pp · terreno em caixa")]
+SC = [("ltm", "+5% s/ LTM"), ("2025", "+5% s/ 2025"), ("lstar", "lançar o que vende (L*)"), ("ltm+30", "LTM, Vivaz +30 pp")]
 VAL = {}
 for key, lab in SC:
     d = dre(key); pv = sum(d[y]["caixa"] / (1 + KE) ** (i + 1) for i, y in enumerate(YS)); tv = d[2031]["caixa"] * (1 + G) / (KE - G); pvtv = tv / (1 + KE) ** 5
@@ -49,12 +49,12 @@ g.append(f'<line x1="{X0}" y1="{Y1}" x2="{X1}" y2="{Y1}" stroke="var(--baseline)
 ox = 440; bx0, bx1 = ox + 44, 1060 - 20; items = [(k, VAL[k]) for k, _ in SC]; nb = len(items); gb = (bx1 - bx0) / nb; vmx = 60; yb = lambda v: Y1 - (Y1 - Y0) * v / vmx
 g.append(f'<text x="{bx0}" y="17" class="gtit">VPL por ação por cenário, R$</text><text x="{bx0}" y="32" class="gsub">fluxo 2027-31 + perpetuidade (g {fmt(100*G)}%), Ke {fmt(100*KE)}%, menos dívida líquida; tracejado = preço</text>')
 for tv_ in (0, 20, 40, 60): g.append(f'<line x1="{bx0}" y1="{yb(tv_):.1f}" x2="{bx1}" y2="{yb(tv_):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{bx0-5}" y="{yb(tv_)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{tv_}</text>')
-SH = {"ltm": "+5% LTM", "ltm|caixa": "+5% LTM", "2025": "+5% 2025", "2025|caixa": "+5% 2025", "corte": "corte 30%", "corte|caixa": "corte 30%", "ltm+30": "Vivaz +30", "ltm+30|caixa": "Vivaz +30"}
+SH = {"ltm": "+5% s/ LTM", "2025": "+5% s/ 2025", "lstar": "lançar o que vende", "ltm+30": "LTM, Vivaz +30 pp"}
 for i, (k, v) in enumerate(items):
-    x = bx0 + gb * i + gb * 0.15; w = gb * 0.7; col = S3 if "caixa" not in k else S1
+    x = bx0 + gb * i + gb * 0.15; w = gb * 0.7; col = S3
     yt = yb(max(v["ps"], 0)); inside = (yt - 13) < (yb(PX) + 2)   # 25/09/26: rótulo colidia com o tracejado do preço -> dentro da barra, em branco, quando encostaria na linha
     g.append(f'<rect x="{x:.1f}" y="{yt:.1f}" width="{w:.1f}" height="{abs(yt - yb(0)):.1f}" fill="{col}"/>' + (f'<text x="{x+w/2:.1f}" y="{yt+12:.1f}" text-anchor="middle" class="fw-s2" style="fill:#fff;font-weight:700;font-size:11px">{fmt(v["ps"], 1)}</text>' if inside else f'<text x="{x+w/2:.1f}" y="{yt-4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(v["ps"], 1)}</text>'))
-    g.append(f'<text x="{x+w/2:.1f}" y="{Y1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{SH[k]}</text><text x="{x+w/2:.1f}" y="{Y1+24}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{"permuta" if "caixa" not in k else "terr. caixa"}</text>')
+    g.append(f'<text x="{x+w/2:.1f}" y="{Y1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{SH[k]}</text>')
 g.append(f'<line x1="{bx0}" y1="{yb(PX):.1f}" x2="{bx1}" y2="{yb(PX):.1f}" stroke="{I2}" stroke-dasharray="4 3"/><text x="{bx0+3}" y="{yb(PX)-4:.1f}" class="fw-s2" fill="{I2}">preço {fmt(PX, 2)}</text>')
 g.append(f'<line x1="{bx0}" y1="{Y1}" x2="{bx1}" y2="{Y1}" stroke="var(--baseline)"/>')
 svg = '<svg viewBox="0 0 1060 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
@@ -77,9 +77,14 @@ num = {"ke": 100 * KE, "g": 100 * G, "px": PX, "nsh": NSH, "dl": DL, "pl": PL, "
        "ll27": D[2027]["ll"], "ll29": D[2029]["ll"], "ll31": D[2031]["ll"], "lpa27": D[2027]["ll"] / NSH, "lpa29": D[2029]["ll"] / NSH, "pe27": BASE["pe27"], "pe29": BASE["pe29"], "ll_lb_27": 100 * D[2027]["ll"] / D[2027]["lb"], "conv_ll_27_31": 100 * sum(D[y]["caixa"] for y in YS) / sum(D[y]["ll"] for y in YS)}
 def ps_at(key, ke, g=G):
     d = VAL[key]["dre"]; pv = sum(d[y]["caixa"] / (1 + ke) ** (i + 1) for i, y in enumerate(YS)); tv = d[2031]["caixa"] * (1 + g) / (ke - g); return (pv + tv / (1 + ke) ** 5 - DL) / NSH
-num["sens"] = {f"{key}@{int(100*ke)}": ps_at(key, ke) for key in ("ltm", "ltm|caixa", "corte") for ke in (0.13, 0.15, 0.17, 0.19)}
+num["sens"] = {f"{key}@{int(100*ke)}": ps_at(key, ke) for key in ("ltm", "lstar") for ke in (0.13, 0.15, 0.17, 0.19)}
+KES = [0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20]; GS = [0.02, 0.03, 0.04, 0.05, 0.06]
+grid = {ke: {g_: ps_at("ltm", ke, g_) for g_ in GS} for ke in KES}
+table3 = ('<table class="tl compact" style="margin-top:4px;width:100%;font-size:9px"><thead><tr><th style="text-align:left;' + PAD + '">R$/ação, +5% s/ LTM: Ke ↓ · g →</th>' + "".join(f'<th style="text-align:right;{PAD}">{fmt(100*g_)}%</th>' for g_ in GS) + '</tr></thead><tbody>'
+          + "".join(f'<tr><td style="text-align:left;{PAD}{";font-weight:700" if abs(ke - KE) < 1e-9 else ""}">Ke {fmt(100*ke)}%</td>' + "".join(f'<td style="text-align:right;{PAD}{";font-weight:700;color:var(--s3)" if abs(ke - KE) < 1e-9 and abs(g_ - G) < 1e-9 else ""}">{fmt(grid[ke][g_], 1)}</td>' for g_ in GS) + '</tr>' for ke in KES) + '</tbody></table>')
+num["sens_grid"] = {f"{int(100*ke)}|{int(100*g_)}": v for ke, d in grid.items() for g_, v in d.items()}
 num["sens_g"] = {f"ltm@g{int(100*g)}": ps_at("ltm", KE, g) for g in (0.02, 0.04, 0.06)}
 for k, _ in SC:
     kk = k.replace("|caixa", "_tc").replace("+", "p"); num[f"ps_{kk}"] = VAL[k]["ps"]; num[f"vs_{kk}"] = 100 * VAL[k]["vs_px"]; num[f"eq_{kk}"] = VAL[k]["eq"]; num[f"pvtv_{kk}"] = VAL[k]["pvtv"]; num[f"pv_{kk}"] = VAL[k]["pv"]
-json.dump({"svg": svg, "table": table, "table2": table2, "num": num, "val": {k: {kk: (vv if not isinstance(vv, dict) else {str(y): r for y, r in vv.items()}) for kk, vv in v.items()} for k, v in VAL.items()}}, io.open(os.path.join(here, "_valuation_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
+json.dump({"svg": svg, "table": table, "table2": table2, "table3": table3, "num": num, "val": {k: {kk: (vv if not isinstance(vv, dict) else {str(y): r for y, r in vv.items()}) for kk, vv in v.items()} for k, v in VAL.items()}}, io.open(os.path.join(here, "_valuation_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("ok", {k: (round(v, 1) if isinstance(v, float) else v) for k, v in num.items() if k != "pr"}); print("premissas %:", {k: round(v, 1) for k, v in num["pr"].items()})
