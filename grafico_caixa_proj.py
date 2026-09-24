@@ -41,12 +41,12 @@ G = 0.05; YS = list(range(2027, 2032))
 def path(kind):
     L = dict(LY)
     if kind == "ltm":   # +5% a partir do LTM 2T26
-        for y in YS: L[y] = L[2026] * (1 + G) ** (y - 2026)
+        for y in range(2027, 2033): L[y] = L[2026] * (1 + G) ** (y - 2026)
     elif kind == "2025":   # +5% a partir de 2025 (2026 = LTM já observado; 2027 = 2025 × 1,05²)
-        for y in YS: L[y] = LY[2025] * (1 + G) ** (y - 2025)
+        for y in range(2027, 2033): L[y] = LY[2025] * (1 + G) ** (y - 2025)
     elif kind == "corte":   # −30% em 2027 (entre o −15% do Itaú BBA para 2026 e o −50% de 2015-16), 2028 estável, depois +5%
         L[2027] = L[2026] * 0.70; L[2028] = L[2027]
-        for y in range(2029, 2032): L[y] = L[y - 1] * (1 + G)
+        for y in range(2029, 2033): L[y] = L[y - 1] * (1 + G)
     return L
 SC = {"ltm": ("+5% sobre o LTM", "ltm"), "2025": ("+5% sobre 2025", "2025"), "corte": ("−30% em 2027, depois +5%", "corte")}
 LP = {k: path(v[1]) for k, v in SC.items()}
@@ -67,6 +67,9 @@ LABEL = {"lucro_bruto": "lucro bruto", "d_cr": "Δ contas a receber", "d_est_ex"
          "fin_cx": "ajuste caixa do financeiro", "outras_dre": "outras receitas/despesas", "div_jv": "dividendos de JVs", "invest": "investimentos (JVs, SPEs, imobilizado)", "minor": "minoritários"}
 SHORT = {"lucro_bruto": "lucro bruto", "d_cr": "recebível", "d_est_ex": "obra", "terrenos": "terrenos", "d_adiant": "adiant.", "sga": "SG&amp;A", "impostos": "IR", "fin": "fin. DRE", "fin_cx": "fin. caixa", "outras_dre": "outras", "div_jv": "div. JVs", "invest": "invest.", "minor": "minor."}
 LAND, CASH = 0.18, 0.50   # terreno do alto padrão ~18% do VGV (slide de premissas do MAP); regime "caixa": metade paga no ano do lançamento; 2013 (compra em caixa) a linha foi −12% dos lançamentos, 2019-22 (permuta/prazo) −1% a −2%
+# cronograma de terrenos a pagar (nota do ITR 2T26, R$ mi): circulante 1.208 (até jun/27), 650 (12-24 m), 591 (24-36), 647 (36-48), 73 (48-60), 18 além; metade de cada balde cai em cada ano-calendário
+SCHED = {2027: 0.5 * 1207.658 + 0.5 * 649.862, 2028: 0.5 * 649.862 + 0.5 * 591.17, 2029: 0.5 * 591.17 + 0.5 * 646.569, 2030: 0.5 * 646.569 + 0.5 * 73.305, 2031: 0.5 * 73.305 + 18.376}
+def NL(y, L, dpp): return LAND * (1 - (MX[2026] + dpp)) * L[y + 1] if y + 1 in L and y >= 2027 else 0.0   # terreno comprado em t para os lançamentos de t+1 (landbank de um ano)
 def project(sk, dpp=0.0, land="permuta"):
     L = LP[sk]; RECY = {y: FREC * lagL(y, L) for y in YS}; CRP = cr_path(RECY, dpp); R = {}; e_prev = est("2T26")
     for y in YS:
@@ -75,7 +78,7 @@ def project(sk, dpp=0.0, land="permuta"):
         for k in ORDER:
             if k == "d_cr": r[k] = CRP[y]["d_cr"]
             elif k == "d_est_ex": r[k] = -(e_now - e_prev)
-            elif k == "terrenos": r[k] = 0.0 if land == "permuta" else LAND * (1 - CRP[y]["share"]) * rec - LAND * (1 - (MX[2026] + dpp)) * (CASH * L[y] + (1 - CASH) * 0.5 * (L[y - 1] + L[y - 2]))   # em caixa: (+) custo do terreno reconhecido no CPV (18% da receita MAP) (−) caixa pago: metade no lançamento, metade em dois anos
+            elif k == "terrenos": r[k] = 0.0 if land == "permuta" else LAND * (1 - CRP[y]["share"]) * rec - (SCHED.get(y, 0.0) + CASH * NL(y, L, dpp) + (1 - CASH) * NL(y - 2, L, dpp))   # em caixa: (+) terreno no CPV (18% da receita MAP) (−) parcelas da nota do ITR sem reposição a prazo, (−) terreno dos lançamentos de t+1 metade à vista, metade em dois anos
             else: r[k] = PR[k] * rec
         r["caixa"] = sum(r[k] for k in ORDER); r["dias"] = CRP[y]["dias"]; r["estoque"] = e_now; R[y] = r; e_prev = e_now
     return R
@@ -134,7 +137,7 @@ YT = (2027, 2029, 2031); rows = []
 rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">lançamentos, R$ mi (VGV 100%)</td><td style="text-align:right;{PAD};color:var(--muted)">+5% s/ LTM</td>{c(LY[2026])}' + "".join(c(PJ["ltm"][y]["lanc"]) for y in YT) + '</tr>')
 rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">receita, R$ mi</td><td style="text-align:right;{PAD};color:var(--muted)">{fmt(100 * FREC, 0)}% × lançamentos t−1..t−4 (15/35/35/15)</td>{c(rec0)}' + "".join(c(PJ["ltm"][y]["receita"]) for y in YT) + '</tr>')
 for k in ORDER:
-    prem = {"d_cr": "dias: Vivaz 160, resto " + fmt(N["dias_map"]) + ", mix 32%", "d_est_ex": f"estoque = {fmt(100 * BETA, 0)}% da média 3a de lançamentos", "terrenos": "permuta = 0; em caixa = −18% × 50% × VGV MAP lançado"}.get(k, f"{fmt(100 * PR.get(k, 0), 1)}% da receita")
+    prem = {"d_cr": "dias: Vivaz 160, resto " + fmt(N["dias_map"]) + ", mix 32%", "d_est_ex": f"estoque = {fmt(100 * BETA, 0)}% da média 3a de lançamentos", "terrenos": "permuta = 0; em caixa = CPV − parcelas da nota − terreno de t+1 (½ à vista)"}.get(k, f"{fmt(100 * PR.get(k, 0), 1)}% da receita")
     rows.append(f'<tr><td style="text-align:left;{PAD}">{LABEL[k]}</td><td style="text-align:right;{PAD};color:var(--muted)">{prem}</td>{c(P[LTM][k])}' + "".join(c(PJ["ltm"][y][k]) for y in YT) + '</tr>')
 rows.append(f'<tr style="font-weight:700"><td style="text-align:left;{PAD}">= caixa operacional, +5% s/ LTM</td><td></td>{c(P[LTM]["cia_oper"])}' + "".join(c(PJ["ltm"][y]["caixa"]) for y in YT) + '</tr>')
 for k, lab in (("2025", "caixa · +5% sobre 2025"), ("corte", "caixa · corte de 30% em 2027, depois +5%"), ("ltm+30", "caixa · +5% s/ LTM com Vivaz +30 pp")):
