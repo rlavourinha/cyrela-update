@@ -106,5 +106,42 @@ num = {"u": U, "lb": R["lucro_bruto"], "cr": -R["d_cr"], "obra": -R["d_est_ex"],
        "ll": R["ll"], "conv_lb": 100 * R["cia_oper"] / R["lucro_bruto"], "conv_ll": 100 * R["cia_oper"] / R["ll"], "err_lb": 100 * R["outros"] / R["lucro_bruto"], "err_ll": 100 * R["outros"] / R["ll"],
        "err_lb_abs_med": sum(abs(PER[a]["outros"]) / PER[a]["lucro_bruto"] for a in anos if a[:2] == "20" and int(a[:4]) >= 2015) / len([a for a in anos if a[:2] == "20" and int(a[:4]) >= 2015]) * 100, "err_ll_abs_med": sum(abs(PER[a]["outros"]) / abs(PER[a]["ll"]) for a in anos if a[:2] == "20" and int(a[:4]) >= 2019) / len([a for a in anos if a[:2] == "20" and int(a[:4]) >= 2019]) * 100,   # desde 2019: em 2017-18 o lucro líquido foi ~0 e a razão explode
        "conv_lb_23_25": [100 * PER[a]["cia_oper"] / PER[a]["lucro_bruto"] for a in ("2023", "2024", "2025")], "conv_ll_23_25": [100 * PER[a]["cia_oper"] / PER[a]["ll"] for a in ("2023", "2024", "2025")]}
-json.dump({"svg": svg, "table": table, "num": num, "per": PER, "lab": LAB}, io.open(os.path.join(here, "_caixa_reconc_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
+# ---- 24/09/26: agregados por fase da companhia e total 2013-25, com conversão em caixa e erro; conversão projetada 2027-31 (slide seguinte)
+PH = [("2013-16 · colheita do legado", ["2013", "2014", "2015", "2016"]), ("2017-19 · reconstrução", ["2017", "2018", "2019"]), ("2020-22 · IPOs e retomada", ["2020", "2021", "2022"]), ("2023-25 · expansão", ["2023", "2024", "2025"]), ("2013-25 · total", [a for a in anos if a[:2] == "20"]), (U, [U])]
+def agg(ys, k): return sum(PER[a][k] for a in ys)
+AGG = {lab: {k: agg(ys, k) for k in ("lucro_bruto", "d_cr", "d_est_ex", "terrenos", "sga", "caixa_rec", "cia_oper", "outros", "ll")} for lab, ys in PH}
+for lab in AGG:
+    d = AGG[lab]; d["conv_lb"] = 100 * d["cia_oper"] / d["lucro_bruto"]; d["conv_ll"] = 100 * d["cia_oper"] / d["ll"]; d["err_lb"] = 100 * d["outros"] / d["lucro_bruto"]; d["err_ll"] = 100 * d["outros"] / d["ll"]
+FWD = {}
+try:
+    PJ = J("_caixa_proj_frag.json")["proj"]; ll_lb = R["ll"] / R["lucro_bruto"]   # lucro líquido projetado = lucro bruto × (LL ÷ LB do LTM); a projeção não modela o LL
+    for key, lab in (("ltm", "2027-31 · +5%, permuta"), ("ltm|caixa", "2027-31 · +5%, terreno em caixa"), ("corte", "2027-31 · corte 30%, permuta")):
+        d = PJ[key]; lb = sum(d[str(y)]["lucro_bruto"] for y in range(2027, 2032)); cx = sum(d[str(y)]["caixa"] for y in range(2027, 2032))
+        FWD[lab] = {"lucro_bruto": lb, "cia_oper": cx, "ll": lb * ll_lb, "conv_lb": 100 * cx / lb, "conv_ll": 100 * cx / (lb * ll_lb), "d_cr": sum(d[str(y)]["d_cr"] for y in range(2027, 2032)), "d_est_ex": sum(d[str(y)]["d_est_ex"] for y in range(2027, 2032)), "terrenos": sum(d[str(y)]["terrenos"] for y in range(2027, 2032)), "sga": sum(d[str(y)]["sga"] for y in range(2027, 2032))}
+except Exception as e: print("sem projeção:", e)
+COLS = list(AGG.items()) + list(FWD.items())
+def cell2(d, k, pct=False):
+    v = d.get(k)
+    return f'<td style="text-align:right">{"—" if v is None else (fmt(v, 0) + "%" if pct else fmt(v))}</td>'
+rows2 = [("lucro bruto", "lucro_bruto", False), ("Δ contas a receber", "d_cr", False), ("Δ estoque de obra", "d_est_ex", False), ("terrenos", "terrenos", False), ("despesas comerciais e G&A", "sga", False), ("= caixa reconciliado", "caixa_rec", False), ("geração de caixa (release; projeção: modelo)", "cia_oper", False), ("outros = release − reconciliado", "outros", False), ("lucro líquido (projeção: LB × LL/LB do LTM)", "ll", False),
+         ("conversão: caixa ÷ lucro bruto", "conv_lb", True), ("conversão: caixa ÷ lucro líquido", "conv_ll", True), ("erro: outros ÷ lucro bruto", "err_lb", True), ("erro: outros ÷ lucro líquido", "err_ll", True)]
+table2 = ('<table class="tl compact" style="width:100%;margin-top:4px;font-size:9.5px"><thead><tr><th style="text-align:left">R$ mi, somas por fase</th>' + "".join(f'<th style="text-align:right{";border-left:1px solid var(--grid)" if lab.startswith("2027") and i == len(AGG) else ""}">{lab}</th>' for i, (lab, _) in enumerate(COLS)) + '</tr></thead><tbody>'
+          + "".join(f'<tr style="{"font-weight:700;color:var(--s3)" if k.startswith("conv") else ("color:var(--muted)" if k.startswith("err") else ("font-weight:700" if k in ("cia_oper", "lucro_bruto") else ""))}"><td>{l}</td>' + "".join(cell2(d, k, pct) for _, d in COLS) + '</tr>' for l, k, pct in rows2) + '</tbody></table>')
+num.update({"fase": {lab: {k: v for k, v in d.items()} for lab, d in AGG.items()}, "fwd": FWD, "conv_lb_tot": AGG["2013-25 · total"]["conv_lb"], "conv_ll_tot": AGG["2013-25 · total"]["conv_ll"], "conv_lb_exp": AGG["2023-25 · expansão"]["conv_lb"], "conv_ll_exp": AGG["2023-25 · expansão"]["conv_ll"],
+            "conv_lb_col": AGG["2013-16 · colheita do legado"]["conv_lb"], "conv_lb_rec": AGG["2017-19 · reconstrução"]["conv_lb"], "conv_lb_ipo": AGG["2020-22 · IPOs e retomada"]["conv_lb"],
+            "fwd_lb_perm": FWD.get("2027-31 · +5%, permuta", {}).get("conv_lb"), "fwd_ll_perm": FWD.get("2027-31 · +5%, permuta", {}).get("conv_ll"), "fwd_lb_tc": FWD.get("2027-31 · +5%, terreno em caixa", {}).get("conv_lb"), "fwd_ll_tc": FWD.get("2027-31 · +5%, terreno em caixa", {}).get("conv_ll"), "fwd_lb_corte": FWD.get("2027-31 · corte 30%, permuta", {}).get("conv_lb")})
+# svg2: barras da conversão caixa ÷ lucro bruto e ÷ lucro líquido por fase, LTM e projeção 2027-31
+g2 = []; X0b, X1b, Y0b, Y1b = 60, 1040, 44, 200; items2 = COLS; nb = len(items2); gw2 = (X1b - X0b) / nb; vmin3, vmax3 = -20, 140; y2 = lambda v: Y1b - (Y1b - Y0b) * (v - vmin3) / (vmax3 - vmin3)
+g2.append(f'<text x="{X0b}" y="17" class="gtit">Conversão em caixa por fase, %</text><text x="{X0b}" y="32" class="gsub">geração de caixa operacional (release) ÷ lucro bruto (dourado) e ÷ lucro líquido (cinza); à direita, 2027-31 pelo modelo da projeção de caixa; 2017-19 ÷ lucro líquido fora da escala (941%)</text>')
+for tv in (0, 40, 80, 120): g2.append(f'<line x1="{X0b}" y1="{y2(tv):.1f}" x2="{X1b}" y2="{y2(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0b-6}" y="{y2(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{tv}%</text>')
+for i, (lab, d) in enumerate(items2):
+    x = X0b + gw2 * i; fwd = lab.startswith("2027")
+    for j, (k, col) in enumerate((("conv_lb", S3), ("conv_ll", MU))):
+        v = min(max(d[k], vmin3), vmax3); xx = x + gw2 * (0.12 + 0.4 * j); w = gw2 * 0.36
+        g2.append(f'<rect x="{xx:.1f}" y="{min(y2(v), y2(0)):.1f}" width="{w:.1f}" height="{abs(y2(v) - y2(0)):.1f}" fill="{col}" fill-opacity="{.55 if fwd else .9}"{" stroke=\"" + col + "\" stroke-dasharray=\"3 2\"" if fwd else ""}/><text x="{xx + w/2:.1f}" y="{min(y2(v), y2(0)) - 4:.1f}" text-anchor="middle" class="axq" fill="{I2}" style="font-size:9px">{fmt(d[k], 0)}%</text>')
+    short = lab.replace(" · ", chr(10)).split(chr(10))
+    for j, part in enumerate(short): g2.append(f'<text x="{x + gw2/2:.1f}" y="{Y1b + 13 + 11*j}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{part}</text>')
+g2.append(f'<line x1="{X0b}" y1="{y2(0):.1f}" x2="{X1b}" y2="{y2(0):.1f}" stroke="var(--baseline)"/>')
+svg2 = '<svg viewBox="0 0 1060 232" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g2) + "</svg>"
+json.dump({"svg": svg, "svg2": svg2, "table": table, "table2": table2, "num": num, "per": PER, "lab": LAB}, io.open(os.path.join(here, "_caixa_reconc_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("ok", {k: (round(v) if isinstance(v, float) else v) for k, v in num.items() if k != "outros_ano"}); print({a: round(v) for a, v in num["outros_ano"].items()})
