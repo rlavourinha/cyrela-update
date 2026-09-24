@@ -35,7 +35,7 @@ for key, lab in SC:
 BASE = VAL["ltm"]; D = BASE["dre"]
 # ---- svg: painel 1 DRE projetada (base) barras LB e LL; painel 2 VPL por ação por cenário × preço
 g = []
-X0, X1, Y0, Y1 = 44, 400, 40, 161; ymx = 6000; xg = (X1 - X0) / (len(YS) + 1); yv = lambda v: Y1 - (Y1 - Y0) * v / ymx   # 25/09/26: 44/176 -> 40/161 (svg 205 -> 190) sem clipar os rótulos de 2 linhas do eixo x
+X0, X1, Y0, Y1 = 44, 400, 40, 146; ymx = 6000; xg = (X1 - X0) / (len(YS) + 1); yv = lambda v: Y1 - (Y1 - Y0) * v / ymx   # 25/09/26: 44/176 -> 40/161 (svg 205 -> 190); 24/09/26 v4: 161 -> 146 (svg 175) para caber a grade Ke × g; legenda em Y1+26 = 172
 g.append(f'<text x="{X0}" y="17" class="gtit">Lucro bruto e lucro líquido projetados, R$ mi</text><text x="{X0}" y="32" class="gsub">+5% s/ LTM; linhas abaixo do lucro bruto em % da receita (2023-LTM)</text>')
 for tv_ in (0, 2000, 4000, 6000): g.append(f'<line x1="{X0}" y1="{yv(tv_):.1f}" x2="{X1}" y2="{yv(tv_):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{yv(tv_)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(tv_)}</text>')
 cols = [("LTM", LTM["lb"], LTM["ll"])] + [(str(y), D[y]["lb"], D[y]["ll"]) for y in YS]
@@ -57,9 +57,9 @@ for i, (k, v) in enumerate(items):
     g.append(f'<text x="{x+w/2:.1f}" y="{Y1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{SH[k]}</text>')
 g.append(f'<line x1="{bx0}" y1="{yb(PX):.1f}" x2="{bx1}" y2="{yb(PX):.1f}" stroke="{I2}" stroke-dasharray="4 3"/><text x="{bx0+3}" y="{yb(PX)-4:.1f}" class="fw-s2" fill="{I2}">preço {fmt(PX, 2)}</text>')
 g.append(f'<line x1="{bx0}" y1="{Y1}" x2="{bx1}" y2="{Y1}" stroke="var(--baseline)"/>')
-svg = '<svg viewBox="0 0 1060 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+svg = '<svg viewBox="0 0 1060 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela 1: DRE projetada (base) + caixa; tabela 2: VPL por cenário
-PAD = "padding:0 8px"
+PAD = "padding:0 8px;font-size:9px"   # 24/09/26: 9px na célula (o .compact fixa 10px no td; o font-size da <table> não vale) — três tabelas, 27 linhas
 def c(v, d=0, s_=""): return f'<td style="text-align:right;{PAD}">{fmt(v, d)}{s_}</td>'
 LAB = [("rec", "receita líquida", None), ("lb", "lucro bruto (modelo de caixa)", None), ("sga", "despesas comerciais e administrativas", "sga"), ("outras", "outras receitas/despesas", "outras"), ("fin", "resultado financeiro", "fin"), ("equiv", "equivalência patrimonial (Cury, Lavvi, P&P)", "equiv"), ("ir_corr", "IR/CS corrente", "ir_corr"), ("ir_dif", "IR/CS diferido", "ir_dif"), ("minor", "minoritários", "minor"), ("ll", "= lucro líquido", None), ("caixa", "geração de caixa operacional (modelo)", None)]
 rows = []
@@ -80,7 +80,7 @@ def ps_at(key, ke, g=G):
 num["sens"] = {f"{key}@{int(100*ke)}": ps_at(key, ke) for key in ("ltm", "lstar") for ke in (0.13, 0.15, 0.17, 0.19)}
 KES = [0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20]; GS = [0.02, 0.03, 0.04, 0.05, 0.06]
 grid = {ke: {g_: ps_at("ltm", ke, g_) for g_ in GS} for ke in KES}
-table3 = ('<table class="tl compact" style="margin-top:4px;width:100%;font-size:9px"><thead><tr><th style="text-align:left;' + PAD + '">R$/ação, +5% s/ LTM: Ke ↓ · g →</th>' + "".join(f'<th style="text-align:right;{PAD}">{fmt(100*g_)}%</th>' for g_ in GS) + '</tr></thead><tbody>'
+table3 = ('<table class="tl compact" style="margin-top:2px;width:100%;font-size:9px"><thead><tr><th style="text-align:left;' + PAD + '">R$/ação, +5% s/ LTM: Ke ↓ · g →</th>' + "".join(f'<th style="text-align:right;{PAD}">{fmt(100*g_)}%</th>' for g_ in GS) + '</tr></thead><tbody>'
           + "".join(f'<tr><td style="text-align:left;{PAD}{";font-weight:700" if abs(ke - KE) < 1e-9 else ""}">Ke {fmt(100*ke)}%</td>' + "".join(f'<td style="text-align:right;{PAD}{";font-weight:700;color:var(--s3)" if abs(ke - KE) < 1e-9 and abs(g_ - G) < 1e-9 else ""}">{fmt(grid[ke][g_], 1)}</td>' for g_ in GS) + '</tr>' for ke in KES) + '</tbody></table>')
 num["sens_grid"] = {f"{int(100*ke)}|{int(100*g_)}": v for ke, d in grid.items() for g_, v in d.items()}
 num["sens_g"] = {f"ltm@g{int(100*g)}": ps_at("ltm", KE, g) for g in (0.02, 0.04, 0.06)}
