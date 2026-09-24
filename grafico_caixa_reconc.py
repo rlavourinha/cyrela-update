@@ -45,6 +45,10 @@ def bloco(q0, qs):
     r["sga"] = -(flow(qs, "vendas") + flow(qs, "adm")); r["impostos"] = -flow(qs, "ir_corr"); r["fin"] = flow(qs, "fin"); r["fin_cx"] = flow(qs, "dfc_varmon") + flow(qs, "dfc_outitens")
     r["outras_dre"] = flow(qs, "outras_rec") - flow(qs, "outras_desp"); r["ipo"] = -1335.0 if "3T20" in qs else 0.0   # marcação a valor justo dos IPOs de Cury, P&P e Lavvi (3T20), sem caixa: ledger _one_offs.json
     r["div_jv"] = flow(qs, "dfc_divrec"); r["invest"] = flow(qs, "dfc_capex"); r["minor"] = flow(qs, "dfc_outfin")
+    # 24/09/26: torre Cyrela Corporate by Pininfarina reclassificada de estoque para imobilizado em andamento em 31/12/25 (nota de imobilizado da DFP 2025:
+    # transferência de R$ 431,0 mi). Sem caixa: o estoque cai (parece caixa) e a DFC mostra a mesma cifra em "compra de ativo permanente"; as duas
+    # linhas se anulam no total, mas distorcem a leitura. Tira-se a transferência das duas: obra volta a mostrar o consumo real, investimentos o caixa real.
+    if "4T25" in qs: r["d_est_ex"] -= 431.016; r["invest"] += 431.016
     r["caixa_rec"] = sum(r[k] for k in ("lucro_bruto", "d_cr", "d_prov", "d_est_ex", "terrenos", "d_adiant", "sga", "impostos", "fin", "fin_cx", "outras_dre", "ipo", "div_jv", "invest", "minor"))
     r["cia_oper"] = cia(qs); r["cia_ger"] = sum(G["ger"].get(q, 0) for q in qs); r["part"] = sum(-G["part"].get(q, 0) for q in qs)
     r["d_dl"] = -(dl(qs[-1]) - dl(q0)); r["div_pagos"] = flow(qs, "dfc_divpag"); r["ll"] = flow(qs, "ll"); r["outros"] = r["cia_oper"] - r["caixa_rec"]
