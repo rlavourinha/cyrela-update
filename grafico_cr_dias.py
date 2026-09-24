@@ -62,7 +62,7 @@ lib_30 = cy["cr"] - mix(0.30); lib_40 = cy["cr"] - mix(0.40)
 nq = sorted(NT, key=ORD)[-1]; concl = NT[nq]["concluidos"]; constr = NT[nq]["em_construcao"]
 # ---- svg: três painéis
 def panel(ox, w, title, sub, series, ymax, step, xs, xlab, unit="%", rm=70):   # rm: margem direita para os rótulos de fim de linha
-    h = 250; X0, X1, Y0, Y1 = ox + 40, ox + w - rm, 44, h - 22
+    h = 215; X0, X1, Y0, Y1 = ox + 40, ox + w - rm, 44, h - 22   # 23/09/26: 250 → 215 (slide a 766px com 4 pares de baixa renda na tabela; alvo ≤ 710)
     x = lambda i: X0 + (X1 - X0) * i / (len(xs) - 1); y = lambda v: Y1 - (Y1 - Y0) * v / ymax
     g = [f'<text x="{ox+40}" y="17" class="gtit">{title}</text><text x="{ox+40}" y="32" class="gsub">{sub}</text>']
     t = 0
@@ -92,7 +92,7 @@ xs = [q for q in QC if q in CY]
 g = [panel(0, 360, "Dias de recebível", "contas a receber ÷ receita 12 m × 365", [(D_CY, S1, "Cyrela", 2.6, ""), (D_CU, S3, "Cury", 2.4, ""), (D_LV, S2, "Lavvi", 1.8, "5 3"), (D_TR, MU, "Trisul", 1.8, "5 3")], 400, 100, xs, xl, "", rm=82),   # 23/09/26: rm 82 (a 70 "Cyrela 241" terminava em 357 e o "250%" do painel 2 começa em 362)
      panel(360, 330, "Contas a receber ÷ PL, %", "balanço consolidado; Cury: PL total", [(P_CY, S1, "Cyrela", 2.6, ""), (P_CU, S3, "Cury", 2.4, "")], 250, 50, xs, xl)]   # Cury acima de 100%: PL pequeno
 # painel 3: barras dos cenários (margens de 28/20 e barras de 40: passo de ~70 entre rótulos, "concluídos"/"MCMV 30%" sem encostar)
-ox, w = 690, 370; X0, XR, Y1, Y0 = ox + 28, ox + w - 20, 228, 60
+ox, w = 690, 370; X0, XR, Y1, Y0 = ox + 28, ox + w - 20, 193, 54   # 23/09/26: 228/60 → 193/54 (altura 215)
 bars = [("hoje", cy["cr"], MU), ("concluídos", concl, S2), ("MCMV 30%", lib_30, S3), ("MCMV 40%", lib_40, S3), ("dias Cury", lib_a, S1)]
 ymx = 8000; yb = lambda v: Y1 - (Y1 - Y0) * v / ymx; bw = 40; gap = (XR - X0 - 5 * bw) / 4
 g.append(f'<text x="{X0}" y="17" class="gtit">Caixa que sai do recebível, R$ bi</text><text x="{X0}" y="32" class="gsub">LTM 2T26; cenários sobre os dias da Cury ({fmt(cu["dias"])})</text>')
@@ -101,12 +101,12 @@ for i, (lab, v, col) in enumerate(bars):
     x0 = X0 + i * (bw + gap); g.append(f'<rect x="{x0:.1f}" y="{yb(v):.1f}" width="{bw}" height="{Y1-yb(v):.1f}" rx="2" fill="{col}" opacity="{.9 if i else .5}"/><text x="{x0+bw/2:.1f}" y="{yb(v)-5:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(v/1000, 1)}</text>')
     g.append(f'<text x="{x0+bw/2:.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".8">{lab}</text>')
 g.append(f'<line x1="{X0}" y1="{Y1}" x2="{XR}" y2="{Y1}" stroke="var(--baseline)"/>')
-svg = '<svg viewBox="0 0 1060 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+svg = '<svg viewBox="0 0 1060 215" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela: fim de ano e último
 cols = [q for q in xs if q.startswith("4T") and int(q[2:]) >= 13] + [u]
 # 23/09/26: dias sobre a receita do trimestre × 4 (Cyrela: E[q]["rec"], R$ mi; Cury: CD[q]["rec"] / 1000), fonte normal; o indicador principal segue o de 12 m
 D4_CY = {q: 365 * CY[q]["cr"] / (4 * E[q]["rec"]) for q in CY}; D4_CU = {q: 365 * CU[q]["cr"] / (4 * CD[q]["rec"] / 1000) for q in CU}
-PAD = "padding:1px 8px"   # 23/09/26: 1px (era 2px do .compact) para as 12 linhas caberem no slide (≤ 700px)
+PAD = "padding:0 8px"   # 23/09/26: 2px do .compact → 1px (12 linhas) → 0 (16 linhas com os pares de baixa renda; borda de 1px separa as linhas)
 def cell(v, d=0, s=""): return f'<td style="text-align:right;{PAD}">{fmt(v, d) + s if v is not None else "—"}</td>'
 lines = [("Cyrela · contas a receber, R$ mi", [CY[q]["cr"] for q in cols], 0, ""), ("Cyrela · receita 12 m, R$ mi", [CY[q]["rec12"] for q in cols], 0, ""), ("Cyrela · dias", [CY[q]["dias"] for q in cols], 0, ""), ("Cyrela · dias, trimestre × 4", [D4_CY[q] for q in cols], 0, ""), ("Cyrela · recebível ÷ PL", [CY[q]["cr_pl"] for q in cols], 0, "%"),
          ("Cury · dias", [CU.get(q, {}).get("dias") for q in cols], 0, ""), ("Cury · dias, trimestre × 4", [D4_CU.get(q) for q in cols], 0, ""), ("Cury · recebível ÷ PL", [CU.get(q, {}).get("cr_pl") for q in cols], 0, "%"),
