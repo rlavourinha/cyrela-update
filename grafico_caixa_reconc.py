@@ -58,7 +58,7 @@ LAB = [("lucro_bruto", "lucro bruto (DRE)"), ("d_cr", "Δ contas a receber (bala
        ("sga", "despesas comerciais e G&A"), ("impostos", "IR/CS corrente"), ("fin", "resultado financeiro (DRE)"), ("fin_cx", "ajuste caixa do financeiro (DFC)"), ("outras_dre", "outras receitas/despesas (DRE)"), ("ipo", "marcação dos IPOs de 2020 (não caixa)"), ("div_jv", "dividendos recebidos das JVs"), ("invest", "investimentos: JVs, SPEs e imobilizado"), ("minor", "minoritários e outros financiamentos"),
        ("caixa_rec", "= caixa reconciliado"), ("cia_oper", "geração de caixa operacional (release)"), ("outros", "outros = release − reconciliado")]
 # ---- svg: (1) cascata LTM; (2) reconciliado × companhia por ano
-g = []; Y0, Y1 = 46, 226
+g = []; Y0, Y1 = 46, 176   # 25/09/26: 226 → 176 (viewBox 250 → 200); o slide passou de 880px com as 5 linhas de conversão/erro na tabela
 steps = [(k, l) for k, l in LAB if k not in ("caixa_rec", "cia_oper", "outros")]
 X0, X1 = 44, 700; n = len(steps) + 2; gw = (X1 - X0) / n; vmin, vmax = -1600, 3600; y = lambda v: Y1 - (Y1 - Y0) * (v - vmin) / (vmax - vmin)
 g.append(f'<text x="{X0}" y="17" class="gtit">Do lucro bruto ao caixa, {U}, R$ mi</text><text x="{X0}" y="32" class="gsub">cascata: verde soma, vinho subtrai; barra final = caixa reconciliado contra a geração operacional do release</text>')
@@ -71,11 +71,11 @@ for i, (k, l) in enumerate(steps):
     col = GR if v >= 0 else S1
     if k == "lucro_bruto": col = I2
     g.append(f'<rect x="{x:.1f}" y="{min(y(top), y(base)):.1f}" width="{w:.1f}" height="{abs(y(top) - y(base)):.1f}" fill="{col}" fill-opacity=".85"/><text x="{x + w/2:.1f}" y="{min(y(top), y(base)) - 4:.1f}" text-anchor="middle" class="axq" fill="{I2}">{fmt(v)}</text>')
-    g.append(f'<text x="{x + w/2:.1f}" y="{Y1 + (12 if i % 2 == 0 else 22)}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{SHORT[k]}</text>')
+    g.append(f'<text x="{x + w/2:.1f}" y="{Y1 + (11 if i % 2 == 0 else 21)}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{SHORT[k]}</text>')
     cum = top
 for j, (k, lab, col) in enumerate((("caixa_rec", "reconc.", I2), ("cia_oper", "release", S3))):
     i = len(steps) + j; v = R[k]; x = X0 + gw * i + gw * 0.12; w = gw * 0.76
-    g.append(f'<rect x="{x:.1f}" y="{min(y(v), y(0)):.1f}" width="{w:.1f}" height="{abs(y(v) - y(0)):.1f}" fill="{col}" fill-opacity=".9"/><text x="{x + w/2:.1f}" y="{min(y(v), y(0)) - 4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(v)}</text><text x="{x + w/2:.1f}" y="{Y1 + (12 if i % 2 == 0 else 22)}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{lab}</text>')
+    g.append(f'<rect x="{x:.1f}" y="{min(y(v), y(0)):.1f}" width="{w:.1f}" height="{abs(y(v) - y(0)):.1f}" fill="{col}" fill-opacity=".9"/><text x="{x + w/2:.1f}" y="{min(y(v), y(0)) - 4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(v)}</text><text x="{x + w/2:.1f}" y="{Y1 + (11 if i % 2 == 0 else 21)}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{lab}</text>')
 g.append(f'<line x1="{X0}" y1="{y(0):.1f}" x2="{X1}" y2="{y(0):.1f}" stroke="var(--baseline)"/>')
 # painel 2
 anos = list(PER); Xb0, Xb1 = 790, 1090; gb = (Xb1 - Xb0) / len(anos); vmin2, vmax2 = -600, 1800; yb = lambda v: Y1 - (Y1 - Y0) * (v - vmin2) / (vmax2 - vmin2)
@@ -86,7 +86,7 @@ for j, a in enumerate(anos):
         v = PER[a][k]; x = Xb0 + gb * j + gb * 0.1 + i * gb * 0.4; g.append(f'<rect x="{x:.1f}" y="{min(yb(v), yb(0)):.1f}" width="{gb*0.38:.1f}" height="{abs(yb(v) - yb(0)):.1f}" fill="{col}" fill-opacity="{op}"/>')
     g.append(f'<text x="{Xb0 + gb * (j + 0.5):.1f}" y="{Y1+14}" text-anchor="middle" class="axq" opacity=".75">{a[2:4] if a.startswith("20") else "LTM"}</text>')
 g.append(f'<line x1="{Xb0}" y1="{yb(0):.1f}" x2="{Xb1}" y2="{yb(0):.1f}" stroke="var(--baseline)"/>')
-svg = '<svg viewBox="0 0 1150 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+svg = '<svg viewBox="0 0 1150 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela
 table = ('<table class="tl compact" style="width:100%;margin-top:0;font-size:9.5px"><thead><tr><th style="text-align:left">R$ mi</th>' + "".join(f'<th style="text-align:right">{a}</th>' for a in anos) + '</tr></thead><tbody>'
          + "".join(f'<tr class="{"total" if k in ("lucro_bruto", "caixa_rec", "cia_oper") else ""}"><td>{l}</td>' + "".join(f'<td style="text-align:right">{fmt(PER[a][k])}</td>' for a in anos) + "</tr>" for k, l in LAB)
@@ -95,6 +95,8 @@ table = ('<table class="tl compact" style="width:100%;margin-top:0;font-size:9.5
          + "".join(f'<tr style="{sty}"><td>{l}</td>' + "".join(f'<td style="text-align:right">{fmt(100 * PER[a]["cia_oper" if "conv" in k else "outros"] / PER[a][d], 0)}%</td>' for a in anos) + '</tr>'
                    for k, l, d, sty in (("conv_lb", "conversão em caixa: release ÷ lucro bruto", "lucro_bruto", "font-weight:700;color:var(--s3)"), ("conv_ll", "conversão em caixa: release ÷ lucro líquido", "ll", "font-weight:700;color:var(--s3)"), ("err_lb", "erro: outros ÷ lucro bruto", "lucro_bruto", "color:var(--muted)"), ("err_ll", "erro: outros ÷ lucro líquido", "ll", "color:var(--muted)")))
          + "</tbody></table>")
+PAD = "padding:0 8px;font-size:9px"   # 25/09/26: 23 linhas a 9px e sem padding vertical na célula (o .compact fixa 10px/2px no td; o font-size da <table> não vale)
+table = table.replace('<td>', f'<td style="{PAD}">').replace('style="text-align:right"', f'style="text-align:right;{PAD}"').replace('style="text-align:left"', f'style="text-align:left;{PAD}"')
 num = {"u": U, "lb": R["lucro_bruto"], "cr": -R["d_cr"], "obra": -R["d_est_ex"], "terr": R["terrenos"], "sga": -R["sga"], "rec": R["caixa_rec"], "cia": R["cia_oper"], "outros": R["outros"], "invest": -R["invest"], "minor": -R["minor"], "fin_cx": R["fin_cx"],
        "outros_ano": {a: PER[a]["outros"] for a in anos}, "outros_abs_med": sum(abs(PER[a]["outros"]) for a in anos) / len(anos), "terr_2025": PER["2025"]["terrenos"], "cr_2025": -PER["2025"]["d_cr"], "obra_2025": -PER["2025"]["d_est_ex"], "lb_2025": PER["2025"]["lucro_bruto"], "cia_2025": PER["2025"]["cia_oper"],
        "ll": R["ll"], "conv_lb": 100 * R["cia_oper"] / R["lucro_bruto"], "conv_ll": 100 * R["cia_oper"] / R["ll"], "err_lb": 100 * R["outros"] / R["lucro_bruto"], "err_ll": 100 * R["outros"] / R["ll"],
