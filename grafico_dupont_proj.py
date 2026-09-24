@@ -50,16 +50,16 @@ def panel(ox, w, title, sub, series, ymin, ymax, step, unit, rm):
         yy = yv(max(min(v, ymax), ymin))
         for pv in ys_:
             if abs(yy - pv) < 13: yy = pv + 13
-        ys_.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{yv(max(min(v, ymax), ymin)):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}" style="font-size:11px">{lab} {fmt(v, 1 if step < 1 else 0)}{unit}</text>')
+        ys_.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{yv(max(min(v, ymax), ymin)):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}" style="font-size:10.5px">{lab} {fmt(v, 1 if step < 1 else 0)}{unit}</text>')   # 24/09/26: rótulos de fim de linha a 10,5px, empilhados de 13 em 13 (5 cenários no painel 1)
     return "".join(g)
 g = []
 roe_h = [H[k]["roe"] for k in HK]
-g.append(panel(0, 560, "ROE, 12 meses, %", "lucro atribuível ÷ PL médio dos controladores; projeção distribuindo o caixa gerado", [(roe_h + [None] * 5, I2, "", "histórico", 2.4)] + [(([None] * (len(HK) - 1)) + [roe_h[-1]] + [PJ[k][y]["roe"] for y in YS], col, dash, lab, 2.0) for k, lab, col, dash in SC], -10, 30, 10, "%", 150))
+g.append(panel(0, 560, "ROE, 12 meses, %", "lucro atribuível ÷ PL médio dos controladores; projeção distribuindo o caixa gerado", [(roe_h + [None] * 5, I2, "", "histórico", 2.4)] + [(([None] * (len(HK) - 1)) + [roe_h[-1]] + [PJ[k][y]["roe"] for y in YS], col, dash, lab, 2.0) for k, lab, col, dash in SC], -10, 40, 10, "%", 158))   # 24/09/26: eixo até 40% para não clipar o pico de 34% (2020); rm 158 para "LTM, Vivaz +30 pp 18%" caber antes do painel 2
 mg_h = [H[k]["margem"] for k in HK]; gp_h = [H[k]["rec_ltm"] / H[k]["pl_med"] for k in HK]
 g.append(panel(560, 500, "Margem líquida, % · receita ÷ PL médio, x", "as duas peças do ROE; giro sobre o PL porque o modelo não projeta o ativo", [(mg_h + [None] * 5, S3, "", "margem", 2.4), (([None] * (len(HK) - 1)) + [mg_h[-1]] + [BASE[y]["margem"] for y in YS], S3, "5 3", "margem proj.", 2.0), ([100 * v for v in gp_h] + [None] * 5, S1, "", "giro ×100", 2.4), (([None] * (len(HK) - 1)) + [100 * gp_h[-1]] + [100 * BASE[y]["giro_pl"] for y in YS], S1, "5 3", "giro proj. ×100", 2.0)], -10, 130, 20, "", 130))
 svg = '<svg viewBox="0 0 1060 205" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela: anos (4T13..4T25), LTM, 2027-31 base; linhas DuPont; ROE dos outros cenários
-PAD = "padding:0 8px"
+PAD = "padding:0 6px;font-size:9px;white-space:nowrap"   # 24/09/26: 9px na célula (o .compact fixa 10px no td), sem quebra ("LTM 2T26" e o rótulo do PL abriam 2 linhas)
 def c(v, d=1, s_=""): return f'<td style="text-align:right;{PAD}">{fmt(v, d)}{s_}</td>'
 cols = [k for k in HK if k.endswith("-12") and int(k[:4]) >= 2013] + [HK[-1]]
 lab_c = lambda k: ("LTM 2T26" if k == HK[-1] else k[:4])
