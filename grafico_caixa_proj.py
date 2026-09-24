@@ -51,8 +51,8 @@ def project(reg, crk):
     return R
 PJ = {(reg, crk): project(reg, crk) for reg in REG for crk in CRP}
 # ---- svg: painel 1 caixa por ano e regime (mix base) + Vivaz +30 pp no regime B; painel 2 decomposição 2029 (regime B)
-g = []; W1 = 520
-X0, X1, Y0, Y1 = 44, W1 - 96, 44, 228; ymin, ymax = -1000, 2500
+g = []; W1 = 430   # 24/09/26: painel 1 mais estreito (rótulos de fim de linha a 11px cabem antes do painel 2); viewBox 250 → 205
+X0, X1, Y0, Y1 = 42, W1 - 130, 44, 183; ymin, ymax = -1000, 2500
 x = lambda i: X0 + (X1 - X0) * i / (len(YS) - 1 + 1); yv = lambda v: Y1 - (Y1 - Y0) * (v - ymin) / (ymax - ymin)
 g.append(f'<text x="{X0}" y="17" class="gtit">Caixa operacional projetado, R$ mi por ano</text><text x="{X0}" y="32" class="gsub">linhas da reconciliação em % da receita; LTM 2T26 = R$ {fmt(P[LTM]["cia_oper"])} mi (release)</text>')
 for tv in range(ymin, ymax + 1, 500): g.append(f'<line x1="{X0}" y1="{yv(tv):.1f}" x2="{X1}" y2="{yv(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{yv(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{fmt(tv)}</text>')
@@ -69,11 +69,11 @@ ys_ = []
 for v, col, lab in sorted(ends, reverse=True):
     yy = yv(v)
     for pv in ys_:
-        if abs(yy - pv) < 14: yy = pv + 14
-    ys_.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{yv(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab} {fmt(v/1000, 1)}</text>')
+        if abs(yy - pv) < 13: yy = pv + 13
+    ys_.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{yv(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}" style="font-size:11px">{lab} {fmt(v/1000, 1)}</text>')
 # painel 2: ponte 2029, regime B, mix base
-ox = W1 + 20; R29 = PJ[("B", "base")][2029]; items = [(k, R29[k]) for k in ORDER if abs(R29[k]) > 1]
-bx0, bx1, by0, by1 = ox + 44, 1060 - 20, 44, 228; tot = R29["lucro_bruto"]; scale = (by1 - by0) / (max(tot, 1) * 1.15)
+ox = W1 + 10; R29 = PJ[("B", "base")][2029]; items = [(k, R29[k]) for k in ORDER if abs(R29[k]) > 1]
+bx0, bx1, by0, by1 = ox + 12, 1060 - 18, 44, 183; tot = R29["lucro_bruto"]; scale = (by1 - by0) / (max(tot, 1) * 1.15)   # 24/09/26: 13 colunas a ~45 unidades: rótulos do eixo a 9px numa linha sem colidir
 g.append(f'<text x="{bx0}" y="17" class="gtit">Ponte de 2029, regime neutro, R$ mi</text><text x="{bx0}" y="32" class="gsub">do lucro bruto ao caixa operacional; receita R$ {fmt(R29["receita"]/1000, 1)} bi</text>')
 n = len(items) + 1; bw = (bx1 - bx0) / n * 0.72; step = (bx1 - bx0) / n; run = 0.0
 def yb(v): return by1 - v * scale
@@ -81,12 +81,12 @@ for i, (k, v) in enumerate(items):
     top, bot = (run + v, run) if v >= 0 else (run, run + v); xx = bx0 + i * step
     col = S3 if k == "lucro_bruto" else (GR if v > 0 else S1)
     g.append(f'<rect x="{xx:.1f}" y="{yb(top):.1f}" width="{bw:.1f}" height="{max(yb(bot)-yb(top),1):.1f}" rx="2" fill="{col}" opacity=".85"/><text x="{xx+bw/2:.1f}" y="{yb(top)-4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(v)}</text>')
-    g.append(f'<text x="{xx+bw/2:.1f}" y="{by1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:8.5px">{SHORT[k]}</text>'); run += v
-xx = bx0 + len(items) * step; g.append(f'<rect x="{xx:.1f}" y="{yb(run):.1f}" width="{bw:.1f}" height="{max(by1-yb(run),1):.1f}" rx="2" fill="{I2}" opacity=".9"/><text x="{xx+bw/2:.1f}" y="{yb(run)-4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(run)}</text><text x="{xx+bw/2:.1f}" y="{by1+12}" text-anchor="middle" class="axq" opacity=".8" style="font-size:8.5px">caixa</text>')
+    g.append(f'<text x="{xx+bw/2:.1f}" y="{by1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">{SHORT[k]}</text>'); run += v
+xx = bx0 + len(items) * step; g.append(f'<rect x="{xx:.1f}" y="{yb(run):.1f}" width="{bw:.1f}" height="{max(by1-yb(run),1):.1f}" rx="2" fill="{I2}" opacity=".9"/><text x="{xx+bw/2:.1f}" y="{yb(run)-4:.1f}" text-anchor="middle" class="fw-s2" fill="{I2}">{fmt(run)}</text><text x="{xx+bw/2:.1f}" y="{by1+13}" text-anchor="middle" class="axq" opacity=".8" style="font-size:9px">caixa</text>')
 g.append(f'<line x1="{bx0}" y1="{by1}" x2="{bx1}" y2="{by1}" stroke="var(--baseline)"/>')
-svg = '<svg viewBox="0 0 1060 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+svg = '<svg viewBox="0 0 1060 205" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela: linhas × (LTM, 2027, 2029, 2031 no regime B) + premissa % + caixa por regime
-PAD = "padding:1px 8px"
+PAD = "padding:0 8px"
 def c(v, d=0, s=""): return f'<td style="text-align:right;{PAD}">{fmt(v, d)}{s}</td>'
 rows = []
 for k in ORDER:
@@ -97,7 +97,7 @@ rows.append(f'<tr style="font-weight:700"><td style="text-align:left;{PAD}">= ca
 for reg, lab in (("A", "regime A, como 2023-LTM"), ("C", "regime C, como 2019-22")):
     rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">caixa · {lab}</td><td></td><td></td>' + "".join(c(PJ[(reg, "base")][y]["caixa"]) for y in (2027, 2029, 2031)) + '</tr>')
 rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">caixa · regime B com Vivaz +30 pp</td><td></td><td></td>' + "".join(c(PJ[("B", "+30")][y]["caixa"]) for y in (2027, 2029, 2031)) + '</tr>')
-table = ('<table class="tl compact" style="margin-top:4px;width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;' + PAD + '">R$ mi</th><th style="text-align:right;' + PAD + '">premissa, % da receita</th><th style="text-align:right;' + PAD + '">LTM 2T26</th>'
+table = ('<table class="tl compact" style="margin-top:0;width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;' + PAD + '">R$ mi</th><th style="text-align:right;' + PAD + '">premissa, % da receita</th><th style="text-align:right;' + PAD + '">LTM 2T26</th>'
          + "".join(f'<th style="text-align:right;{PAD}">{y}E</th>' for y in (2027, 2029, 2031)) + '</tr></thead><tbody>' + "".join(rows) + '</tbody></table>')
 num = {"ltm_cia": P[LTM]["cia_oper"], "ltm_terr": P[LTM]["terrenos"], "ltm_obra": P[LTM]["d_est_ex"], "ltm_cr": P[LTM]["d_cr"], "mg": 100 * PR["lucro_bruto"], "sga": 100 * PR["sga"], "g": 100 * G,
        "A_29": PJ[("A", "base")][2029]["caixa"], "B_29": PJ[("B", "base")][2029]["caixa"], "C_29": PJ[("C", "base")][2029]["caixa"], "B30_29": PJ[("B", "+30")][2029]["caixa"], "A_31": PJ[("A", "base")][2031]["caixa"], "B_31": PJ[("B", "base")][2031]["caixa"], "C_31": PJ[("C", "base")][2031]["caixa"], "B30_31": PJ[("B", "+30")][2031]["caixa"],
