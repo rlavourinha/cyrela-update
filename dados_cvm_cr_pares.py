@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """Dias de recebível dos pares (pedido de 23/09/26): contas a receber (balanço consolidado, circulante 1.01.03 + não circulante
 'Contas a Receber'/'Clientes' em 1.02.01.xx) e receita líquida (3.01, trimestre corrente) via dados abertos da CVM (ITR/DFP 2021-26,
-tabelas BPA_con e DRE_con; cache em fontes/cvm/). Empresas: Lavvi, Trisul, EZTEC, Even, Moura Dubeux (MAP), Cury (MCMV), Cyrela (controle).
+tabelas BPA_con e DRE_con; cache em fontes/cvm/). Empresas: Lavvi, Trisul, EZTEC, Even, Moura Dubeux (MAP); Cury, Plano & Plano, Direcional, Tenda, MRV (MCMV); Cyrela (controle).
 Dias = contas a receber ÷ receita 12 meses × 365. Saída: _cvm_cr_pares.json {empresa: {tri: {cr_cp, cr_lp, cr, rec_tri, rec12, dias}}}."""
 import io, os, re, json, zipfile, csv
 here = os.path.dirname(os.path.abspath(__file__)); D = os.path.join(here, "fontes", "cvm")
-EMP = {"lavvi": r"^LAVVI", "trisul": r"^TRISUL", "eztec": r"^EZ ?TEC", "even": r"^EVEN CONSTRUTORA", "mdne": r"^MOURA DUBEUX", "cury": r"^CURY", "cyrela": r"^CYRELA BRAZIL"}
+EMP = {"lavvi": r"^LAVVI", "trisul": r"^TRISUL", "eztec": r"^EZ ?TEC", "even": r"^EVEN CONSTRUTORA", "mdne": r"^MOURA DUBEUX", "cury": r"^CURY", "pp": r"^PLANO & PLANO", "direcional": r"^DIRECIONAL", "tenda": r"^CONSTRUTORA TENDA", "mrv": r"^MRV ENGENHARIA", "cyrela": r"^CYRELA BRAZIL"}
 def rows(z, name):
     with z.open(name) as f:
         for r in csv.DictReader(io.TextIOWrapper(f, encoding="latin-1"), delimiter=";"): yield r
