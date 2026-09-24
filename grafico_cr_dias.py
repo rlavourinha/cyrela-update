@@ -50,6 +50,8 @@ for i, q in enumerate(QU):
     r12 = sum(CD[QU[j]]["rec"] for j in range(i - 3, i + 1)) / 1000; cr = ccp[q] + clp[q]; pl = cpl.get(q)
     CU[q] = {"cr": cr, "rec12": r12, "dias": 365 * cr / r12, "cr_pl": 100 * cr / pl if pl else None, "pl": pl}
 u = QC[-1]; cy, cu = CY[u], CU[u]
+PE = J("_cvm_cr_pares.json")   # pares puros de MAP (CVM, dados_cvm_cr_pares.py): Lavvi e Trisul
+D_LV = {q: v["dias"] for q, v in PE["lavvi"].items() if v["dias"]}; D_TR = {q: v["dias"] for q, v in PE["trisul"].items() if v["dias"]}
 # ---- cenários de liberação de caixa (LTM 2T26)
 # (a) Cyrela inteira no patamar de dias da Cury; (b) mix: MCMV com dias da Cury, MAP com os dias implícitos; MCMV sobe de sh_mcmv para 30% e 40% da receita
 cr_at_cury = cy["rec12"] * cu["dias"] / 365; lib_a = cy["cr"] - cr_at_cury
@@ -87,7 +89,7 @@ xl = lambda q: q[2:] if q.startswith("4T") and int(q[2:]) % 2 == 1 else ""
 D_CY = {q: v["dias"] for q, v in CY.items()}; D_CU = {q: v["dias"] for q, v in CU.items()}
 P_CY = {q: v["cr_pl"] for q, v in CY.items()}; P_CU = {q: v["cr_pl"] for q, v in CU.items()}
 xs = [q for q in QC if q in CY]
-g = [panel(0, 360, "Dias de recebível", "contas a receber ÷ receita 12 m × 365", [(D_CY, S1, "Cyrela", 2.6, ""), (D_CU, S3, "Cury", 2.4, "")], 400, 100, xs, xl, ""),
+g = [panel(0, 360, "Dias de recebível", "contas a receber ÷ receita 12 m × 365", [(D_CY, S1, "Cyrela", 2.6, ""), (D_CU, S3, "Cury", 2.4, ""), (D_LV, S2, "Lavvi", 1.8, "5 3"), (D_TR, MU, "Trisul", 1.8, "5 3")], 400, 100, xs, xl, ""),
      panel(360, 330, "Contas a receber ÷ PL, %", "balanço consolidado; Cury: PL total", [(P_CY, S1, "Cyrela", 2.6, ""), (P_CU, S3, "Cury", 2.4, "")], 250, 50, xs, xl)]   # Cury acima de 100%: PL pequeno
 # painel 3: barras dos cenários (margens de 28/20 e barras de 40: passo de ~70 entre rótulos, "concluídos"/"MCMV 30%" sem encostar)
 ox, w = 690, 370; X0, XR, Y1, Y0 = ox + 28, ox + w - 20, 228, 60
@@ -104,11 +106,13 @@ svg = '<svg viewBox="0 0 1060 250" xmlns="http://www.w3.org/2000/svg" style="wid
 cols = [q for q in xs if q.startswith("4T") and int(q[2:]) >= 13] + [u]
 def cell(v, d=0, s=""): return f'<td style="text-align:right">{fmt(v, d) + s if v is not None else "—"}</td>'
 lines = [("Cyrela · contas a receber, R$ mi", [CY[q]["cr"] for q in cols], 0, ""), ("Cyrela · receita 12 m, R$ mi", [CY[q]["rec12"] for q in cols], 0, ""), ("Cyrela · dias", [CY[q]["dias"] for q in cols], 0, ""), ("Cyrela · recebível ÷ PL", [CY[q]["cr_pl"] for q in cols], 0, "%"),
-         ("Cury · contas a receber, R$ mi", [CU.get(q, {}).get("cr") for q in cols], 0, ""), ("Cury · receita 12 m, R$ mi", [CU.get(q, {}).get("rec12") for q in cols], 0, ""), ("Cury · dias", [CU.get(q, {}).get("dias") for q in cols], 0, ""), ("Cury · recebível ÷ PL", [CU.get(q, {}).get("cr_pl") for q in cols], 0, "%")]
+         ("Cury · contas a receber, R$ mi", [CU.get(q, {}).get("cr") for q in cols], 0, ""), ("Cury · receita 12 m, R$ mi", [CU.get(q, {}).get("rec12") for q in cols], 0, ""), ("Cury · dias", [CU.get(q, {}).get("dias") for q in cols], 0, ""), ("Cury · recebível ÷ PL", [CU.get(q, {}).get("cr_pl") for q in cols], 0, "%"),
+         ("Lavvi · dias (CVM)", [PE["lavvi"].get(q, {}).get("dias") for q in cols], 0, ""), ("Trisul · dias (CVM)", [PE["trisul"].get(q, {}).get("dias") for q in cols], 0, "")]
 table = ('<table class="tl compact" style="margin-top:4px;width:100%;font-size:9.5px"><thead><tr><th style="text-align:left"></th>' + "".join(f'<th style="text-align:right">{"20" + q[2:] if q.startswith("4T") else q}</th>' for q in cols) + '</tr></thead><tbody>'
          + "".join(f'<tr><td style="text-align:left;white-space:nowrap{";font-weight:700" if "dias" in lab else ""}">{lab}</td>' + "".join(cell(v, d, s) for v in vals) + '</tr>' for lab, vals, d, s in lines) + '</tbody></table>')
 num = {"u": u, "cy_cr": cy["cr"], "cy_dias": cy["dias"], "cy_cr_pl": cy["cr_pl"], "cy_rec12": cy["rec12"], "cu_cr": cu["cr"], "cu_dias": cu["dias"], "cu_cr_pl": cu["cr_pl"], "cu_rec12": cu["rec12"], "sh_mcmv": 100 * sh_mcmv, "dias_map": dias_map,
        "lib_a": lib_a, "lib_30": lib_30, "lib_40": lib_40, "concl": concl, "constr": constr, "nq": nq, "cy_dias_max": max(v["dias"] for v in CY.values()), "cy_dias_max_q": max(CY, key=lambda q: CY[q]["dias"]), "cy_dias_min": min(v["dias"] for v in CY.values()), "cy_dias_min_q": min(CY, key=lambda q: CY[q]["dias"]),
-       "cu_dias_min": min(v["dias"] for v in CU.values()), "cu_dias_min_q": min(CU, key=lambda q: CU[q]["dias"]), "cy_dias_4T19": CY.get("4T19", {}).get("dias"), "cu_dias_4T19": CU.get("4T19", {}).get("dias")}
+       "cu_dias_min": min(v["dias"] for v in CU.values()), "cu_dias_min_q": min(CU, key=lambda q: CU[q]["dias"]), "cy_dias_4T19": CY.get("4T19", {}).get("dias"), "cu_dias_4T19": CU.get("4T19", {}).get("dias"),
+       "lv_dias": D_LV[u], "tr_dias": D_TR[u], "ez_dias": PE["eztec"][u]["dias"], "ev_dias": PE["even"][u]["dias"], "md_dias": PE["mdne"][u]["dias"]}
 json.dump({"svg": svg, "table": table, "num": num}, io.open(os.path.join(here, "_cr_dias_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("ok", {k: (round(v, 1) if isinstance(v, float) else v) for k, v in num.items()})
