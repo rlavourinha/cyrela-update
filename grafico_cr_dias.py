@@ -62,7 +62,7 @@ lib_30 = cy["cr"] - mix(0.30); lib_40 = cy["cr"] - mix(0.40)
 nq = sorted(NT, key=ORD)[-1]; concl = NT[nq]["concluidos"]; constr = NT[nq]["em_construcao"]
 # ---- svg: três painéis
 def panel(ox, w, title, sub, series, ymax, step, xs, xlab, unit="%", rm=70):   # rm: margem direita para os rótulos de fim de linha
-    h = 215; X0, X1, Y0, Y1 = ox + 40, ox + w - rm, 44, h - 22   # 23/09/26: 250 → 215 (slide a 766px com 4 pares de baixa renda na tabela; alvo ≤ 710)
+    h = 190; X0, X1, Y0, Y1 = ox + 40, ox + w - rm, 44, h - 22   # 23/09/26: 250 → 215 → 190 (slide a 759px com o painel 3 e a tabela de caixa; alvo ≤ 720)
     x = lambda i: X0 + (X1 - X0) * i / (len(xs) - 1); y = lambda v: Y1 - (Y1 - Y0) * v / ymax
     g = [f'<text x="{ox+40}" y="17" class="gtit">{title}</text><text x="{ox+40}" y="32" class="gsub">{sub}</text>']
     t = 0
@@ -110,7 +110,7 @@ for lab, dpp, col in SCN:
         rows_[y] = {"rec": rec, "share": s, "dias": d, "cr": cr, "dcr": cr - cr_prev if y > Y0P else None, "cx_ante": cx_ante * rec if y > Y0P else None, "cx": cx_ante * rec - (cr - cr_prev) if y > Y0P else None, "mix": m[y]}
         cr_prev = cr
     PROJ[lab] = rows_
-ox, w = 690, 370; X0, X1, Y1, Y0 = ox + 40, ox + w - 82, 193, 44
+ox, w = 690, 370; X0, X1, Y1, Y0 = ox + 40, ox + w - 90, 168, 44   # Y1 = h − 22 do panel(); margem 90 para "base 32% 226" não vazar
 xp = lambda i: X0 + (X1 - X0) * i / (len(YS_P) - 1); yp = lambda v: Y1 - (Y1 - Y0) * (v - 150) / 150
 g.append(f'<text x="{X0}" y="17" class="gtit">Dias projetados por mix da Vivaz</text><text x="{X0}" y="32" class="gsub">Vivaz a {fmt(DV)} dias, resto a {fmt(dias_map)}; mix de 2027 em diante</text>')
 for tv in (150, 200, 250, 300): g.append(f'<line x1="{X0}" y1="{yp(tv):.1f}" x2="{X1}" y2="{yp(tv):.1f}" stroke="var(--grid)" opacity=".55"/><text x="{X0-5}" y="{yp(tv)+3.5:.1f}" text-anchor="end" class="axq" opacity=".85">{tv}</text>')
@@ -126,7 +126,7 @@ for v, col, lab in sorted(ends, reverse=True):
     for pv in ys_:
         if abs(yy - pv) < 15: yy = pv + 15
     ys_.append(yy); g.append(f'<circle cx="{X1:.1f}" cy="{yp(v):.1f}" r="3" fill="{col}"/><text x="{X1+6}" y="{yy+4:.1f}" class="fw-t2" fill="{col}">{lab} {fmt(v)}</text>')
-svg = '<svg viewBox="0 0 1060 215" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
+svg = '<svg viewBox="0 0 1060 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + "".join(g) + "</svg>"
 # ---- tabela: fim de ano e último
 cols = [q for q in xs if q.startswith("4T") and int(q[2:]) >= 13] + [u]
 # 23/09/26: dias sobre a receita do trimestre × 4 (Cyrela: E[q]["rec"], R$ mi; Cury: CD[q]["rec"] / 1000), fonte normal; o indicador principal segue o de 12 m
@@ -138,15 +138,15 @@ lines = [("Cyrela · contas a receber, R$ mi", [CY[q]["cr"] for q in cols], 0, "
          ("Plano & Plano · dias (CVM)", [PE["pp"].get(q, {}).get("dias") for q in cols], 0, ""), ("Tenda · dias (CVM)", [PE["tenda"].get(q, {}).get("dias") for q in cols], 0, ""), ("Direcional · dias (CVM)", [PE["direcional"].get(q, {}).get("dias") for q in cols], 0, ""), ("MRV · dias (CVM)", [PE["mrv"].get(q, {}).get("dias") for q in cols], 0, ""),
          ("Lavvi · dias (CVM)", [PE["lavvi"].get(q, {}).get("dias") for q in cols], 0, ""), ("Trisul · dias (CVM)", [PE["trisul"].get(q, {}).get("dias") for q in cols], 0, ""), ("Even · dias (CVM)", [PE["even"].get(q, {}).get("dias") for q in cols], 0, "")]
 bold = lambda lab: "dias" in lab and "trimestre" not in lab
-table = ('<table class="tl compact" style="margin-top:3px;width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;' + PAD + '"></th>' + "".join(f'<th style="text-align:right;{PAD}">{"20" + q[2:] if q.startswith("4T") else q}</th>' for q in cols) + '</tr></thead><tbody>'
+table = ('<table class="tl compact" style="margin-top:0;width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;' + PAD + '"></th>' + "".join(f'<th style="text-align:right;{PAD}">{"20" + q[2:] if q.startswith("4T") else q}</th>' for q in cols) + '</tr></thead><tbody>'
          + "".join(f'<tr><td style="text-align:left;white-space:nowrap;{PAD}{";font-weight:700" if bold(lab) else ""}">{lab}</td>' + "".join(cell(v, d, s) for v in vals) + '</tr>' for lab, vals, d, s in lines) + '</tbody></table>')
 YT = [2027, 2028, 2029, 2030, 2031]
 def c2(v, d=1): return f'<td style="text-align:right;{PAD}">{fmt(v, d)}</td>'
 tr2 = []
 for lab, dpp, col in SCN:
     P = PROJ[lab]; acc = sum(P[y]["cx"] for y in YT); dcr = sum(P[y]["dcr"] for y in YT)
-    tr2.append(f'<tr><td style="text-align:left;white-space:nowrap;{PAD};color:{col};font-weight:700">Vivaz {lab} dos lançamentos</td>' + "".join(f'<td style="text-align:right;{PAD}">{fmt(100 * P[y]["share"])}% · {fmt(P[y]["dias"])} d · <b>{fmt(P[y]["cx"] / 1000, 1)}</b></td>' for y in YT) + c2(dcr / 1000) + c2(acc / 1000) + '</tr>')
-table2 = ('<table class="tl compact" style="margin-top:4px;width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;' + PAD + '">geração de caixa operacional, R$ bi: Vivaz na receita · dias · <b>caixa</b></th>' + "".join(f'<th style="text-align:right;{PAD}">{y}</th>' for y in YT) + f'<th style="text-align:right;{PAD}">Δ recebível 27-31</th><th style="text-align:right;{PAD}">caixa 27-31</th></tr></thead><tbody>' + "".join(tr2) + '</tbody></table>')
+    tr2.append(f'<tr><td style="text-align:left;white-space:nowrap;{PAD};color:{col};font-weight:700">Vivaz {lab} dos lançamentos</td>' + "".join(f'<td style="text-align:right;white-space:nowrap;{PAD}">{fmt(100 * P[y]["share"])}% · {fmt(P[y]["dias"])} d · <b>{fmt(P[y]["cx"] / 1000, 1)}</b></td>' for y in YT) + c2(dcr / 1000) + c2(acc / 1000) + '</tr>')
+table2 = ('<table class="tl compact" style="margin-top:2px;width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;white-space:nowrap;' + PAD + '">geração de caixa operacional, R$ bi: Vivaz na receita · dias · <b>caixa</b></th>' + "".join(f'<th style="text-align:right;{PAD}">{y}</th>' for y in YT) + f'<th style="text-align:right;{PAD}">Δ recebível 27-31</th><th style="text-align:right;{PAD}">caixa 27-31</th></tr></thead><tbody>' + "".join(tr2) + '</tbody></table>')
 print("dias trimestre×4:", {q: (round(D4_CY[q]), round(D4_CU[q]) if q in D4_CU else None) for q in ("4T25", "1T26", "2T26")})
 num = {"u": u, "cy_cr": cy["cr"], "cy_dias": cy["dias"], "cy_cr_pl": cy["cr_pl"], "cy_rec12": cy["rec12"], "cu_cr": cu["cr"], "cu_dias": cu["dias"], "cu_cr_pl": cu["cr_pl"], "cu_rec12": cu["rec12"], "sh_mcmv": 100 * sh_mcmv, "dias_map": dias_map,
        "lib_a": lib_a, "lib_30": lib_30, "lib_40": lib_40, "cx_ante_pct": 100 * cx_ante, "cx_ante_ltm": CXR["cia"] + CXR["cr"], "cia_ltm": CXR["cia"], "dcr_ltm": CXR["cr"], "dv": DV, "g": 100 * G, "mix26": 100 * MX[2026], "share30_base": 100 * PROJ["base 32%"][2030]["share"], "dias30_base": PROJ["base 32%"][2030]["dias"], "dias31_base": PROJ["base 32%"][2031]["dias"], "dias31_p30": PROJ["+30 pp"][2031]["dias"], "cx_base_27_31": sum(PROJ["base 32%"][y]["cx"] for y in YT) / 1000, "cx_p30_27_31": sum(PROJ["+30 pp"][y]["cx"] for y in YT) / 1000, "cx_p10_27_31": sum(PROJ["+10 pp"][y]["cx"] for y in YT) / 1000, "cx_base_27": PROJ["base 32%"][2027]["cx"] / 1000, "cx_base_31": PROJ["base 32%"][2031]["cx"] / 1000, "cx_p30_31": PROJ["+30 pp"][2031]["cx"] / 1000, "dcr_base_27_31": sum(PROJ["base 32%"][y]["dcr"] for y in YT) / 1000, "dcr_p30_27_31": sum(PROJ["+30 pp"][y]["dcr"] for y in YT) / 1000, "concl": concl, "constr": constr, "nq": nq, "cy_dias_max": max(v["dias"] for v in CY.values()), "cy_dias_max_q": max(CY, key=lambda q: CY[q]["dias"]), "cy_dias_min": min(v["dias"] for v in CY.values()), "cy_dias_min_q": min(CY, key=lambda q: CY[q]["dias"]),
