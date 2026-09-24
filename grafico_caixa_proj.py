@@ -66,7 +66,8 @@ ORDER = ["lucro_bruto", "d_cr", "d_est_ex", "terrenos", "d_adiant", "sga", "impo
 LABEL = {"lucro_bruto": "lucro bruto", "d_cr": "Δ contas a receber", "d_est_ex": "Δ estoque de obra", "terrenos": "terrenos (Δ custo − Δ a pagar)", "d_adiant": "Δ adiantamentos", "sga": "despesas comerciais e adm.", "impostos": "IR/CS corrente", "fin": "resultado financeiro (DRE)",
          "fin_cx": "ajuste caixa do financeiro", "outras_dre": "outras receitas/despesas", "div_jv": "dividendos de JVs", "invest": "investimentos (JVs, SPEs, imobilizado)", "minor": "minoritários"}
 SHORT = {"lucro_bruto": "lucro bruto", "d_cr": "recebível", "d_est_ex": "obra", "terrenos": "terrenos", "d_adiant": "adiant.", "sga": "SG&amp;A", "impostos": "IR", "fin": "fin. DRE", "fin_cx": "fin. caixa", "outras_dre": "outras", "div_jv": "div. JVs", "invest": "invest.", "minor": "minor."}
-def project(sk, dpp=0.0):
+LAND, CASH = 0.18, 0.50   # terreno do alto padrão ~18% do VGV (slide de premissas do MAP); regime "caixa": metade paga no ano do lançamento; 2013 (compra em caixa) a linha foi −12% dos lançamentos, 2019-22 (permuta/prazo) −1% a −2%
+def project(sk, dpp=0.0, land="permuta"):
     L = LP[sk]; RECY = {y: FREC * lagL(y, L) for y in YS}; CRP = cr_path(RECY, dpp); R = {}; e_prev = est("2T26")
     for y in YS:
         rec = RECY[y]; r = {"receita": rec, "lanc": L[y]}
@@ -74,11 +75,13 @@ def project(sk, dpp=0.0):
         for k in ORDER:
             if k == "d_cr": r[k] = CRP[y]["d_cr"]
             elif k == "d_est_ex": r[k] = -(e_now - e_prev)
-            elif k == "terrenos": r[k] = 0.0
+            elif k == "terrenos": r[k] = 0.0 if land == "permuta" else LAND * (1 - CRP[y]["share"]) * rec - LAND * (1 - (MX[2026] + dpp)) * (CASH * L[y] + (1 - CASH) * 0.5 * (L[y - 1] + L[y - 2]))   # em caixa: (+) custo do terreno reconhecido no CPV (18% da receita MAP) (−) caixa pago: metade no lançamento, metade em dois anos
             else: r[k] = PR[k] * rec
         r["caixa"] = sum(r[k] for k in ORDER); r["dias"] = CRP[y]["dias"]; r["estoque"] = e_now; R[y] = r; e_prev = e_now
     return R
 PJ = {k: project(k) for k in SC}; PJ["ltm+30"] = project("ltm", 0.30)
+for k in list(SC): PJ[k + "|caixa"] = project(k, 0.0, "caixa")
+PJ["ltm+30|caixa"] = project("ltm", 0.30, "caixa")
 # ---- svg: painel 1 lançamentos por cenário; painel 2 caixa operacional por cenário; painel 3 ponte 2029 (cenário LTM)
 g = []
 COL = {"ltm": S1, "2025": S3, "corte": S2, "ltm+30": S1}
@@ -106,8 +109,8 @@ LAB_S = {"ltm": "+5% s/ LTM", "2025": "+5% s/ 2025", "corte": "corte −30%", "l
 # 24/09/26: painel 1 (3 linhas) a 280 de largura e painel 2 com margem para os rótulos de fim de linha (que invadiam o eixo do vizinho); painel 3 a 410
 g.append(lines_panel(0, 280, "Lançamentos, R$ bi (VGV 100%)", "LTM 2T26 = R$ " + fmt(LY[2026] / 1000, 1) + " bi; 2025 = " + fmt(LY[2025] / 1000, 1),
     [([LY[2026] / 1000] + [LP[k][y] / 1000 for y in YS], COL[k], "", LAB_S[k]) for k in ("2025", "ltm", "corte")], 0, 25, 5, rm=98, lm=30, tl=12))
-g.append(lines_panel(280, 370, "Caixa operacional, R$ mi por ano", "obra e recebível pelo lançamento; terreno neutro",
-    [([P[LTM]["cia_oper"]] + [PJ[k][y]["caixa"] for y in YS], COL[k], ("5 3" if k == "ltm+30" else ""), LAB_S[k]) for k in ("2025", "ltm", "ltm+30", "corte")], -500, 3000, 500, rm=142))
+g.append(lines_panel(280, 370, "Caixa operacional, R$ mi por ano", "sólido: permuta; tracejado: metade do terreno MAP em caixa",
+    [([P[LTM]["cia_oper"]] + [PJ[k][y]["caixa"] for y in YS], COL[k], "", LAB_S[k]) for k in ("2025", "ltm", "corte")] + [([P[LTM]["cia_oper"]] + [PJ[k + "|caixa"][y]["caixa"] for y in YS], COL[k], "5 3", LAB_S[k] + ", terreno em caixa") for k in ("ltm", "corte")], -500, 3000, 500, rm=142))
 # ponte 2029, cenário LTM: valores dos negativos abaixo da barra, rótulos do eixo em duas alturas (14 colunas em 27 px cada)
 ox = 650; R29 = PJ["ltm"][2029]; items = [(k, R29[k]) for k in ORDER if abs(R29[k]) > 1]
 bx0, bx1, by0, by1 = ox + 22, 1060 - 6, 50, 183; tot = R29["lucro_bruto"]; scale = (by1 - by0) / (max(tot, 1) * 1.15)
@@ -130,16 +133,18 @@ YT = (2027, 2029, 2031); rows = []
 rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">lançamentos, R$ mi (VGV 100%)</td><td style="text-align:right;{PAD};color:var(--muted)">+5% s/ LTM</td>{c(LY[2026])}' + "".join(c(PJ["ltm"][y]["lanc"]) for y in YT) + '</tr>')
 rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">receita, R$ mi</td><td style="text-align:right;{PAD};color:var(--muted)">{fmt(100 * FREC, 0)}% × lançamentos t−1..t−4 (15/35/35/15)</td>{c(rec0)}' + "".join(c(PJ["ltm"][y]["receita"]) for y in YT) + '</tr>')
 for k in ORDER:
-    prem = {"d_cr": "dias: Vivaz 160, resto " + fmt(N["dias_map"]) + ", mix 32%", "d_est_ex": f"estoque = {fmt(100 * BETA, 0)}% da média 3a de lançamentos", "terrenos": "neutro (2023-LTM: +10,7%; 2019-22: −2,1%)"}.get(k, f"{fmt(100 * PR.get(k, 0), 1)}% da receita")
+    prem = {"d_cr": "dias: Vivaz 160, resto " + fmt(N["dias_map"]) + ", mix 32%", "d_est_ex": f"estoque = {fmt(100 * BETA, 0)}% da média 3a de lançamentos", "terrenos": "permuta = 0; em caixa = −18% × 50% × VGV MAP lançado"}.get(k, f"{fmt(100 * PR.get(k, 0), 1)}% da receita")
     rows.append(f'<tr><td style="text-align:left;{PAD}">{LABEL[k]}</td><td style="text-align:right;{PAD};color:var(--muted)">{prem}</td>{c(P[LTM][k])}' + "".join(c(PJ["ltm"][y][k]) for y in YT) + '</tr>')
 rows.append(f'<tr style="font-weight:700"><td style="text-align:left;{PAD}">= caixa operacional, +5% s/ LTM</td><td></td>{c(P[LTM]["cia_oper"])}' + "".join(c(PJ["ltm"][y]["caixa"]) for y in YT) + '</tr>')
 for k, lab in (("2025", "caixa · +5% sobre 2025"), ("corte", "caixa · corte de 30% em 2027, depois +5%"), ("ltm+30", "caixa · +5% s/ LTM com Vivaz +30 pp")):
     rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--muted)">{lab}</td><td style="text-align:right;{PAD};color:var(--muted)">lanç. 2027 R$ {fmt(PJ[k][2027]["lanc"] / 1000, 1)} bi; receita 2029 R$ {fmt(PJ[k][2029]["receita"] / 1000, 1)} bi</td><td></td>' + "".join(c(PJ[k][y]["caixa"]) for y in YT) + '</tr>')
+for k, lab in (("ltm", "caixa · +5% s/ LTM, terreno em caixa"), ("2025", "caixa · +5% s/ 2025, terreno em caixa"), ("corte", "caixa · corte de 30%, terreno em caixa")):
+    rows.append(f'<tr><td style="text-align:left;{PAD};color:var(--s1)">{lab}</td><td style="text-align:right;{PAD};color:var(--muted)">terrenos 2027 R$ {fmt(PJ[k + "|caixa"][2027]["terrenos"] / 1000, 1)} bi</td><td></td>' + "".join(c(PJ[k + "|caixa"][y]["caixa"]) for y in YT) + '</tr>')
 table = ('<table class="tl compact" style="margin-top:0;width:100%;font-size:9.5px"><thead><tr><th style="text-align:left;' + PAD + '">R$ mi</th><th style="text-align:right;' + PAD + '">premissa</th><th style="text-align:right;' + PAD + '">LTM 2T26</th>'
          + "".join(f'<th style="text-align:right;{PAD}">{y}E</th>' for y in YT) + '</tr></thead><tbody>' + "".join(rows) + '</tbody></table>')
 num = {"ltm_cia": P[LTM]["cia_oper"], "ltm_terr": P[LTM]["terrenos"], "ltm_obra": P[LTM]["d_est_ex"], "ltm_cr": P[LTM]["d_cr"], "mg": 100 * PR["lucro_bruto"], "sga": 100 * PR["sga"], "g": 100 * G, "frec": 100 * FREC, "beta": 100 * BETA,
        "lanc_ltm": LY[2026], "lanc_25": LY[2025], "dias_map": N["dias_map"], "rec_ltm_27_base": rec0, "cia_23_25": [P[y]["cia_oper"] for y in ("2023", "2024", "2025")], "rec_27": PJ["ltm"][2027]["receita"], "rec_29": PJ["ltm"][2029]["receita"]}
 for k in PJ:
-    kk = k.replace("+", "p"); num[f"cx_{kk}_27"] = PJ[k][2027]["caixa"]; num[f"cx_{kk}_29"] = PJ[k][2029]["caixa"]; num[f"cx_{kk}_31"] = PJ[k][2031]["caixa"]; num[f"soma_{kk}"] = sum(PJ[k][y]["caixa"] for y in YS); num[f"lanc_{kk}_27"] = PJ[k][2027]["lanc"]; num[f"rec_{kk}_29"] = PJ[k][2029]["receita"]; num[f"obra_{kk}_27"] = PJ[k][2027]["d_est_ex"]; num[f"cr_{kk}_27"] = PJ[k][2027]["d_cr"]
+    kk = k.replace("+", "p").replace("|caixa", "_tc"); num[f"cx_{kk}_27"] = PJ[k][2027]["caixa"]; num[f"cx_{kk}_29"] = PJ[k][2029]["caixa"]; num[f"cx_{kk}_31"] = PJ[k][2031]["caixa"]; num[f"soma_{kk}"] = sum(PJ[k][y]["caixa"] for y in YS); num[f"lanc_{kk}_27"] = PJ[k][2027]["lanc"]; num[f"rec_{kk}_29"] = PJ[k][2029]["receita"]; num[f"obra_{kk}_27"] = PJ[k][2027]["d_est_ex"]; num[f"cr_{kk}_27"] = PJ[k][2027]["d_cr"]
 json.dump({"svg": svg, "table": table, "num": num, "proj": {k: {str(y): v for y, v in d.items()} for k, d in PJ.items()}}, io.open(os.path.join(here, "_caixa_proj_frag.json"), "w", encoding="utf-8"), ensure_ascii=False)
 print("ok", {k: (round(v, 1) if isinstance(v, float) else v) for k, v in num.items()})
